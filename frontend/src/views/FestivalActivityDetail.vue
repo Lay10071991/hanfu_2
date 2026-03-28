@@ -1,0 +1,1282 @@
+<template>
+  <div class="festival-activity-detail-container">
+    <!-- 顶部导航栏 -->
+    <div class="header">
+      <div class="nav-container">
+        <div class="logo">汉服文化交流平台</div>
+        <ul class="nav-menu">
+          <li class="nav-item" @click="$router.push('/knowledge')">汉服知识库</li>
+          <li class="nav-item" @click="$router.push('/culture')">传统文化学习</li>
+          <li class="nav-item" @click="$router.push('/activity')">汉服活动召集</li>
+          <li class="nav-item" @click="$router.push('/shop-evaluation')">汉服店铺测评</li>
+          <li class="nav-item" @click="$router.push('/community')">社区互动</li>
+          <li class="nav-item" @click="$router.push('/ai-chat')">AI问答</li>
+          <li class="nav-item" @click="goToProfile">个人中心</li>
+        </ul>
+        <div class="user-info-vertical">
+          <div class="user-name">欢迎，{{ username }}</div>
+          <el-button type="text" @click="logout" class="logout-btn">退出</el-button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 主内容区 -->
+    <div class="main-content">
+      <div class="container">
+        <!-- 返回按钮 -->
+        <div class="back-section">
+          <el-button type="text" @click="goBack" class="back-btn">
+            <el-icon><ArrowLeft /></el-icon>
+            返回
+          </el-button>
+        </div>
+
+        <!-- 页面标题 -->
+        <h2 class="page-title">{{ festivalData.title }}</h2>
+
+        <!-- 活动信息概览 -->
+        <div class="festival-overview">
+          <div class="overview-header">
+            <div class="festival-image">
+              <el-image :src="festivalData.image" fit="cover" class="main-image" />
+              <div class="image-overlay">
+                <el-tag type="success" size="large" class="festival-tag">
+                  {{ getSeasonName(festivalData.season) }}
+                </el-tag>
+              </div>
+            </div>
+
+            <div class="overview-info">
+              <div class="info-section">
+                <h3>活动基本信息</h3>
+                <div class="info-grid">
+                  <div class="info-item">
+                    <el-icon><Calendar /></el-icon>
+                    <div class="info-content">
+                      <div class="info-label">活动日期</div>
+                      <div class="info-value">{{ festivalData.date }}</div>
+                    </div>
+                  </div>
+                  <div class="info-item">
+                    <el-icon><Location /></el-icon>
+                    <div class="info-content">
+                      <div class="info-label">活动地点</div>
+                      <div class="info-value">{{ festivalData.location }}</div>
+                    </div>
+                  </div>
+                  <div class="info-item">
+                    <el-icon><Clock /></el-icon>
+                    <div class="info-content">
+                      <div class="info-label">活动时间</div>
+                      <div class="info-value">{{ festivalData.time || "全天" }}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="action-buttons">
+                <el-button
+                  :type="
+                    isActivityExpired(festivalData.date)
+                      ? 'danger'
+                      : isSignedUp
+                        ? 'warning'
+                        : 'primary'
+                  "
+                  size="large"
+                  @click="handleSignUp"
+                  :disabled="isActivityExpired(festivalData.date)"
+                >
+                  <el-icon><Check /></el-icon>
+                  {{
+                    isActivityExpired(festivalData.date)
+                      ? "活动结束"
+                      : isSignedUp
+                        ? "取消报名"
+                        : "立即报名"
+                  }}
+                </el-button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 活动详细介绍 -->
+        <div class="festival-details">
+          <div class="details-section">
+            <h3 class="section-title">
+              <el-icon><Document /></el-icon>
+              活动介绍
+            </h3>
+            <div class="section-content">
+              <p>{{ festivalData.description }}</p>
+              <div class="detailed-content" v-if="festivalData.detailedDescription">
+                <p v-for="(paragraph, index) in festivalData.detailedDescription" :key="index">
+                  {{ paragraph }}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="details-section">
+            <h3 class="section-title">
+              <el-icon><MagicStick /></el-icon>
+              传统习俗体验
+            </h3>
+            <div class="section-content">
+              <div class="customs-grid">
+                <div class="custom-item" v-for="custom in festivalData.customs" :key="custom.id">
+                  <div class="custom-icon">
+                    <span>{{ custom.icon }}</span>
+                  </div>
+                  <div class="custom-info">
+                    <h4>{{ custom.title }}</h4>
+                    <p>{{ custom.description }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="details-section">
+            <h3 class="section-title">
+              <el-icon><Warning /></el-icon>
+              注意事项
+            </h3>
+            <div class="section-content">
+              <ul class="notice-list">
+                <li v-for="(notice, index) in festivalData.notices" :key="index">{{ notice }}</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- 评论区 -->
+        <div class="comments-section">
+          <h3 class="section-title">
+            <el-icon><ChatDotRound /></el-icon>
+            活动评论
+          </h3>
+          <div class="comment-input">
+            <el-input
+              v-model="commentText"
+              type="textarea"
+              :rows="3"
+              placeholder="写下您的评论..."
+              maxlength="200"
+              show-word-limit
+            />
+            <div class="comment-actions">
+              <el-button type="primary" @click="submitComment" :disabled="!commentText.trim()">
+                发表评论
+              </el-button>
+            </div>
+          </div>
+
+          <div class="comments-list" v-if="comments.length > 0">
+            <div class="comment-item" v-for="comment in comments" :key="comment.id">
+              <div class="comment-header">
+                <div class="user-info">
+                  <div class="user-name">{{ comment.username }}</div>
+                </div>
+              </div>
+              <div class="comment-content">
+                {{ comment.content }}
+              </div>
+            </div>
+          </div>
+
+          <div class="no-comments" v-else>
+            <el-empty description="暂无评论，快来发表第一条评论吧！" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 页脚 -->
+    <div class="footer">
+      <div class="container">
+        <p>汉服文化交流平台</p>
+        <p class="footer-subtitle">传承华夏衣冠，弘扬汉服文化</p>
+      </div>
+    </div>
+
+    <!-- 报名成功提示 -->
+    <el-dialog
+      v-model="signUpDialogVisible"
+      title="报名成功"
+      width="400px"
+      :show-close="false"
+      center
+    >
+      <div class="dialog-content">
+        <el-icon color="#67C23A" size="60px"><CircleCheck /></el-icon>
+        <p style="margin-top: 20px; text-align: center">恭喜您成功报名参加活动！</p>
+      </div>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button type="primary" @click="signUpDialogVisible = false">确定</el-button>
+        </span>
+      </template>
+    </el-dialog>
+  </div>
+</template>
+
+<script setup>
+import { ref, onMounted } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import { ElMessage, ElMessageBox } from "element-plus";
+import {
+  ArrowLeft,
+  Calendar,
+  Location,
+  User,
+  Clock,
+  Check,
+  Document,
+  MagicStick,
+  Warning,
+  ChatDotRound,
+  CircleCheck,
+} from "@element-plus/icons-vue";
+
+const router = useRouter();
+const route = useRoute();
+const username = ref("");
+
+// 活动数据
+const festivalData = ref({
+  id: 1,
+  title: "元宵灯会汉服游园",
+  season: "winter",
+  date: "2024-02-24（农历正月十五）",
+  time: "18:00-21:30",
+  location: "南京夫子庙秦淮河畔",
+  image: "https://placehold.co/800x400/FFCC99/000000?text=元宵灯会活动",
+  participants: 156,
+  description:
+    "传统元宵佳节，穿上汉服赏花灯、猜灯谜，体验古代元宵节的欢乐氛围。活动包括汉服走秀、传统灯谜、古典舞蹈表演等。",
+  detailedDescription: [
+    "元宵节，又称上元节、小正月、元夕或灯节，是春节之后的第一个重要节日。在这一天，人们会点上彩灯万盏，以示庆贺。",
+    "本次汉服游园会将在南京夫子庙秦淮河畔举行，参与者可以穿上精美的汉服，漫步在古色古香的街巷中，感受传统文化的魅力。",
+    "活动特别设置了汉服走秀环节，参与者可以展示自己的汉服，交流汉服文化。同时还有传统灯谜、投壶游戏、古典舞蹈表演等丰富多彩的互动项目。",
+  ],
+  customs: [
+    {
+      id: 1,
+      icon: "🏮",
+      title: "赏花灯",
+      description: "欣赏各式各样的传统花灯，感受节日氛围",
+    },
+    {
+      id: 2,
+      icon: "🎯",
+      title: "猜灯谜",
+      description: "参与传统灯谜游戏，挑战智慧",
+    },
+    {
+      id: 3,
+      icon: "🎭",
+      title: "汉服走秀",
+      description: "展示不同朝代的汉服，交流服饰文化",
+    },
+    {
+      id: 4,
+      icon: "💃",
+      title: "传统舞蹈",
+      description: "观看古典舞蹈表演，感受传统艺术",
+    },
+  ],
+  notices: [
+    "请提前15分钟到达活动现场签到",
+    "汉服需自备，如有需要可提前联系主办方租借",
+    "活动期间请保管好个人物品",
+    "请尊重传统文化，保持场地整洁",
+    "如遇恶劣天气，活动将延期举行，请关注通知",
+  ],
+});
+
+// 用户状态
+const isSignedUp = ref(false);
+const commentText = ref("");
+const signUpDialogVisible = ref(false);
+
+// 评论数据
+const comments = ref([
+  {
+    id: 1,
+    username: "汉服爱好者",
+    content: "非常期待这次活动！去年参加过一次，体验很棒！",
+  },
+  {
+    id: 2,
+    username: "传统文化传播者",
+    content: "这样的活动很有意义，既能体验传统文化，又能认识志同道合的朋友。",
+  },
+]);
+
+onMounted(() => {
+  const savedUsername = localStorage.getItem("username");
+  if (savedUsername) {
+    username.value = savedUsername;
+  }
+
+  // 根据路由参数加载活动数据
+  const festivalId = route.params.id;
+  loadFestivalData(festivalId);
+
+  // 检查用户是否已报名
+  setTimeout(() => {
+    checkUserStatus();
+  }, 100);
+});
+
+// 根据季节获取季节名称
+const getSeasonName = (season) => {
+  const seasonMap = {
+    spring: "春季",
+    summer: "夏季",
+    autumn: "秋季",
+    winter: "冬季",
+  };
+  return seasonMap[season] || season;
+};
+
+// 检查活动是否已过期
+const isActivityExpired = (dateStr) => {
+  // 提取日期部分
+  let dateStrClean = dateStr;
+  // 处理"2024-02-24（农历正月十五）"格式
+  if (dateStr.includes("（")) {
+    dateStrClean = dateStr.split("（")[0];
+  }
+  // 处理"2026年2月12日"格式
+  if (dateStr.includes("年")) {
+    dateStrClean = dateStr.replace("年", "-").replace("月", "-").replace("日", "");
+  }
+
+  // 解析日期
+  const activityDate = new Date(dateStrClean);
+  const now = new Date();
+
+  // 比较日期（只比较年月日，不比较时间）
+  const activityDateOnly = new Date(
+    activityDate.getFullYear(),
+    activityDate.getMonth(),
+    activityDate.getDate(),
+  );
+  const nowDateOnly = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+  return activityDateOnly < nowDateOnly;
+};
+
+// 加载活动数据
+const loadFestivalData = async (id) => {
+  try {
+    // 从后端获取活动数据
+    const response = await fetch(`http://localhost:8082/api/festival-activity/${id}`);
+    if (response.ok) {
+      const data = await response.json();
+      festivalData.value = data;
+    }
+  } catch (error) {
+    console.error("加载活动数据失败:", error);
+    // 使用默认数据
+    const activities = [
+      {
+        id: 1,
+        title: "元宵灯会汉服游园",
+        season: "winter",
+        date: "2024-02-24（农历正月十五）",
+        time: "18:00-21:30",
+        location: "南京夫子庙秦淮河畔",
+        image: "https://placehold.co/800x400/FFCC99/000000?text=元宵灯会活动",
+        participants: 156,
+        description:
+          "传统元宵佳节，穿上汉服赏花灯、猜灯谜，体验古代元宵节的欢乐氛围。活动包括汉服走秀、传统灯谜、古典舞蹈表演等。",
+        detailedDescription: [
+          "元宵节，又称上元节、小正月、元夕或灯节，是春节之后的第一个重要节日。在这一天，人们会点上彩灯万盏，以示庆贺。",
+          "本次汉服游园会将在南京夫子庙秦淮河畔举行，参与者可以穿上精美的汉服，漫步在古色古香的街巷中，感受传统文化的魅力。",
+          "活动特别设置了汉服走秀环节，参与者可以展示自己的汉服，交流汉服文化。同时还有传统灯谜、投壶游戏、古典舞蹈表演等丰富多彩的互动项目。",
+        ],
+        customs: [
+          {
+            id: 1,
+            icon: "🏮",
+            title: "赏花灯",
+            description: "欣赏各式各样的传统花灯，感受节日氛围",
+          },
+          {
+            id: 2,
+            icon: "🎯",
+            title: "猜灯谜",
+            description: "参与传统灯谜游戏，挑战智慧",
+          },
+          {
+            id: 3,
+            icon: "🎭",
+            title: "汉服走秀",
+            description: "展示不同朝代的汉服，交流服饰文化",
+          },
+          {
+            id: 4,
+            icon: "💃",
+            title: "传统舞蹈",
+            description: "观看古典舞蹈表演，感受传统艺术",
+          },
+        ],
+        notices: [
+          "请提前15分钟到达活动现场签到",
+          "汉服需自备，如有需要可提前联系主办方租借",
+          "活动期间请保管好个人物品",
+          "请尊重传统文化，保持场地整洁",
+          "如遇恶劣天气，活动将延期举行，请关注通知",
+        ],
+      },
+      {
+        id: 2,
+        title: "清明踏青汉服雅集",
+        season: "spring",
+        date: "2024-04-05（清明节）",
+        time: "10:00-16:00",
+        location: "杭州西湖",
+        image: "https://placehold.co/800x400/99CC99/000000?text=清明踏青",
+        participants: 203,
+        description:
+          "清明时节，春光明媚，穿上汉服在西湖边踏青、品茶、赏花，感受传统清明节的文化内涵。",
+        detailedDescription: [
+          "清明节是中国传统节日，也是最重要的祭祀节日之一，是祭祖和扫墓的日子。",
+          "本次汉服雅集将在杭州西湖举行，参与者可以穿上汉服，在西湖边漫步，欣赏春天的美景。",
+          "活动包括汉服展示、传统茶艺表演、诗歌朗诵等环节，让参与者深度体验传统文化。",
+        ],
+        customs: [
+          {
+            id: 1,
+            icon: "🌿",
+            title: "踏青",
+            description: "在春天的阳光下漫步，感受大自然的生机",
+          },
+          {
+            id: 2,
+            icon: "🍵",
+            title: "品茶",
+            description: "品尝传统茶艺，感受茶文化的魅力",
+          },
+          {
+            id: 3,
+            icon: "📜",
+            title: "诗歌朗诵",
+            description: "朗诵传统诗歌，感受文学之美",
+          },
+        ],
+        notices: [
+          "请穿着舒适的汉服，便于行走",
+          "请自备饮用水和防晒用品",
+          "活动期间请遵守景区规定",
+          "如有身体不适，请及时告知工作人员",
+        ],
+      },
+      {
+        id: 3,
+        title: "端午龙舟汉服观赛",
+        season: "summer",
+        date: "2024-06-10（端午节）",
+        time: "09:00-15:00",
+        location: "苏州护城河",
+        image: "https://placehold.co/800x400/FF9999/000000?text=端午龙舟",
+        participants: 189,
+        description: "端午节观看传统龙舟比赛，体验包粽子、挂艾草等习俗，感受浓厚的端午文化氛围。",
+        detailedDescription: [
+          "端午节是中国传统节日，为了纪念屈原而设立。",
+          "本次活动将在苏州护城河举行，参与者可以观看精彩的龙舟比赛，体验包粽子、挂艾草等传统习俗。",
+          "活动还包括汉服展示、传统音乐表演等环节，让参与者全方位感受端午文化。",
+        ],
+        customs: [
+          {
+            id: 1,
+            icon: "🚣",
+            title: "观看龙舟赛",
+            description: "欣赏激烈的龙舟比赛，感受团队合作精神",
+          },
+          {
+            id: 2,
+            icon: "粽叶",
+            title: "包粽子",
+            description: "学习包粽子的传统技艺",
+          },
+          {
+            id: 3,
+            icon: "🌿",
+            title: "挂艾草",
+            description: "了解艾草的文化意义",
+          },
+        ],
+        notices: [
+          "请提前到达现场，占据观赛好位置",
+          "请遵守现场秩序，不要拥挤",
+          "活动期间请保管好个人物品",
+          "如需参与包粽子活动，请提前报名",
+        ],
+      },
+      {
+        id: 4,
+        title: "中秋赏月汉服夜宴",
+        season: "autumn",
+        date: "2024-09-17（中秋节）",
+        time: "18:00-22:00",
+        location: "北京颐和园",
+        image: "https://placehold.co/800x400/CCCCFF/000000?text=中秋赏月",
+        participants: 175,
+        description: "中秋佳节，穿上汉服在颐和园赏月、品月饼、吟诗作对，体验古人的风雅情趣。",
+        detailedDescription: [
+          "中秋节是中国传统节日，象征团圆和丰收。",
+          "本次活动将在颐和园举行，参与者可以穿上汉服，在月光下赏月、品月饼、吟诗作对。",
+          "活动还包括传统音乐表演、汉服走秀等环节，让参与者感受古人的风雅生活。",
+        ],
+        customs: [
+          {
+            id: 1,
+            icon: "🌙",
+            title: "赏月",
+            description: "在月光下欣赏中秋圆月",
+          },
+          {
+            id: 2,
+            icon: "🥮",
+            title: "品月饼",
+            description: "品尝传统月饼，感受节日氛围",
+          },
+          {
+            id: 3,
+            icon: "📝",
+            title: "吟诗作对",
+            description: "即兴创作诗歌，展示才华",
+          },
+        ],
+        notices: [
+          "请穿着正式的汉服，体现节日氛围",
+          "请自备小食和饮品，共享团圆宴",
+          "活动期间请保持安静，不要影响他人赏月",
+          "如遇天气不佳，活动将移至室内举行",
+        ],
+      },
+      {
+        id: 5,
+        title: "重阳登高汉服会",
+        season: "autumn",
+        date: "2024-10-11（重阳节）",
+        time: "08:00-16:00",
+        location: "黄山风景区",
+        image: "https://placehold.co/800x400/FFCCCC/000000?text=重阳登高",
+        participants: 132,
+        description: "重阳节登高望远，佩戴茱萸，饮菊花酒，感受传统重阳节的敬老爱老文化。",
+        detailedDescription: [
+          "重阳节是中国传统节日，有登高、赏菊、饮菊花酒、佩戴茱萸等习俗。",
+          "本次活动将在黄山风景区举行，参与者可以穿上汉服，登高望远，欣赏秋天的美景。",
+          "活动还包括敬老仪式、菊花酒品尝、传统音乐表演等环节，让参与者感受重阳节的文化内涵。",
+        ],
+        customs: [
+          {
+            id: 1,
+            icon: "⛰️",
+            title: "登高",
+            description: "登上山顶，俯瞰美景",
+          },
+          {
+            id: 2,
+            icon: "🌼",
+            title: "赏菊",
+            description: "欣赏菊花，感受秋天的气息",
+          },
+          {
+            id: 3,
+            icon: "🍷",
+            title: "饮菊花酒",
+            description: "品尝传统菊花酒，保健养生",
+          },
+        ],
+        notices: [
+          "请穿着舒适的汉服和鞋子，便于登山",
+          "请自备饮用水和零食",
+          "活动期间请注意安全，不要单独行动",
+          "请尊重老人，体现敬老爱老的传统美德",
+        ],
+      },
+      {
+        id: 6,
+        title: "七夕乞巧汉服节",
+        season: "summer",
+        date: "2024-08-10（七夕节）",
+        time: "18:00-22:00",
+        location: "西安大唐不夜城",
+        image: "https://placehold.co/800x400/FFB6C1/000000?text=七夕乞巧",
+        participants: 221,
+        description: "传统七夕节，体验穿针乞巧、月下祈福等传统习俗，感受浪漫的传统情人节氛围。",
+        detailedDescription: [
+          "七夕节是中国传统的情人节，源于牛郎织女的传说。",
+          "本次活动将在西安大唐不夜城举行，参与者可以穿上汉服，体验穿针乞巧、月下祈福等传统习俗。",
+          "活动还包括汉服走秀、传统音乐表演、鹊桥相会等环节，让参与者感受浪漫的传统节日氛围。",
+        ],
+        customs: [
+          {
+            id: 1,
+            icon: "🧵",
+            title: "穿针乞巧",
+            description: "体验传统的乞巧习俗，祈求心灵手巧",
+          },
+          {
+            id: 2,
+            icon: "🌙",
+            title: "月下祈福",
+            description: "在月光下祈求美好姻缘",
+          },
+          {
+            id: 3,
+            icon: "鹊桥",
+            title: "鹊桥相会",
+            description: "参与鹊桥相会的互动活动",
+          },
+        ],
+        notices: [
+          "请穿着漂亮的汉服，体现节日氛围",
+          "请自备小礼物，参与交换活动",
+          "活动期间请遵守秩序，不要拥挤",
+          "如遇天气不佳，活动将移至室内举行",
+        ],
+      },
+    ];
+
+    // 根据id查找活动数据
+    const activity = activities.find((act) => act.id === parseInt(id));
+    if (activity) {
+      festivalData.value = activity;
+    }
+  }
+
+  // 加载评论数据
+  await loadComments(id);
+};
+
+// 加载评论数据
+const loadComments = async (activityId) => {
+  try {
+    const response = await fetch(
+      `http://localhost:8082/api/festival-activity/${activityId}/comments`,
+    );
+    if (response.ok) {
+      const data = await response.json();
+      comments.value = data.map((comment) => ({
+        id: comment.id,
+        username: comment.userName,
+        content: comment.content,
+      }));
+    }
+  } catch (error) {
+    console.error("加载评论数据失败:", error);
+    // 使用默认评论数据
+    comments.value = [
+      {
+        id: 1,
+        username: "汉服爱好者",
+        content: "非常期待这次活动！去年参加过一次，体验很棒！",
+      },
+      {
+        id: 2,
+        username: "传统文化传播者",
+        content: "这样的活动很有意义，既能体验传统文化，又能认识志同道合的朋友。",
+      },
+    ];
+  }
+};
+
+// 检查用户状态
+const checkUserStatus = () => {
+  // 这里应该调用API检查用户是否已报名
+  // 现在使用模拟数据
+  const signedUpActivities = JSON.parse(localStorage.getItem("signedUpActivities") || "[]");
+  isSignedUp.value = signedUpActivities.includes(festivalData.value.id);
+};
+
+// 处理报名/取消报名
+const handleSignUp = () => {
+  // 检查活动是否已过期
+  if (isActivityExpired(festivalData.value.date)) {
+    ElMessage.info("活动已经结束，无法操作！");
+    return;
+  }
+
+  if (isSignedUp.value) {
+    // 取消报名
+    ElMessageBox.confirm("确定要取消报名此活动吗？", "取消报名", {
+      confirmButtonText: "确定",
+      cancelButtonText: "取消",
+      type: "warning",
+    })
+      .then(() => {
+        // 取消报名成功
+        isSignedUp.value = false;
+
+        // 从本地存储中移除
+        const signedUpActivities = JSON.parse(localStorage.getItem("signedUpActivities") || "[]");
+        const index = signedUpActivities.indexOf(festivalData.value.id);
+        if (index > -1) {
+          signedUpActivities.splice(index, 1);
+          localStorage.setItem("signedUpActivities", JSON.stringify(signedUpActivities));
+        }
+
+        ElMessage.success("成功取消报名！");
+      })
+      .catch(() => {
+        // 用户取消
+      });
+  } else {
+    // 报名
+    ElMessageBox.confirm("确定要报名参加此活动吗？", "报名确认", {
+      confirmButtonText: "确定",
+      cancelButtonText: "取消",
+      type: "info",
+    })
+      .then(() => {
+        // 模拟报名成功
+        isSignedUp.value = true;
+
+        // 保存到本地存储
+        const signedUpActivities = JSON.parse(localStorage.getItem("signedUpActivities") || "[]");
+        signedUpActivities.push(festivalData.value.id);
+        localStorage.setItem("signedUpActivities", JSON.stringify(signedUpActivities));
+
+        signUpDialogVisible.value = true;
+      })
+      .catch(() => {
+        // 用户取消
+      });
+  }
+};
+
+// 提交评论
+const submitComment = async () => {
+  if (!commentText.value.trim()) return;
+
+  try {
+    const response = await fetch(
+      `http://localhost:8082/api/festival-activity/${festivalData.value.id}/comments`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userName: username.value,
+          content: commentText.value,
+        }),
+      },
+    );
+
+    if (response.ok) {
+      const newComment = await response.json();
+      comments.value.unshift({
+        id: newComment.id,
+        username: newComment.userName,
+        content: newComment.content,
+      });
+      commentText.value = "";
+      ElMessage.success("评论发表成功");
+    } else {
+      ElMessage.error("评论发表失败");
+    }
+  } catch (error) {
+    console.error("提交评论失败:", error);
+    // 本地模拟评论提交
+    const newComment = {
+      id: comments.value.length + 1,
+      username: username.value,
+      content: commentText.value,
+    };
+
+    comments.value.unshift(newComment);
+    commentText.value = "";
+    ElMessage.success("评论发表成功");
+  }
+};
+
+const goToProfile = () => {
+  const role = localStorage.getItem("role");
+  if (role === "shop") {
+    router.push("/shop-profile");
+  } else {
+    router.push("/profile");
+  }
+};
+
+const goBack = () => {
+  router.back();
+  // 滚动到顶部
+  setTimeout(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, 100);
+};
+
+const logout = () => {
+  localStorage.removeItem("isLoggedIn");
+  localStorage.removeItem("username");
+  localStorage.removeItem("role");
+  ElMessage.success("退出登录成功");
+  router.push("/login");
+};
+</script>
+
+<style scoped>
+.festival-activity-detail-container {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+/* 复用头部和页脚样式 */
+.header {
+  background: linear-gradient(135deg, #8b4513 0%, #d2691e 100%);
+  color: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.nav-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.logo {
+  font-size: 20px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.nav-menu {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+  flex-wrap: nowrap;
+}
+
+.nav-item {
+  margin: 0 15px;
+  cursor: pointer;
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.nav-item:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.user-info-vertical {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  white-space: nowrap;
+}
+
+.user-name {
+  font-size: 14px;
+  margin-bottom: 4px;
+  color: white;
+}
+
+.logout-btn {
+  color: white;
+  padding: 0;
+  font-size: 12px;
+  height: auto;
+}
+
+.logout-btn:hover {
+  color: #ffd04b;
+  background-color: transparent;
+}
+
+/* 主内容区 */
+.main-content {
+  padding: 30px 0;
+  min-height: calc(100vh - 160px);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* 返回按钮和标题 */
+.back-section {
+  margin-bottom: 20px;
+}
+
+.back-btn {
+  color: #8b4513;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.back-btn:hover {
+  color: #d2691e;
+}
+
+.page-title {
+  font-size: 28px;
+  margin-bottom: 30px;
+  color: #8b4513;
+  border-left: 4px solid #d4a76a;
+  padding-left: 12px;
+}
+
+/* 活动概览 */
+.festival-overview {
+  background-color: white;
+  border-radius: 12px;
+  padding: 30px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.overview-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+
+.festival-image {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  height: 350px;
+}
+
+.main-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-overlay {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+}
+
+.festival-tag {
+  font-size: 16px;
+  padding: 8px 16px;
+}
+
+/* 基本信息 */
+.overview-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.info-section h3 {
+  margin: 0 0 20px 0;
+  color: #8b4513;
+  font-size: 22px;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  background-color: #f9f5f0;
+  border-radius: 8px;
+  border-left: 4px solid #d4a76a;
+}
+
+.info-item .el-icon {
+  color: #8b4513;
+  font-size: 24px;
+}
+
+.info-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.info-label {
+  font-size: 12px;
+  color: #999;
+  margin-bottom: 4px;
+}
+
+.info-value {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+}
+
+/* 操作按钮 */
+.action-buttons {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.action-buttons .el-button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 16px;
+  padding: 12px 0;
+  background: linear-gradient(135deg, #8b4513 0%, #d2691e 100%) !important;
+  border-color: #8b4513 !important;
+  color: white !important;
+}
+
+.action-buttons .el-button:hover {
+  background: linear-gradient(135deg, #d2691e 0%, #f0a830 100%) !important;
+  border-color: #d2691e !important;
+}
+
+.action-buttons .el-button:disabled {
+  background: #a9a9a9 !important;
+  border-color: #a9a9a9 !important;
+  cursor: not-allowed;
+}
+
+/* 活动详情 */
+.festival-details {
+  background-color: white;
+  border-radius: 12px;
+  padding: 30px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.details-section {
+  margin-bottom: 30px;
+}
+
+.details-section:last-child {
+  margin-bottom: 0;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 20px 0;
+  color: #8b4513;
+  font-size: 20px;
+}
+
+.section-title .el-icon {
+  color: #d2691e;
+}
+
+.section-content {
+  padding-left: 10px;
+}
+
+.section-content p {
+  line-height: 1.8;
+  color: #666;
+  margin-bottom: 15px;
+}
+
+/* 习俗体验 */
+.customs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.custom-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 20px;
+  background: linear-gradient(135deg, #f9f5f0 0%, #f0e6d6 100%);
+  border-radius: 10px;
+  border: 1px solid #f0e6d6;
+  transition: all 0.3s ease;
+}
+
+.custom-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(139, 69, 19, 0.15);
+  background: linear-gradient(135deg, #f0e6d6 0%, #e8d8c4 100%);
+}
+
+.custom-icon {
+  font-size: 32px;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.custom-info h4 {
+  margin: 0 0 8px 0;
+  color: #8b4513;
+  font-size: 18px;
+}
+
+.custom-info p {
+  margin: 0;
+  color: #666;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* 注意事项 */
+.notice-list {
+  padding-left: 20px;
+  margin: 0;
+}
+
+.notice-list li {
+  margin-bottom: 10px;
+  color: #666;
+  line-height: 1.6;
+}
+
+.notice-list li:last-child {
+  margin-bottom: 0;
+}
+
+/* 评论区 */
+.comments-section {
+  background-color: white;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.comment-input {
+  margin-bottom: 30px;
+}
+
+.comment-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 15px;
+}
+
+.comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.comment-item {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  border: 1px solid #eee;
+}
+
+.comment-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name {
+  font-weight: bold;
+  color: #333;
+}
+
+.comment-content {
+  color: #666;
+  line-height: 1.6;
+}
+
+.no-comments {
+  text-align: center;
+  padding: 40px 0;
+}
+
+/* 页脚 */
+.footer {
+  background: linear-gradient(135deg, #8b4513 0%, #d2691e 100%);
+  color: white;
+  text-align: center;
+  padding: 20px 0;
+  margin-top: 30px;
+}
+
+.footer-subtitle {
+  font-size: 12px;
+  opacity: 0.8;
+  margin-top: 5px;
+}
+
+/* 响应式设计 */
+@media (max-width: 992px) {
+  .overview-header {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .festival-image {
+    height: 250px;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .action-buttons {
+    flex-direction: column;
+  }
+
+  .customs-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .nav-container {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .nav-menu {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .nav-item {
+    margin: 5px;
+    font-size: 12px;
+  }
+}
+</style>
