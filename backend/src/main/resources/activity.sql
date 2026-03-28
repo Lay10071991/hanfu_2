@@ -2,30 +2,6 @@ SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- ----------------------------
--- Table structure for historical_era
--- ----------------------------
-DROP TABLE IF EXISTS `historical_era`;
-CREATE TABLE `historical_era`  (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '历史时期ID',
-  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '时期名称',
-  `years` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '年代范围',
-  `title` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '标题',
-  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '描述',
-  `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '历史时期表' ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of historical_era
--- ----------------------------
-INSERT INTO `historical_era` VALUES (1, '先秦时期', '约公元前21世纪-前221年', '衣裳制确立，深衣出现', '先秦时期确立了汉服的基本形制——上衣下裳制。深衣开始出现，成为后世汉服的重要基础。服饰体现了严格的等级制度和社会规范。', '2026-03-01 19:22:16', '2026-03-01 19:22:16');
-INSERT INTO `historical_era` VALUES (2, '秦汉时期', '前221年-220年', '曲裾深衣流行，袍服普及', '秦汉时期曲裾深衣盛行，袍服开始普及。服饰风格庄重典雅，体现了大一统帝国的威严和气度。', '2026-03-01 19:22:16', '2026-03-01 19:22:16');
-INSERT INTO `historical_era` VALUES (3, '魏晋南北朝', '220年-589年', '宽衣博带，服饰风格飘逸', '受玄学思想影响，服饰风格趋向宽大飘逸，宽衣博带成为时尚。服饰更加注重个性表达和审美追求。', '2026-03-01 19:22:16', '2026-03-01 19:22:16');
-INSERT INTO `historical_era` VALUES (4, '隋唐时期', '581年-907年', '圆领袍盛行，女装丰富多彩', '隋唐时期国力强盛，服饰丰富多彩。圆领袍成为男性主要服饰，女装款式多样，色彩艳丽，体现了开放包容的时代精神。', '2026-03-01 19:22:16', '2026-03-01 19:22:16');
-INSERT INTO `historical_era` VALUES (5, '宋明时期', '960年-1644年', '褙子流行，服饰趋于内敛', '宋明时期理学思想影响下，服饰风格趋于内敛含蓄。褙子成为流行服饰，整体造型简洁素雅。', '2026-03-01 19:22:16', '2026-03-01 19:22:16');
-
--- ----------------------------
 -- Table structure for comment
 -- ----------------------------
 DROP TABLE IF EXISTS `comment`;
