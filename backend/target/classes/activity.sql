@@ -930,7 +930,7 @@ CREATE TABLE `festival_activity_comment`  (
 -- ----------------------------
 -- Records of festival_activity_comment
 -- ----------------------------
--- 节庆活动1(上元节灯会)的9条评论 - 活动已结束
+-- 节庆活动1(上元节灯会)的17条评论 - 活动已结束
 INSERT INTO `festival_activity_comment` VALUES (1, 1, 'lay', '故宫的灯会太美了！各种花灯造型精美绝伦，猜灯谜也很有趣。', '2026-02-12 21:30:00');
 INSERT INTO `festival_activity_comment` VALUES (2, 1, 'Echo', '第一次穿汉服参加灯会，氛围感满满，明年一定还要来！', '2026-02-12 22:00:00');
 INSERT INTO `festival_activity_comment` VALUES (3, 1, '挽墨', '元宵特别甜，和同袍们一起赏灯的感觉真好。', '2026-02-13 10:00:00');
@@ -940,16 +940,33 @@ INSERT INTO `festival_activity_comment` VALUES (6, 1, '北岛信物', '人有点
 INSERT INTO `festival_activity_comment` VALUES (7, 1, '橘子汽水', '拍了很多照片，每一张都是大片，太喜欢了！', '2026-02-14 09:00:00');
 INSERT INTO `festival_activity_comment` VALUES (8, 1, '半糖主义', '汉服配花灯真的绝美，下次要带朋友一起来。', '2026-02-14 11:00:00');
 INSERT INTO `festival_activity_comment` VALUES (9, 1, '月亮邮递员', '传统节日就该这样过，有仪式感又有文化内涵。', '2026-02-14 15:00:00');
+INSERT INTO `festival_activity_comment` VALUES (10, 1, 'Wanderer', '故宫的夜景真的太震撼了，花灯设计得很用心。', '2026-02-14 17:00:00');
+INSERT INTO `festival_activity_comment` VALUES (11, 1, 'Nostalgia', '猜灯谜环节特别有趣，学到了很多传统文化知识。', '2026-02-15 09:30:00');
+INSERT INTO `festival_activity_comment` VALUES (12, 1, 'Paradox', '穿着汉服在故宫赏灯，感觉像穿越了一样。', '2026-02-15 11:00:00');
+INSERT INTO `festival_activity_comment` VALUES (13, 1, 'Serendipity', '元宵节的活动办得真好，期待明年的灯会！', '2026-02-15 14:00:00');
+INSERT INTO `festival_activity_comment` VALUES (14, 1, '寄风给你', '和同袍们一起过节的感觉太棒了，认识了很多新朋友。', '2026-02-15 16:30:00');
+INSERT INTO `festival_activity_comment` VALUES (15, 1, '且听风吟', '花灯的造型太精致了，每个都想拍照留念。', '2026-02-16 10:00:00');
+INSERT INTO `festival_activity_comment` VALUES (16, 1, '温柔半两', '传统节日的氛围感拉满，这才是过年的感觉。', '2026-02-16 14:00:00');
+INSERT INTO `festival_activity_comment` VALUES (17, 1, '晚风吻尽', '明年元宵节一定还要来，太喜欢这种氛围了！', '2026-02-16 17:00:00');
 
--- 节庆活动9(成人礼仪式)的8条评论 - 活动已结束
-INSERT INTO `festival_activity_comment` VALUES (10, 9, 'lay', '在孔庙参加成人礼太有仪式感了，终生难忘的经历！', '2026-03-21 17:00:00');
-INSERT INTO `festival_activity_comment` VALUES (11, 9, 'Nostalgia', '冠礼和笄礼的仪式很庄重，感受到了成年的责任。', '2026-03-21 18:30:00');
-INSERT INTO `festival_activity_comment` VALUES (12, 9, 'Paradox', '曲阜孔庙的氛围特别好，礼仪老师讲解得很细致。', '2026-03-22 09:00:00');
-INSERT INTO `festival_activity_comment` VALUES (13, 9, 'Serendipity', '第一次参加传统成人礼，比西式成人礼有意义多了。', '2026-03-22 10:30:00');
-INSERT INTO `festival_activity_comment` VALUES (14, 9, '寄风给你', '穿着汉服行成人礼，感觉真正长大了，要承担责任了。', '2026-03-22 14:00:00');
-INSERT INTO `festival_activity_comment` VALUES (15, 9, '且听风吟', '仪式感满满，传统文化需要这样的传承方式。', '2026-03-22 16:00:00');
-INSERT INTO `festival_activity_comment` VALUES (16, 9, '温柔半两', '父母在台下看着我行礼，那一刻真的很感动。', '2026-03-23 09:30:00');
-INSERT INTO `festival_activity_comment` VALUES (17, 9, '晚风吻尽', '希望以后能有更多年轻人参与传统成人礼。', '2026-03-23 11:00:00');
+-- 节庆活动9(成人礼仪式)的17条评论 - 活动已结束
+INSERT INTO `festival_activity_comment` VALUES (18, 9, 'lay', '在孔庙参加成人礼太有仪式感了，终生难忘的经历！', '2026-03-21 17:00:00');
+INSERT INTO `festival_activity_comment` VALUES (19, 9, 'Nostalgia', '冠礼和笄礼的仪式很庄重，感受到了成年的责任。', '2026-03-21 18:30:00');
+INSERT INTO `festival_activity_comment` VALUES (20, 9, 'Paradox', '曲阜孔庙的氛围特别好，礼仪老师讲解得很细致。', '2026-03-22 09:00:00');
+INSERT INTO `festival_activity_comment` VALUES (21, 9, 'Serendipity', '第一次参加传统成人礼，比西式成人礼有意义多了。', '2026-03-22 10:30:00');
+INSERT INTO `festival_activity_comment` VALUES (22, 9, '寄风给你', '穿着汉服行成人礼，感觉真正长大了，要承担责任了。', '2026-03-22 14:00:00');
+INSERT INTO `festival_activity_comment` VALUES (23, 9, '且听风吟', '仪式感满满，传统文化需要这样的传承方式。', '2026-03-22 16:00:00');
+INSERT INTO `festival_activity_comment` VALUES (24, 9, '温柔半两', '父母在台下看着我行礼，那一刻真的很感动。', '2026-03-23 09:30:00');
+INSERT INTO `festival_activity_comment` VALUES (25, 9, '晚风吻尽', '希望以后能有更多年轻人参与传统成人礼。', '2026-03-23 11:00:00');
+INSERT INTO `festival_activity_comment` VALUES (26, 9, 'Echo', '孔庙的环境很庄严，让整个仪式更有意义。', '2026-03-23 14:00:00');
+INSERT INTO `festival_activity_comment` VALUES (27, 9, '挽墨', '礼仪老师很专业，每个步骤都讲解得很清楚。', '2026-03-23 16:30:00');
+INSERT INTO `festival_activity_comment` VALUES (28, 9, '星河滚烫', '成人礼让我真正理解了成长的意义。', '2026-03-24 09:00:00');
+INSERT INTO `festival_activity_comment` VALUES (29, 9, '清风徐来', '传统礼仪文化需要传承，这样的活动很有价值。', '2026-03-24 11:00:00');
+INSERT INTO `festival_activity_comment` VALUES (30, 9, '北岛信物', '穿着汉服行礼的感觉很特别，终生难忘。', '2026-03-24 14:00:00');
+INSERT INTO `festival_activity_comment` VALUES (31, 9, '橘子汽水', '仪式后和同袍们合影留念，记录下这重要的时刻。', '2026-03-24 16:00:00');
+INSERT INTO `festival_activity_comment` VALUES (32, 9, '半糖主义', '感谢主办方，让我有了一次难忘的成人礼体验。', '2026-03-25 09:30:00');
+INSERT INTO `festival_activity_comment` VALUES (33, 9, '月亮邮递员', '传统文化活动办得越来越好，支持！', '2026-03-25 11:00:00');
+INSERT INTO `festival_activity_comment` VALUES (34, 9, '落日飞车', '以后有类似活动一定还会参加。', '2026-03-25 14:00:00');
 
 -- ----------------------------
 -- Table structure for pattern_symbol
