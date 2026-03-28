@@ -26,66 +26,6 @@ INSERT INTO `historical_era` VALUES (4, '隋唐时期', '581年-907年', '圆领
 INSERT INTO `historical_era` VALUES (5, '宋明时期', '960年-1644年', '褙子流行，服饰趋于内敛', '宋明时期理学思想影响下，服饰风格趋于内敛含蓄。褙子成为流行服饰，整体造型简洁素雅。', '2026-03-01 19:22:16', '2026-03-01 19:22:16');
 
 -- ----------------------------
--- Table structure for activity
--- ----------------------------
-DROP TABLE IF EXISTS `activity`;
-CREATE TABLE `activity`  (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '活动ID',
-  `title` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '活动标题',
-  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '活动描述',
-  `location` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '活动地点',
-  `start_time` datetime NOT NULL COMMENT '开始时间',
-  `end_time` datetime NOT NULL COMMENT '结束时间',
-  `organizer_id` bigint NOT NULL COMMENT '组织者ID',
-  `status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT 'upcoming' COMMENT '活动状态(upcoming/ongoing/completed/cancelled)',
-  `participants_count` int NULL DEFAULT 0 COMMENT '参与人数',
-  `max_participants` int NULL DEFAULT 100 COMMENT '最大参与人数',
-  `create_time` datetime NOT NULL COMMENT '创建时间',
-  `update_time` datetime NOT NULL COMMENT '更新时间',
-  PRIMARY KEY (`id`) USING BTREE,
-  INDEX `organizer_id`(`organizer_id` ASC) USING BTREE,
-  CONSTRAINT `activity_ibfk_1` FOREIGN KEY (`organizer_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 27 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '活动表' ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of activity
--- ----------------------------
-INSERT INTO `activity` VALUES (1, '汉服文化展', '举办汉服文化展示和交流活动，展示各朝代汉服形制', '北京文化中心', '2026-01-15 09:00:00', '2026-01-15 17:00:00', 1, 'upcoming', 0, 100, '2025-12-05 10:00:00', '2025-12-05 10:00:00');
-INSERT INTO `activity` VALUES (2, '汉服制作工坊', '学习汉服制作技艺，从裁剪到缝制全流程教学', '上海手工艺中心', '2026-01-20 14:00:00', '2026-01-20 18:00:00', 2, 'upcoming', 0, 100, '2025-12-06 09:30:00', '2025-12-06 09:30:00');
-INSERT INTO `activity` VALUES (3, '春日汉服游园会', '穿汉服赏春花，体验传统文化活动', '杭州西湖景区', '2026-03-20 10:00:00', '2026-03-20 16:00:00', 1, 'upcoming', 0, 100, '2025-12-10 11:00:00', '2025-12-10 11:00:00');
-INSERT INTO `activity` VALUES (4, '唐代礼仪体验课', '学习唐代礼仪，体验盛唐风采', '西安大唐芙蓉园', '2026-02-10 14:00:00', '2026-02-10 17:00:00', 1, 'upcoming', 0, 100, '2025-12-12 10:00:00', '2025-12-12 10:00:00');
-INSERT INTO `activity` VALUES (5, '汉服摄影大赛', '汉服主题摄影比赛，优秀作品将获得奖励', '全国各地', '2026-04-01 00:00:00', '2026-04-30 23:59:59', 1, 'upcoming', 0, 100, '2025-12-15 09:00:00', '2025-12-15 09:00:00');
-INSERT INTO `activity` VALUES (6, '宋代点茶体验', '学习宋代点茶技艺，品味宋代雅致生活', '苏州园林', '2026-02-25 13:00:00', '2026-02-25 16:00:00', 1, 'upcoming', 0, 100, '2025-12-18 10:00:00', '2025-12-18 10:00:00');
-
--- ----------------------------
--- Table structure for activity_registration
--- ----------------------------
-DROP TABLE IF EXISTS `activity_registration`;
-CREATE TABLE `activity_registration`  (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '报名ID',
-  `activity_id` bigint NOT NULL COMMENT '活动ID',
-  `user_id` bigint NOT NULL COMMENT '用户ID',
-  `status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT 'registered' COMMENT '报名状态(registered/attended/cancelled/no_show)',
-  `registration_time` datetime NOT NULL COMMENT '报名时间',
-  PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE INDEX `uk_activity_user`(`activity_id` ASC, `user_id` ASC) USING BTREE,
-  INDEX `user_id`(`user_id` ASC) USING BTREE,
-  CONSTRAINT `activity_registration_ibfk_1` FOREIGN KEY (`activity_id`) REFERENCES `activity` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
-  CONSTRAINT `activity_registration_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 64 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '活动报名表' ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of activity_registration
--- ----------------------------
-INSERT INTO `activity_registration` VALUES (47, 1, 2, 'registered', '2025-12-05 11:00:00');
-INSERT INTO `activity_registration` VALUES (48, 1, 3, 'registered', '2025-12-05 12:00:00');
-INSERT INTO `activity_registration` VALUES (52, 2, 3, 'registered', '2025-12-06 11:00:00');
-INSERT INTO `activity_registration` VALUES (54, 3, 2, 'registered', '2025-12-10 12:00:00');
-INSERT INTO `activity_registration` VALUES (55, 3, 3, 'registered', '2025-12-10 13:30:00');
-INSERT INTO `activity_registration` VALUES (59, 5, 2, 'registered', '2025-12-15 10:00:00');
-INSERT INTO `activity_registration` VALUES (60, 5, 3, 'registered', '2025-12-15 11:00:00');
-
--- ----------------------------
 -- Table structure for comment
 -- ----------------------------
 DROP TABLE IF EXISTS `comment`;
@@ -990,13 +930,26 @@ CREATE TABLE `festival_activity_comment`  (
 -- ----------------------------
 -- Records of festival_activity_comment
 -- ----------------------------
-INSERT INTO `festival_activity_comment` VALUES (1, 1, '汉服爱好者', '非常期待这次活动！去年参加过一次，体验很棒！', '2026-02-01 10:00:00');
-INSERT INTO `festival_activity_comment` VALUES (2, 1, '传统文化传播者', '这样的活动很有意义，既能体验传统文化，又能认识志同道合的朋友。', '2026-02-02 14:30:00');
-INSERT INTO `festival_activity_comment` VALUES (3, 2, '汉服爱好者', '西湖边的踏青雅集，想想就很美好！一定要参加。', '2026-03-10 09:00:00');
-INSERT INTO `festival_activity_comment` VALUES (4, 2, '文化学者', '清明踏青是传统习俗，这样的活动有助于传承传统文化。', '2026-03-15 16:00:00');
-INSERT INTO `festival_activity_comment` VALUES (5, 3, '汉服爱好者', '龙舟竞渡很刺激，去年的比赛很精彩，今年一定更棒！', '2026-05-20 11:00:00');
-INSERT INTO `festival_activity_comment` VALUES (6, 4, '传统文化传播者', '七夕乞巧大会很有意义，学习传统女红技艺，了解传统文化。', '2026-07-10 14:00:00');
-INSERT INTO `festival_activity_comment` VALUES (7, 5, '汉服爱好者', '中秋赏月诗会，吟诗作对，很有雅趣！', '2026-08-20 10:00:00');
+-- 节庆活动1(上元节灯会)的9条评论 - 活动已结束
+INSERT INTO `festival_activity_comment` VALUES (1, 1, 'lay', '故宫的灯会太美了！各种花灯造型精美绝伦，猜灯谜也很有趣。', '2026-02-12 21:30:00');
+INSERT INTO `festival_activity_comment` VALUES (2, 1, 'Echo', '第一次穿汉服参加灯会，氛围感满满，明年一定还要来！', '2026-02-12 22:00:00');
+INSERT INTO `festival_activity_comment` VALUES (3, 1, '挽墨', '元宵特别甜，和同袍们一起赏灯的感觉真好。', '2026-02-13 10:00:00');
+INSERT INTO `festival_activity_comment` VALUES (4, 1, '星河滚烫', '故宫夜景配上汉服和花灯，像穿越回古代一样。', '2026-02-13 11:30:00');
+INSERT INTO `festival_activity_comment` VALUES (5, 1, '清风徐来', '灯谜很有意思，还赢了不少小礼品，开心！', '2026-02-13 14:00:00');
+INSERT INTO `festival_activity_comment` VALUES (6, 1, '北岛信物', '人有点多，但氛围真的很好，传统文化活动要多举办。', '2026-02-13 16:00:00');
+INSERT INTO `festival_activity_comment` VALUES (7, 1, '橘子汽水', '拍了很多照片，每一张都是大片，太喜欢了！', '2026-02-14 09:00:00');
+INSERT INTO `festival_activity_comment` VALUES (8, 1, '半糖主义', '汉服配花灯真的绝美，下次要带朋友一起来。', '2026-02-14 11:00:00');
+INSERT INTO `festival_activity_comment` VALUES (9, 1, '月亮邮递员', '传统节日就该这样过，有仪式感又有文化内涵。', '2026-02-14 15:00:00');
+
+-- 节庆活动9(成人礼仪式)的8条评论 - 活动已结束
+INSERT INTO `festival_activity_comment` VALUES (10, 9, 'lay', '在孔庙参加成人礼太有仪式感了，终生难忘的经历！', '2026-03-21 17:00:00');
+INSERT INTO `festival_activity_comment` VALUES (11, 9, 'Nostalgia', '冠礼和笄礼的仪式很庄重，感受到了成年的责任。', '2026-03-21 18:30:00');
+INSERT INTO `festival_activity_comment` VALUES (12, 9, 'Paradox', '曲阜孔庙的氛围特别好，礼仪老师讲解得很细致。', '2026-03-22 09:00:00');
+INSERT INTO `festival_activity_comment` VALUES (13, 9, 'Serendipity', '第一次参加传统成人礼，比西式成人礼有意义多了。', '2026-03-22 10:30:00');
+INSERT INTO `festival_activity_comment` VALUES (14, 9, '寄风给你', '穿着汉服行成人礼，感觉真正长大了，要承担责任了。', '2026-03-22 14:00:00');
+INSERT INTO `festival_activity_comment` VALUES (15, 9, '且听风吟', '仪式感满满，传统文化需要这样的传承方式。', '2026-03-22 16:00:00');
+INSERT INTO `festival_activity_comment` VALUES (16, 9, '温柔半两', '父母在台下看着我行礼，那一刻真的很感动。', '2026-03-23 09:30:00');
+INSERT INTO `festival_activity_comment` VALUES (17, 9, '晚风吻尽', '希望以后能有更多年轻人参与传统成人礼。', '2026-03-23 11:00:00');
 
 -- ----------------------------
 -- Table structure for pattern_symbol
