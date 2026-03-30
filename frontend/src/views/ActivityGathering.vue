@@ -501,6 +501,8 @@ const loadActivities = async () => {
         location: exhibition.location || "待定",
         image: exhibition.image || "http://localhost:8082/uploads/exhibition-1.png",
         description: exhibition.description || "",
+        organizer: exhibition.organizer || "汉服文化中心",
+        ticket: exhibition.ticketPrice ? `¥${exhibition.ticketPrice}` : "免费",
       }));
     }
 
@@ -520,6 +522,8 @@ const loadActivities = async () => {
         location: lecture.location || "待定",
         image: lecture.image || "http://localhost:8082/uploads/v (1).png",
         description: lecture.description || "",
+        capacity: lecture.capacity || 0,
+        registeredCount: lecture.registeredCount || 0,
       }));
     }
   } catch (error) {
@@ -558,7 +562,56 @@ onMounted(async () => {
 
   initAppointments();
   await loadActivities();
+
+  // 检查用户的预约和报名状态
+  const savedUserId = localStorage.getItem("userId");
+  if (savedUserId) {
+    await checkUserAppointments();
+  }
 });
+
+// 检查用户的预约和报名状态
+const checkUserAppointments = async () => {
+  const userId = localStorage.getItem("userId");
+  if (!userId) return;
+
+  try {
+    // 检查展览预约状态
+    for (const exhibition of allExhibitions.value) {
+      const response = await fetch(
+        `http://localhost:8082/api/exhibitions/${exhibition.id}/registration/check?userId=${userId}`,
+      );
+      if (response.ok) {
+        const data = await response.json();
+        if (data.isRegistered) {
+          exhibitionAppointments.value.add(exhibition.id);
+        }
+      }
+    }
+
+    // 检查讲座报名状态
+    for (const lecture of allLectures.value) {
+      const response = await fetch(
+        `http://localhost:8082/api/lectures/${lecture.id}/registration/check?userId=${userId}`,
+      );
+      if (response.ok) {
+        const data = await response.json();
+        if (data.isRegistered) {
+          lectureAppointments.value.add(lecture.id);
+        }
+      }
+    }
+
+    // 更新本地存储
+    localStorage.setItem(
+      "exhibitionAppointments",
+      JSON.stringify([...exhibitionAppointments.value]),
+    );
+    localStorage.setItem("lectureAppointments", JSON.stringify([...lectureAppointments.value]));
+  } catch (error) {
+    console.error("检查预约状态失败:", error);
+  }
+};
 
 const goToProfile = () => {
   const role = localStorage.getItem("role");
@@ -598,7 +651,7 @@ const viewActivity = (activity) => {
   }
 };
 
-const signUpExhibition = () => {
+const signUpExhibition = async () => {
   if (!selectedExhibition.value) return;
 
   const exhibitionId = selectedExhibition.value.id;
@@ -610,6 +663,14 @@ const signUpExhibition = () => {
     return;
   }
 
+  const savedUserId = localStorage.getItem("userId");
+  if (!savedUserId) {
+    ElMessage.error("请先登录后再进行预约！");
+    return;
+  }
+
+  const userId = parseInt(savedUserId);
+
   if (isAppointed) {
     // 取消预约
     ElMessageBox.confirm(`确定要取消预约"${selectedExhibition.value.title}"吗？`, "取消预约", {
@@ -617,13 +678,31 @@ const signUpExhibition = () => {
       cancelButtonText: "取消",
       type: "warning",
     })
-      .then(() => {
-        exhibitionAppointments.value.delete(exhibitionId);
-        localStorage.setItem(
-          "exhibitionAppointments",
-          JSON.stringify([...exhibitionAppointments.value]),
-        );
-        ElMessage.success(`成功取消预约"${selectedExhibition.value.title}"！`);
+      .then(async () => {
+        try {
+          const response = await fetch(
+            `http://localhost:8082/api/exhibitions/${exhibitionId}/registration?userId=${userId}`,
+            { method: "DELETE" },
+          );
+          if (response.ok) {
+            const data = await response.json();
+            if (data.success) {
+              exhibitionAppointments.value.delete(exhibitionId);
+              localStorage.setItem(
+                "exhibitionAppointments",
+                JSON.stringify([...exhibitionAppointments.value]),
+              );
+              ElMessage.success(`成功取消预约"${selectedExhibition.value.title}"！`);
+            } else {
+              ElMessage.error("取消预约失败");
+            }
+          } else {
+            ElMessage.error("取消预约失败");
+          }
+        } catch (error) {
+          console.error("取消预约失败:", error);
+          ElMessage.error("取消预约失败");
+        }
       })
       .catch(() => {
         // 用户取消
@@ -635,13 +714,35 @@ const signUpExhibition = () => {
       cancelButtonText: "取消",
       type: "info",
     })
-      .then(() => {
-        exhibitionAppointments.value.add(exhibitionId);
-        localStorage.setItem(
-          "exhibitionAppointments",
-          JSON.stringify([...exhibitionAppointments.value]),
-        );
-        ElMessage.success(`成功预约"${selectedExhibition.value.title}"！`);
+      .then(async () => {
+        try {
+          const response = await fetch(
+            `http://localhost:8082/api/exhibitions/${exhibitionId}/registration`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ userId }),
+            },
+          );
+          if (response.ok) {
+            const data = await response.json();
+            if (data.success) {
+              exhibitionAppointments.value.add(exhibitionId);
+              localStorage.setItem(
+                "exhibitionAppointments",
+                JSON.stringify([...exhibitionAppointments.value]),
+              );
+              ElMessage.success(`成功预约"${selectedExhibition.value.title}"！`);
+            } else {
+              ElMessage.error("预约失败");
+            }
+          } else {
+            ElMessage.error("预约失败");
+          }
+        } catch (error) {
+          console.error("预约失败:", error);
+          ElMessage.error("预约失败");
+        }
       })
       .catch(() => {
         // 用户取消
@@ -649,7 +750,7 @@ const signUpExhibition = () => {
   }
 };
 
-const signUpLecture = () => {
+const signUpLecture = async () => {
   if (!selectedLecture.value) return;
 
   const lectureId = selectedLecture.value.id;
@@ -661,6 +762,14 @@ const signUpLecture = () => {
     return;
   }
 
+  const savedUserId = localStorage.getItem("userId");
+  if (!savedUserId) {
+    ElMessage.error("请先登录后再进行报名！");
+    return;
+  }
+
+  const userId = parseInt(savedUserId);
+
   if (isAppointed) {
     // 取消报名
     ElMessageBox.confirm(`确定要取消报名"${selectedLecture.value.title}"讲座吗？`, "取消报名", {
@@ -668,10 +777,31 @@ const signUpLecture = () => {
       cancelButtonText: "取消",
       type: "warning",
     })
-      .then(() => {
-        lectureAppointments.value.delete(lectureId);
-        localStorage.setItem("lectureAppointments", JSON.stringify([...lectureAppointments.value]));
-        ElMessage.success(`成功取消报名"${selectedLecture.value.title}"讲座！`);
+      .then(async () => {
+        try {
+          const response = await fetch(
+            `http://localhost:8082/api/lectures/${lectureId}/registration?userId=${userId}`,
+            { method: "DELETE" },
+          );
+          if (response.ok) {
+            const data = await response.json();
+            if (data.success) {
+              lectureAppointments.value.delete(lectureId);
+              localStorage.setItem(
+                "lectureAppointments",
+                JSON.stringify([...lectureAppointments.value]),
+              );
+              ElMessage.success(`成功取消报名"${selectedLecture.value.title}"讲座！`);
+            } else {
+              ElMessage.error("取消报名失败");
+            }
+          } else {
+            ElMessage.error("取消报名失败");
+          }
+        } catch (error) {
+          console.error("取消报名失败:", error);
+          ElMessage.error("取消报名失败");
+        }
       })
       .catch(() => {
         // 用户取消
@@ -683,10 +813,35 @@ const signUpLecture = () => {
       cancelButtonText: "取消",
       type: "info",
     })
-      .then(() => {
-        lectureAppointments.value.add(lectureId);
-        localStorage.setItem("lectureAppointments", JSON.stringify([...lectureAppointments.value]));
-        ElMessage.success(`成功报名"${selectedLecture.value.title}"讲座！`);
+      .then(async () => {
+        try {
+          const response = await fetch(
+            `http://localhost:8082/api/lectures/${lectureId}/registration`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ userId }),
+            },
+          );
+          if (response.ok) {
+            const data = await response.json();
+            if (data.success) {
+              lectureAppointments.value.add(lectureId);
+              localStorage.setItem(
+                "lectureAppointments",
+                JSON.stringify([...lectureAppointments.value]),
+              );
+              ElMessage.success(`成功报名"${selectedLecture.value.title}"讲座！`);
+            } else {
+              ElMessage.error("报名失败");
+            }
+          } else {
+            ElMessage.error("报名失败");
+          }
+        } catch (error) {
+          console.error("报名失败:", error);
+          ElMessage.error("报名失败");
+        }
       })
       .catch(() => {
         // 用户取消

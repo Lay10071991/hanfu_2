@@ -2,11 +2,13 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.Exhibition;
 import com.example.demo.repository.ExhibitionRepository;
+import com.example.demo.service.ExhibitionRegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/exhibitions")
@@ -14,6 +16,9 @@ public class ExhibitionController {
 
     @Autowired
     private ExhibitionRepository repository;
+
+    @Autowired
+    private ExhibitionRegistrationService registrationService;
 
     @GetMapping
     public List<Exhibition> getAll() {
@@ -54,5 +59,35 @@ public class ExhibitionController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         repository.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    // 预约相关API
+    @PostMapping("/{id}/registration")
+    public ResponseEntity<Map<String, Object>> register(@PathVariable Long id, @RequestBody Map<String, Long> request) {
+        Long userId = request.get("userId");
+        if (userId == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        boolean success = registrationService.register(userId, id);
+        return ResponseEntity.ok(Map.of("success", success));
+    }
+
+    @DeleteMapping("/{id}/registration")
+    public ResponseEntity<Map<String, Object>> cancelRegistration(@PathVariable Long id, @RequestParam Long userId) {
+        boolean success = registrationService.cancelRegistration(userId, id);
+        return ResponseEntity.ok(Map.of("success", success));
+    }
+
+    @GetMapping("/{id}/registration/check")
+    public ResponseEntity<Map<String, Object>> checkRegistration(@PathVariable Long id, @RequestParam Long userId) {
+        boolean isRegistered = registrationService.isRegistered(userId, id);
+        return ResponseEntity.ok(Map.of("isRegistered", isRegistered));
+    }
+
+    @GetMapping("/{id}/registration/count")
+    public ResponseEntity<Map<String, Long>> getRegistrationCount(@PathVariable Long id) {
+        long count = registrationService.getRegistrationCount(id);
+        return ResponseEntity.ok(Map.of("count", count));
     }
 }
