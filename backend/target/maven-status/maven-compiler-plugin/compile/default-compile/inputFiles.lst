@@ -2,6 +2,7 @@ E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\bac
 E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\repository\PatternCategoryRepository.java
 E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\controller\UserController.java
 E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\service\ShopService.java
+E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\entity\FestivalActivityRegistration.java
 E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\entity\ShopImage.java
 E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\repository\FestivalRepository.java
 E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\entity\Exhibition.java
@@ -75,6 +76,7 @@ E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\bac
 E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\controller\ImageController.java
 E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\controller\EtiquetteController.java
 E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\controller\FestivalActivityController.java
+E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\repository\FestivalActivityRegistrationRepository.java
 E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\entity\Shop.java
 E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\repository\HistoricalEraRepository.java
 E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\entity\PostImage.java
@@ -97,6 +99,7 @@ E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\bac
 E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\controller\CommentController.java
 E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\repository\ShopServiceRepository.java
 E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\service\UserService.java
+E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\service\FestivalActivityRegistrationService.java
 E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\service\ShopImageService.java
 E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\service\FestivalActivityCommentService.java
 E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\repository\ShopImageRepository.java
