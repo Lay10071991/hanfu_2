@@ -190,37 +190,46 @@ const loadShapeTypes = async () => {
     if (response.ok) {
       const data = await response.json();
       shapeTypes.value = data;
+    } else {
+      console.error("加载形制分类数据失败，响应状态:", response.status);
+      // 使用默认数据
+      setDefaultShapeTypes();
     }
   } catch (error) {
     console.error("加载形制分类数据失败:", error);
     // 使用默认数据
-    shapeTypes.value = [
-      {
-        name: "衣裳制",
-        description: "上衣下裳的基本形制，最古老的汉服形式，象征天地秩序。",
-        period: "先秦至明清",
-        characteristics: "上下分裁、庄严正统、礼仪性强",
-      },
-      {
-        name: "深衣制",
-        description: "上下连属的服饰，将上衣下裳连为一体，体现深意。",
-        period: "战国至明代",
-        characteristics: "上下连属、端庄大方、适用广泛",
-      },
-      {
-        name: "袍服制",
-        description: "一体裁剪的长衣，便于活动，逐渐成为日常服饰。",
-        period: "汉代以后",
-        characteristics: "一体裁剪、便于活动、日常实用",
-      },
-      {
-        name: "襦裙制",
-        description: "上衣下裙的女装组合，历代款式变化丰富多样。",
-        period: "历代流行",
-        characteristics: "上衣下裙、款式多样、女性特色",
-      },
-    ];
+    setDefaultShapeTypes();
   }
+};
+
+// 设置默认形制分类数据
+const setDefaultShapeTypes = () => {
+  shapeTypes.value = [
+    {
+      name: "衣裳制",
+      description: "上衣下裳的基本形制，最古老的汉服形式，象征天地秩序。",
+      period: "先秦至明清",
+      characteristics: "上下分裁、庄严正统、礼仪性强",
+    },
+    {
+      name: "深衣制",
+      description: "上下连属的服饰，将上衣下裳连为一体，体现深意。",
+      period: "战国至明代",
+      characteristics: "上下连属、端庄大方、适用广泛",
+    },
+    {
+      name: "袍服制",
+      description: "一体裁剪的长衣，便于活动，逐渐成为日常服饰。",
+      period: "汉代以后",
+      characteristics: "一体裁剪、便于活动、日常实用",
+    },
+    {
+      name: "襦裙制",
+      description: "上衣下裙的女装组合，历代款式变化丰富多样。",
+      period: "历代流行",
+      characteristics: "上衣下裙、款式多样、女性特色",
+    },
+  ];
 };
 
 // 服饰部件数据 - 从后端加载
@@ -238,346 +247,73 @@ const loadComponents = async () => {
         type: item.type,
         description: item.description,
       }));
+    } else {
+      console.error("加载服饰部件数据失败，响应状态:", response.status);
+      // 使用默认数据
+      setDefaultComponents();
     }
   } catch (error) {
     console.error("加载服饰部件数据失败:", error);
     // 使用默认数据
-    components.value = [
-      {
-        id: 1,
-        name: "衣",
-        type: "上身服饰",
-        description: "汉服的上身部分，包括各种款式的上衣。",
-      },
-      {
-        id: 2,
-        name: "裳",
-        type: "下身服饰",
-        description: "汉服的下身部分，主要指裙装。",
-      },
-      {
-        id: 3,
-        name: "袍",
-        type: "一体服饰",
-        description: "上下连属的长衣，有衬里的称袍。",
-      },
-      {
-        id: 4,
-        name: "衫",
-        type: "一体服饰",
-        description: "单层的长衣，无衬里的称衫。",
-      },
-      {
-        id: 5,
-        name: "襦",
-        type: "上衣",
-        description: "短上衣，通常与裙搭配穿着。",
-      },
-      {
-        id: 6,
-        name: "裙",
-        type: "下裳",
-        description: "下身穿着的裙装，款式多样。",
-      },
-      {
-        id: 7,
-        name: "裤",
-        type: "下裳",
-        description: "下身穿着的裤装，便于活动。",
-      },
-      {
-        id: 8,
-        name: "冠",
-        type: "首服",
-        description: "头上戴的冠帽，体现身份等级。",
-      },
-    ];
+    setDefaultComponents();
   }
 };
 
-// 详细内容数据
-const detailContents = {
-  shape: {
-    衣裳制: {
-      title: "衣裳制 - 基本形制",
-      content: [
-        "衣裳制是汉服最古老、最基本的形制，其特点是将上衣和下裳分开裁剪制作。",
-        '这种形制源于古人对天地的崇拜，上衣象征天，下裳象征地，体现了"天人合一"的哲学思想。',
-        "衣裳制在礼仪场合中具有重要地位，历代祭祀、朝会等重要场合多采用此形制。",
-        "在具体款式上，上衣多为交领右衽，下裳则为裙或裤。上衣的长度一般到腰部，下裳则垂至脚踝。",
-        "衣裳制的颜色搭配也有严格规定，天子穿玄衣纁裳（黑色上衣，红色下裳），象征天地。",
-        "虽然在后世发展中出现了其他形制，但衣裳制始终保持着其正统地位，是汉服文化的核心代表。",
-      ],
-      images: [
-        {
-          url: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=traditional%20Chinese%20hanfu%20with%20separate%20top%20and%20bottom%2C%20ancient%20style%2C%20elegant%20design%2C%20historical%20costume&image_size=square_hd",
-          alt: "衣裳制",
-          caption: "上衣下裳的基本形制",
-        },
-        {
-          url: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=hanfu%20ceremonial%20costume%2C%20ancient%20Chinese%20ritual%20clothing%2C%20black%20top%20and%20red%20bottom%2C%20traditional%20style&image_size=square_hd",
-          alt: "玄衣纁裳",
-          caption: "天子穿的玄衣纁裳",
-        },
-      ],
+// 设置默认服饰部件数据
+const setDefaultComponents = () => {
+  components.value = [
+    {
+      id: 1,
+      name: "衣",
+      type: "上身服饰",
+      description: "汉服的上身部分，包括各种款式的上衣。",
     },
-    深衣制: {
-      title: "深衣制 - 主要形制",
-      content: [
-        '深衣制是将上衣和下裳连为一体的服饰形制，体现了"深意"的文化内涵。',
-        "这种形制在战国时期开始流行，后成为历代重要的服饰形式。深衣既保持了衣裳制的庄重，又便于活动。",
-        '深衣在裁剪上讲究"续衽钩边"，即衣襟接长向后环绕，再用腰带系扎，形成独特的曲线美。',
-        "深衣的长度一般到脚踝，袖子宽大，体现了汉服的飘逸之美。",
-        "深衣制对后世服饰发展产生了深远影响，是现代汉服复兴中的重要形制之一。",
-        "根据不同的用途和场合，深衣又分为曲裾深衣、直裾深衣等多种款式。",
-      ],
-      images: [
-        {
-          url: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=traditional%20Chinese%20deep%20robe%20(深衣)%2C%20ancient%20style%2C%20elegant%20design%2C%20long%20flowing%20robes%2C%20historical%20costume&image_size=square_hd",
-          alt: "深衣制",
-          caption: "上下连属的深衣形制",
-        },
-        {
-          url: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=curved%20hem%20deep%20robe%20(曲裾深衣)%2C%20ancient%20Chinese%20hanfu%2C%20traditional%20style%2C%20elegant%20design&image_size=square_hd",
-          alt: "曲裾深衣",
-          caption: "曲裾深衣款式",
-        },
-      ],
+    {
+      id: 2,
+      name: "裳",
+      type: "下身服饰",
+      description: "汉服的下身部分，主要指裙装。",
     },
-    袍服制: {
-      title: "袍服制 - 日常形制",
-      content: [
-        "袍服制是一体裁剪的长衣，便于活动，逐渐成为日常服饰。",
-        "这种形制在汉代以后开始流行，是对深衣制的简化和发展。",
-        "袍服的特点是上衣和下裳连成一体，无明显的分界，穿着更加方便舒适。",
-        "根据厚度和材质的不同，袍服可分为单袍、夹袍、棉袍等多种类型。",
-        "袍服的款式多样，包括圆领袍、直领袍、交领袍等，适应不同的季节和场合。",
-        "在唐代，圆领袍成为官员的常服，后来逐渐普及到民间，成为日常穿着的主要形式。",
-      ],
-      images: [
-        {
-          url: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=traditional%20Chinese%20robe%20(袍服)%2C%20ancient%20style%2C%20daily%20wear%2C%20elegant%20design%2C%20historical%20costume&image_size=square_hd",
-          alt: "袍服制",
-          caption: "一体裁剪的袍服形制",
-        },
-        {
-          url: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=round%20collar%20robe%20(圆领袍)%2C%20ancient%20Chinese%20official%20costume%2C%20traditional%20style%2C%20elegant%20design&image_size=square_hd",
-          alt: "圆领袍",
-          caption: "唐代圆领袍款式",
-        },
-      ],
+    {
+      id: 3,
+      name: "袍",
+      type: "一体服饰",
+      description: "上下连属的长衣，有衬里的称袍。",
     },
-    襦裙制: {
-      title: "襦裙制 - 女性形制",
-      content: [
-        "襦裙制是上衣下裙的女装组合，历代款式变化丰富多样。",
-        "这种形制是女性汉服的主要形式，由短上衣（襦）和裙子组成。",
-        "襦裙的特点是上衣短小，裙子较长，体现了女性的柔美气质。",
-        "根据裙子的位置不同，襦裙可分为齐胸襦裙、齐腰襦裙、高腰襦裙等多种款式。",
-        "齐胸襦裙流行于隋唐时期，裙子系在胸部以上，显得身材修长；齐腰襦裙则是最常见的款式，裙子系在腰部。",
-        "襦裙的颜色和纹样丰富多样，反映了不同时代的审美特点，是汉服文化中最具代表性的女装形制。",
-      ],
-      images: [
-        {
-          url: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=traditional%20Chinese%20ruqun%20(襦裙)%2C%20ancient%20style%2C%20female%20hanfu%2C%20elegant%20design%2C%20historical%20costume&image_size=square_hd",
-          alt: "襦裙制",
-          caption: "上衣下裙的襦裙形制",
-        },
-        {
-          url: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=high%20waist%20ruqun%20(齐胸襦裙)%2C%20ancient%20Chinese%20female%20hanfu%2C%20traditional%20style%2C%20elegant%20design&image_size=square_hd",
-          alt: "齐胸襦裙",
-          caption: "隋唐时期的齐胸襦裙",
-        },
-      ],
+    {
+      id: 4,
+      name: "衫",
+      type: "一体服饰",
+      description: "单层的长衣，无衬里的称衫。",
     },
-  },
-  component: {
-    衣: {
-      title: "衣 - 上身服饰",
-      content: [
-        "衣是汉服的上身部分，包括各种款式的上衣。根据形制、用途的不同，衣有多种分类。",
-        "常见的上衣包括襦、衫、袄等。襦为短上衣，衫为单层上衣，袄为有衬里的上衣。",
-        "衣的领型有交领、直领、圆领等多种形式，袖型有广袖、窄袖、琵琶袖等变化。",
-        "不同朝代、不同场合的衣在款式、色彩、纹样上都有严格的规定，体现了汉服的礼仪性。",
-        "衣的长度从短至腰到长及膝下不等，根据季节和场合选择合适的款式。",
-        "衣的纹样装饰丰富多样，常见的有云纹、龙纹、凤纹等，体现了穿着者的身份和地位。",
-      ],
-      images: [
-        {
-          url: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=traditional%20Chinese%20hanfu%20upper%20garment%20(衣)%2C%20elegant%20design%2C%20ancient%20style%2C%20historical%20costume&image_size=square_hd",
-          alt: "上衣",
-          caption: "汉服上衣样式",
-        },
-        {
-          url: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Chinese%20hanfu%20cross-collar%20upper%20garment%2C%20traditional%20style%2C%20elegant%20design&image_size=square_hd",
-          alt: "交领衣",
-          caption: "交领右衽的传统上衣",
-        },
-      ],
+    {
+      id: 5,
+      name: "襦",
+      type: "上衣",
+      description: "短上衣，通常与裙搭配穿着。",
     },
-    裳: {
-      title: "裳 - 下身服饰",
-      content: [
-        "裳是汉服的下身部分，主要指裙装。在古代，裳是男女皆可穿着的下装。",
-        "裳的款式多样，包括单片裙、多片裙、马面裙等。不同形制的裳在裁剪和穿着方式上各有特点。",
-        "裳的长度、幅数、褶数等都有特定的文化含义，体现了古人的审美观念和社会规范。",
-        "随着时代发展，裳的款式不断丰富，成为汉服文化中的重要组成部分。",
-        "裳的穿着方式讲究层次，通常内穿衬裙，外罩主裙，体现了汉服的层次感。",
-        "裳的色彩搭配讲究和谐，常与上衣形成对比或呼应，展现整体美感。",
-      ],
-      images: [
-        {
-          url: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=traditional%20Chinese%20hanfu%20skirt%20(裳)%2C%20elegant%20design%2C%20flowing%20fabric%2C%20ancient%20style&image_size=square_hd",
-          alt: "下裳",
-          caption: "汉服下裳样式",
-        },
-        {
-          url: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Chinese%20hanfu%20horse-face%20skirt%20(马面裙)%2C%20traditional%20style%2C%20pleated%20design&image_size=square_hd",
-          alt: "马面裙",
-          caption: "经典的马面裙款式",
-        },
-      ],
+    {
+      id: 6,
+      name: "裙",
+      type: "下裳",
+      description: "下身穿着的裙装，款式多样。",
     },
-    袍: {
-      title: "袍 - 一体服饰",
-      content: [
-        "袍是上下连属的长衣，有衬里的称袍，是汉服中重要的服饰类型。",
-        "袍的特点是保暖性好，适合秋冬季节穿着，也是正式场合的常见服饰。",
-        "袍的款式包括直裾袍、曲裾袍等，不同款式适应不同的场合和身份。",
-        "袍的长度一般到脚踝，袖子宽大，体现了汉服的庄重与大气。",
-        "袍的颜色和纹样有严格的等级规定，不同品级的官员穿着不同颜色的袍服。",
-        "袍的穿着方式讲究系带和配饰，体现了汉服的礼仪规范。",
-      ],
-      images: [
-        {
-          url: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=traditional%20Chinese%20hanfu%20robe%20(袍)%2C%20lined%20garment%2C%20elegant%20design%2C%20ancient%20style&image_size=square_hd",
-          alt: "袍",
-          caption: "汉服袍服样式",
-        },
-        {
-          url: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Chinese%20hanfu%20official%20robe%2C%20traditional%20court%20dress%2C%20elegant%20design&image_size=square_hd",
-          alt: "官袍",
-          caption: "传统官袍款式",
-        },
-      ],
+    {
+      id: 7,
+      name: "裤",
+      type: "下裳",
+      description: "下身穿着的裤装，便于活动。",
     },
-    衫: {
-      title: "衫 - 单层服饰",
-      content: [
-        "衫是单层的长衣，无衬里的称衫，适合春夏季节穿着。",
-        "衫的特点是轻薄透气，穿着舒适，是日常休闲的常见选择。",
-        "衫的款式包括直领衫、交领衫等，面料多为丝绸、棉麻等轻薄材质。",
-        "衫的长度变化多样，有长及脚踝的长衫，也有短至腰部的短衫。",
-        "衫的颜色以素雅为主，常见的有白色、浅蓝、淡粉等清新色调。",
-        "衫的穿着场合广泛，既可作为内衣，也可作为外衣，体现了汉服的实用性。",
-      ],
-      images: [
-        {
-          url: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=traditional%20Chinese%20hanfu%20unlined%20garment%20(衫)%2C%20light%20fabric%2C%20elegant%20design%2C%20summer%20style&image_size=square_hd",
-          alt: "衫",
-          caption: "汉服衫服样式",
-        },
-        {
-          url: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Chinese%20hanfu%20light%20summer%20robe%2C%20flowing%20silk%2C%20elegant%20design&image_size=square_hd",
-          alt: "夏衫",
-          caption: "轻薄透气的夏衫",
-        },
-      ],
+    {
+      id: 8,
+      name: "冠",
+      type: "首服",
+      description: "头上戴的冠帽，体现身份等级。",
     },
-    襦: {
-      title: "襦 - 短上衣",
-      content: [
-        "襦是短上衣，长度一般到腰部，通常与裙搭配穿着。",
-        "襦的特点是短小精悍，便于活动，是女性日常穿着的主要上衣类型。",
-        "襦的领型多为交领，也有对襟款式，袖子有窄袖和广袖之分。",
-        "襦与裙的搭配形成了襦裙这一经典女装形制，历代款式变化丰富。",
-        "襦的装饰精美，常在领口、袖口、下摆处绣有花纹，体现女性审美。",
-        "襦的颜色选择丰富，可根据季节和场合搭配不同颜色的裙子。",
-      ],
-      images: [
-        {
-          url: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=traditional%20Chinese%20hanfu%20short%20upper%20garment%20(襦)%2C%20elegant%20design%2C%20ancient%20style%2C%20female%20costume&image_size=square_hd",
-          alt: "襦",
-          caption: "汉服襦衣样式",
-        },
-        {
-          url: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Chinese%20hanfu%20ruqun%20outfit%2C%20short%20top%20and%20skirt%2C%20traditional%20female%20dress&image_size=square_hd",
-          alt: "襦裙搭配",
-          caption: "襦裙经典搭配",
-        },
-      ],
-    },
-    裙: {
-      title: "裙 - 下裳",
-      content: [
-        "裙是下身穿着的裙装，是女性汉服的重要组成部分。",
-        "裙的款式多样，包括百褶裙、马面裙、月华裙等，每种都有独特的审美特点。",
-        "裙的穿着位置有齐胸、齐腰、高腰之分，不同位置展现不同的身材比例。",
-        "裙的面料多为丝绸、锦缎等，质地轻盈，行走时飘逸动人。",
-        "裙的纹样装饰丰富，常见的有花卉、云纹、几何图案等。",
-        "裙的色彩搭配讲究，常与上衣形成和谐或对比的视觉效果。",
-      ],
-      images: [
-        {
-          url: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=traditional%20Chinese%20hanfu%20skirt%20(裙)%2C%20elegant%20design%2C%20flowing%20fabric%2C%20female%20costume&image_size=square_hd",
-          alt: "裙",
-          caption: "汉服裙装样式",
-        },
-        {
-          url: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Chinese%20hanfu%20pleated%20skirt%2C%20traditional%20design%2C%20elegant%20flowing%20fabric&image_size=square_hd",
-          alt: "百褶裙",
-          caption: "优雅的百褶裙",
-        },
-      ],
-    },
-    裤: {
-      title: "裤 - 下装",
-      content: [
-        "裤是下身穿着的裤装，便于活动，是实用的下装选择。",
-        "古代的裤与现代有所不同，早期为无裆的胫衣，后发展为合裆裤。",
-        "裤的款式包括长裤、短裤、灯笼裤等，适应不同的活动和场合。",
-        "裤常穿在裙内作为衬裤，也可单独外穿，体现了汉服的层次感。",
-        "裤的面料多为棉麻、丝绸等，注重舒适性和实用性。",
-        "裤的系带设计便于调节松紧，适应不同身材和活动需求。",
-      ],
-      images: [
-        {
-          url: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=traditional%20Chinese%20hanfu%20trousers%20(裤)%2C%20loose%20design%2C%20comfortable%20fit%2C%20ancient%20style&image_size=square_hd",
-          alt: "裤",
-          caption: "汉服裤装样式",
-        },
-        {
-          url: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Chinese%20hanfu%20loose%20pants%2C%20traditional%20design%2C%20comfortable%20wear&image_size=square_hd",
-          alt: "宽松裤",
-          caption: "宽松舒适的汉服裤",
-        },
-      ],
-    },
-    冠: {
-      title: "冠 - 首服",
-      content: [
-        "冠是头上戴的冠帽，是汉服首服的重要组成部分，体现身份等级。",
-        "冠的种类繁多，包括冕冠、通天冠、进贤冠等，不同冠代表不同身份。",
-        "冠的佩戴有严格的礼仪规范，不同场合佩戴不同的冠。",
-        "冠的制作工艺精湛，常用金玉、珠宝等装饰，体现尊贵地位。",
-        "冠与服饰的搭配讲究和谐，形成完整的礼仪装束。",
-        "除冠外，首服还包括巾、帽等，适应不同场合和身份需求。",
-      ],
-      images: [
-        {
-          url: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=traditional%20Chinese%20hanfu%20crown%20(冠)%2C%20elegant%20design%2C%20ceremonial%20headwear%2C%20ancient%20style&image_size=square_hd",
-          alt: "冠",
-          caption: "汉服冠帽样式",
-        },
-        {
-          url: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Chinese%20imperial%20crown%20(冕冠)%2C%20ceremonial%20headwear%2C%20jade%20beads%2C%20traditional%20design&image_size=square_hd",
-          alt: "冕冠",
-          caption: "帝王冕冠",
-        },
-      ],
-    },
-  },
+  ];
 };
+
+// 详细内容数据 - 从后端加载
 
 // 显示详情弹窗
 const showDetail = async (type, item) => {
@@ -653,21 +389,8 @@ const showDetail = async (type, item) => {
     }
   } catch (error) {
     console.error("获取详细信息失败:", error);
-    // 如果后端接口不可用，使用默认数据
-    const content = detailContents[type]?.[item.name];
-    if (content) {
-      Object.assign(currentDetail, {
-        title: content.title,
-        description: content.content?.[0] || "",
-        period: "",
-        features: [],
-        content: content.content?.slice(1)?.join("\n") || "",
-        images: content.images || [],
-      });
-      dialogVisible.value = true;
-    } else {
-      ElMessage.info("详细内容正在完善中...");
-    }
+    // 如果后端接口不可用，显示提示信息
+    ElMessage.info("详细内容正在完善中...");
   }
 };
 
