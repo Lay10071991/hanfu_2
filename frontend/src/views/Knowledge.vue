@@ -99,30 +99,19 @@
               <div class="history-text">
                 <h4 class="history-subtitle">汉服的历史源流</h4>
                 <p class="history-description">
-                  汉服，全称是"汉民族传统服饰"，又称汉衣冠、汉装、华服，是从黄帝即位到公元17世纪中叶(明末清初)，
-                  在汉族的主要居住区，以"华夏-汉"文化为背景和主导思想，以华夏礼仪文化为中心，通过自然演化而形成的
-                  具有独特汉民族风貌性格，明显区别于其他民族的传统服装和配饰体系。
+                  {{
+                    culturalContents.find((item) => item.type === "overview")?.content ||
+                    '汉服，全称是"汉民族传统服饰"，又称汉衣冠、汉装、华服，是从黄帝即位到公元17世纪中叶(明末清初)，在汉族的主要居住区，以"华夏-汉"文化为背景和主导思想，以华夏礼仪文化为中心，通过自然演化而形成的具有独特汉民族风貌性格，明显区别于其他民族的传统服装和配饰体系。'
+                  }}
                 </p>
                 <div class="history-timeline">
-                  <div class="timeline-item">
-                    <span class="timeline-period">先秦时期</span>
-                    <span class="timeline-desc">衣裳制确立，深衣出现</span>
-                  </div>
-                  <div class="timeline-item">
-                    <span class="timeline-period">秦汉时期</span>
-                    <span class="timeline-desc">曲裾深衣流行，袍服普及</span>
-                  </div>
-                  <div class="timeline-item">
-                    <span class="timeline-period">魏晋南北朝</span>
-                    <span class="timeline-desc">宽衣博带，服饰风格飘逸</span>
-                  </div>
-                  <div class="timeline-item">
-                    <span class="timeline-period">隋唐时期</span>
-                    <span class="timeline-desc">圆领袍盛行，女装丰富多彩</span>
-                  </div>
-                  <div class="timeline-item">
-                    <span class="timeline-period">宋明时期</span>
-                    <span class="timeline-desc">褙子流行，服饰趋于内敛</span>
+                  <div
+                    v-for="item in culturalContents.filter((item) => item.type === 'history')"
+                    :key="item.id"
+                    class="timeline-item"
+                  >
+                    <span class="timeline-period">{{ item.name }}</span>
+                    <span class="timeline-desc">{{ item.title }}</span>
                   </div>
                 </div>
               </div>
@@ -330,6 +319,7 @@ const maxDisplayCount = ref(6);
 const dynasties = ref([]);
 const patterns = ref([]);
 const shapeTypes = ref([]);
+const culturalContents = ref([]);
 
 // 形制详情对话框状态
 const showDynastyDialog = ref(false);
@@ -445,6 +435,19 @@ const loadPatterns = async () => {
   }
 };
 
+// 从后端加载文化内容数据
+const loadCulturalContents = async () => {
+  try {
+    const response = await fetch("http://localhost:8082/api/cultural-content");
+    if (response.ok) {
+      const data = await response.json();
+      culturalContents.value = data;
+    }
+  } catch (error) {
+    console.error("加载文化内容数据失败:", error);
+  }
+};
+
 // 计算显示的形制分类数据（固定显示4个）
 const displayedShapeTypes = computed(() => {
   return shapeTypes.value.slice(0, 4);
@@ -466,6 +469,7 @@ onMounted(() => {
   loadShapeTypes();
   loadDynasties();
   loadPatterns();
+  loadCulturalContents();
   const savedUsername = localStorage.getItem("username");
 
   if (savedUsername) {
@@ -812,6 +816,11 @@ const logout = () => {
   color: #666;
   line-height: 1.6;
   margin-bottom: 20px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .history-timeline {

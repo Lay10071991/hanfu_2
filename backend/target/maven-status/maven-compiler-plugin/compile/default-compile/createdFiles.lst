@@ -2,7 +2,6 @@ com\example\demo\controller\PostController.class
 com\example\demo\entity\FestivalActivity.class
 com\example\demo\entity\CultureInfluence.class
 com\example\demo\config\CorsConfig.class
-com\example\demo\config\ActivityInitializer.class
 com\example\demo\controller\ShopController.class
 com\example\demo\repository\FestivalActivityRepository.class
 com\example\demo\repository\EtiquetteRepository.class
