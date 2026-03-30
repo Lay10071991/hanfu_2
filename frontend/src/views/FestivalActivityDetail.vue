@@ -255,54 +255,16 @@ const username = ref("");
 
 // 活动数据
 const festivalData = ref({
-  id: 1,
-  title: "元宵灯会汉服游园",
-  season: "winter",
-  date: "2024-02-24（农历正月十五）",
-  time: "18:00-21:30",
-  location: "南京夫子庙秦淮河畔",
-  image: "https://placehold.co/800x400/FFCC99/000000?text=元宵灯会活动",
-  participants: 156,
-  description:
-    "传统元宵佳节，穿上汉服赏花灯、猜灯谜，体验古代元宵节的欢乐氛围。活动包括汉服走秀、传统灯谜、古典舞蹈表演等。",
-  detailedDescription: [
-    "元宵节，又称上元节、小正月、元夕或灯节，是春节之后的第一个重要节日。在这一天，人们会点上彩灯万盏，以示庆贺。",
-    "本次汉服游园会将在南京夫子庙秦淮河畔举行，参与者可以穿上精美的汉服，漫步在古色古香的街巷中，感受传统文化的魅力。",
-    "活动特别设置了汉服走秀环节，参与者可以展示自己的汉服，交流汉服文化。同时还有传统灯谜、投壶游戏、古典舞蹈表演等丰富多彩的互动项目。",
-  ],
-  customs: [
-    {
-      id: 1,
-      icon: "🏮",
-      title: "赏花灯",
-      description: "欣赏各式各样的传统花灯，感受节日氛围",
-    },
-    {
-      id: 2,
-      icon: "🎯",
-      title: "猜灯谜",
-      description: "参与传统灯谜游戏，挑战智慧",
-    },
-    {
-      id: 3,
-      icon: "🎭",
-      title: "汉服走秀",
-      description: "展示不同朝代的汉服，交流服饰文化",
-    },
-    {
-      id: 4,
-      icon: "💃",
-      title: "传统舞蹈",
-      description: "观看古典舞蹈表演，感受传统艺术",
-    },
-  ],
-  notices: [
-    "请提前15分钟到达活动现场签到",
-    "汉服需自备，如有需要可提前联系主办方租借",
-    "活动期间请保管好个人物品",
-    "请尊重传统文化，保持场地整洁",
-    "如遇恶劣天气，活动将延期举行，请关注通知",
-  ],
+  id: null,
+  title: "",
+  season: "",
+  date: "",
+  time: "",
+  location: "",
+  image: "",
+  description: "",
+  traditionExperience: "",
+  precautions: "",
 });
 
 // 用户状态
@@ -313,18 +275,7 @@ const userId = ref(null);
 const registrationCount = ref(0);
 
 // 评论数据
-const comments = ref([
-  {
-    id: 1,
-    username: "汉服爱好者",
-    content: "非常期待这次活动！去年参加过一次，体验很棒！",
-  },
-  {
-    id: 2,
-    username: "传统文化传播者",
-    content: "这样的活动很有意义，既能体验传统文化，又能认识志同道合的朋友。",
-  },
-]);
+const comments = ref([]);
 
 onMounted(() => {
   const savedUsername = localStorage.getItem("username");
@@ -398,276 +349,20 @@ const loadFestivalData = async (id) => {
     }
   } catch (error) {
     console.error("加载活动数据失败:", error);
-    // 使用默认数据
-    const activities = [
-      {
-        id: 1,
-        title: "元宵灯会汉服游园",
-        season: "winter",
-        date: "2024-02-24（农历正月十五）",
-        time: "18:00-21:30",
-        location: "南京夫子庙秦淮河畔",
-        image: "https://placehold.co/800x400/FFCC99/000000?text=元宵灯会活动",
-        participants: 156,
-        description:
-          "传统元宵佳节，穿上汉服赏花灯、猜灯谜，体验古代元宵节的欢乐氛围。活动包括汉服走秀、传统灯谜、古典舞蹈表演等。",
-        detailedDescription: [
-          "元宵节，又称上元节、小正月、元夕或灯节，是春节之后的第一个重要节日。在这一天，人们会点上彩灯万盏，以示庆贺。",
-          "本次汉服游园会将在南京夫子庙秦淮河畔举行，参与者可以穿上精美的汉服，漫步在古色古香的街巷中，感受传统文化的魅力。",
-          "活动特别设置了汉服走秀环节，参与者可以展示自己的汉服，交流汉服文化。同时还有传统灯谜、投壶游戏、古典舞蹈表演等丰富多彩的互动项目。",
-        ],
-        customs: [
-          {
-            id: 1,
-            icon: "🏮",
-            title: "赏花灯",
-            description: "欣赏各式各样的传统花灯，感受节日氛围",
-          },
-          {
-            id: 2,
-            icon: "🎯",
-            title: "猜灯谜",
-            description: "参与传统灯谜游戏，挑战智慧",
-          },
-          {
-            id: 3,
-            icon: "🎭",
-            title: "汉服走秀",
-            description: "展示不同朝代的汉服，交流服饰文化",
-          },
-          {
-            id: 4,
-            icon: "💃",
-            title: "传统舞蹈",
-            description: "观看古典舞蹈表演，感受传统艺术",
-          },
-        ],
-        notices: [
-          "请提前15分钟到达活动现场签到",
-          "汉服需自备，如有需要可提前联系主办方租借",
-          "活动期间请保管好个人物品",
-          "请尊重传统文化，保持场地整洁",
-          "如遇恶劣天气，活动将延期举行，请关注通知",
-        ],
-      },
-      {
-        id: 2,
-        title: "清明踏青汉服雅集",
-        season: "spring",
-        date: "2024-04-05（清明节）",
-        time: "10:00-16:00",
-        location: "杭州西湖",
-        image: "https://placehold.co/800x400/99CC99/000000?text=清明踏青",
-        participants: 203,
-        description:
-          "清明时节，春光明媚，穿上汉服在西湖边踏青、品茶、赏花，感受传统清明节的文化内涵。",
-        detailedDescription: [
-          "清明节是中国传统节日，也是最重要的祭祀节日之一，是祭祖和扫墓的日子。",
-          "本次汉服雅集将在杭州西湖举行，参与者可以穿上汉服，在西湖边漫步，欣赏春天的美景。",
-          "活动包括汉服展示、传统茶艺表演、诗歌朗诵等环节，让参与者深度体验传统文化。",
-        ],
-        customs: [
-          {
-            id: 1,
-            icon: "🌿",
-            title: "踏青",
-            description: "在春天的阳光下漫步，感受大自然的生机",
-          },
-          {
-            id: 2,
-            icon: "🍵",
-            title: "品茶",
-            description: "品尝传统茶艺，感受茶文化的魅力",
-          },
-          {
-            id: 3,
-            icon: "📜",
-            title: "诗歌朗诵",
-            description: "朗诵传统诗歌，感受文学之美",
-          },
-        ],
-        notices: [
-          "请穿着舒适的汉服，便于行走",
-          "请自备饮用水和防晒用品",
-          "活动期间请遵守景区规定",
-          "如有身体不适，请及时告知工作人员",
-        ],
-      },
-      {
-        id: 3,
-        title: "端午龙舟汉服观赛",
-        season: "summer",
-        date: "2024-06-10（端午节）",
-        time: "09:00-15:00",
-        location: "苏州护城河",
-        image: "https://placehold.co/800x400/FF9999/000000?text=端午龙舟",
-        participants: 189,
-        description: "端午节观看传统龙舟比赛，体验包粽子、挂艾草等习俗，感受浓厚的端午文化氛围。",
-        detailedDescription: [
-          "端午节是中国传统节日，为了纪念屈原而设立。",
-          "本次活动将在苏州护城河举行，参与者可以观看精彩的龙舟比赛，体验包粽子、挂艾草等传统习俗。",
-          "活动还包括汉服展示、传统音乐表演等环节，让参与者全方位感受端午文化。",
-        ],
-        customs: [
-          {
-            id: 1,
-            icon: "🚣",
-            title: "观看龙舟赛",
-            description: "欣赏激烈的龙舟比赛，感受团队合作精神",
-          },
-          {
-            id: 2,
-            icon: "粽叶",
-            title: "包粽子",
-            description: "学习包粽子的传统技艺",
-          },
-          {
-            id: 3,
-            icon: "🌿",
-            title: "挂艾草",
-            description: "了解艾草的文化意义",
-          },
-        ],
-        notices: [
-          "请提前到达现场，占据观赛好位置",
-          "请遵守现场秩序，不要拥挤",
-          "活动期间请保管好个人物品",
-          "如需参与包粽子活动，请提前报名",
-        ],
-      },
-      {
-        id: 4,
-        title: "中秋赏月汉服夜宴",
-        season: "autumn",
-        date: "2024-09-17（中秋节）",
-        time: "18:00-22:00",
-        location: "北京颐和园",
-        image: "https://placehold.co/800x400/CCCCFF/000000?text=中秋赏月",
-        participants: 175,
-        description: "中秋佳节，穿上汉服在颐和园赏月、品月饼、吟诗作对，体验古人的风雅情趣。",
-        detailedDescription: [
-          "中秋节是中国传统节日，象征团圆和丰收。",
-          "本次活动将在颐和园举行，参与者可以穿上汉服，在月光下赏月、品月饼、吟诗作对。",
-          "活动还包括传统音乐表演、汉服走秀等环节，让参与者感受古人的风雅生活。",
-        ],
-        customs: [
-          {
-            id: 1,
-            icon: "🌙",
-            title: "赏月",
-            description: "在月光下欣赏中秋圆月",
-          },
-          {
-            id: 2,
-            icon: "🥮",
-            title: "品月饼",
-            description: "品尝传统月饼，感受节日氛围",
-          },
-          {
-            id: 3,
-            icon: "📝",
-            title: "吟诗作对",
-            description: "即兴创作诗歌，展示才华",
-          },
-        ],
-        notices: [
-          "请穿着正式的汉服，体现节日氛围",
-          "请自备小食和饮品，共享团圆宴",
-          "活动期间请保持安静，不要影响他人赏月",
-          "如遇天气不佳，活动将移至室内举行",
-        ],
-      },
-      {
-        id: 5,
-        title: "重阳登高汉服会",
-        season: "autumn",
-        date: "2024-10-11（重阳节）",
-        time: "08:00-16:00",
-        location: "黄山风景区",
-        image: "https://placehold.co/800x400/FFCCCC/000000?text=重阳登高",
-        participants: 132,
-        description: "重阳节登高望远，佩戴茱萸，饮菊花酒，感受传统重阳节的敬老爱老文化。",
-        detailedDescription: [
-          "重阳节是中国传统节日，有登高、赏菊、饮菊花酒、佩戴茱萸等习俗。",
-          "本次活动将在黄山风景区举行，参与者可以穿上汉服，登高望远，欣赏秋天的美景。",
-          "活动还包括敬老仪式、菊花酒品尝、传统音乐表演等环节，让参与者感受重阳节的文化内涵。",
-        ],
-        customs: [
-          {
-            id: 1,
-            icon: "⛰️",
-            title: "登高",
-            description: "登上山顶，俯瞰美景",
-          },
-          {
-            id: 2,
-            icon: "🌼",
-            title: "赏菊",
-            description: "欣赏菊花，感受秋天的气息",
-          },
-          {
-            id: 3,
-            icon: "🍷",
-            title: "饮菊花酒",
-            description: "品尝传统菊花酒，保健养生",
-          },
-        ],
-        notices: [
-          "请穿着舒适的汉服和鞋子，便于登山",
-          "请自备饮用水和零食",
-          "活动期间请注意安全，不要单独行动",
-          "请尊重老人，体现敬老爱老的传统美德",
-        ],
-      },
-      {
-        id: 6,
-        title: "七夕乞巧汉服节",
-        season: "summer",
-        date: "2024-08-10（七夕节）",
-        time: "18:00-22:00",
-        location: "西安大唐不夜城",
-        image: "https://placehold.co/800x400/FFB6C1/000000?text=七夕乞巧",
-        participants: 221,
-        description: "传统七夕节，体验穿针乞巧、月下祈福等传统习俗，感受浪漫的传统情人节氛围。",
-        detailedDescription: [
-          "七夕节是中国传统的情人节，源于牛郎织女的传说。",
-          "本次活动将在西安大唐不夜城举行，参与者可以穿上汉服，体验穿针乞巧、月下祈福等传统习俗。",
-          "活动还包括汉服走秀、传统音乐表演、鹊桥相会等环节，让参与者感受浪漫的传统节日氛围。",
-        ],
-        customs: [
-          {
-            id: 1,
-            icon: "🧵",
-            title: "穿针乞巧",
-            description: "体验传统的乞巧习俗，祈求心灵手巧",
-          },
-          {
-            id: 2,
-            icon: "🌙",
-            title: "月下祈福",
-            description: "在月光下祈求美好姻缘",
-          },
-          {
-            id: 3,
-            icon: "鹊桥",
-            title: "鹊桥相会",
-            description: "参与鹊桥相会的互动活动",
-          },
-        ],
-        notices: [
-          "请穿着漂亮的汉服，体现节日氛围",
-          "请自备小礼物，参与交换活动",
-          "活动期间请遵守秩序，不要拥挤",
-          "如遇天气不佳，活动将移至室内举行",
-        ],
-      },
-    ];
-
-    // 根据id查找活动数据
-    const activity = activities.find((act) => act.id === parseInt(id));
-    if (activity) {
-      festivalData.value = activity;
-    }
+    // 加载失败，使用空数据
+    console.warn("加载活动数据失败，使用空数据");
+    festivalData.value = {
+      id: null,
+      title: "活动加载失败",
+      season: "",
+      date: "",
+      time: "",
+      location: "",
+      image: "",
+      description: "无法加载活动数据，请稍后再试",
+      traditionExperience: "",
+      precautions: "",
+    };
   }
 
   // 加载评论数据
@@ -690,19 +385,8 @@ const loadComments = async (activityId) => {
     }
   } catch (error) {
     console.error("加载评论数据失败:", error);
-    // 使用默认评论数据
-    comments.value = [
-      {
-        id: 1,
-        username: "汉服爱好者",
-        content: "非常期待这次活动！去年参加过一次，体验很棒！",
-      },
-      {
-        id: 2,
-        username: "传统文化传播者",
-        content: "这样的活动很有意义，既能体验传统文化，又能认识志同道合的朋友。",
-      },
-    ];
+    // 加载失败，使用空数据
+    comments.value = [];
   }
 };
 
