@@ -118,34 +118,39 @@
             </div>
           </div>
 
-          <div class="details-section">
+          <div class="details-section" v-if="festivalData.traditionExperience">
             <h3 class="section-title">
               <el-icon><MagicStick /></el-icon>
               传统习俗体验
             </h3>
             <div class="section-content">
-              <div class="customs-grid">
-                <div class="custom-item" v-for="custom in festivalData.customs" :key="custom.id">
-                  <div class="custom-icon">
-                    <span>{{ custom.icon }}</span>
-                  </div>
-                  <div class="custom-info">
-                    <h4>{{ custom.title }}</h4>
-                    <p>{{ custom.description }}</p>
-                  </div>
-                </div>
+              <div class="tradition-content">
+                <p
+                  v-for="(line, index) in formatTraditionExperience(
+                    festivalData.traditionExperience,
+                  )"
+                  :key="index"
+                  class="tradition-line"
+                >
+                  {{ line }}
+                </p>
               </div>
             </div>
           </div>
 
-          <div class="details-section">
+          <div class="details-section" v-if="festivalData.precautions">
             <h3 class="section-title">
               <el-icon><Warning /></el-icon>
               注意事项
             </h3>
             <div class="section-content">
               <ul class="notice-list">
-                <li v-for="(notice, index) in festivalData.notices" :key="index">{{ notice }}</li>
+                <li
+                  v-for="(notice, index) in formatPrecautions(festivalData.precautions)"
+                  :key="index"
+                >
+                  {{ notice }}
+                </li>
               </ul>
             </div>
           </div>
@@ -823,6 +828,18 @@ const logout = () => {
   ElMessage.success("退出登录成功");
   router.push("/login");
 };
+
+// 格式化传统习俗体验数据
+const formatTraditionExperience = (traditionExperience) => {
+  if (!traditionExperience) return [];
+  return traditionExperience.split("\\n").filter((line) => line.trim() !== "");
+};
+
+// 格式化注意事项数据
+const formatPrecautions = (precautions) => {
+  if (!precautions) return [];
+  return precautions.split("\\n").filter((line) => line.trim() !== "");
+};
 </script>
 
 <style scoped>
@@ -1102,7 +1119,36 @@ const logout = () => {
   margin-bottom: 15px;
 }
 
-/* 习俗体验 */
+/* 传统习俗体验 */
+.tradition-content {
+  padding: 15px;
+  background: linear-gradient(135deg, #f9f5f0 0%, #f0e6d6 100%);
+  border-radius: 10px;
+  border: 1px solid #f0e6d6;
+}
+
+.tradition-line {
+  margin: 0 0 12px 0;
+  padding: 10px 15px;
+  background-color: white;
+  border-radius: 8px;
+  border-left: 4px solid #d2691e;
+  color: #555;
+  line-height: 1.6;
+  font-size: 15px;
+  transition: all 0.3s ease;
+}
+
+.tradition-line:hover {
+  transform: translateX(5px);
+  box-shadow: 0 2px 8px rgba(139, 69, 19, 0.1);
+}
+
+.tradition-line:last-child {
+  margin-bottom: 0;
+}
+
+/* 习俗体验（旧样式，保留兼容） */
 .customs-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));

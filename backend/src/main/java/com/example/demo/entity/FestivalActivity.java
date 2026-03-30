@@ -31,6 +31,12 @@ public class FestivalActivity {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
 
+    @Column(name = "tradition_experience", columnDefinition = "TEXT")
+    private String traditionExperience;
+
+    @Column(columnDefinition = "TEXT")
+    private String precautions;
+
     @CreationTimestamp
     @Column(name = "create_time", updatable = false)
     private LocalDateTime createTime;
@@ -54,6 +60,10 @@ public class FestivalActivity {
     public void setImage(String image) { this.image = image; }
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
+    public String getTraditionExperience() { return traditionExperience; }
+    public void setTraditionExperience(String traditionExperience) { this.traditionExperience = traditionExperience; }
+    public String getPrecautions() { return precautions; }
+    public void setPrecautions(String precautions) { this.precautions = precautions; }
     public LocalDateTime getCreateTime() { return createTime; }
     public void setCreateTime(LocalDateTime createTime) { this.createTime = createTime; }
     public LocalDateTime getUpdateTime() { return updateTime; }
