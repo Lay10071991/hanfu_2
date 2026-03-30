@@ -78,14 +78,6 @@
       </div>
     </div>
 
-    <!-- 页脚 -->
-    <div class="footer">
-      <div class="container">
-        <p>汉服文化交流平台</p>
-        <p class="footer-subtitle">传承华夏衣冠，弘扬汉服文化</p>
-      </div>
-    </div>
-
     <!-- 展览详情弹窗 -->
     <el-dialog
       v-model="detailDialogVisible"
@@ -157,10 +149,27 @@
           <div class="detail-section">
             <h4>参观须知</h4>
             <ul class="notice-list">
-              <li>请提前预约参观时间</li>
-              <li>保持安静，勿触摸展品</li>
-              <li>禁止使用闪光灯拍照</li>
-              <li>遵守展馆各项规定</li>
+              <template
+                v-if="
+                  selectedExhibition &&
+                  selectedExhibition.notice &&
+                  selectedExhibition.notice.trim()
+                "
+              >
+                <li
+                  v-for="(noticeItem, index) in selectedExhibition.notice.split('\n')"
+                  :key="index"
+                  v-if="noticeItem && noticeItem.trim()"
+                >
+                  {{ noticeItem.trim() }}
+                </li>
+              </template>
+              <template v-else>
+                <li>请提前预约参观时间</li>
+                <li>保持安静，勿触摸展品</li>
+                <li>禁止使用闪光灯拍照</li>
+                <li>遵守展馆各项规定</li>
+              </template>
             </ul>
           </div>
         </div>
@@ -170,20 +179,20 @@
           <el-button @click="detailDialogVisible = false">关闭</el-button>
           <el-button
             :type="
-              isExhibitionExpired(selectedExhibition.date)
+              selectedExhibition && isExhibitionExpired(selectedExhibition.date)
                 ? 'danger'
-                : exhibitionAppointments.has(selectedExhibition.id)
+                : selectedExhibition && exhibitionAppointments.has(selectedExhibition.id)
                   ? 'warning'
                   : 'primary'
             "
-            :disabled="isExhibitionExpired(selectedExhibition.date)"
+            :disabled="selectedExhibition && isExhibitionExpired(selectedExhibition.date)"
             @click="signUpExhibition"
             class="signup-btn"
           >
             {{
-              isExhibitionExpired(selectedExhibition.date)
+              selectedExhibition && isExhibitionExpired(selectedExhibition.date)
                 ? "展览结束"
-                : exhibitionAppointments.has(selectedExhibition.id)
+                : selectedExhibition && exhibitionAppointments.has(selectedExhibition.id)
                   ? "取消预约"
                   : "预约参观"
             }}
@@ -191,6 +200,14 @@
         </span>
       </template>
     </el-dialog>
+
+    <!-- 页脚 -->
+    <div class="footer">
+      <div class="container">
+        <p>汉服文化交流平台</p>
+        <p class="footer-subtitle">传承华夏衣冠，弘扬汉服文化</p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -271,6 +288,7 @@ const loadExhibitions = async () => {
     const response = await fetch("http://localhost:8082/api/exhibitions");
     if (response.ok) {
       const data = await response.json();
+      console.log("从后端获取的展览数据:", data);
       exhibitions.value = data.map((exhibition) => ({
         id: exhibition.id,
         title: exhibition.title,
@@ -282,8 +300,13 @@ const loadExhibitions = async () => {
         detailDescription: exhibition.description || "",
         ticket: exhibition.ticketPrice ? `¥${exhibition.ticketPrice}` : "免费",
         organizer: exhibition.organizer || "汉服文化中心",
+        notice:
+          exhibition.notice !== undefined && exhibition.notice !== null
+            ? exhibition.notice
+            : "请提前预约参观时间\n保持安静，勿触摸展品\n禁止使用闪光灯拍照\n遵守展馆各项规定",
         highlights: ["精彩展览内容", "传统文化体验", "互动活动丰富"],
       }));
+      console.log("处理后的展览数据:", exhibitions.value);
       total.value = exhibitions.value.length;
     }
   } catch (error) {
@@ -306,7 +329,51 @@ onMounted(async () => {
 
   initAppointments();
   await loadExhibitions();
+
+  // 检查用户的预约状态
+  const savedUserId = localStorage.getItem("userId");
+  if (savedUserId) {
+    await checkUserAppointments();
+  }
+
+  // 测试弹窗是否显示
+  // setTimeout(() => {
+  //   if (exhibitions.value.length > 0) {
+  //     selectedExhibition.value = exhibitions.value[0];
+  //     detailDialogVisible.value = true;
+  //     console.log('Testing dialog visibility');
+  //   }
+  // }, 2000);
 });
+
+// 检查用户的预约状态
+const checkUserAppointments = async () => {
+  const userId = localStorage.getItem("userId");
+  if (!userId) return;
+
+  try {
+    // 检查展览预约状态
+    for (const exhibition of exhibitions.value) {
+      const response = await fetch(
+        `http://localhost:8082/api/exhibitions/${exhibition.id}/registration/check?userId=${userId}`,
+      );
+      if (response.ok) {
+        const data = await response.json();
+        if (data.isRegistered) {
+          exhibitionAppointments.value.add(exhibition.id);
+        }
+      }
+    }
+
+    // 更新本地存储
+    localStorage.setItem(
+      "exhibitionAppointments",
+      JSON.stringify([...exhibitionAppointments.value]),
+    );
+  } catch (error) {
+    console.error("检查预约状态失败:", error);
+  }
+};
 
 const goToProfile = () => {
   const role = localStorage.getItem("role");
@@ -322,7 +389,7 @@ const viewDetail = (exhibition) => {
   detailDialogVisible.value = true;
 };
 
-const signUpExhibition = () => {
+const signUpExhibition = async () => {
   if (!selectedExhibition.value) return;
 
   const exhibitionId = selectedExhibition.value.id;
@@ -334,6 +401,14 @@ const signUpExhibition = () => {
     return;
   }
 
+  const savedUserId = localStorage.getItem("userId");
+  if (!savedUserId) {
+    ElMessage.error("请先登录后再进行预约！");
+    return;
+  }
+
+  const userId = parseInt(savedUserId);
+
   if (isAppointed) {
     // 取消预约
     ElMessageBox.confirm(`确定要取消预约"${selectedExhibition.value.title}"吗？`, "取消预约", {
@@ -341,13 +416,31 @@ const signUpExhibition = () => {
       cancelButtonText: "取消",
       type: "warning",
     })
-      .then(() => {
-        exhibitionAppointments.value.delete(exhibitionId);
-        localStorage.setItem(
-          "exhibitionAppointments",
-          JSON.stringify([...exhibitionAppointments.value]),
-        );
-        ElMessage.success(`成功取消预约"${selectedExhibition.value.title}"！`);
+      .then(async () => {
+        try {
+          const response = await fetch(
+            `http://localhost:8082/api/exhibitions/${exhibitionId}/registration?userId=${userId}`,
+            { method: "DELETE" },
+          );
+          if (response.ok) {
+            const data = await response.json();
+            if (data.success) {
+              exhibitionAppointments.value.delete(exhibitionId);
+              localStorage.setItem(
+                "exhibitionAppointments",
+                JSON.stringify([...exhibitionAppointments.value]),
+              );
+              ElMessage.success(`成功取消预约"${selectedExhibition.value.title}"！`);
+            } else {
+              ElMessage.error("取消预约失败");
+            }
+          } else {
+            ElMessage.error("取消预约失败");
+          }
+        } catch (error) {
+          console.error("取消预约失败:", error);
+          ElMessage.error("取消预约失败");
+        }
       })
       .catch(() => {
         // 用户取消
@@ -359,13 +452,35 @@ const signUpExhibition = () => {
       cancelButtonText: "取消",
       type: "info",
     })
-      .then(() => {
-        exhibitionAppointments.value.add(exhibitionId);
-        localStorage.setItem(
-          "exhibitionAppointments",
-          JSON.stringify([...exhibitionAppointments.value]),
-        );
-        ElMessage.success(`成功预约"${selectedExhibition.value.title}"！`);
+      .then(async () => {
+        try {
+          const response = await fetch(
+            `http://localhost:8082/api/exhibitions/${exhibitionId}/registration`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ userId }),
+            },
+          );
+          if (response.ok) {
+            const data = await response.json();
+            if (data.success) {
+              exhibitionAppointments.value.add(exhibitionId);
+              localStorage.setItem(
+                "exhibitionAppointments",
+                JSON.stringify([...exhibitionAppointments.value]),
+              );
+              ElMessage.success(`成功预约"${selectedExhibition.value.title}"！`);
+            } else {
+              ElMessage.error("预约失败");
+            }
+          } else {
+            ElMessage.error("预约失败");
+          }
+        } catch (error) {
+          console.error("预约失败:", error);
+          ElMessage.error("预约失败");
+        }
       })
       .catch(() => {
         // 用户取消

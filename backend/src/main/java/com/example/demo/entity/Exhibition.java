@@ -42,6 +42,9 @@ public class Exhibition {
     @Column(length = 255)
     private String image;
 
+    @Column(columnDefinition = "TEXT")
+    private String notice;
+
     @CreationTimestamp
     @Column(name = "create_time", updatable = false)
     private LocalDateTime createTime;
@@ -129,6 +132,14 @@ public class Exhibition {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getNotice() {
+        return notice;
+    }
+
+    public void setNotice(String notice) {
+        this.notice = notice;
     }
 
     public LocalDateTime getCreateTime() {

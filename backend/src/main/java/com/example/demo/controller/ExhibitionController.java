@@ -50,6 +50,7 @@ public class ExhibitionController {
                     existing.setOpeningHours(exhibition.getOpeningHours());
                     existing.setTicketPrice(exhibition.getTicketPrice());
                     existing.setImage(exhibition.getImage());
+                    existing.setNotice(exhibition.getNotice());
                     return ResponseEntity.ok(repository.save(existing));
                 })
                 .orElse(ResponseEntity.notFound().build());
