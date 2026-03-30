@@ -48,12 +48,7 @@
                 {{ culturalContents[0].content }}
               </p>
               <p v-else>
-                汉服，全称是"汉民族传统服饰"，又称汉衣冠、汉装、华服，是从黄帝即位到公元17世纪中叶(明末清初)，
-                在汉族的主要居住区，以"华夏-汉"文化为背景和主导思想，以华夏礼仪文化为中心，通过自然演化而形成的
-                具有独特汉民族风貌性格，明显区别于其他民族的传统服装和配饰体系。
-                汉服历史悠久，源远流长，承载着中华民族几千年的文化底蕴和审美理念。从黄帝"垂衣裳而天下治"开始，
-                汉服就已经具备了基本形制，历经夏商周、秦汉、魏晋南北朝、隋唐、宋元明清各个朝代的发展演变，
-                形成了丰富多彩的服饰文化体系。
+                加载中...
               </p>
             </div>
           </div>
@@ -96,11 +91,22 @@
               <h4>{{ item.title }}</h4>
               <div class="detail-content" v-if="item.description">
                 <p
-                  v-for="(paragraph, idx) in item.description.split('\n').filter((p) => p.trim())"
+                  v-for="(paragraph, idx) in (item.description || '')
+                    .split('\n')
+                    .filter((p) => p.trim())"
                   :key="idx"
                 >
                   {{ paragraph }}
                 </p>
+              </div>
+              <div class="detail-content" v-else>
+                <p>{{ item.content || "无描述" }}</p>
+              </div>
+            </div>
+            <div v-if="cultureInfluences.length === 0" class="impact-item">
+              <h4>暂无数据</h4>
+              <div class="detail-content">
+                <p>文化影响与传承数据正在加载中...</p>
               </div>
             </div>
           </div>
