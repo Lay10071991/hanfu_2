@@ -41,12 +41,16 @@
           </h3>
           <div class="overview-content">
             <div class="overview-text">
-              <p>
+              <p v-if="culturalContents.find((item) => item.type === 'overview')">
+                {{ culturalContents.find((item) => item.type === "overview").content }}
+              </p>
+              <p v-else-if="culturalContents.length > 0">
+                {{ culturalContents[0].content }}
+              </p>
+              <p v-else>
                 汉服，全称是"汉民族传统服饰"，又称汉衣冠、汉装、华服，是从黄帝即位到公元17世纪中叶(明末清初)，
                 在汉族的主要居住区，以"华夏-汉"文化为背景和主导思想，以华夏礼仪文化为中心，通过自然演化而形成的
                 具有独特汉民族风貌性格，明显区别于其他民族的传统服装和配饰体系。
-              </p>
-              <p>
                 汉服历史悠久，源远流长，承载着中华民族几千年的文化底蕴和审美理念。从黄帝"垂衣裳而天下治"开始，
                 汉服就已经具备了基本形制，历经夏商周、秦汉、魏晋南北朝、隋唐、宋元明清各个朝代的发展演变，
                 形成了丰富多彩的服饰文化体系。
@@ -62,15 +66,19 @@
             历史发展时间线
           </h3>
           <div class="timeline">
-            <div class="timeline-item" v-for="era in historicalEras" :key="era.id">
+            <div
+              class="timeline-item"
+              v-for="item in culturalContents.filter((item) => item.type === 'history')"
+              :key="item.id"
+            >
               <div class="timeline-period">
-                <span class="era-name">{{ era.name }}</span>
-                <span class="era-years">{{ era.years }}</span>
+                <span class="era-name">{{ item.name }}</span>
+                <span class="era-years">{{ item.years || "" }}</span>
               </div>
               <div class="timeline-content">
                 <div class="era-details">
-                  <h4>{{ era.title }}</h4>
-                  <p>{{ era.description }}</p>
+                  <h4>{{ item.title }}</h4>
+                  <p>{{ item.content }}</p>
                 </div>
               </div>
             </div>
@@ -148,6 +156,21 @@ const loadHistoricalEras = async () => {
   }
 };
 
+// 文化内容数据
+const culturalContents = ref([]);
+
+// 从后端加载文化内容数据
+const loadCulturalContents = async () => {
+  try {
+    const response = await fetch("http://localhost:8082/api/cultural-content");
+    if (response.ok) {
+      culturalContents.value = await response.json();
+    }
+  } catch (error) {
+    console.error("加载文化内容数据失败:", error);
+  }
+};
+
 onMounted(() => {
   const savedUsername = localStorage.getItem("username");
   if (savedUsername) {
@@ -155,6 +178,7 @@ onMounted(() => {
   }
   loadCultureInfluences();
   loadHistoricalEras();
+  loadCulturalContents();
   window.scrollTo(0, 0);
 });
 
