@@ -313,8 +313,6 @@ const setDefaultComponents = () => {
   ];
 };
 
-// 详细内容数据 - 从后端加载
-
 // 显示详情弹窗
 const showDetail = async (type, item) => {
   try {
