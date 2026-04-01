@@ -608,7 +608,15 @@ const goToProfile = () => {
 };
 
 const goBack = () => {
-  router.back();
+  // 检查是否从/profile页面跳转过来
+  const fromProfile = router.options.history.state.back;
+  if (fromProfile && fromProfile.includes("/profile")) {
+    // 如果是从/profile页面跳转过来的，返回到/profile页面的节庆雅集标签页
+    router.push("/profile?menu=activity-registrations");
+  } else {
+    // 否则，使用默认的返回方法
+    router.back();
+  }
   // 滚动到顶部
   setTimeout(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
