@@ -290,4 +290,9 @@ public class PostService {
         postRepository.deleteById(id);
     }
 
+    public List<Map<String, Object>> getPostsByUserId(Long userId) {
+        List<Post> posts = postRepository.findByAuthorId(userId);
+        return posts.stream().map(this::convertToMap).collect(Collectors.toList());
+    }
+
 }

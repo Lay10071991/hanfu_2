@@ -95,4 +95,10 @@ public class PostController {
         postService.deletePost(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Map<String, Object>>> getPostsByUserId(@PathVariable Long userId) {
+        List<Map<String, Object>> posts = postService.getPostsByUserId(userId);
+        return ResponseEntity.ok(posts);
+    }
 }

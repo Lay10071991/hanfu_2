@@ -130,7 +130,20 @@
               <h3 class="content-title">我的发帖</h3>
               <div class="posts-list">
                 <div class="post-item" v-for="post in userPosts" :key="post.id">
-                  <h4>{{ post.title }}</h4>
+                  <div class="post-header">
+                    <h4>{{ post.title }}</h4>
+                    <div class="post-actions">
+                      <el-button type="primary" size="small" @click="viewPostDetails(post.id)"
+                        >查看</el-button
+                      >
+                      <el-button type="warning" size="small" @click="editPost(post)"
+                        >修改</el-button
+                      >
+                      <el-button type="danger" size="small" @click="deletePost(post.id)"
+                        >删除</el-button
+                      >
+                    </div>
+                  </div>
                   <p>{{ post.content }}</p>
                   <div class="post-meta">
                     <span>{{ post.date }}</span>
@@ -361,16 +374,7 @@ const passwordRules = {
 
 const userEvaluations = ref([]);
 
-const userPosts = ref([
-  {
-    id: 1,
-    title: "我的第一套汉服",
-    content: "今天收到了人生中第一套汉服，超级开心！",
-    date: "2023-11-10",
-    likes: 23,
-    comments: 5,
-  },
-]);
+const userPosts = ref([]);
 
 const userLikes = ref([
   {
@@ -500,6 +504,8 @@ onMounted(() => {
     // 如果是evaluations菜单，就加载用户测评数据
     if (route.query.menu === "evaluations") {
       fetchUserEvaluations();
+    } else if (route.query.menu === "posts") {
+      fetchUserPosts();
     }
   }
 });
@@ -508,6 +514,8 @@ const handleMenuSelect = (index) => {
   activeMenu.value = index;
   if (index === "evaluations") {
     fetchUserEvaluations();
+  } else if (index === "posts") {
+    fetchUserPosts();
   }
 };
 
@@ -749,6 +757,99 @@ const deleteEvaluation = (evaluationId) => {
         }
       } catch (error) {
         console.error("删除测评失败:", error);
+        ElMessage.error("网络异常，请稍后重试");
+      } finally {
+        loading.value = false;
+      }
+    })
+    .catch(() => {
+      // 用户取消操作
+    });
+};
+
+// 加载用户发帖数据
+const fetchUserPosts = async () => {
+  const userId = getUserId();
+  if (!userId) {
+    ElMessage.warning("请先登录");
+    router.push("/login");
+    return;
+  }
+
+  loading.value = true;
+  try {
+    const response = await fetch(`${API_BASE}/posts/user/${userId}`);
+    if (response.ok) {
+      const posts = await response.json();
+      const postsWithStats = posts.map((post) => ({
+        id: post.id,
+        title: post.title || "",
+        content: post.content || "",
+        date: post.time || "",
+        likes: post.likes || 0,
+        comments: post.comments || 0,
+      }));
+      userPosts.value = postsWithStats;
+    } else {
+      ElMessage.error("获取发帖记录失败");
+    }
+  } catch (error) {
+    console.error("获取发帖记录失败:", error);
+    ElMessage.error("网络异常，请稍后重试");
+  } finally {
+    loading.value = false;
+  }
+};
+
+// 查看帖子详情
+const viewPostDetails = (postId) => {
+  // 跳转到社区页面，携带帖子ID和来源
+  router.push({
+    path: "/community",
+    query: {
+      postId: postId,
+      from: "profile",
+      menu: activeMenu.value,
+    },
+  });
+};
+
+// 修改帖子
+const editPost = (post) => {
+  // 跳转到社区页面，携带帖子ID和编辑模式
+  router.push({
+    path: "/community",
+    query: {
+      postId: post.id,
+      mode: "edit",
+      from: "profile",
+      menu: activeMenu.value,
+    },
+  });
+};
+
+// 删除帖子
+const deletePost = (postId) => {
+  ElMessageBox.confirm("确定要删除这条帖子吗？删除后无法恢复。", "删除确认", {
+    confirmButtonText: "确定删除",
+    cancelButtonText: "取消",
+    type: "warning",
+  })
+    .then(async () => {
+      loading.value = true;
+      try {
+        const response = await fetch(`${API_BASE}/posts/${postId}`, {
+          method: "DELETE",
+        });
+        if (response.ok) {
+          ElMessage.success("帖子删除成功");
+          // 重新加载发帖数据
+          fetchUserPosts();
+        } else {
+          ElMessage.error("删除帖子失败");
+        }
+      } catch (error) {
+        console.error("删除帖子失败:", error);
         ElMessage.error("网络异常，请稍后重试");
       } finally {
         loading.value = false;
@@ -1048,9 +1149,22 @@ const logout = () => {
   line-height: 1.5;
 }
 
-.post-item h4 {
-  margin: 0 0 8px 0;
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.post-header h4 {
+  margin: 0;
   color: #8b4513;
+  flex: 1;
+}
+
+.post-actions {
+  display: flex;
+  gap: 8px;
 }
 
 .post-item p {
