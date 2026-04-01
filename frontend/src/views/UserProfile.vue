@@ -571,11 +571,15 @@ const changePassword = async () => {
     });
 
     if (response.ok) {
-      ElMessage.success("密码修改成功");
+      ElMessage.success("密码修改成功，即将退出登录");
       passwordDialogVisible.value = false;
       passwordForm.oldPassword = "";
       passwordForm.newPassword = "";
       passwordForm.confirmPassword = "";
+      // 延迟一秒后退出登录，让用户看到成功提示
+      setTimeout(() => {
+        logout();
+      }, 1000);
     } else {
       const errorData = await response.json();
       ElMessage.error(errorData.message || "密码修改失败");
