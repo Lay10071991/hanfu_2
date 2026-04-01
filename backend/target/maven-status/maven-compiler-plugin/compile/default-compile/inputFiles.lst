@@ -1,4 +1,5 @@
 E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\entity\UserRole.java
+E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\repository\ShopRatingRepository.java
 E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\repository\PatternCategoryRepository.java
 E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\controller\UserController.java
 E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\service\ShopService.java
@@ -30,6 +31,7 @@ E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\bac
 E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\repository\ActivityRepository.java
 E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\controller\ActivityController.java
 E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\controller\AiChatController.java
+E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\service\ShopRatingService.java
 E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\config\WebConfig.java
 E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\service\ExhibitionRegistrationService.java
 E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\controller\LectureController.java
@@ -61,6 +63,7 @@ E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\bac
 E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\repository\CultureInfluenceRepository.java
 E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\controller\FestivalController.java
 E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\entity\Post.java
+E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\entity\ShopRating.java
 E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\entity\Comment.java
 E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\controller\ExhibitionController.java
 E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\entity\ClothingComponent.java

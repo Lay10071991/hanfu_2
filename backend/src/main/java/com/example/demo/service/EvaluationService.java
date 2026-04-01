@@ -1,9 +1,9 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.Evaluation;
-import com.example.demo.entity.ShopRatingDistribution;
+import com.example.demo.entity.ShopRating;
 import com.example.demo.repository.EvaluationRepository;
-import com.example.demo.repository.ShopRatingDistributionRepository;
+import com.example.demo.repository.ShopRatingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -15,7 +15,7 @@ public class EvaluationService {
     private EvaluationRepository evaluationRepository;
     
     @Autowired
-    private ShopRatingDistributionRepository shopRatingDistributionRepository;
+    private ShopRatingRepository shopRatingRepository;
     
     public List<Evaluation> getEvaluationsByShopId(Long shopId) {
         return evaluationRepository.findByShopId(shopId);
@@ -23,11 +23,11 @@ public class EvaluationService {
     
     public Evaluation createEvaluation(Evaluation evaluation) {
         Evaluation saved = evaluationRepository.save(evaluation);
-        updateShopRatingDistribution(evaluation.getShopId());
+        updateShopRating(evaluation.getShopId());
         return saved;
     }
     
-    private void updateShopRatingDistribution(Long shopId) {
+    private void updateShopRating(Long shopId) {
         List<Evaluation> evaluations = evaluationRepository.findByShopId(shopId);
         
         // 统计各星级评价数量
@@ -44,19 +44,29 @@ public class EvaluationService {
             }
         }
         
-        // 查找或创建评分分布记录
-        ShopRatingDistribution distribution = shopRatingDistributionRepository.findByShopId(shopId);
-        if (distribution == null) {
-            distribution = new ShopRatingDistribution();
-            distribution.setShopId(shopId);
+        // 计算总评价数和平均评分
+        int totalCount = rating5 + rating4 + rating3 + rating2 + rating1;
+        double averageRating = 0.0;
+        if (totalCount > 0) {
+            double weightedSum = 5.0 * rating5 + 4.0 * rating4 + 3.0 * rating3 + 2.0 * rating2 + 1.0 * rating1;
+            averageRating = Math.round((weightedSum / totalCount) * 10.0) / 10.0;
         }
         
-        distribution.setRating5(rating5);
-        distribution.setRating4(rating4);
-        distribution.setRating3(rating3);
-        distribution.setRating2(rating2);
-        distribution.setRating1(rating1);
+        // 查找或创建评分记录
+        ShopRating rating = shopRatingRepository.findByShopId(shopId);
+        if (rating == null) {
+            rating = new ShopRating();
+            rating.setShopId(shopId);
+        }
         
-        shopRatingDistributionRepository.save(distribution);
+        rating.setRating5(rating5);
+        rating.setRating4(rating4);
+        rating.setRating3(rating3);
+        rating.setRating2(rating2);
+        rating.setRating1(rating1);
+        rating.setReviewCount(totalCount);
+        rating.setAverageRating(averageRating);
+        
+        shopRatingRepository.save(rating);
     }
 }

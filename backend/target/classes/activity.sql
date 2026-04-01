@@ -1618,51 +1618,15 @@ INSERT INTO `shop_service` VALUES (49, 17, '顶级定制', '2026-01-01 10:00:00'
 INSERT INTO `shop_service` VALUES (50, 17, '手工制作', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
 INSERT INTO `shop_service` VALUES (51, 17, '汉服婚礼', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
 
--- ----------------------------
--- Table structure for shop_rating_distribution
--- ----------------------------
-DROP TABLE IF EXISTS `shop_rating_distribution`;
-CREATE TABLE `shop_rating_distribution` (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `shop_id` bigint NOT NULL COMMENT '店铺ID',
-  `rating_5` int NOT NULL COMMENT '5星评价数',
-  `rating_4` int NOT NULL COMMENT '4星评价数',
-  `rating_3` int NOT NULL COMMENT '3星评价数',
-  `rating_2` int NOT NULL COMMENT '2星评价数',
-  `rating_1` int NOT NULL COMMENT '1星评价数',
-  `create_time` datetime NOT NULL COMMENT '创建时间',
-  `update_time` datetime NOT NULL COMMENT '更新时间',
-  PRIMARY KEY (`id`) USING BTREE,
-  KEY `idx_shop_id` (`shop_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '店铺评分分布表' ROW_FORMAT = Dynamic;
 
--- ----------------------------
--- Records of shop_rating_distribution
--- ----------------------------
--- 普通档店铺评分分布
-INSERT INTO `shop_rating_distribution` VALUES (1, 1, 60, 35, 15, 8, 2, '2026-01-01 10:00:00', '2026-01-01 10:00:00'); -- 4.2 (60*5 + 35*4 + 15*3 + 8*2 + 2*1 = 503 / 120 = 4.2)
-INSERT INTO `shop_rating_distribution` VALUES (2, 2, 65, 25, 5, 3, 0, '2026-01-02 10:00:00', '2026-01-02 10:00:00'); -- 4.3 (65*5 + 25*4 + 5*3 + 3*2 = 426 / 98 = 4.3)
-INSERT INTO `shop_rating_distribution` VALUES (3, 3, 55, 25, 5, 0, 0, '2026-01-03 10:00:00', '2026-01-03 10:00:00'); -- 4.1 (55*5 + 25*4 + 5*3 = 360 / 85 = 4.1)
-INSERT INTO `shop_rating_distribution` VALUES (4, 4, 50, 20, 6, 0, 0, '2026-01-04 10:00:00', '2026-01-04 10:00:00'); -- 4.0 (50*5 + 20*4 + 6*3 = 308 / 76 = 4.0)
-INSERT INTO `shop_rating_distribution` VALUES (5, 5, 70, 25, 8, 2, 0, '2026-01-05 10:00:00', '2026-01-05 10:00:00'); -- 4.4 (70*5 + 25*4 + 8*3 + 2*2 = 466 / 105 = 4.4)
-INSERT INTO `shop_rating_distribution` VALUES (6, 6, 60, 20, 7, 2, 0, '2026-01-06 10:00:00', '2026-01-06 10:00:00'); -- 4.2 (60*5 + 20*4 + 7*3 + 2*2 = 385 / 89 = 4.2)
 
--- 中档店铺评分分布
-INSERT INTO `shop_rating_distribution` VALUES (7, 7, 90, 45, 15, 6, 0, '2026-01-07 10:00:00', '2026-01-07 10:00:00'); -- 4.5 (90*5 + 45*4 + 15*3 + 6*2 = 702 / 156 = 4.5)
-INSERT INTO `shop_rating_distribution` VALUES (8, 8, 100, 25, 5, 2, 0, '2026-01-08 10:00:00', '2026-01-08 10:00:00'); -- 4.6 (100*5 + 25*4 + 5*3 + 2*2 = 619 / 132 = 4.6)
-INSERT INTO `shop_rating_distribution` VALUES (9, 9, 85, 35, 5, 3, 0, '2026-01-09 10:00:00', '2026-01-09 10:00:00'); -- 4.5 (85*5 + 35*4 + 5*3 + 3*2 = 576 / 128 = 4.5)
-INSERT INTO `shop_rating_distribution` VALUES (10, 10, 110, 25, 8, 2, 0, '2026-01-10 10:00:00', '2026-01-10 10:00:00'); -- 4.7 (110*5 + 25*4 + 8*3 + 2*2 = 678 / 145 = 4.7)
 
--- 中高档店铺评分分布
-INSERT INTO `shop_rating_distribution` VALUES (11, 11, 150, 45, 10, 5, 0, '2026-01-11 10:00:00', '2026-01-11 10:00:00'); -- 4.8 (150*5 + 45*4 + 10*3 + 5*2 = 980 / 210 = 4.8)
-INSERT INTO `shop_rating_distribution` VALUES (12, 12, 170, 15, 4, 0, 0, '2026-01-12 10:00:00', '2026-01-12 10:00:00'); -- 4.9 (170*5 + 15*4 + 4*3 = 922 / 189 = 4.9)
-INSERT INTO `shop_rating_distribution` VALUES (13, 13, 145, 40, 10, 3, 0, '2026-01-13 10:00:00', '2026-01-13 10:00:00'); -- 4.8 (145*5 + 40*4 + 10*3 + 3*2 = 951 / 198 = 4.8)
-INSERT INTO `shop_rating_distribution` VALUES (14, 14, 130, 35, 10, 1, 0, '2026-01-14 10:00:00', '2026-01-14 10:00:00'); -- 4.7 (130*5 + 35*4 + 10*3 + 1*2 = 822 / 176 = 4.7)
 
--- 高档店铺评分分布
-INSERT INTO `shop_rating_distribution` VALUES (15, 15, 240, 15, 3, 1, 1, '2026-01-15 10:00:00', '2026-01-15 10:00:00'); -- 4.9 (240*5 + 15*4 + 3*3 + 1*2 + 1*1 = 1200 + 60 + 9 + 2 + 1 = 1272 / 260 = 4.9)
-INSERT INTO `shop_rating_distribution` VALUES (16, 16, 220, 12, 2, 1, 0, '2026-01-16 10:00:00', '2026-01-16 10:00:00'); -- 4.9 (220*5 + 12*4 + 2*3 + 1*2 = 1100 + 48 + 6 + 2 = 1156 / 235 = 4.9)
-INSERT INTO `shop_rating_distribution` VALUES (17, 17, 200, 10, 2, 0, 0, '2026-01-17 10:00:00', '2026-01-17 10:00:00'); -- 4.9 (200*5 + 10*4 + 2*3 = 1000 + 40 + 6 = 1046 / 212 = 4.9)
+
+
+
+
+
 
 -- ----------------------------
 -- Table structure for exhibition_registration
@@ -2311,6 +2275,26 @@ CREATE TABLE `shop_review` (
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '店铺评价表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Table structure for shop_rating
+-- ----------------------------
+DROP TABLE IF EXISTS `shop_rating`;
+CREATE TABLE `shop_rating` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `shop_id` bigint NOT NULL COMMENT '店铺ID',
+  `average_rating` double NOT NULL COMMENT '平均评分',
+  `rating_5` int NOT NULL COMMENT '5星评价数',
+  `rating_4` int NOT NULL COMMENT '4星评价数',
+  `rating_3` int NOT NULL COMMENT '3星评价数',
+  `rating_2` int NOT NULL COMMENT '2星评价数',
+  `rating_1` int NOT NULL COMMENT '1星评价数',
+  `review_count` int NOT NULL COMMENT '评价总数',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `update_time` datetime NOT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `uk_shop_id` (`shop_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '店铺评分表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
 -- Records of shop_review - 店铺1 (汉服小铺)
 -- ----------------------------
 INSERT INTO `shop_review` VALUES (1, 1, 2, 5, '汉服质量很好，款式也很喜欢，客服态度也很棒！', '2026-01-15 10:00:00');
@@ -2496,5 +2480,33 @@ INSERT INTO `shop_review` VALUES (116, 17, 13, 5, NULL, '2026-01-19 00:30:00');
 INSERT INTO `shop_review` VALUES (117, 17, 14, 5, '衣服做工精细，面料优质，穿着很舒适。', '2026-01-19 19:30:00');
 INSERT INTO `shop_review` VALUES (118, 17, 15, 5, '发货速度快，包装精美，衣服质量非常好。', '2026-01-20 21:30:00');
 INSERT INTO `shop_review` VALUES (119, 17, 16, 5, NULL, '2026-01-22 00:00:00');
+
+-- ----------------------------
+-- Records of shop_rating
+-- ----------------------------
+-- 普通档店铺评分
+INSERT INTO `shop_rating` VALUES (1, 1, 4.2, 60, 35, 15, 8, 2, 120, '2026-01-01 10:00:00', '2026-01-01 10:00:00'); -- 4.2 (60*5 + 35*4 + 15*3 + 8*2 + 2*1 = 503 / 120 = 4.2)
+INSERT INTO `shop_rating` VALUES (2, 2, 4.3, 65, 25, 5, 3, 0, 98, '2026-01-02 10:00:00', '2026-01-02 10:00:00'); -- 4.3 (65*5 + 25*4 + 5*3 + 3*2 = 426 / 98 = 4.3)
+INSERT INTO `shop_rating` VALUES (3, 3, 4.1, 55, 25, 5, 0, 0, 85, '2026-01-03 10:00:00', '2026-01-03 10:00:00'); -- 4.1 (55*5 + 25*4 + 5*3 = 360 / 85 = 4.1)
+INSERT INTO `shop_rating` VALUES (4, 4, 4.0, 50, 20, 6, 0, 0, 76, '2026-01-04 10:00:00', '2026-01-04 10:00:00'); -- 4.0 (50*5 + 20*4 + 6*3 = 308 / 76 = 4.0)
+INSERT INTO `shop_rating` VALUES (5, 5, 4.4, 70, 25, 8, 2, 0, 105, '2026-01-05 10:00:00', '2026-01-05 10:00:00'); -- 4.4 (70*5 + 25*4 + 8*3 + 2*2 = 466 / 105 = 4.4)
+INSERT INTO `shop_rating` VALUES (6, 6, 4.2, 60, 20, 7, 2, 0, 89, '2026-01-06 10:00:00', '2026-01-06 10:00:00'); -- 4.2 (60*5 + 20*4 + 7*3 + 2*2 = 385 / 89 = 4.2)
+
+-- 中档店铺评分
+INSERT INTO `shop_rating` VALUES (7, 7, 4.5, 90, 45, 15, 6, 0, 156, '2026-01-07 10:00:00', '2026-01-07 10:00:00'); -- 4.5 (90*5 + 45*4 + 15*3 + 6*2 = 702 / 156 = 4.5)
+INSERT INTO `shop_rating` VALUES (8, 8, 4.6, 100, 25, 5, 2, 0, 132, '2026-01-08 10:00:00', '2026-01-08 10:00:00'); -- 4.6 (100*5 + 25*4 + 5*3 + 2*2 = 619 / 132 = 4.6)
+INSERT INTO `shop_rating` VALUES (9, 9, 4.5, 85, 35, 5, 3, 0, 128, '2026-01-09 10:00:00', '2026-01-09 10:00:00'); -- 4.5 (85*5 + 35*4 + 5*3 + 3*2 = 576 / 128 = 4.5)
+INSERT INTO `shop_rating` VALUES (10, 10, 4.7, 110, 25, 8, 2, 0, 145, '2026-01-10 10:00:00', '2026-01-10 10:00:00'); -- 4.7 (110*5 + 25*4 + 8*3 + 2*2 = 678 / 145 = 4.7)
+
+-- 中高档店铺评分
+INSERT INTO `shop_rating` VALUES (11, 11, 4.8, 150, 45, 10, 5, 0, 210, '2026-01-11 10:00:00', '2026-01-11 10:00:00'); -- 4.8 (150*5 + 45*4 + 10*3 + 5*2 = 980 / 210 = 4.8)
+INSERT INTO `shop_rating` VALUES (12, 12, 4.9, 170, 15, 4, 0, 0, 189, '2026-01-12 10:00:00', '2026-01-12 10:00:00'); -- 4.9 (170*5 + 15*4 + 4*3 = 922 / 189 = 4.9)
+INSERT INTO `shop_rating` VALUES (13, 13, 4.8, 145, 40, 10, 3, 0, 198, '2026-01-13 10:00:00', '2026-01-13 10:00:00'); -- 4.8 (145*5 + 40*4 + 10*3 + 3*2 = 951 / 198 = 4.8)
+INSERT INTO `shop_rating` VALUES (14, 14, 4.7, 130, 35, 10, 1, 0, 176, '2026-01-14 10:00:00', '2026-01-14 10:00:00'); -- 4.7 (130*5 + 35*4 + 10*3 + 1*2 = 822 / 176 = 4.7)
+
+-- 高档店铺评分
+INSERT INTO `shop_rating` VALUES (15, 15, 4.9, 240, 15, 3, 1, 1, 260, '2026-01-15 10:00:00', '2026-01-15 10:00:00'); -- 4.9 (240*5 + 15*4 + 3*3 + 1*2 + 1*1 = 1272 / 260 = 4.9)
+INSERT INTO `shop_rating` VALUES (16, 16, 4.9, 220, 12, 2, 1, 0, 235, '2026-01-16 10:00:00', '2026-01-16 10:00:00'); -- 4.9 (220*5 + 12*4 + 2*3 + 1*2 = 1156 / 235 = 4.9)
+INSERT INTO `shop_rating` VALUES (17, 17, 4.9, 200, 10, 2, 0, 0, 212, '2026-01-17 10:00:00', '2026-01-17 10:00:00'); -- 4.9 (200*5 + 10*4 + 2*3 = 1046 / 212 = 4.9)
 
 SET FOREIGN_KEY_CHECKS = 1;

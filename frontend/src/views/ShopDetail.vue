@@ -344,7 +344,14 @@ const loadShopRatingDistribution = async (shopId) => {
     if (response.ok) {
       const data = await response.json();
       console.log("从后端获取的评分分布数据:", data);
-      shopRatingDistribution.value = data;
+      // 转换数据格式，使其与前端期望的格式匹配
+      shopRatingDistribution.value = {
+        rating5: data.rating5 || 0,
+        rating4: data.rating4 || 0,
+        rating3: data.rating3 || 0,
+        rating2: data.rating2 || 0,
+        rating1: data.rating1 || 0,
+      };
       console.log("设置后的shopRatingDistribution:", shopRatingDistribution.value);
     }
   } catch (error) {
@@ -383,50 +390,76 @@ const services = computed(() => {
   return shopServices.value;
 });
 
+// 评价列表数据
+const reviews = ref([]);
+
+// 从后端加载店铺评价
+const loadShopReviews = async (shopId) => {
+  try {
+    const response = await fetch(`http://localhost:8082/api/evaluations/shop/${shopId}`);
+    if (response.ok) {
+      const data = await response.json();
+      // 为每个评价获取用户信息
+      const reviewsWithUserInfo = await Promise.all(
+        data.map(async (item) => {
+          let username = `用户${item.userId}`;
+          try {
+            // 尝试获取用户真实姓名
+            const userResponse = await fetch(`http://localhost:8082/api/users/${item.userId}`);
+            if (userResponse.ok) {
+              const userData = await userResponse.json();
+              username = userData.username || username;
+            }
+          } catch (userError) {
+            console.error("加载用户信息失败:", userError);
+          }
+          return {
+            id: item.id,
+            name: username,
+            avatar: `https://placehold.co/40/8b4513/FFFFFF?text=用户`,
+            rating: item.rating || 0,
+            time: item.createTime ? new Date(item.createTime).toLocaleDateString() : "",
+            content: item.content || "无评价内容",
+          };
+        })
+      );
+      reviews.value = reviewsWithUserInfo;
+    }
+  } catch (error) {
+    console.error("加载店铺评价失败:", error);
+  }
+};
+
 // 完整的评价列表
 const allReviews = computed(() => {
-  return [
-    {
-      id: 1,
-      name: "汉服爱好者",
-      avatar: "https://placehold.co/40/8b4513/FFFFFF?text=用户",
-      rating: calculatedRating.value > 4 ? 5 : 4,
-      time: "2024-01-15",
-      content: `这家店铺的${shop.value.tags[0]}汉服真的太美了！做工精细，面料舒适，还原度很高。下次还会再来！`,
-    },
-    {
-      id: 2,
-      name: "传统文化研究者",
-      avatar: "https://placehold.co/40/d2691e/FFFFFF?text=用户",
-      rating: Math.floor(calculatedRating.value) || 4,
-      time: "2024-01-10",
-      content: `对于${shop.value.tags[0]}汉服的历史细节还原非常到位，看得出来是下了功夫研究的。推荐给喜欢传统服饰的朋友。`,
-    },
-    {
-      id: 3,
-      name: "汉服新手",
-      avatar: "https://placehold.co/40/8b4513/FFFFFF?text=用户",
-      rating: 5,
-      time: "2024-01-05",
-      content: `第一次购买汉服，店家服务很耐心，推荐的款式很适合我。质量也很不错，准备再入手一套。`,
-    },
-    {
-      id: 4,
-      name: "资深汉服玩家",
-      avatar: "https://placehold.co/40/d2691e/FFFFFF?text=用户",
-      rating: 4,
-      time: "2023-12-28",
-      content: `店铺的${shop.value.tags[0]}系列很正宗，细节处理得很好。物流速度也很快，包装精美。`,
-    },
-    {
-      id: 5,
-      name: "汉服摄影师",
-      avatar: "https://placehold.co/40/8b4513/FFFFFF?text=用户",
-      rating: 5,
-      time: "2023-12-20",
-      content: `拍摄汉服写真需要高质量的服装，这家店铺的服装上镜效果很好，面料垂感不错，颜色也很正。`,
-    },
-  ];
+  return reviews.value.length > 0
+    ? reviews.value
+    : [
+        {
+          id: 1,
+          name: "汉服爱好者",
+          avatar: "https://placehold.co/40/8b4513/FFFFFF?text=用户",
+          rating: calculatedRating.value > 4 ? 5 : 4,
+          time: "2024-01-15",
+          content: `这家店铺的${shop.value.tags[0]}汉服真的太美了！做工精细，面料舒适，还原度很高。下次还会再来！`,
+        },
+        {
+          id: 2,
+          name: "传统文化研究者",
+          avatar: "https://placehold.co/40/d2691e/FFFFFF?text=用户",
+          rating: Math.floor(calculatedRating.value) || 4,
+          time: "2024-01-10",
+          content: `对于${shop.value.tags[0]}汉服的历史细节还原非常到位，看得出来是下了功夫研究的。推荐给喜欢传统服饰的朋友。`,
+        },
+        {
+          id: 3,
+          name: "汉服新手",
+          avatar: "https://placehold.co/40/8b4513/FFFFFF?text=用户",
+          rating: 5,
+          time: "2024-01-05",
+          content: `第一次购买汉服，店家服务很耐心，推荐的款式很适合我。质量也很不错，准备再入手一套。`,
+        },
+      ];
 });
 
 // 显示的评价列表（根据showAllReviews控制）
@@ -532,6 +565,7 @@ onMounted(() => {
     loadShop(shopId);
     loadShopServices(shopId);
     loadShopRatingDistribution(shopId);
+    loadShopReviews(shopId);
   } else {
     ElMessage.error("店铺ID无效");
     router.push("/shop-list");

@@ -2,7 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.dto.ShopDTO;
 import com.example.demo.entity.Shop;
-import com.example.demo.entity.ShopRatingDistribution;
+import com.example.demo.entity.ShopRating;
 import com.example.demo.repository.ShopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ public class ShopService {
     private ShopRepository shopRepository;
     
     @Autowired
-    private ShopRatingDistributionService shopRatingDistributionService;
+    private ShopRatingService shopRatingService;
     
     public List<ShopDTO> getAllShops() {
         List<Shop> shops = shopRepository.findAll();
@@ -45,11 +45,11 @@ public class ShopService {
         dto.setCreateTime(shop.getCreateTime());
         dto.setUpdateTime(shop.getUpdateTime());
         
-        // 从评分分布表获取计算后的评分
-        ShopRatingDistribution distribution = shopRatingDistributionService.getRatingDistributionByShopId(shop.getId());
-        if (distribution != null) {
-            dto.setAverageRating(distribution.getAverageRating());
-            dto.setReviewCount(distribution.getTotalCount());
+        // 从评分表获取评分数据
+        ShopRating rating = shopRatingService.getRatingByShopId(shop.getId());
+        if (rating != null) {
+            dto.setAverageRating(rating.getAverageRating());
+            dto.setReviewCount(rating.getReviewCount());
         } else {
             dto.setAverageRating(0.0);
             dto.setReviewCount(0);
