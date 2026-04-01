@@ -126,9 +126,6 @@
                 <el-button type="primary" size="small" @click.stop="viewShopDetail(shop)">
                   查看详情
                 </el-button>
-                <el-button type="success" size="small" @click.stop="goToEvaluation(shop)">
-                  我要评价
-                </el-button>
               </div>
             </div>
           </div>
@@ -312,11 +309,6 @@ const resetFilters = () => {
 
 const viewShopDetail = (shop) => {
   router.push(`/shop-detail/${shop.id}`);
-};
-
-// 前往评价页面
-const goToEvaluation = (shop) => {
-  router.push(`/shop-evaluation-form/${shop.id}`);
 };
 
 // 个人中心跳转
