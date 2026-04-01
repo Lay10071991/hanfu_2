@@ -24,8 +24,10 @@
     <div class="main-content">
       <div class="container">
         <h2 class="page-title">AI问答助手</h2>
-        <p class="page-desc">我是汉服文化AI助手，可以回答关于汉服形制、穿搭、礼仪、面料等方面的问题～</p>
-        
+        <p class="page-desc">
+          我是汉服文化AI助手，可以回答关于汉服形制、穿搭、礼仪、面料等方面的问题～
+        </p>
+
         <div class="chat-container">
           <div class="chat-messages" ref="chatMessagesRef">
             <div
@@ -49,7 +51,7 @@
               </div>
             </div>
           </div>
-          
+
           <div class="chat-input-area">
             <div class="quick-questions">
               <span class="quick-label">快捷提问：</span>
@@ -59,7 +61,8 @@
                 size="small"
                 class="quick-tag"
                 @click="sendQuickQuestion(q)"
-              >{{ q }}</el-tag>
+                >{{ q }}</el-tag
+              >
             </div>
             <div class="chat-input-row">
               <el-input
@@ -69,12 +72,9 @@
                 :disabled="aiLoading"
                 size="large"
               />
-              <el-button
-                type="primary"
-                @click="sendMessage"
-                :loading="aiLoading"
-                size="large"
-              >发送</el-button>
+              <el-button type="primary" @click="sendMessage" :loading="aiLoading" size="large"
+                >发送</el-button
+              >
             </div>
           </div>
         </div>
@@ -87,124 +87,171 @@
         <p class="footer-subtitle">传承华夏衣冠，弘扬汉服文化</p>
       </div>
     </div>
-
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick } from 'vue'
-import { useRouter } from 'vue-router'
-import { ElMessage } from 'element-plus'
+import { ref, onMounted, nextTick } from "vue";
+import { useRouter } from "vue-router";
+import { ElMessage } from "element-plus";
 
-const router = useRouter()
-const username = ref('')
-const chatInput = ref('')
-const aiLoading = ref(false)
-const chatMessagesRef = ref(null)
+const router = useRouter();
+const username = ref("");
+const chatInput = ref("");
+const aiLoading = ref(false);
+const chatMessagesRef = ref(null);
 
 function getCurrentTime() {
-  const now = new Date()
-  return `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`
+  const now = new Date();
+  return `${now.getHours().toString().padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}`;
 }
 
 const chatMessages = ref([
   {
-    role: 'ai',
-    content: '您好！我是汉服文化AI助手 🏮\n\n我可以为您解答以下方面的问题：\n\n🏛️ 朝代形制：各朝代汉服特点与区别\n👘 汉服分类：襦裙、袄裙、曲裾、直裾等\n🎀 穿搭技巧：日常穿搭、配饰搭配\n🙏 礼仪文化：传统礼仪、场合着装\n🧵 面料工艺：刺绣、织锦、印染等\n\n请随时向我提问吧～',
-    time: getCurrentTime()
-  }
-])
+    role: "ai",
+    content:
+      "您好！我是汉服文化AI助手 🏮\n\n我可以为您解答以下方面的问题：\n\n🏛️ 朝代形制：各朝代汉服特点与区别\n👘 汉服分类：襦裙、袄裙、曲裾、直裾等\n🎀 穿搭技巧：日常穿搭、配饰搭配\n🙏 礼仪文化：传统礼仪、场合着装\n🧵 面料工艺：刺绣、织锦、印染等\n\n请随时向我提问吧～",
+    time: getCurrentTime(),
+  },
+]);
 
 const quickQuestions = ref([
-  '襦裙是什么',
-  '唐代汉服有哪些特点',
-  '新手入门推荐',
-  '汉服怎么保养',
-  '马面裙的历史'
-])
+  "襦裙是什么",
+  "唐代汉服有哪些特点",
+  "新手入门推荐",
+  "汉服怎么保养",
+  "马面裙的历史",
+]);
 
 onMounted(() => {
-  const savedUsername = localStorage.getItem('username')
+  const savedUsername = localStorage.getItem("username");
   if (savedUsername) {
-    username.value = savedUsername
+    username.value = savedUsername;
   }
-})
+  loadMessagesFromStorage();
+  scrollToBottom();
+});
 
 const formatMessage = (text) => {
-  return text
-    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\n/g, '<br>')
-}
+  return text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>").replace(/\n/g, "<br>");
+};
 
 const scrollToBottom = () => {
   nextTick(() => {
     if (chatMessagesRef.value) {
-      chatMessagesRef.value.scrollTop = chatMessagesRef.value.scrollHeight
+      chatMessagesRef.value.scrollTop = chatMessagesRef.value.scrollHeight;
     }
-  })
-}
+  });
+};
 
 const sendMessage = async () => {
-  const question = chatInput.value.trim()
-  if (!question || aiLoading.value) return
+  const question = chatInput.value.trim();
+  if (!question || aiLoading.value) return;
 
   chatMessages.value.push({
-    role: 'user',
+    role: "user",
     content: question,
-    time: getCurrentTime()
-  })
-  chatInput.value = ''
-  aiLoading.value = true
-  scrollToBottom()
+    time: getCurrentTime(),
+  });
+  chatInput.value = "";
+  aiLoading.value = true;
+  scrollToBottom();
 
   try {
-    const response = await fetch('http://localhost:8082/api/ai/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ question })
-    })
-    const data = await response.json()
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000);
+
+    const response = await fetch("http://localhost:8082/api/ai/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ question }),
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
     chatMessages.value.push({
-      role: 'ai',
-      content: data.answer || '抱歉，暂时无法回答您的问题。',
-      time: getCurrentTime()
-    })
+      role: "ai",
+      content: data.answer || "抱歉，暂时无法回答您的问题。",
+      time: getCurrentTime(),
+    });
+    saveMessagesToStorage();
   } catch (error) {
-    console.error('AI问答请求失败', error)
+    console.error("AI问答请求失败", error);
+    let errorMessage = "网络异常，请稍后再试～";
+    if (error.name === "AbortError") {
+      errorMessage = "请求超时，请稍后再试～";
+    }
     chatMessages.value.push({
-      role: 'ai',
-      content: '网络异常，请稍后再试～',
-      time: getCurrentTime()
-    })
+      role: "ai",
+      content: errorMessage,
+      time: getCurrentTime(),
+    });
   } finally {
-    aiLoading.value = false
-    scrollToBottom()
+    aiLoading.value = false;
+    scrollToBottom();
   }
-}
+};
 
 const sendQuickQuestion = (question) => {
-  chatInput.value = question
-  sendMessage()
-}
+  chatInput.value = question;
+  sendMessage();
+};
+
+const saveMessagesToStorage = () => {
+  try {
+    localStorage.setItem("chatMessages", JSON.stringify(chatMessages.value));
+  } catch (e) {
+    console.error("保存消息失败", e);
+  }
+};
+
+const loadMessagesFromStorage = () => {
+  try {
+    const saved = localStorage.getItem("chatMessages");
+    if (saved) {
+      chatMessages.value = JSON.parse(saved);
+    }
+  } catch (e) {
+    console.error("加载消息失败", e);
+  }
+};
+
+const clearChatHistory = () => {
+  chatMessages.value = [
+    {
+      role: "ai",
+      content:
+        "您好！我是汉服文化AI助手 🏮\n\n我可以为您解答以下方面的问题：\n\n🏛️ 朝代形制：各朝代汉服特点与区别\n👘 汉服分类：襦裙、袄裙、曲裾、直裾等\n🎀 穿搭技巧：日常穿搭、配饰搭配\n🙏 礼仪文化：传统礼仪、场合着装\n🧵 面料工艺：刺绣、织锦、印染等\n\n请随时向我提问吧～",
+      time: getCurrentTime(),
+    },
+  ];
+  saveMessagesToStorage();
+};
 
 const goToProfile = () => {
-  const role = localStorage.getItem('role')
-  if (role === '2') {
-    router.push('/shop-profile')
+  const role = localStorage.getItem("role");
+  if (role === "2") {
+    router.push("/shop-profile");
   } else {
-    router.push('/profile')
+    router.push("/profile");
   }
-}
+};
 
 const logout = () => {
-  localStorage.removeItem('isLoggedIn')
-  localStorage.removeItem('username')
-  localStorage.removeItem('gender')
-  localStorage.removeItem('bio')
-  localStorage.removeItem('role')
-  ElMessage.success('退出登录成功')
-  router.push('/login')
-}
+  localStorage.removeItem("isLoggedIn");
+  localStorage.removeItem("username");
+  localStorage.removeItem("gender");
+  localStorage.removeItem("bio");
+  localStorage.removeItem("role");
+  ElMessage.success("退出登录成功");
+  router.push("/login");
+};
 </script>
 
 <style scoped>
@@ -259,7 +306,8 @@ const logout = () => {
   white-space: nowrap;
 }
 
-.nav-item:hover, .nav-item.active {
+.nav-item:hover,
+.nav-item.active {
   background-color: rgba(255, 255, 255, 0.2);
 }
 

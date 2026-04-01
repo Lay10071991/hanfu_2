@@ -74,7 +74,6 @@ com\example\demo\exception\GlobalExceptionHandler.class
 com\example\demo\controller\CultureInfluenceController.class
 com\example\demo\repository\ImageRepository.class
 com\example\demo\controller\ClothingComponentController.class
-com\example\demo\controller\AiChatController.class
 com\example\demo\repository\CultureInfluenceRepository.class
 com\example\demo\controller\ImageController.class
 com\example\demo\controller\ActivityController.class
