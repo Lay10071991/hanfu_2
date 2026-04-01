@@ -262,10 +262,9 @@
               <h3 class="content-title">我的活动报名</h3>
               <div class="registrations-header">
                 <el-tabs v-model="registrationTab" class="registration-tabs">
-                  <el-tab-pane label="已报名" name="registered"></el-tab-pane>
-                  <el-tab-pane label="待参加" name="upcoming"></el-tab-pane>
-                  <el-tab-pane label="已结束" name="completed"></el-tab-pane>
-                  <el-tab-pane label="已取消" name="cancelled"></el-tab-pane>
+                  <el-tab-pane label="节庆雅集" name="festival"></el-tab-pane>
+                  <el-tab-pane label="展览" name="exhibition"></el-tab-pane>
+                  <el-tab-pane label="讲座" name="lecture"></el-tab-pane>
                 </el-tabs>
               </div>
 
@@ -307,13 +306,18 @@
                             size="small"
                             @click="cancelRegistration(registration.id)"
                           >
-                            取消报名
+                            取消预约
                           </el-button>
                           <el-button
-                            v-if="registration.status === 'upcoming'"
                             type="primary"
                             size="small"
-                            @click="viewActivityDetails(registration.activityId)"
+                            @click="
+                              viewActivityDetails(
+                                registration.activityId,
+                                registration.activityType,
+                                registration,
+                              )
+                            "
                           >
                             查看详情
                           </el-button>
@@ -425,6 +429,226 @@
       @comment-added="handleCommentAdded"
     />
 
+    <!-- 展览详情弹窗 -->
+    <el-dialog
+      v-model="exhibitionDialogVisible"
+      :title="selectedExhibition?.title"
+      width="800px"
+      :show-close="true"
+    >
+      <div v-if="selectedExhibition" class="exhibition-detail-dialog">
+        <div class="detail-header">
+          <el-image
+            :src="selectedExhibition.detailImage || selectedExhibition.image"
+            fit="cover"
+            class="detail-image"
+          />
+        </div>
+        <div class="detail-content">
+          <div class="detail-info">
+            <div class="info-row">
+              <div class="info-item">
+                <el-icon><Calendar /></el-icon>
+                <div class="info-content">
+                  <div class="info-label">展览时间</div>
+                  <div class="info-value">{{ selectedExhibition.date }}</div>
+                </div>
+              </div>
+              <div class="info-item">
+                <el-icon><Location /></el-icon>
+                <div class="info-content">
+                  <div class="info-label">展览地点</div>
+                  <div class="info-value">{{ selectedExhibition.location }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="info-row">
+              <div class="info-item">
+                <el-icon><Ticket /></el-icon>
+                <div class="info-content">
+                  <div class="info-label">门票信息</div>
+                  <div class="info-value">{{ selectedExhibition.ticket || "免费" }}</div>
+                </div>
+              </div>
+              <div class="info-item">
+                <el-icon><User /></el-icon>
+                <div class="info-content">
+                  <div class="info-label">主办单位</div>
+                  <div class="info-value">
+                    {{ selectedExhibition.organizer || "汉服文化交流平台" }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="detail-section">
+            <h4>展览介绍</h4>
+            <p>
+              {{
+                selectedExhibition.detailDescription ||
+                selectedExhibition.description ||
+                "暂无详细介绍"
+              }}
+            </p>
+          </div>
+
+          <div
+            class="detail-section"
+            v-if="selectedExhibition.highlights && selectedExhibition.highlights.length > 0"
+          >
+            <h4>展览亮点</h4>
+            <ul class="highlight-list">
+              <li v-for="(highlight, index) in selectedExhibition.highlights" :key="index">
+                {{ highlight }}
+              </li>
+            </ul>
+          </div>
+
+          <div class="detail-section">
+            <h4>参观须知</h4>
+            <ul class="notice-list">
+              <template
+                v-if="
+                  selectedExhibition &&
+                  selectedExhibition.notice &&
+                  selectedExhibition.notice.trim()
+                "
+              >
+                <li
+                  v-for="(noticeItem, index) in selectedExhibition.notice
+                    .split('\n')
+                    .filter((item) => item && item.trim())"
+                  :key="index"
+                >
+                  {{ noticeItem.trim() }}
+                </li>
+              </template>
+              <template v-else>
+                <li>请提前预约参观时间</li>
+                <li>保持安静，勿触摸展品</li>
+                <li>禁止使用闪光灯拍照</li>
+                <li>遵守展馆各项规定</li>
+              </template>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="exhibitionDialogVisible = false">关闭</el-button>
+        </span>
+      </template>
+    </el-dialog>
+
+    <!-- 讲座详情弹窗 -->
+    <el-dialog v-model="lectureDialogVisible" :title="selectedLecture?.title" width="700px" center>
+      <div v-if="selectedLecture" class="lecture-detail-content">
+        <div class="detail-info-section">
+          <div class="info-row">
+            <div class="info-item">
+              <el-icon><User /></el-icon>
+              <div class="info-content">
+                <div class="info-label">主讲人</div>
+                <div class="info-value">{{ selectedLecture.speaker || "待定" }}</div>
+              </div>
+            </div>
+            <div class="info-item">
+              <el-icon><Calendar /></el-icon>
+              <div class="info-content">
+                <div class="info-label">讲座日期</div>
+                <div class="info-value">{{ selectedLecture.date }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="info-row">
+            <div class="info-item">
+              <el-icon><Clock /></el-icon>
+              <div class="info-content">
+                <div class="info-label">讲座时间</div>
+                <div class="info-value">{{ selectedLecture.time || "全天" }}</div>
+              </div>
+            </div>
+            <div class="info-item">
+              <el-icon><Location /></el-icon>
+              <div class="info-content">
+                <div class="info-label">讲座地点</div>
+                <div class="info-value">{{ selectedLecture.location }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <h4>讲座简介</h4>
+          <p>{{ selectedLecture.description }}</p>
+        </div>
+
+        <div class="detail-section">
+          <h4>主讲人简介</h4>
+          <p>
+            {{
+              selectedLecture.speakerBio ||
+              "资深汉服文化研究者，长期从事传统服饰文化的研究与推广工作。"
+            }}
+          </p>
+        </div>
+
+        <div class="detail-section">
+          <h4>讲座内容</h4>
+          <ul class="content-list">
+            <template
+              v-if="selectedLecture && selectedLecture.content && selectedLecture.content.trim()"
+            >
+              <li
+                v-for="(contentItem, index) in selectedLecture.content
+                  .split('\n')
+                  .filter((item) => item && item.trim())"
+                :key="index"
+              >
+                {{ contentItem.trim() }}
+              </li>
+            </template>
+            <template v-else>
+              <li>汉服的历史起源与发展脉络</li>
+              <li>各朝代汉服的特点与区别</li>
+              <li>汉服的基本构成与穿着方法</li>
+              <li>现代汉服的传承与创新</li>
+            </template>
+          </ul>
+        </div>
+
+        <div class="detail-section">
+          <h4>参与须知</h4>
+          <ul class="notice-list">
+            <template
+              v-if="selectedLecture && selectedLecture.notice && selectedLecture.notice.trim()"
+            >
+              <li
+                v-for="(noticeItem, index) in selectedLecture.notice
+                  .split('\n')
+                  .filter((item) => item && item.trim())"
+                :key="index"
+              >
+                {{ noticeItem.trim() }}
+              </li>
+            </template>
+            <template v-else>
+              <li>请提前10分钟到场签到</li>
+              <li>讲座期间请保持安静</li>
+              <li>可携带笔记本记录</li>
+              <li>讲座结束后设有互动问答环节</li>
+            </template>
+          </ul>
+        </div>
+      </div>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="lectureDialogVisible = false">关闭</el-button>
+        </span>
+      </template>
+    </el-dialog>
+
     <!-- 页脚 -->
     <div class="footer">
       <div class="container">
@@ -450,6 +674,7 @@ import {
   Location,
   Clock,
   ArrowDown,
+  Ticket,
 } from "@element-plus/icons-vue";
 
 const API_BASE = "http://localhost:8082/api";
@@ -461,7 +686,7 @@ const activeMenu = ref("info");
 const editDialogVisible = ref(false);
 const passwordDialogVisible = ref(false);
 const passwordFormRef = ref();
-const registrationTab = ref("registered");
+const registrationTab = ref("festival");
 const loading = ref(false);
 
 const userInfo = ref({
@@ -513,6 +738,14 @@ const postDetailVisible = ref(false);
 const selectedPost = ref(null);
 const userInteractions = ref([]);
 
+// 展览详情弹窗
+const exhibitionDialogVisible = ref(false);
+const selectedExhibition = ref(null);
+
+// 讲座详情弹窗
+const lectureDialogVisible = ref(false);
+const selectedLecture = ref(null);
+
 const userLikes = ref([
   {
     id: 1,
@@ -528,52 +761,54 @@ const userLikes = ref([
 const activityRegistrations = ref([
   {
     id: 1,
-    activityId: 101,
-    activityName: "春日汉服游园会",
-    location: "中山公园",
-    time: "2024-03-15 14:00-17:00",
+    activityId: 1,
+    activityName: "上元节灯会",
+    activityType: "festival",
+    location: "北京故宫",
+    time: "2026年2月12日",
     registrationDate: "2024-02-20",
     status: "upcoming", // registered, upcoming, completed, cancelled
   },
   {
     id: 2,
-    activityId: 102,
-    activityName: "汉服茶艺交流会",
-    location: "茶文化馆",
-    time: "2024-02-28 19:00-21:00",
+    activityId: 2,
+    activityName: "春日汉服游园会",
+    activityType: "festival",
+    location: "中山公园",
+    time: "2024-03-15 14:00-17:00",
     registrationDate: "2024-02-15",
     status: "completed",
   },
   {
     id: 3,
-    activityId: 103,
-    activityName: "汉服摄影大赛",
-    location: "古城墙景区",
-    time: "2024-04-10 09:00-16:00",
+    activityId: 3,
+    activityName: "汉服文化展览",
+    activityType: "exhibition",
+    location: "市博物馆",
+    time: "2024-03-01至2024-03-15",
     registrationDate: "2024-02-25",
-    status: "registered",
+    status: "upcoming",
   },
   {
     id: 4,
-    activityId: 104,
-    activityName: "传统节日庆典",
-    location: "文化广场",
-    time: "2024-01-20 10:00-18:00",
-    registrationDate: "2024-01-10",
-    status: "cancelled",
+    activityId: 4,
+    activityName: "汉服历史讲座",
+    activityType: "lecture",
+    location: "图书馆",
+    time: "2024-03-20 14:00-16:00",
+    registrationDate: "2024-02-28",
+    status: "upcoming",
   },
 ]);
 
 // 计算属性：根据标签过滤活动
 const filteredRegistrations = computed(() => {
-  if (registrationTab.value === "registered") {
-    return activityRegistrations.value.filter((item) => item.status === "registered");
-  } else if (registrationTab.value === "upcoming") {
-    return activityRegistrations.value.filter((item) => item.status === "upcoming");
-  } else if (registrationTab.value === "completed") {
-    return activityRegistrations.value.filter((item) => item.status === "completed");
-  } else if (registrationTab.value === "cancelled") {
-    return activityRegistrations.value.filter((item) => item.status === "cancelled");
+  if (registrationTab.value === "festival") {
+    return activityRegistrations.value.filter((item) => item.activityType === "festival");
+  } else if (registrationTab.value === "exhibition") {
+    return activityRegistrations.value.filter((item) => item.activityType === "exhibition");
+  } else if (registrationTab.value === "lecture") {
+    return activityRegistrations.value.filter((item) => item.activityType === "lecture");
   }
   return activityRegistrations.value;
 });
@@ -783,17 +1018,16 @@ const getStatusText = (status) => {
 // 新增：获取空状态描述
 const getEmptyDescription = () => {
   const map = {
-    registered: "暂无已报名的活动",
-    upcoming: "暂无待参加的活动",
-    completed: "暂无已结束的活动",
-    cancelled: "暂无已取消的活动",
+    festival: "暂无节庆雅集活动",
+    exhibition: "暂无展览活动",
+    lecture: "暂无讲座活动",
   };
   return map[registrationTab.value] || "暂无活动记录";
 };
 
-// 新增：取消报名
+// 新增：取消预约
 const cancelRegistration = (registrationId) => {
-  ElMessageBox.confirm("确定要取消报名吗？取消后如需参加需要重新报名。", "取消报名确认", {
+  ElMessageBox.confirm("确定要取消预约吗？取消后如需参加需要重新预约。", "取消预约确认", {
     confirmButtonText: "确定取消",
     cancelButtonText: "再想想",
     type: "warning",
@@ -802,7 +1036,7 @@ const cancelRegistration = (registrationId) => {
       const index = activityRegistrations.value.findIndex((item) => item.id === registrationId);
       if (index !== -1) {
         activityRegistrations.value[index].status = "cancelled";
-        ElMessage.success("已成功取消报名");
+        ElMessage.success("已成功取消预约");
       }
     })
     .catch(() => {
@@ -811,8 +1045,94 @@ const cancelRegistration = (registrationId) => {
 };
 
 // 新增：查看活动详情
-const viewActivityDetails = (activityId) => {
-  router.push(`/activity/${activityId}`);
+const viewActivityDetails = async (activityId, activityType, registration) => {
+  if (activityType === "festival") {
+    router.push(`/festival-activity/${activityId}`);
+  } else if (activityType === "exhibition") {
+    // 从后端获取展览详情
+    try {
+      const response = await fetch(`${API_BASE}/exhibitions/${activityId}`);
+      if (response.ok) {
+        const data = await response.json();
+        selectedExhibition.value = {
+          id: data.id,
+          title: data.title,
+          date: data.date,
+          location: data.location,
+          description: data.description,
+          detailDescription: data.detailDescription,
+          image: data.image,
+          detailImage: data.detailImage,
+          ticket: data.ticket,
+          organizer: data.organizer,
+          highlights: data.highlights,
+          notice: data.notice,
+        };
+      } else {
+        // 如果后端没有数据，使用注册信息
+        selectedExhibition.value = {
+          id: registration.activityId,
+          title: registration.activityName,
+          date: registration.time,
+          location: registration.location,
+          description: "暂无详细介绍",
+          image: "http://localhost:8082/uploads/exhibition-1.png",
+        };
+      }
+    } catch (error) {
+      console.error("获取展览详情失败:", error);
+      // 使用注册信息
+      selectedExhibition.value = {
+        id: registration.activityId,
+        title: registration.activityName,
+        date: registration.time,
+        location: registration.location,
+        description: "暂无详细介绍",
+        image: "http://localhost:8082/uploads/exhibition-1.png",
+      };
+    }
+    exhibitionDialogVisible.value = true;
+  } else if (activityType === "lecture") {
+    // 从后端获取讲座详情
+    try {
+      const response = await fetch(`${API_BASE}/lectures/${activityId}`);
+      if (response.ok) {
+        const data = await response.json();
+        selectedLecture.value = {
+          id: data.id,
+          title: data.title,
+          date: data.date,
+          time: data.time,
+          location: data.location,
+          description: data.description,
+          speaker: data.speaker,
+          speakerBio: data.speakerBio,
+          content: data.content,
+          notice: data.notice,
+        };
+      } else {
+        // 如果后端没有数据，使用注册信息
+        selectedLecture.value = {
+          id: registration.activityId,
+          title: registration.activityName,
+          date: registration.time,
+          location: registration.location,
+          description: "暂无详细介绍",
+        };
+      }
+    } catch (error) {
+      console.error("获取讲座详情失败:", error);
+      // 使用注册信息
+      selectedLecture.value = {
+        id: registration.activityId,
+        title: registration.activityName,
+        date: registration.time,
+        location: registration.location,
+        description: "暂无详细介绍",
+      };
+    }
+    lectureDialogVisible.value = true;
+  }
 };
 
 // 加载用户测评数据
@@ -1664,6 +1984,232 @@ const logout = () => {
   align-items: center;
   font-size: 12px;
   color: #999;
+}
+
+/* 展览详情弹窗样式 */
+.exhibition-detail-dialog {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.exhibition-detail-dialog .detail-header {
+  margin-bottom: 20px;
+}
+
+.exhibition-detail-dialog .detail-image {
+  width: 100%;
+  height: 300px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.exhibition-detail-dialog .detail-content {
+  padding: 0 10px;
+}
+
+.exhibition-detail-dialog .detail-info {
+  background-color: #f9f5f0;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.exhibition-detail-dialog .info-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 15px;
+}
+
+.exhibition-detail-dialog .info-row:last-child {
+  margin-bottom: 0;
+}
+
+.exhibition-detail-dialog .info-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.exhibition-detail-dialog .info-item .el-icon {
+  color: #8b4513;
+  font-size: 24px;
+}
+
+.exhibition-detail-dialog .info-content {
+  flex: 1;
+}
+
+.exhibition-detail-dialog .info-label {
+  font-size: 12px;
+  color: #999;
+  margin-bottom: 4px;
+}
+
+.exhibition-detail-dialog .info-value {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+}
+
+.exhibition-detail-dialog .detail-section {
+  margin-bottom: 25px;
+}
+
+.exhibition-detail-dialog .detail-section h4 {
+  color: #8b4513;
+  font-size: 18px;
+  margin: 0 0 15px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #d4a76a;
+}
+
+.exhibition-detail-dialog .detail-section p {
+  color: #666;
+  line-height: 1.8;
+  margin-bottom: 15px;
+}
+
+.exhibition-detail-dialog .highlight-list,
+.exhibition-detail-dialog .notice-list {
+  padding-left: 20px;
+  margin: 0;
+}
+
+.exhibition-detail-dialog .highlight-list li,
+.exhibition-detail-dialog .notice-list li {
+  color: #666;
+  line-height: 1.8;
+  margin-bottom: 8px;
+}
+
+.exhibition-detail-dialog .highlight-list li:last-child,
+.exhibition-detail-dialog .notice-list li:last-child {
+  margin-bottom: 0;
+}
+
+.exhibition-detail-dialog .dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* 讲座详情弹窗样式 */
+.lecture-detail-content {
+  max-height: 70vh;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+.lecture-detail-content .detail-info-section {
+  background-color: #f9f5f0;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.lecture-detail-content .info-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 15px;
+}
+
+.lecture-detail-content .info-row:last-child {
+  margin-bottom: 0;
+}
+
+.lecture-detail-content .info-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.lecture-detail-content .info-item .el-icon {
+  color: #8b4513;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.lecture-detail-content .info-content {
+  flex: 1;
+}
+
+.lecture-detail-content .info-label {
+  font-size: 12px;
+  color: #999;
+  margin-bottom: 4px;
+}
+
+.lecture-detail-content .info-value {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+}
+
+.lecture-detail-content .detail-section {
+  margin-bottom: 25px;
+}
+
+.lecture-detail-content .detail-section h4 {
+  color: #8b4513;
+  font-size: 18px;
+  margin: 0 0 15px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #d4a76a;
+}
+
+.lecture-detail-content .detail-section p {
+  color: #666;
+  line-height: 1.8;
+  margin: 0;
+}
+
+.lecture-detail-content .content-list,
+.lecture-detail-content .notice-list {
+  padding-left: 20px;
+  margin: 0;
+}
+
+.lecture-detail-content .content-list li,
+.lecture-detail-content .notice-list li {
+  color: #666;
+  line-height: 1.8;
+  margin-bottom: 8px;
+}
+
+.lecture-detail-content .content-list li:last-child,
+.lecture-detail-content .notice-list li:last-child {
+  margin-bottom: 0;
+}
+
+.lecture-detail-content .content-list li {
+  position: relative;
+  padding-left: 10px;
+}
+
+.lecture-detail-content .content-list li::before {
+  content: "📚";
+  position: absolute;
+  left: -15px;
+}
+
+.lecture-detail-content .notice-list li {
+  position: relative;
+  padding-left: 10px;
+}
+
+.lecture-detail-content .notice-list li::before {
+  content: "•";
+  position: absolute;
+  left: -10px;
+  color: #8b4513;
+}
+
+.lecture-detail-content .dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
 }
 
 .like-type {

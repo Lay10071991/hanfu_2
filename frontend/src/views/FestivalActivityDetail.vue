@@ -345,7 +345,34 @@ const loadFestivalData = async (id) => {
     const response = await fetch(`http://localhost:8082/api/festival-activity/${id}`);
     if (response.ok) {
       const data = await response.json();
-      festivalData.value = data;
+      // 确保数据字段映射正确
+      festivalData.value = {
+        id: data.id,
+        title: data.title,
+        season: data.season,
+        date: data.date,
+        time: data.date, // 后端返回的是date字段，前端模板使用time字段
+        location: data.location,
+        image: data.image,
+        description: data.description,
+        traditionExperience: data.traditionExperience,
+        precautions: data.precautions,
+      };
+    } else {
+      console.error("获取活动数据失败，状态码:", response.status);
+      // 加载失败，使用空数据
+      festivalData.value = {
+        id: null,
+        title: "活动加载失败",
+        season: "",
+        date: "",
+        time: "",
+        location: "",
+        image: "",
+        description: "无法加载活动数据，请稍后再试",
+        traditionExperience: "",
+        precautions: "",
+      };
     }
   } catch (error) {
     console.error("加载活动数据失败:", error);
@@ -670,7 +697,7 @@ const formatPrecautions = (precautions) => {
   white-space: nowrap;
 }
 
-.user-name {
+.user-info-vertical .user-name {
   font-size: 14px;
   margin-bottom: 4px;
   color: white;
