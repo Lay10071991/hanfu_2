@@ -157,9 +157,10 @@
                 "
               >
                 <li
-                  v-for="(noticeItem, index) in selectedExhibition.notice.split('\n')"
+                  v-for="(noticeItem, index) in selectedExhibition.notice
+                    .split('\n')
+                    .filter((item) => item && item.trim())"
                   :key="index"
-                  v-if="noticeItem && noticeItem.trim()"
                 >
                   {{ noticeItem.trim() }}
                 </li>
