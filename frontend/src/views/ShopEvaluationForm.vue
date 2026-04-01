@@ -188,10 +188,15 @@ const submitEvaluation = async () => {
     if (userStr) {
       try {
         const user = JSON.parse(userStr);
-        userId = user.id;
+        userId = user.id || user.userId; // 兼容不同的用户ID字段名
       } catch (e) {
         console.error("解析用户信息失败", e);
       }
+    }
+
+    // 如果localStorage中没有用户信息，尝试从其他存储中获取
+    if (!userId) {
+      userId = localStorage.getItem("userId");
     }
 
     if (!userId) {
@@ -202,16 +207,20 @@ const submitEvaluation = async () => {
 
     const submitData = {
       shopId: Number(shopId),
-      userId: userId,
+      userId: Number(userId),
       rating: evaluationForm.value.overallRating,
       content: evaluationForm.value.content,
     };
+
+    console.log("提交评价数据:", submitData);
 
     const response = await fetch("http://localhost:8082/api/evaluations", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(submitData),
     });
+
+    console.log("评价提交响应状态:", response.status);
 
     if (response.ok) {
       ElMessage.success("评价提交成功！");
@@ -222,6 +231,8 @@ const submitEvaluation = async () => {
         },
       });
     } else {
+      const errorText = await response.text();
+      console.error("提交失败响应:", errorText);
       ElMessage.error("提交失败，请稍后重试");
     }
   } catch (error) {

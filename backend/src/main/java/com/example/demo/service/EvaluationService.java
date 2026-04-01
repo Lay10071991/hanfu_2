@@ -17,6 +17,62 @@ public class EvaluationService {
     }
     
     public ShopReview createEvaluation(ShopReview review) {
-        return shopReviewRepository.save(review);
+        // 先设置评分统计字段的初始值
+        review.setAverageRating(0.0);
+        review.setRating1(0);
+        review.setRating2(0);
+        review.setRating3(0);
+        review.setRating4(0);
+        review.setRating5(0);
+        review.setReviewCount(0);
+        
+        // 保存当前评价
+        ShopReview savedReview = shopReviewRepository.save(review);
+        
+        // 计算并更新评分统计数据
+        updateShopRatingStats(review.getShopId());
+        
+        return savedReview;
+    }
+    
+    private void updateShopRatingStats(Long shopId) {
+        // 获取该店铺的所有评价
+        List<ShopReview> reviews = shopReviewRepository.findByShopId(shopId);
+        
+        // 统计各星级评价数量
+        int rating5 = 0, rating4 = 0, rating3 = 0, rating2 = 0, rating1 = 0;
+        for (ShopReview review : reviews) {
+            Double rating = review.getRating();
+            if (rating != null) {
+                int ratingInt = rating.intValue();
+                switch (ratingInt) {
+                    case 5: rating5++; break;
+                    case 4: rating4++; break;
+                    case 3: rating3++; break;
+                    case 2: rating2++; break;
+                    case 1: rating1++; break;
+                }
+            }
+        }
+        
+        // 计算总评价数和平均评分
+        int totalCount = rating5 + rating4 + rating3 + rating2 + rating1;
+        double averageRating = 0.0;
+        if (totalCount > 0) {
+            double weightedSum = 5.0 * rating5 + 4.0 * rating4 + 3.0 * rating3 + 2.0 * rating2 + 1.0 * rating1;
+            averageRating = Math.round((weightedSum / totalCount) * 10.0) / 10.0;
+        }
+        
+        // 更新所有评价的评分统计字段
+        for (ShopReview review : reviews) {
+            review.setAverageRating(averageRating);
+            review.setRating5(rating5);
+            review.setRating4(rating4);
+            review.setRating3(rating3);
+            review.setRating2(rating2);
+            review.setRating1(rating1);
+            review.setReviewCount(totalCount);
+            shopReviewRepository.save(review);
+        }
     }
 }
