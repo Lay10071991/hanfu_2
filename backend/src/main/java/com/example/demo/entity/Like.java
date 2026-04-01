@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "like", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"user_id", "target_id", "target_type"})
+@Table(name = "post_like", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"post_id", "user_id"})
 })
 public class Like {
     @Id
@@ -15,11 +15,8 @@ public class Like {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
-    @Column(name = "target_id", nullable = false)
-    private Long targetId;
-
-    @Column(name = "target_type", nullable = false, length = 20)
-    private String targetType;
+    @Column(name = "post_id", nullable = false)
+    private Long postId;
 
     @Column(name = "create_time", nullable = false)
     private LocalDateTime createTime;
@@ -45,20 +42,12 @@ public class Like {
         this.userId = userId;
     }
 
-    public Long getTargetId() {
-        return targetId;
+    public Long getPostId() {
+        return postId;
     }
 
-    public void setTargetId(Long targetId) {
-        this.targetId = targetId;
-    }
-
-    public String getTargetType() {
-        return targetType;
-    }
-
-    public void setTargetType(String targetType) {
-        this.targetType = targetType;
+    public void setPostId(Long postId) {
+        this.postId = postId;
     }
 
     public LocalDateTime getCreateTime() {

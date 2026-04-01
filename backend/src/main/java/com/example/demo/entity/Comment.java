@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "comment")
+@Table(name = "post_comment")
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,9 +19,6 @@ public class Comment {
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
-
-    @Column(columnDefinition = "INT DEFAULT 0")
-    private Integer likes = 0;
 
     @Column(name = "create_time", nullable = false)
     private LocalDateTime createTime;
@@ -70,14 +67,6 @@ public class Comment {
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public Integer getLikes() {
-        return likes;
-    }
-
-    public void setLikes(Integer likes) {
-        this.likes = likes;
     }
 
     public LocalDateTime getCreateTime() {

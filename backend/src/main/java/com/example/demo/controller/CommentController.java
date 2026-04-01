@@ -34,7 +34,6 @@ public class CommentController {
             Map<String, Object> map = new HashMap<>();
             map.put("id", comment.getId());
             map.put("content", comment.getContent());
-            map.put("likes", comment.getLikes());
             map.put("createTime", comment.getCreateTime());
             map.put("updateTime", comment.getUpdateTime());
             

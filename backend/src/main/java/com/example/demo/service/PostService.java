@@ -60,7 +60,7 @@ public class PostService {
         Map<String, Object> result = convertToMap(post);
         
         if (currentUserId != null) {
-            boolean liked = likeRepository.existsByUserIdAndTargetIdAndTargetType(currentUserId, id, "post");
+            boolean liked = likeRepository.existsByUserIdAndPostId(currentUserId, id);
             result.put("liked", liked);
         } else {
             result.put("liked", false);
@@ -114,7 +114,7 @@ public class PostService {
         }
         
         Post post = postOpt.get();
-        Optional<Like> likeOpt = likeRepository.findByUserIdAndTargetIdAndTargetType(userId, postId, "post");
+        Optional<Like> likeOpt = likeRepository.findByUserIdAndPostId(userId, postId);
         
         boolean liked;
         if (likeOpt.isPresent()) {
@@ -124,8 +124,7 @@ public class PostService {
         } else {
             Like like = new Like();
             like.setUserId(userId);
-            like.setTargetId(postId);
-            like.setTargetType("post");
+            like.setPostId(postId);
             likeRepository.save(like);
             post.setLikes(post.getLikes() + 1);
             liked = true;
@@ -145,7 +144,6 @@ public class PostService {
             Map<String, Object> map = new HashMap<>();
             map.put("id", comment.getId());
             map.put("content", comment.getContent());
-            map.put("likes", comment.getLikes());
             map.put("time", formatTime(comment.getCreateTime()));
             map.put("author", getAuthorName(comment.getUserId()));
             return map;
@@ -164,7 +162,6 @@ public class PostService {
         comment.setPost(post);
         comment.setUserId(userId);
         comment.setContent(content);
-        comment.setLikes(0);
         
         Comment savedComment = commentRepository.save(comment);
         
@@ -174,7 +171,6 @@ public class PostService {
         Map<String, Object> result = new HashMap<>();
         result.put("id", savedComment.getId());
         result.put("content", savedComment.getContent());
-        result.put("likes", savedComment.getLikes());
         result.put("time", "刚刚");
         result.put("author", getAuthorName(userId));
         result.put("postComments", post.getComments());

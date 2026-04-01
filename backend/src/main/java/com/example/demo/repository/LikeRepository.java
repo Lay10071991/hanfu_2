@@ -9,11 +9,11 @@ import java.util.Optional;
 @Repository
 public interface LikeRepository extends JpaRepository<Like, Long> {
     
-    Optional<Like> findByUserIdAndTargetIdAndTargetType(Long userId, Long targetId, String targetType);
+    Optional<Like> findByUserIdAndPostId(Long userId, Long postId);
     
-    boolean existsByUserIdAndTargetIdAndTargetType(Long userId, Long targetId, String targetType);
+    boolean existsByUserIdAndPostId(Long userId, Long postId);
     
-    void deleteByUserIdAndTargetIdAndTargetType(Long userId, Long targetId, String targetType);
+    void deleteByUserIdAndPostId(Long userId, Long postId);
     
-    long countByTargetIdAndTargetType(Long targetId, String targetType);
+    long countByPostId(Long postId);
 }

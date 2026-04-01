@@ -16,7 +16,6 @@ com\example\demo\entity\Festival.class
 com\example\demo\service\ShopService.class
 com\example\demo\entity\User.class
 com\example\demo\config\FestivalActivityInitializer.class
-com\example\demo\controller\CommentController.class
 com\example\demo\service\ActivityService.class
 com\example\demo\entity\ClothingComponent.class
 com\example\demo\repository\UserRepository.class
