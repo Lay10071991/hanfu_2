@@ -14,6 +14,7 @@ public class User {
 
     private String gender;
     private String bio;
+    private String avatar;
     
     @ManyToOne
     private UserRole userRole;
@@ -70,6 +71,14 @@ public class User {
 
     public void setUserRole(UserRole userRole) {
         this.userRole = userRole;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
 

@@ -190,7 +190,7 @@ public class ImageController {
             "festivals", "exhibitions", "shop-hanfu", "etiquette",
             "pattern-symbols", "dynasty-shapes", "shape-types",
             "clothing-components", "festival-activities", "lectures",
-            "shop-details", "community-posts"
+            "shop-details", "community-posts", "avatar"
         };
 
         for (String valid : validCategories) {

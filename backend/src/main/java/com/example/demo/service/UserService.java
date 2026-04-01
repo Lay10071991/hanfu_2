@@ -98,6 +98,7 @@ public class UserService {
         user.setPassword(userDetails.getPassword());
         user.setGender(userDetails.getGender());
         user.setBio(userDetails.getBio());
+        user.setAvatar(userDetails.getAvatar());
         user.setUserRole(userDetails.getUserRole());
         
         return userRepository.save(user);
