@@ -130,26 +130,44 @@
               <h3 class="content-title">我的发帖</h3>
               <div class="posts-list">
                 <div class="post-item" v-for="post in userPosts" :key="post.id">
-                  <div class="post-header">
-                    <h4>{{ post.title }}</h4>
-                    <div class="post-actions">
-                      <el-button type="primary" size="small" @click="viewPostDetails(post.id)"
-                        >查看</el-button
-                      >
-                      <el-button type="warning" size="small" @click="editPost(post)"
-                        >修改</el-button
-                      >
-                      <el-button type="danger" size="small" @click="deletePost(post.id)"
-                        >删除</el-button
-                      >
+                  <!-- 标题和按钮行 -->
+                  <div class="post-header-new">
+                    <h4 class="post-title">{{ post.title }}</h4>
+                    <div class="post-actions-new">
+                      <el-button type="primary" size="small" @click="viewPostDetails(post.id)">
+                        查看
+                      </el-button>
+                      <el-button type="warning" size="small" @click="editPost(post)">
+                        修改
+                      </el-button>
+                      <el-button type="danger" size="small" @click="deletePost(post.id)">
+                        删除
+                      </el-button>
                     </div>
                   </div>
-                  <p>{{ post.content }}</p>
-                  <div class="post-meta">
-                    <span>{{ post.date }}</span>
-                    <div class="post-stats">
-                      <span>❤️ {{ post.likes }}</span>
-                      <span>💬 {{ post.comments }}</span>
+                  <!-- 内容和图片区域 -->
+                  <div class="post-content-area">
+                    <!-- 图片区域 -->
+                    <div v-if="post.images && post.images.length > 0" class="post-image-area">
+                      <img
+                        v-for="(image, index) in post.images"
+                        :key="index"
+                        :src="image"
+                        alt="帖子图片"
+                        class="post-image-new"
+                      />
+                    </div>
+                    <!-- 内容区域 -->
+                    <div class="post-text-area">
+                      <p class="post-content">{{ post.content }}</p>
+                    </div>
+                  </div>
+                  <!-- 日期和统计信息 -->
+                  <div class="post-meta-new">
+                    <span class="post-date">{{ post.date }}</span>
+                    <div class="post-stats-new">
+                      <span class="post-likes">❤️ {{ post.likes }}</span>
+                      <span class="post-comments">💬 {{ post.comments }}</span>
                     </div>
                   </div>
                 </div>
@@ -297,7 +315,7 @@
     </el-dialog>
 
     <!-- 帖子修改对话框 -->
-    <el-dialog v-model="postDialogVisible" title="修改帖子" width="600px">
+    <el-dialog v-model="postDialogVisible" title="修改帖子" width="600px" :append-to-body="true">
       <div v-if="currentPost">
         <el-form :model="currentPost" label-width="80px">
           <el-form-item label="标题">
@@ -841,6 +859,7 @@ const fetchUserPosts = async () => {
         date: post.time || "",
         likes: post.likes || 0,
         comments: post.comments || 0,
+        images: post.images || [],
       }));
       userPosts.value = postsWithStats;
     } else {
@@ -866,25 +885,27 @@ const viewPostDetails = (postId) => {
 
 // 修改帖子
 const editPost = (post) => {
-  // 复制帖子数据
-  const postCopy = { ...post };
-
-  // 处理图片数据，转换为el-upload需要的格式
-  if (post.images) {
-    postCopy.images = Array.isArray(post.images)
-      ? post.images.map((url) => ({
-          url: url,
-          name: url.split("/").pop(),
-          status: "success",
-        }))
-      : [];
-  } else {
-    postCopy.images = [];
+  console.log("editPost called", post);
+  // 简化处理，直接设置currentPost和打开弹窗
+  currentPost.value = {
+    id: post.id,
+    title: post.title,
+    content: post.content,
+    images: post.images || [],
+  };
+  // 确保images是数组
+  if (!Array.isArray(currentPost.value.images)) {
+    currentPost.value.images = [];
   }
-
-  currentPost.value = postCopy;
-  postDialogType.value = "edit";
+  // 转换图片格式
+  currentPost.value.images = currentPost.value.images.map((url) => ({
+    url: url,
+    name: url.split("/").pop(),
+    status: "success",
+  }));
   postDialogVisible.value = true;
+  console.log("postDialogVisible set to", postDialogVisible.value);
+  console.log("currentPost set to", currentPost.value);
 };
 
 // 保存修改后的帖子
@@ -1336,6 +1357,79 @@ const logout = () => {
 .post-stats {
   display: flex;
   gap: 10px;
+}
+
+/* 新的帖子样式 */
+.post-header-new {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.post-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: #8b4513;
+  margin: 0;
+}
+
+.post-actions-new {
+  display: flex;
+  gap: 8px;
+}
+
+.post-content-area {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 10px;
+}
+
+.post-image-area {
+  flex-shrink: 0;
+}
+
+.post-image-new {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.post-text-area {
+  flex: 1;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 10px;
+  min-height: 120px;
+}
+
+.post-content {
+  margin: 0;
+  line-height: 1.5;
+  color: #333;
+}
+
+.post-meta-new {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  color: #999;
+  margin-top: 10px;
+}
+
+.post-stats-new {
+  display: flex;
+  gap: 15px;
+}
+
+.post-likes,
+.post-comments {
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .like-type {
