@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 @RestController
 @RequestMapping("/api/users")
@@ -55,6 +57,27 @@ public class UserController {
             return ResponseEntity.ok(user);
         } else {
             return ResponseEntity.status(401).build();
+        }
+    }
+
+    // 修改密码接口
+    @PutMapping("/{id}/password")
+    public ResponseEntity<Map<String, Object>> changePassword(
+            @PathVariable Long id,
+            @RequestBody Map<String, String> passwordData) {
+        String oldPassword = passwordData.get("oldPassword");
+        String newPassword = passwordData.get("newPassword");
+        try {
+            userService.changePassword(id, oldPassword, newPassword);
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "密码修改成功");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
         }
     }
 }

@@ -62,7 +62,18 @@
                   <h3>{{ userInfo.username }}</h3>
                   <p>汉服爱好者</p>
                 </div>
-                <el-button type="primary" @click="showEditDialog">修改信息</el-button>
+                <el-dropdown>
+                  <el-button class="edit-button">
+                    修改设置
+                    <el-icon class="el-icon--right"><ArrowDown /></el-icon>
+                  </el-button>
+                  <template #dropdown>
+                    <el-dropdown-menu>
+                      <el-dropdown-item @click="showEditDialog">修改信息</el-dropdown-item>
+                      <el-dropdown-item @click="showPasswordDialog">修改密码</el-dropdown-item>
+                    </el-dropdown-menu>
+                  </template>
+                </el-dropdown>
               </div>
 
               <div class="profile-details">
@@ -78,10 +89,6 @@
                   <label>简介：</label>
                   <span>{{ userInfo.bio || "这个人很懒，什么都没有写～" }}</span>
                 </div>
-              </div>
-
-              <div class="password-section">
-                <el-button type="warning" @click="showPasswordDialog">修改密码</el-button>
               </div>
             </div>
 
@@ -285,6 +292,7 @@ import {
   Calendar,
   Location,
   Clock,
+  ArrowDown,
 } from "@element-plus/icons-vue";
 
 const API_BASE = "http://localhost:8082/api";
@@ -543,14 +551,40 @@ const changePassword = async () => {
 
   try {
     await passwordFormRef.value.validate();
-    // 这里应该调用API修改密码
-    ElMessage.success("密码修改成功");
-    passwordDialogVisible.value = false;
-    passwordForm.oldPassword = "";
-    passwordForm.newPassword = "";
-    passwordForm.confirmPassword = "";
-  } catch {
-    ElMessage.warning("请正确填写表单");
+    const userId = getUserId();
+    if (!userId) {
+      ElMessage.warning("请先登录");
+      router.push("/login");
+      return;
+    }
+
+    loading.value = true;
+    const response = await fetch(`${API_BASE}/users/${userId}/password`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        oldPassword: passwordForm.oldPassword,
+        newPassword: passwordForm.newPassword,
+      }),
+    });
+
+    if (response.ok) {
+      ElMessage.success("密码修改成功");
+      passwordDialogVisible.value = false;
+      passwordForm.oldPassword = "";
+      passwordForm.newPassword = "";
+      passwordForm.confirmPassword = "";
+    } else {
+      const errorData = await response.json();
+      ElMessage.error(errorData.message || "密码修改失败");
+    }
+  } catch (error) {
+    console.error("修改密码失败:", error);
+    ElMessage.error("网络异常，请稍后重试");
+  } finally {
+    loading.value = false;
   }
 };
 
@@ -829,9 +863,15 @@ const logout = () => {
   color: #666;
 }
 
-.password-section {
-  border-top: none;
-  padding-top: 0;
+.edit-button {
+  background: linear-gradient(135deg, #8b4513 0%, #d2691e 100%);
+  color: white;
+  border: none;
+}
+
+.edit-button:hover {
+  background: linear-gradient(135deg, #6b340d 0%, #b15a1a 100%);
+  color: white;
 }
 
 .content-title {

@@ -126,4 +126,17 @@ public class UserService {
         }
         return null;
     }
+
+    // 修改密码功能
+    public void changePassword(Long id, String oldPassword, String newPassword) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found with id " + id));
+        
+        if (!user.getPassword().equals(oldPassword)) {
+            throw new RuntimeException("原密码错误");
+        }
+        
+        user.setPassword(newPassword);
+        userRepository.save(user);
+    }
 }
