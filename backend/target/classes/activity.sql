@@ -1,6 +1,10 @@
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
+-- 删除不需要的shop相关表
+DROP TABLE IF EXISTS shop_rating_distribution;
+DROP TABLE IF EXISTS shop_rating;
+
 -- ----------------------------
 -- Table structure for culture_influence
 -- ----------------------------
