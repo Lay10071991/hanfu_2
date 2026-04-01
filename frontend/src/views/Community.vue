@@ -416,12 +416,38 @@ const submitPublish = async () => {
       return;
     }
 
-    const imageUrls = publishForm.value.images.map((img) => {
+    // 上传图片到服务器
+    const imageUrls = [];
+    for (const img of publishForm.value.images) {
       if (img.raw) {
-        return URL.createObjectURL(img.raw);
+        // 创建FormData对象
+        const formData = new FormData();
+        formData.append("file", img.raw);
+
+        // 上传图片到community-posts类别
+        const uploadResponse = await fetch(`${API_BASE}/image/upload/community-posts`, {
+          method: "POST",
+          body: formData,
+        });
+
+        if (uploadResponse.ok) {
+          const uploadData = await uploadResponse.json();
+          if (uploadData.success) {
+            imageUrls.push(uploadData.path);
+          } else {
+            ElMessage.error(`图片上传失败: ${uploadData.message}`);
+            publishing.value = false;
+            return;
+          }
+        } else {
+          ElMessage.error("图片上传失败，请重试");
+          publishing.value = false;
+          return;
+        }
+      } else if (img.url) {
+        imageUrls.push(img.url);
       }
-      return img.url || img;
-    });
+    }
 
     console.log("发布帖子数据:", {
       title: publishForm.value.title,
@@ -459,7 +485,8 @@ const submitPublish = async () => {
     } else {
       ElMessage.error("发布失败，请重试");
     }
-  } catch {
+  } catch (error) {
+    console.error("发布失败:", error);
     ElMessage.error("发布失败，请重试");
   } finally {
     publishing.value = false;
