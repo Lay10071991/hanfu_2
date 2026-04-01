@@ -58,12 +58,9 @@
             <!-- 个人信息 -->
             <div v-if="activeMenu === 'info'" class="section">
               <div class="profile-header">
-                <div class="avatar-section">
-                  <el-avatar :size="80" :src="userInfo.avatar" />
-                  <div class="user-basic-info">
-                    <h3>{{ userInfo.username }}</h3>
-                    <p>汉服爱好者</p>
-                  </div>
+                <div class="user-basic-info">
+                  <h3>{{ userInfo.username }}</h3>
+                  <p>汉服爱好者</p>
                 </div>
                 <el-button type="primary" @click="showEditDialog">修改信息</el-button>
               </div>
@@ -223,22 +220,6 @@
     <!-- 修改信息对话框 -->
     <el-dialog v-model="editDialogVisible" title="修改个人信息" width="500px">
       <el-form :model="editForm" label-width="80px">
-        <el-form-item label="头像">
-          <div class="avatar-upload">
-            <el-upload
-              class="avatar-uploader"
-              action="#"
-              :auto-upload="false"
-              :on-change="handleAvatarChange"
-              :show-file-list="false"
-              accept=".jpg,.jpeg,.png,.gif"
-            >
-              <img v-if="userInfo.avatar" :src="userInfo.avatar" class="avatar" />
-              <el-icon v-else class="avatar-uploader-icon"><Upload /></el-icon>
-            </el-upload>
-            <div class="upload-tip">点击上传头像</div>
-          </div>
-        </el-form-item>
         <el-form-item label="用户名">
           <el-input v-model="editForm.username" />
         </el-form-item>
@@ -304,7 +285,6 @@ import {
   Calendar,
   Location,
   Clock,
-  Upload,
 } from "@element-plus/icons-vue";
 
 const API_BASE = "http://localhost:8082/api";
@@ -322,14 +302,12 @@ const userInfo = ref({
   username: "",
   gender: "",
   bio: "",
-  avatar: "https://placehold.co/80/8b4513/FFFFFF?text=用户",
 });
 
 const editForm = reactive({
   username: "",
   gender: "",
   bio: "",
-  avatar: "",
 });
 
 const passwordForm = reactive({
@@ -484,7 +462,6 @@ const fetchUserInfo = async () => {
         username: user.username || "",
         gender: user.gender || "",
         bio: user.bio || "",
-        avatar: user.avatar || "https://placehold.co/80/8b4513/FFFFFF?text=用户",
       };
       editForm.username = user.username || "";
       editForm.gender = user.gender || "";
@@ -517,35 +494,6 @@ const showPasswordDialog = () => {
   passwordDialogVisible.value = true;
 };
 
-const handleAvatarChange = async (file) => {
-  const formData = new FormData();
-  formData.append("file", file.raw);
-
-  loading.value = true;
-  try {
-    const response = await fetch(`${API_BASE}/image/upload/avatar`, {
-      method: "POST",
-      body: formData,
-    });
-    if (response.ok) {
-      const uploadData = await response.json();
-      if (uploadData.success) {
-        userInfo.value.avatar = uploadData.path;
-        ElMessage.success("头像上传成功");
-      } else {
-        ElMessage.error("头像上传失败");
-      }
-    } else {
-      ElMessage.error("头像上传失败");
-    }
-  } catch (error) {
-    console.error("头像上传失败:", error);
-    ElMessage.error("网络异常，请稍后重试");
-  } finally {
-    loading.value = false;
-  }
-};
-
 const saveProfile = async () => {
   const userId = getUserId();
   if (!userId) {
@@ -565,7 +513,6 @@ const saveProfile = async () => {
         username: editForm.username,
         gender: editForm.gender,
         bio: editForm.bio,
-        avatar: userInfo.value.avatar,
       }),
     });
 
@@ -576,7 +523,6 @@ const saveProfile = async () => {
         username: updatedUser.username || "",
         gender: updatedUser.gender || "",
         bio: updatedUser.bio || "",
-        avatar: updatedUser.avatar || "https://placehold.co/80/8b4513/FFFFFF?text=用户",
       };
       username.value = updatedUser.username || "";
       ElMessage.success("个人信息更新成功");
@@ -843,12 +789,6 @@ const logout = () => {
   margin-bottom: 20px;
 }
 
-.avatar-section {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
 .user-basic-info h3 {
   margin: 0 0 5px 0;
   color: #8b4513;
@@ -892,44 +832,6 @@ const logout = () => {
 .password-section {
   border-top: none;
   padding-top: 0;
-}
-
-.avatar-upload {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-}
-
-.avatar-uploader {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 1px solid #d9d9d9;
-  cursor: pointer;
-}
-
-.avatar {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.avatar-uploader-icon {
-  font-size: 32px;
-  color: #999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  background-color: #fafafa;
-}
-
-.upload-tip {
-  font-size: 12px;
-  color: #999;
 }
 
 .content-title {
