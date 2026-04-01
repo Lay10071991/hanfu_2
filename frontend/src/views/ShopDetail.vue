@@ -121,15 +121,6 @@
                 >
                   我要评价
                 </el-button>
-                <el-button
-                  v-if="displayedReviews.length > 0"
-                  type="text"
-                  size="small"
-                  @click="toggleShowAllReviews"
-                  class="more-review-btn"
-                >
-                  {{ showAllReviews ? "收起" : "更多" }}
-                </el-button>
               </div>
             </div>
 
@@ -172,6 +163,18 @@
                   {{ review.content }}
                 </div>
               </div>
+            </div>
+
+            <!-- 更多评价按钮 -->
+            <div class="review-more-btn" v-if="displayedReviews.length > 0">
+              <el-button
+                type="text"
+                size="small"
+                @click="toggleShowAllReviews"
+                class="more-review-btn"
+              >
+                {{ showAllReviews ? "收起" : "更多" }}
+              </el-button>
             </div>
           </div>
 
@@ -351,6 +354,7 @@ const loadShopRatingDistribution = async (shopId) => {
         rating3: data.rating3 || 0,
         rating2: data.rating2 || 0,
         rating1: data.rating1 || 0,
+        averageRating: data.averageRating || 0,
       };
       console.log("设置后的shopRatingDistribution:", shopRatingDistribution.value);
     }
@@ -421,7 +425,7 @@ const loadShopReviews = async (shopId) => {
             time: item.createTime ? new Date(item.createTime).toLocaleDateString() : "",
             content: item.content || "无评价内容",
           };
-        })
+        }),
       );
       reviews.value = reviewsWithUserInfo;
     }
@@ -511,7 +515,7 @@ const getImageText = (index) => {
 
 // 获取各星级评价人数分布
 const getRatingDistribution = computed(() => {
-  // 使用从后端获取的真实评分分布数据
+  // 优先使用从后端获取的评分分布数据
   if (shopRatingDistribution.value) {
     return {
       5: shopRatingDistribution.value.rating5 || 0,
@@ -521,21 +525,34 @@ const getRatingDistribution = computed(() => {
       1: shopRatingDistribution.value.rating1 || 0,
     };
   }
-  // 后端数据不可用时使用默认值
-  const total = 100;
+
+  // 如果后端数据不可用，根据实际评价数据计算评分分布
   const distribution = {
-    5: Math.round(total * 0.6), // 60% 5星
-    4: Math.round(total * 0.25), // 25% 4星
-    3: Math.round(total * 0.1), // 10% 3星
-    2: Math.round(total * 0.03), // 3% 2星
-    1: Math.round(total * 0.02), // 2% 1星
+    5: 0,
+    4: 0,
+    3: 0,
+    2: 0,
+    1: 0,
   };
+
+  allReviews.value.forEach((review) => {
+    const rating = Math.round(review.rating);
+    if (rating >= 1 && rating <= 5) {
+      distribution[rating]++;
+    }
+  });
 
   return distribution;
 });
 
 // 根据评分分布计算综合评分
 const calculatedRating = computed(() => {
+  // 优先使用从后端获取的平均评分
+  if (shopRatingDistribution.value && shopRatingDistribution.value.averageRating) {
+    return shopRatingDistribution.value.averageRating;
+  }
+
+  // 如果后端数据不可用，使用前端计算的评分
   const distribution = getRatingDistribution.value;
   const totalCount = Object.values(distribution).reduce((sum, count) => sum + count, 0);
 
@@ -1081,6 +1098,26 @@ const logout = () => {
   color: #666;
   line-height: 1.6;
   margin-bottom: 12px;
+}
+
+/* 更多评价按钮 */
+.review-more-btn {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.review-more-btn .more-review-btn {
+  color: #8b4513;
+  font-size: 14px;
+  padding: 8px 16px;
+  border: 1px solid #d4a76a;
+  border-radius: 4px;
+}
+
+.review-more-btn .more-review-btn:hover {
+  color: #d2691e;
+  border-color: #d2691e;
 }
 
 /* 联系信息 */
