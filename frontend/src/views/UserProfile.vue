@@ -296,6 +296,52 @@
       </template>
     </el-dialog>
 
+    <!-- 帖子修改对话框 -->
+    <el-dialog v-model="postDialogVisible" title="修改帖子" width="600px">
+      <div v-if="currentPost">
+        <el-form :model="currentPost" label-width="80px">
+          <el-form-item label="标题">
+            <el-input v-model="currentPost.title" placeholder="请输入标题" />
+          </el-form-item>
+          <el-form-item label="内容">
+            <el-input
+              v-model="currentPost.content"
+              type="textarea"
+              :rows="5"
+              placeholder="请输入内容"
+            />
+          </el-form-item>
+          <el-form-item label="图片">
+            <div class="upload-tips">支持上传JPG、PNG格式图片，最多9张</div>
+            <el-upload
+              v-model:file-list="currentPost.images"
+              action="#"
+              list-type="picture-card"
+              :auto-upload="false"
+              :on-change="handleImageChange"
+              :limit="9"
+              :on-exceed="handleExceed"
+              accept=".jpg,.jpeg,.png,.gif"
+            >
+              <el-icon><Plus /></el-icon>
+            </el-upload>
+          </el-form-item>
+        </el-form>
+      </div>
+      <template #footer>
+        <el-button @click="postDialogVisible = false">关闭</el-button>
+        <el-button type="primary" @click="savePost">保存修改</el-button>
+      </template>
+    </el-dialog>
+
+    <!-- 帖子详情弹窗 -->
+    <PostDetailDialog
+      v-model:visible="postDetailVisible"
+      :post-data="selectedPost"
+      @like-changed="handleLikeChanged"
+      @comment-added="handleCommentAdded"
+    />
+
     <!-- 页脚 -->
     <div class="footer">
       <div class="container">
@@ -309,11 +355,13 @@
 <script setup>
 import { ref, onMounted, reactive, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
+import PostDetailDialog from "./PostDetailDialog.vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import {
   User,
   Document,
   ChatDotSquare,
+  Plus,
   Star,
   Calendar,
   Location,
@@ -375,6 +423,11 @@ const passwordRules = {
 const userEvaluations = ref([]);
 
 const userPosts = ref([]);
+const postDialogVisible = ref(false);
+const postDialogType = ref("view"); // view 或 edit
+const currentPost = ref(null);
+const postDetailVisible = ref(false);
+const selectedPost = ref(null);
 
 const userLikes = ref([
   {
@@ -803,29 +856,128 @@ const fetchUserPosts = async () => {
 
 // 查看帖子详情
 const viewPostDetails = (postId) => {
-  // 跳转到社区页面，携带帖子ID和来源
-  router.push({
-    path: "/community",
-    query: {
-      postId: postId,
-      from: "profile",
-      menu: activeMenu.value,
-    },
-  });
+  // 查找对应帖子
+  const post = userPosts.value.find((p) => p.id === postId);
+  if (post) {
+    selectedPost.value = { ...post };
+    postDetailVisible.value = true;
+  }
 };
 
 // 修改帖子
 const editPost = (post) => {
-  // 跳转到社区页面，携带帖子ID和编辑模式
-  router.push({
-    path: "/community",
-    query: {
-      postId: post.id,
-      mode: "edit",
-      from: "profile",
-      menu: activeMenu.value,
-    },
-  });
+  // 复制帖子数据
+  const postCopy = { ...post };
+
+  // 处理图片数据，转换为el-upload需要的格式
+  if (post.images) {
+    postCopy.images = Array.isArray(post.images)
+      ? post.images.map((url) => ({
+          url: url,
+          name: url.split("/").pop(),
+          status: "success",
+        }))
+      : [];
+  } else {
+    postCopy.images = [];
+  }
+
+  currentPost.value = postCopy;
+  postDialogType.value = "edit";
+  postDialogVisible.value = true;
+};
+
+// 保存修改后的帖子
+const savePost = async () => {
+  if (!currentPost.value) return;
+
+  loading.value = true;
+  try {
+    // 处理图片上传
+    const imageUrls = [];
+    if (currentPost.value.images && currentPost.value.images.length > 0) {
+      for (const file of currentPost.value.images) {
+        // 检查是否是新上传的文件（本地文件对象）
+        if (file.raw) {
+          const formData = new FormData();
+          formData.append("file", file.raw);
+
+          const uploadResponse = await fetch(`${API_BASE}/upload`, {
+            method: "POST",
+            body: formData,
+          });
+
+          if (uploadResponse.ok) {
+            const result = await uploadResponse.json();
+            imageUrls.push(result.fileUrl);
+          } else {
+            ElMessage.error("图片上传失败");
+            return;
+          }
+        } else if (file.url) {
+          // 保留已有的图片URL
+          imageUrls.push(file.url);
+        }
+      }
+    }
+
+    // 更新帖子信息
+    const response = await fetch(`${API_BASE}/posts/${currentPost.value.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title: currentPost.value.title,
+        content: currentPost.value.content,
+        images: imageUrls,
+      }),
+    });
+    if (response.ok) {
+      ElMessage.success("帖子修改成功");
+      postDialogVisible.value = false;
+      // 重新加载发帖数据
+      fetchUserPosts();
+    } else {
+      ElMessage.error("修改帖子失败");
+    }
+  } catch (error) {
+    console.error("修改帖子失败:", error);
+    ElMessage.error("网络异常，请稍后重试");
+  } finally {
+    loading.value = false;
+  }
+};
+
+// 处理帖子详情弹窗的点赞变化
+const handleLikeChanged = ({ postId, liked, likes }) => {
+  const post = userPosts.value.find((p) => p.id === postId);
+  if (post) {
+    post.liked = liked;
+    post.likes = likes;
+  }
+};
+
+// 处理帖子详情弹窗的新评论
+const handleCommentAdded = ({ postId }) => {
+  const post = userPosts.value.find((p) => p.id === postId);
+  if (post) {
+    post.comments += 1;
+  }
+};
+
+// 处理图片上传变化
+const handleImageChange = (file, fileList) => {
+  // el-upload 的 v-model:file-list 已经自动管理文件列表
+  // 这里只需要同步到 currentPost.images
+  if (currentPost.value) {
+    currentPost.value.images = fileList;
+  }
+};
+
+// 处理图片上传超过限制
+const handleExceed = () => {
+  ElMessage.warning("最多只能上传9张图片");
 };
 
 // 删除帖子
