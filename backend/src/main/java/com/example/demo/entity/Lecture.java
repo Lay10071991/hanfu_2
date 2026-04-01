@@ -25,6 +25,9 @@ public class Lecture {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
 
+    @Column(columnDefinition = "TEXT")
+    private String content;
+
     @Column(nullable = false, length = 255)
     private String location;
 
@@ -93,6 +96,14 @@ public class Lecture {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public String getLocation() {

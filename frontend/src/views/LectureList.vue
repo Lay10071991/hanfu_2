@@ -163,12 +163,24 @@
         <div class="detail-section">
           <h4>讲座内容</h4>
           <ul class="content-list">
-            <li
-              v-for="(content, index) in selectedLecture.contents || getDefaultContents()"
-              :key="index"
+            <template
+              v-if="selectedLecture && selectedLecture.content && selectedLecture.content.trim()"
             >
-              {{ content }}
-            </li>
+              <li
+                v-for="(contentItem, index) in selectedLecture.content
+                  .split('\n')
+                  .filter((item) => item && item.trim())"
+                :key="index"
+              >
+                {{ contentItem.trim() }}
+              </li>
+            </template>
+            <template v-else>
+              <li>汉服的历史起源与发展脉络</li>
+              <li>各朝代汉服的特点与区别</li>
+              <li>汉服的基本构成与穿着方法</li>
+              <li>现代汉服的传承与创新</li>
+            </template>
           </ul>
         </div>
 
@@ -300,6 +312,7 @@ const loadLectures = async () => {
             : "待定",
         location: lecture.location || "待定",
         description: lecture.description || "",
+        content: lecture.content || "",
         notice:
           lecture.notice ||
           "请提前10分钟到场签到\n讲座期间请保持安静\n可携带笔记本记录\n讲座结束后设有互动问答环节",

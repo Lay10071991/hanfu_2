@@ -305,7 +305,9 @@ const loadExhibitions = async () => {
           exhibition.notice !== undefined && exhibition.notice !== null
             ? exhibition.notice
             : "请提前预约参观时间\n保持安静，勿触摸展品\n禁止使用闪光灯拍照\n遵守展馆各项规定",
-        highlights: ["精彩展览内容", "传统文化体验", "互动活动丰富"],
+        highlights: exhibition.highlights
+          ? exhibition.highlights.split("\n").filter((item) => item && item.trim())
+          : ["精彩展览内容", "传统文化体验", "互动活动丰富"],
       }));
       console.log("处理后的展览数据:", exhibitions.value);
       total.value = exhibitions.value.length;

@@ -45,6 +45,9 @@ public class Exhibition {
     @Column(columnDefinition = "TEXT")
     private String notice;
 
+    @Column(columnDefinition = "TEXT")
+    private String highlights;
+
     @CreationTimestamp
     @Column(name = "create_time", updatable = false)
     private LocalDateTime createTime;
@@ -140,6 +143,14 @@ public class Exhibition {
 
     public void setNotice(String notice) {
         this.notice = notice;
+    }
+
+    public String getHighlights() {
+        return highlights;
+    }
+
+    public void setHighlights(String highlights) {
+        this.highlights = highlights;
     }
 
     public LocalDateTime getCreateTime() {

@@ -131,15 +131,6 @@
             <span class="info-label">活动描述：</span>
             <p class="info-description">{{ selectedFestival.description }}</p>
           </div>
-          <div class="info-item">
-            <span class="info-label">活动详情：</span>
-            <p class="info-description">
-              {{
-                selectedFestival.detailDescription ||
-                "传统节日汉服雅集活动，欢迎广大汉服爱好者参与。活动将包括传统礼仪展示、汉服走秀、文化讲座等丰富内容。"
-              }}
-            </p>
-          </div>
         </div>
       </div>
       <template #footer>
@@ -207,19 +198,55 @@
           <div class="detail-section">
             <h4>展览亮点</h4>
             <ul class="highlight-list">
-              <li>精彩展览内容</li>
-              <li>传统文化体验</li>
-              <li>互动活动丰富</li>
+              <template
+                v-if="
+                  selectedExhibition &&
+                  selectedExhibition.highlights &&
+                  selectedExhibition.highlights.trim()
+                "
+              >
+                <li
+                  v-for="(highlightItem, index) in selectedExhibition.highlights
+                    .split('\n')
+                    .filter((item) => item && item.trim())"
+                  :key="index"
+                >
+                  {{ highlightItem.trim() }}
+                </li>
+              </template>
+              <template v-else>
+                <li>精彩展览内容</li>
+                <li>传统文化体验</li>
+                <li>互动活动丰富</li>
+              </template>
             </ul>
           </div>
 
           <div class="detail-section">
             <h4>参观须知</h4>
             <ul class="notice-list">
-              <li>请提前预约参观时间</li>
-              <li>保持安静，勿触摸展品</li>
-              <li>禁止使用闪光灯拍照</li>
-              <li>遵守展馆各项规定</li>
+              <template
+                v-if="
+                  selectedExhibition &&
+                  selectedExhibition.notice &&
+                  selectedExhibition.notice.trim()
+                "
+              >
+                <li
+                  v-for="(noticeItem, index) in selectedExhibition.notice
+                    .split('\n')
+                    .filter((item) => item && item.trim())"
+                  :key="index"
+                >
+                  {{ noticeItem.trim() }}
+                </li>
+              </template>
+              <template v-else>
+                <li>请提前预约参观时间</li>
+                <li>保持安静，勿触摸展品</li>
+                <li>禁止使用闪光灯拍照</li>
+                <li>遵守展馆各项规定</li>
+              </template>
             </ul>
           </div>
         </div>
@@ -312,20 +339,48 @@
         <div class="detail-section">
           <h4>讲座内容</h4>
           <ul class="content-list">
-            <li>汉服的历史起源与发展脉络</li>
-            <li>各朝代汉服的特点与区别</li>
-            <li>汉服的基本构成与穿着方法</li>
-            <li>现代汉服的传承与创新</li>
+            <template
+              v-if="selectedLecture && selectedLecture.content && selectedLecture.content.trim()"
+            >
+              <li
+                v-for="(contentItem, index) in selectedLecture.content
+                  .split('\n')
+                  .filter((item) => item && item.trim())"
+                :key="index"
+              >
+                {{ contentItem.trim() }}
+              </li>
+            </template>
+            <template v-else>
+              <li>汉服的历史起源与发展脉络</li>
+              <li>各朝代汉服的特点与区别</li>
+              <li>汉服的基本构成与穿着方法</li>
+              <li>现代汉服的传承与创新</li>
+            </template>
           </ul>
         </div>
 
         <div class="detail-section">
           <h4>参与须知</h4>
           <ul class="notice-list">
-            <li>请提前10分钟到场签到</li>
-            <li>讲座期间请保持安静</li>
-            <li>可携带笔记本记录</li>
-            <li>讲座结束后设有互动问答环节</li>
+            <template
+              v-if="selectedLecture && selectedLecture.notice && selectedLecture.notice.trim()"
+            >
+              <li
+                v-for="(noticeItem, index) in selectedLecture.notice
+                  .split('\n')
+                  .filter((item) => item && item.trim())"
+                :key="index"
+              >
+                {{ noticeItem.trim() }}
+              </li>
+            </template>
+            <template v-else>
+              <li>请提前10分钟到场签到</li>
+              <li>讲座期间请保持安静</li>
+              <li>可携带笔记本记录</li>
+              <li>讲座结束后设有互动问答环节</li>
+            </template>
           </ul>
         </div>
       </div>
@@ -503,6 +558,10 @@ const loadActivities = async () => {
         description: exhibition.description || "",
         organizer: exhibition.organizer || "汉服文化中心",
         ticket: exhibition.ticketPrice ? `¥${exhibition.ticketPrice}` : "免费",
+        notice:
+          exhibition.notice ||
+          "请提前预约参观时间\n保持安静，勿触摸展品\n禁止使用闪光灯拍照\n遵守展馆各项规定",
+        highlights: exhibition.highlights || "精彩展览内容\n传统文化体验\n互动活动丰富",
       }));
     }
 
@@ -514,6 +573,7 @@ const loadActivities = async () => {
         id: lecture.id,
         title: lecture.title,
         speaker: lecture.speaker || "待定",
+        speakerBio: lecture.speakerBio || "",
         date: lecture.startTime ? new Date(lecture.startTime).toLocaleDateString("zh-CN") : "待定",
         time:
           lecture.startTime && lecture.endTime
@@ -522,6 +582,10 @@ const loadActivities = async () => {
         location: lecture.location || "待定",
         image: lecture.image || "http://localhost:8082/uploads/v (1).png",
         description: lecture.description || "",
+        content: lecture.content || "",
+        notice:
+          lecture.notice ||
+          "请提前10分钟到场签到\n讲座期间请保持安静\n可携带笔记本记录\n讲座结束后设有互动问答环节",
         capacity: lecture.capacity || 0,
         registeredCount: lecture.registeredCount || 0,
       }));
