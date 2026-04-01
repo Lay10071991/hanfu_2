@@ -2294,4 +2294,207 @@ INSERT INTO `lecture_registration` VALUES (170, 8, 34, 'registered', '2026-04-26
 INSERT INTO `lecture_registration` VALUES (171, 8, 35, 'registered', '2026-04-26 10:30:00');
 INSERT INTO `lecture_registration` VALUES (172, 8, 36, 'registered', '2026-04-26 11:45:00');
 
+-- ----------------------------
+-- Table structure for shop_review
+-- ----------------------------
+DROP TABLE IF EXISTS `shop_review`;
+CREATE TABLE `shop_review` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '评价ID',
+  `shop_id` bigint NOT NULL COMMENT '店铺ID',
+  `user_id` bigint NOT NULL COMMENT '用户ID',
+  `rating` int NOT NULL COMMENT '评分（1-5）',
+  `comment` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '评价内容',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `idx_shop_id` (`shop_id`) USING BTREE,
+  KEY `idx_user_id` (`user_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '店铺评价表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of shop_review - 店铺1 (汉服小铺)
+-- ----------------------------
+INSERT INTO `shop_review` VALUES (1, 1, 2, 5, '汉服质量很好，款式也很喜欢，客服态度也很棒！', '2026-01-15 10:00:00');
+INSERT INTO `shop_review` VALUES (2, 1, 4, 4, '衣服面料很舒服，做工也不错，值得购买。', '2026-01-16 14:30:00');
+INSERT INTO `shop_review` VALUES (3, 1, 5, 5, '款式很符合我的预期，穿起来很合身，推荐！', '2026-01-17 09:15:00');
+INSERT INTO `shop_review` VALUES (4, 1, 6, 3, NULL, '2026-01-18 16:45:00');
+INSERT INTO `shop_review` VALUES (5, 1, 7, 4, '发货速度很快，包装也很仔细，满意。', '2026-01-19 11:20:00');
+INSERT INTO `shop_review` VALUES (6, 1, 8, 5, NULL, '2026-01-20 13:10:00');
+INSERT INTO `shop_review` VALUES (7, 1, 9, 4, '性价比很高，这个价格能买到这样的质量很划算。', '2026-01-21 15:50:00');
+
+-- ----------------------------
+-- Records of shop_review - 店铺2 (霓裳羽衣)
+-- ----------------------------
+INSERT INTO `shop_review` VALUES (8, 2, 10, 5, '款式新颖，面料舒适，穿着很有气质。', '2026-01-15 10:30:00');
+INSERT INTO `shop_review` VALUES (9, 2, 11, 4, '客服很耐心，解答了我很多问题，衣服质量也不错。', '2026-01-16 15:00:00');
+INSERT INTO `shop_review` VALUES (10, 2, 12, 5, '包装很精美，衣服做工精细，很满意。', '2026-01-17 10:20:00');
+INSERT INTO `shop_review` VALUES (11, 2, 13, 4, NULL, '2026-01-18 17:00:00');
+INSERT INTO `shop_review` VALUES (12, 2, 14, 5, '衣服版型很好，穿起来很修身，推荐给大家。', '2026-01-19 12:00:00');
+INSERT INTO `shop_review` VALUES (13, 2, 15, 3, NULL, '2026-01-20 14:00:00');
+INSERT INTO `shop_review` VALUES (14, 2, 16, 4, '发货速度快，物流给力，衣服质量也很好。', '2026-01-21 16:30:00');
+
+-- ----------------------------
+-- Records of shop_review - 店铺3 (汉风堂)
+-- ----------------------------
+INSERT INTO `shop_review` VALUES (15, 3, 17, 5, '传统款式很正宗，面料舒适，做工精细。', '2026-01-15 11:00:00');
+INSERT INTO `shop_review` VALUES (16, 3, 18, 4, '客服态度很好，衣服尺码很准，穿着合身。', '2026-01-16 15:30:00');
+INSERT INTO `shop_review` VALUES (17, 3, 19, 5, '性价比很高，这个价格能买到这样的传统汉服很划算。', '2026-01-17 11:00:00');
+INSERT INTO `shop_review` VALUES (18, 3, 20, 4, NULL, '2026-01-18 17:30:00');
+INSERT INTO `shop_review` VALUES (19, 3, 21, 5, '衣服颜色很正，绣花很精美，很喜欢。', '2026-01-19 12:30:00');
+INSERT INTO `shop_review` VALUES (20, 3, 22, 4, '发货速度快，包装仔细，衣服质量不错。', '2026-01-20 14:30:00');
+INSERT INTO `shop_review` VALUES (21, 3, 23, 5, NULL, '2026-01-21 17:00:00');
+
+-- ----------------------------
+-- Records of shop_review - 店铺4 (华服小馆)
+-- ----------------------------
+INSERT INTO `shop_review` VALUES (22, 4, 24, 5, '小而精致的店铺，衣服质量很好，款式也很独特。', '2026-01-15 11:30:00');
+INSERT INTO `shop_review` VALUES (23, 4, 25, 4, '客服很热情，衣服做工精细，穿着很舒服。', '2026-01-16 16:00:00');
+INSERT INTO `shop_review` VALUES (24, 4, 26, 5, '平价汉服中的精品，质量和款式都很满意。', '2026-01-17 11:30:00');
+INSERT INTO `shop_review` VALUES (25, 4, 27, 4, NULL, '2026-01-18 18:00:00');
+INSERT INTO `shop_review` VALUES (26, 4, 28, 5, '衣服版型很好，适合日常穿着，推荐！', '2026-01-19 13:00:00');
+INSERT INTO `shop_review` VALUES (27, 4, 29, 4, '发货速度快，包装精美，衣服质量不错。', '2026-01-20 15:00:00');
+INSERT INTO `shop_review` VALUES (28, 4, 30, 5, NULL, '2026-01-21 17:30:00');
+
+-- ----------------------------
+-- Records of shop_review - 店铺5 (汉服世家)
+-- ----------------------------
+INSERT INTO `shop_review` VALUES (29, 5, 31, 5, '家族经营的店铺，衣服质量有保障，服务也很好。', '2026-01-15 12:00:00');
+INSERT INTO `shop_review` VALUES (30, 5, 32, 4, '价格实惠，质量不错，性价比很高。', '2026-01-16 16:30:00');
+INSERT INTO `shop_review` VALUES (31, 5, 33, 5, '衣服款式经典，面料舒适，穿着很有气质。', '2026-01-17 12:00:00');
+INSERT INTO `shop_review` VALUES (32, 5, 34, 4, NULL, '2026-01-18 18:30:00');
+INSERT INTO `shop_review` VALUES (33, 5, 35, 5, '客服态度很好，尺码推荐准确，穿着合身。', '2026-01-19 13:30:00');
+INSERT INTO `shop_review` VALUES (34, 5, 36, 4, '发货速度快，包装仔细，衣服质量不错。', '2026-01-20 15:30:00');
+INSERT INTO `shop_review` VALUES (35, 5, 37, 5, NULL, '2026-01-21 18:00:00');
+
+-- ----------------------------
+-- Records of shop_review - 店铺6 (雅韵汉服)
+-- ----------------------------
+INSERT INTO `shop_review` VALUES (36, 6, 2, 5, '优雅韵味的汉服，穿着很有气质，质量也很好。', '2026-01-15 12:30:00');
+INSERT INTO `shop_review` VALUES (37, 6, 4, 4, '价格适中，质量不错，款式也很优雅。', '2026-01-16 17:00:00');
+INSERT INTO `shop_review` VALUES (38, 6, 5, 5, '客服态度很好，衣服做工精细，很满意。', '2026-01-17 12:30:00');
+INSERT INTO `shop_review` VALUES (39, 6, 6, 4, NULL, '2026-01-18 19:00:00');
+INSERT INTO `shop_review` VALUES (40, 6, 7, 5, '衣服颜色很漂亮，面料舒适，穿着很舒服。', '2026-01-19 14:00:00');
+INSERT INTO `shop_review` VALUES (41, 6, 8, 4, '发货速度快，包装精美，衣服质量不错。', '2026-01-20 16:00:00');
+INSERT INTO `shop_review` VALUES (42, 6, 9, 5, NULL, '2026-01-21 18:30:00');
+
+-- ----------------------------
+-- Records of shop_review - 店铺7 (汉唐华服)
+-- ----------------------------
+INSERT INTO `shop_review` VALUES (43, 7, 10, 5, '中等价位，做工精细，款式传统，很喜欢。', '2026-01-15 13:00:00');
+INSERT INTO `shop_review` VALUES (44, 7, 11, 4, '客服很专业，衣服质量很好，值得购买。', '2026-01-16 17:30:00');
+INSERT INTO `shop_review` VALUES (45, 7, 12, 5, '传统与现代结合的设计，穿着很有特色。', '2026-01-17 13:00:00');
+INSERT INTO `shop_review` VALUES (46, 7, 13, 4, NULL, '2026-01-18 19:30:00');
+INSERT INTO `shop_review` VALUES (47, 7, 14, 5, '面料很好，做工精细，穿着很舒适。', '2026-01-19 14:30:00');
+INSERT INTO `shop_review` VALUES (48, 7, 15, 4, '发货速度快，包装仔细，衣服质量不错。', '2026-01-20 16:30:00');
+INSERT INTO `shop_review` VALUES (49, 7, 16, 5, NULL, '2026-01-21 19:00:00');
+
+-- ----------------------------
+-- Records of shop_review - 店铺8 (锦绣坊)
+-- ----------------------------
+INSERT INTO `shop_review` VALUES (50, 8, 17, 5, '绣花很精美，做工精细，衣服质量很好。', '2026-01-15 13:30:00');
+INSERT INTO `shop_review` VALUES (51, 8, 18, 4, '客服态度很好，衣服尺码很准，穿着合身。', '2026-01-16 18:00:00');
+INSERT INTO `shop_review` VALUES (52, 8, 19, 5, '绣花图案很漂亮，面料舒适，穿着很有气质。', '2026-01-17 13:30:00');
+INSERT INTO `shop_review` VALUES (53, 8, 20, 4, NULL, '2026-01-18 20:00:00');
+INSERT INTO `shop_review` VALUES (54, 8, 21, 5, '衣服做工精细，绣花精美，很满意。', '2026-01-19 15:00:00');
+INSERT INTO `shop_review` VALUES (55, 8, 22, 4, '发货速度快，包装精美，衣服质量不错。', '2026-01-20 17:00:00');
+INSERT INTO `shop_review` VALUES (56, 8, 23, 5, NULL, '2026-01-21 19:30:00');
+
+-- ----------------------------
+-- Records of shop_review - 店铺9 (古风雅韵)
+-- ----------------------------
+INSERT INTO `shop_review` VALUES (57, 9, 24, 5, '古风设计很独特，衣服质量很好，穿着很有气质。', '2026-01-15 14:00:00');
+INSERT INTO `shop_review` VALUES (58, 9, 25, 4, '客服很热情，衣服做工精细，款式新颖。', '2026-01-16 18:30:00');
+INSERT INTO `shop_review` VALUES (59, 9, 26, 5, '古风韵味十足，面料舒适，穿着很舒服。', '2026-01-17 14:00:00');
+INSERT INTO `shop_review` VALUES (60, 9, 27, 4, NULL, '2026-01-18 20:30:00');
+INSERT INTO `shop_review` VALUES (61, 9, 28, 5, '衣服设计很有创意，质量很好，推荐！', '2026-01-19 15:30:00');
+INSERT INTO `shop_review` VALUES (62, 9, 29, 4, '发货速度快，包装仔细，衣服质量不错。', '2026-01-20 17:30:00');
+INSERT INTO `shop_review` VALUES (63, 9, 30, 5, NULL, '2026-01-21 20:00:00');
+
+-- ----------------------------
+-- Records of shop_review - 店铺10 (汉衣坊)
+-- ----------------------------
+INSERT INTO `shop_review` VALUES (64, 10, 31, 5, '传统工艺制作，衣服质量很好，款式经典。', '2026-01-15 14:30:00');
+INSERT INTO `shop_review` VALUES (65, 10, 32, 4, '客服态度很好，衣服做工精细，穿着舒适。', '2026-01-16 19:00:00');
+INSERT INTO `shop_review` VALUES (66, 10, 33, 5, '传统工艺与现代需求结合，很实用。', '2026-01-17 14:30:00');
+INSERT INTO `shop_review` VALUES (67, 10, 34, 4, NULL, '2026-01-18 21:00:00');
+INSERT INTO `shop_review` VALUES (68, 10, 35, 5, '衣服质量很好，款式经典，值得购买。', '2026-01-19 16:00:00');
+INSERT INTO `shop_review` VALUES (69, 10, 36, 4, '发货速度快，包装精美，衣服质量不错。', '2026-01-20 18:00:00');
+INSERT INTO `shop_review` VALUES (70, 10, 37, 5, NULL, '2026-01-21 20:30:00');
+
+-- ----------------------------
+-- Records of shop_review - 店铺11 (华裳九州)
+-- ----------------------------
+INSERT INTO `shop_review` VALUES (71, 11, 2, 5, '中高端品牌，设计独特，质量很好，很喜欢。', '2026-01-15 15:00:00');
+INSERT INTO `shop_review` VALUES (72, 11, 4, 4, '客服很专业，衣服做工精细，穿着很有气质。', '2026-01-16 19:30:00');
+INSERT INTO `shop_review` VALUES (73, 11, 5, 5, '设计独特，面料优质，穿着舒适，推荐！', '2026-01-17 15:00:00');
+INSERT INTO `shop_review` VALUES (74, 11, 6, 4, NULL, '2026-01-18 21:30:00');
+INSERT INTO `shop_review` VALUES (75, 11, 7, 5, '高端汉服的代表，质量和设计都很出色。', '2026-01-19 16:30:00');
+INSERT INTO `shop_review` VALUES (76, 11, 8, 4, '发货速度快，包装精美，衣服质量不错。', '2026-01-20 18:30:00');
+INSERT INTO `shop_review` VALUES (77, 11, 9, 5, NULL, '2026-01-21 21:00:00');
+
+-- ----------------------------
+-- Records of shop_review - 店铺12 (礼乐衣冠)
+-- ----------------------------
+INSERT INTO `shop_review` VALUES (78, 12, 10, 5, '注重礼仪文化，衣服设计符合传统规范，质量很好。', '2026-01-15 15:30:00');
+INSERT INTO `shop_review` VALUES (79, 12, 11, 4, '客服很专业，讲解礼仪知识，衣服质量也很好。', '2026-01-16 20:00:00');
+INSERT INTO `shop_review` VALUES (80, 12, 12, 5, '传统礼仪文化的代表，衣服质量和设计都很出色。', '2026-01-17 15:30:00');
+INSERT INTO `shop_review` VALUES (81, 12, 13, 4, NULL, '2026-01-18 22:00:00');
+INSERT INTO `shop_review` VALUES (82, 12, 14, 5, '衣服设计符合传统礼仪，穿着很得体，推荐！', '2026-01-19 17:00:00');
+INSERT INTO `shop_review` VALUES (83, 12, 15, 4, '发货速度快，包装精美，衣服质量不错。', '2026-01-20 19:00:00');
+INSERT INTO `shop_review` VALUES (84, 12, 16, 5, NULL, '2026-01-21 21:30:00');
+
+-- ----------------------------
+-- Records of shop_review - 店铺13 (盛世华服)
+-- ----------------------------
+INSERT INTO `shop_review` VALUES (85, 13, 17, 5, '重现盛世风采，衣服设计大气，质量很好。', '2026-01-15 16:00:00');
+INSERT INTO `shop_review` VALUES (86, 13, 18, 4, '客服态度很好，衣服做工精细，穿着很有气质。', '2026-01-16 20:30:00');
+INSERT INTO `shop_review` VALUES (87, 13, 19, 5, '盛世华服的代表，设计大气，质量上乘。', '2026-01-17 16:00:00');
+INSERT INTO `shop_review` VALUES (88, 13, 20, 4, NULL, '2026-01-18 22:30:00');
+INSERT INTO `shop_review` VALUES (89, 13, 21, 5, '衣服设计大气磅礴，面料优质，穿着舒适。', '2026-01-19 17:30:00');
+INSERT INTO `shop_review` VALUES (90, 13, 22, 4, '发货速度快，包装精美，衣服质量不错。', '2026-01-20 19:30:00');
+INSERT INTO `shop_review` VALUES (91, 13, 23, 5, NULL, '2026-01-21 22:00:00');
+
+-- ----------------------------
+-- Records of shop_review - 店铺14 (古风堂)
+-- ----------------------------
+INSERT INTO `shop_review` VALUES (92, 14, 24, 5, '古典风格，衣服设计典雅，质量很好。', '2026-01-15 16:30:00');
+INSERT INTO `shop_review` VALUES (93, 14, 25, 4, '客服态度很好，衣服做工精细，穿着很舒适。', '2026-01-16 21:00:00');
+INSERT INTO `shop_review` VALUES (94, 14, 26, 5, '古典风格的代表，设计典雅，质量上乘。', '2026-01-17 16:30:00');
+INSERT INTO `shop_review` VALUES (95, 14, 27, 4, NULL, '2026-01-18 23:00:00');
+INSERT INTO `shop_review` VALUES (96, 14, 28, 5, '衣服设计典雅，面料优质，穿着很有气质。', '2026-01-19 18:00:00');
+INSERT INTO `shop_review` VALUES (97, 14, 29, 4, '发货速度快，包装精美，衣服质量不错。', '2026-01-20 20:00:00');
+INSERT INTO `shop_review` VALUES (98, 14, 30, 5, NULL, '2026-01-21 22:30:00');
+
+-- ----------------------------
+-- Records of shop_review - 店铺15 (皇家织造)
+-- ----------------------------
+INSERT INTO `shop_review` VALUES (99, 15, 31, 5, '顶级定制店铺，工艺精湛，衣服质量非常好。', '2026-01-15 17:00:00');
+INSERT INTO `shop_review` VALUES (100, 15, 32, 5, '定制服务很专业，衣服做工精细，非常满意。', '2026-01-16 21:30:00');
+INSERT INTO `shop_review` VALUES (101, 15, 33, 5, '顶级汉服的代表，工艺精湛，质量上乘。', '2026-01-17 17:00:00');
+INSERT INTO `shop_review` VALUES (102, 15, 34, 5, NULL, '2026-01-18 23:30:00');
+INSERT INTO `shop_review` VALUES (103, 15, 35, 5, '定制的汉服非常合身，做工精湛，很喜欢。', '2026-01-19 18:30:00');
+INSERT INTO `shop_review` VALUES (104, 15, 36, 5, '发货速度快，包装精美，衣服质量非常好。', '2026-01-20 20:30:00');
+INSERT INTO `shop_review` VALUES (105, 15, 37, 5, NULL, '2026-01-21 23:00:00');
+
+-- ----------------------------
+-- Records of shop_review - 店铺16 (御品华服)
+-- ----------------------------
+INSERT INTO `shop_review` VALUES (106, 16, 2, 5, '皇室风格，衣服设计尊贵典雅，质量很好。', '2026-01-15 17:30:00');
+INSERT INTO `shop_review` VALUES (107, 16, 4, 5, '客服很专业，衣服做工精细，穿着很有气质。', '2026-01-16 22:00:00');
+INSERT INTO `shop_review` VALUES (108, 16, 5, 5, '皇室风格的代表，设计尊贵，质量上乘。', '2026-01-17 17:30:00');
+INSERT INTO `shop_review` VALUES (109, 16, 6, 5, NULL, '2026-01-19 00:00:00');
+INSERT INTO `shop_review` VALUES (110, 16, 7, 5, '衣服设计尊贵典雅，面料优质，穿着舒适。', '2026-01-19 19:00:00');
+INSERT INTO `shop_review` VALUES (111, 16, 8, 5, '发货速度快，包装精美，衣服质量非常好。', '2026-01-20 21:00:00');
+INSERT INTO `shop_review` VALUES (112, 16, 9, 5, NULL, '2026-01-21 23:30:00');
+
+-- ----------------------------
+-- Records of shop_review - 店铺17 (天衣无缝)
+-- ----------------------------
+INSERT INTO `shop_review` VALUES (113, 17, 10, 5, '顶级工艺，衣服质量非常好，做工精细。', '2026-01-15 18:00:00');
+INSERT INTO `shop_review` VALUES (114, 17, 11, 5, '定制服务很专业，衣服非常合身，很满意。', '2026-01-16 22:30:00');
+INSERT INTO `shop_review` VALUES (115, 17, 12, 5, '顶级工艺的代表，质量上乘，设计精美。', '2026-01-17 18:00:00');
+INSERT INTO `shop_review` VALUES (116, 17, 13, 5, NULL, '2026-01-19 00:30:00');
+INSERT INTO `shop_review` VALUES (117, 17, 14, 5, '衣服做工精细，面料优质，穿着很舒适。', '2026-01-19 19:30:00');
+INSERT INTO `shop_review` VALUES (118, 17, 15, 5, '发货速度快，包装精美，衣服质量非常好。', '2026-01-20 21:30:00');
+INSERT INTO `shop_review` VALUES (119, 17, 16, 5, NULL, '2026-01-22 00:00:00');
+
 SET FOREIGN_KEY_CHECKS = 1;
