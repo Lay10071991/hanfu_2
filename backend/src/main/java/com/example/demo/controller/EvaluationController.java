@@ -18,8 +18,18 @@ public class EvaluationController {
         return evaluationService.getEvaluationsByShopId(shopId);
     }
     
+    @GetMapping("/user/{userId}")
+    public List<ShopReview> getEvaluationsByUserId(@PathVariable Long userId) {
+        return evaluationService.getEvaluationsByUserId(userId);
+    }
+    
     @PostMapping
     public ShopReview createEvaluation(@RequestBody ShopReview review) {
         return evaluationService.createEvaluation(review);
+    }
+    
+    @DeleteMapping("/{id}")
+    public void deleteEvaluation(@PathVariable Long id) {
+        evaluationService.deleteEvaluation(id);
     }
 }

@@ -101,7 +101,20 @@
                   v-for="evaluation in userEvaluations"
                   :key="evaluation.id"
                 >
-                  <div class="eval-shop">{{ evaluation.shopName }}</div>
+                  <div class="eval-header">
+                    <div class="eval-shop">{{ evaluation.shopName }}</div>
+                    <div class="eval-actions">
+                      <el-button
+                        type="primary"
+                        size="small"
+                        @click="viewEvaluationDetails(evaluation)"
+                        >查看</el-button
+                      >
+                      <el-button type="danger" size="small" @click="deleteEvaluation(evaluation.id)"
+                        >删除</el-button
+                      >
+                    </div>
+                  </div>
                   <div class="eval-rating">
                     <el-rate v-model="evaluation.rating" disabled />
                     <span class="eval-date">{{ evaluation.date }}</span>
@@ -282,7 +295,7 @@
 
 <script setup>
 import { ref, onMounted, reactive, computed } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { ElMessage, ElMessageBox } from "element-plus";
 import {
   User,
@@ -298,6 +311,7 @@ import {
 const API_BASE = "http://localhost:8082/api";
 
 const router = useRouter();
+const route = useRoute();
 const username = ref("");
 const activeMenu = ref("info");
 const editDialogVisible = ref(false);
@@ -345,15 +359,7 @@ const passwordRules = {
   ],
 };
 
-const userEvaluations = ref([
-  {
-    id: 1,
-    shopName: "店铺1",
-    rating: 4.5,
-    date: "2023-11-15",
-    content: "衣服质量很好，做工精细，非常满意！",
-  },
-]);
+const userEvaluations = ref([]);
 
 const userPosts = ref([
   {
@@ -488,10 +494,21 @@ const fetchUserInfo = async () => {
 
 onMounted(() => {
   fetchUserInfo();
+  // 检查路由参数，如果有menu参数，就设置activeMenu为该值
+  if (route.query.menu) {
+    activeMenu.value = route.query.menu;
+    // 如果是evaluations菜单，就加载用户测评数据
+    if (route.query.menu === "evaluations") {
+      fetchUserEvaluations();
+    }
+  }
 });
 
 const handleMenuSelect = (index) => {
   activeMenu.value = index;
+  if (index === "evaluations") {
+    fetchUserEvaluations();
+  }
 };
 
 const showEditDialog = () => {
@@ -647,6 +664,99 @@ const cancelRegistration = (registrationId) => {
 // 新增：查看活动详情
 const viewActivityDetails = (activityId) => {
   router.push(`/activity/${activityId}`);
+};
+
+// 加载用户测评数据
+const fetchUserEvaluations = async () => {
+  const userId = getUserId();
+  if (!userId) {
+    ElMessage.warning("请先登录");
+    router.push("/login");
+    return;
+  }
+
+  loading.value = true;
+  try {
+    const response = await fetch(`${API_BASE}/evaluations/user/${userId}`);
+    if (response.ok) {
+      const evaluations = await response.json();
+      // 为每个测评获取店铺名称
+      const evaluationsWithShopName = await Promise.all(
+        evaluations.map(async (evalItem) => {
+          let shopName = "未知店铺";
+          try {
+            const shopResponse = await fetch(`${API_BASE}/shops/${evalItem.shopId}`);
+            if (shopResponse.ok) {
+              const shop = await shopResponse.json();
+              shopName = shop.name || shopName;
+            }
+          } catch (error) {
+            console.error("获取店铺信息失败:", error);
+          }
+          return {
+            id: evalItem.id,
+            shopId: evalItem.shopId,
+            shopName: shopName,
+            rating: evalItem.rating || 0,
+            date: evalItem.createTime ? new Date(evalItem.createTime).toLocaleDateString() : "",
+            content: evalItem.content || "",
+          };
+        }),
+      );
+      userEvaluations.value = evaluationsWithShopName;
+    } else {
+      ElMessage.error("获取测评记录失败");
+    }
+  } catch (error) {
+    console.error("获取测评记录失败:", error);
+    ElMessage.error("网络异常，请稍后重试");
+  } finally {
+    loading.value = false;
+  }
+};
+
+// 查看测评详情
+const viewEvaluationDetails = (evaluation) => {
+  // 跳转到店铺详情页面，携带当前菜单状态
+  router.push({
+    path: `/shop-detail/${evaluation.shopId}`,
+    query: {
+      from: "profile",
+      menu: activeMenu.value,
+    },
+  });
+};
+
+// 删除测评
+const deleteEvaluation = (evaluationId) => {
+  ElMessageBox.confirm("确定要删除这条测评吗？删除后无法恢复。", "删除确认", {
+    confirmButtonText: "确定删除",
+    cancelButtonText: "取消",
+    type: "warning",
+  })
+    .then(async () => {
+      loading.value = true;
+      try {
+        const response = await fetch(`${API_BASE}/evaluations/${evaluationId}`, {
+          method: "DELETE",
+        });
+        if (response.ok) {
+          ElMessage.success("测评删除成功");
+          // 重新加载测评数据
+          fetchUserEvaluations();
+        } else {
+          ElMessage.error("删除测评失败");
+        }
+      } catch (error) {
+        console.error("删除测评失败:", error);
+        ElMessage.error("网络异常，请稍后重试");
+      } finally {
+        loading.value = false;
+      }
+    })
+    .catch(() => {
+      // 用户取消操作
+    });
 };
 
 const logout = () => {
@@ -903,10 +1013,22 @@ const logout = () => {
   background-color: #fafafa;
 }
 
+.eval-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
 .eval-shop {
   font-weight: bold;
   color: #8b4513;
-  margin-bottom: 8px;
+  flex: 1;
+}
+
+.eval-actions {
+  display: flex;
+  gap: 8px;
 }
 
 .eval-rating {

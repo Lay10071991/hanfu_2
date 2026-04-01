@@ -16,6 +16,10 @@ public class EvaluationService {
         return shopReviewRepository.findByShopId(shopId);
     }
     
+    public List<ShopReview> getEvaluationsByUserId(Long userId) {
+        return shopReviewRepository.findByUserId(userId);
+    }
+    
     public ShopReview createEvaluation(ShopReview review) {
         // 先设置评分统计字段的初始值
         review.setAverageRating(0.0);
@@ -33,6 +37,16 @@ public class EvaluationService {
         updateShopRatingStats(review.getShopId());
         
         return savedReview;
+    }
+    
+    public void deleteEvaluation(Long id) {
+        ShopReview review = shopReviewRepository.findById(id).orElse(null);
+        if (review != null) {
+            Long shopId = review.getShopId();
+            shopReviewRepository.deleteById(id);
+            // 重新计算并更新评分统计数据
+            updateShopRatingStats(shopId);
+        }
     }
     
     private void updateShopRatingStats(Long shopId) {

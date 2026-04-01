@@ -26,7 +26,7 @@
       <div class="container">
         <!-- 页面标题区域 -->
         <div class="page-header">
-          <el-button type="text" @click="$router.back()" class="back-btn">
+          <el-button type="text" @click="goBack" class="back-btn">
             <el-icon><ArrowLeft /></el-icon> 返回
           </el-button>
           <h2 class="page-title">{{ shop.name }}</h2>
@@ -654,6 +654,26 @@ const logout = () => {
   localStorage.removeItem("role");
   ElMessage.success("退出登录成功");
   router.push("/login");
+};
+
+// 返回方法
+const goBack = () => {
+  // 检查是否从profile页面跳转过来
+  const from = route.query.from;
+  const menu = route.query.menu;
+
+  if (from === "profile" && menu) {
+    // 返回到profile页面并恢复菜单状态
+    router.push({
+      path: "/profile",
+      query: {
+        menu: menu,
+      },
+    });
+  } else {
+    // 否则使用默认的返回
+    router.back();
+  }
 };
 </script>
 
