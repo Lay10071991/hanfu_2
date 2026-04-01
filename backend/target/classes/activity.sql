@@ -1288,12 +1288,14 @@ CREATE TABLE `lecture`  (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '讲座ID',
   `title` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '讲座标题',
   `speaker` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '讲师',
+  `speaker_bio` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '主讲人介绍',
   `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '讲座描述',
   `location` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '讲座地点',
   `start_time` datetime NOT NULL COMMENT '开始时间',
   `end_time` datetime NOT NULL COMMENT '结束时间',
   `capacity` int NULL DEFAULT 0 COMMENT '容纳人数',
   `registered_count` int NULL DEFAULT 0 COMMENT '已注册人数',
+  `notice` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '参观须知',
   `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '讲座图片URL',
   `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
@@ -1303,14 +1305,14 @@ CREATE TABLE `lecture`  (
 -- ----------------------------
 -- Records of lecture
 -- ----------------------------
-INSERT INTO `lecture` VALUES (1, '汉服的历史演变', '张教授', '详细介绍汉服从先秦到明清的历史演变过程，探讨不同朝代汉服的特点和文化内涵。', '北京文化中心', '2026-03-20 14:00:00', '2026-03-20 16:00:00', 100, 35, 'https://cdn.jsdelivr.net/gh/Hanerdev/Image-Hosting@main/hanfu/lecture1.webp', '2026-03-14 10:00:00', '2026-03-14 10:00:00');
-INSERT INTO `lecture` VALUES (2, '汉服制作工艺', '李师傅', '讲解传统汉服的制作工艺和技巧，包括面料选择、裁剪方法和缝制技术。', '上海手工艺中心', '2026-03-25 10:00:00', '2026-03-25 12:00:00', 80, 28, 'https://cdn.jsdelivr.net/gh/Hanerdev/Image-Hosting@main/hanfu/lecture2.webp', '2026-03-14 10:00:00', '2026-03-14 10:00:00');
-INSERT INTO `lecture` VALUES (3, '汉服与传统礼仪', '王教授', '探讨汉服与传统礼仪的关系，介绍不同场合的汉服穿着规范和礼仪要求。', '西安大唐芙蓉园', '2026-04-02 14:00:00', '2026-04-02 16:00:00', 120, 45, 'https://cdn.jsdelivr.net/gh/Hanerdev/Image-Hosting@main/hanfu/lecture3.webp', '2026-03-14 10:00:00', '2026-03-14 10:00:00');
-INSERT INTO `lecture` VALUES (4, '明代汉服的特点', '刘博士', '深入解析明代汉服的款式、纹样和穿着特点，展示明代服饰的独特魅力。', '南京博物馆', '2026-04-10 09:30:00', '2026-04-10 11:30:00', 90, 32, 'https://cdn.jsdelivr.net/gh/Hanerdev/Image-Hosting@main/hanfu/lecture4.webp', '2026-03-14 10:00:00', '2026-03-14 10:00:00');
-INSERT INTO `lecture` VALUES (5, '汉服复兴运动', '陈老师', '讲述现代汉服复兴运动的发展历程，分析其文化意义和社会影响。', '杭州西湖文化广场', '2026-04-15 15:00:00', '2026-04-15 17:00:00', 150, 68, 'https://cdn.jsdelivr.net/gh/Hanerdev/Image-Hosting@main/hanfu/lecture5.webp', '2026-03-14 10:00:00', '2026-03-14 10:00:00');
-INSERT INTO `lecture` VALUES (6, '唐代汉服与时尚', '赵教授', '探讨唐代汉服的时尚元素和设计特点，分析其对现代时尚的影响。', '洛阳龙门石窟', '2026-04-20 14:00:00', '2026-04-20 16:00:00', 100, 42, 'https://cdn.jsdelivr.net/gh/Hanerdev/Image-Hosting@main/hanfu/lecture6.webp', '2026-03-14 10:00:00', '2026-03-14 10:00:00');
-INSERT INTO `lecture` VALUES (7, '汉服与文学艺术', '钱老师', '分析汉服在文学、绘画等艺术形式中的表现，探讨其文化象征意义。', '苏州园林', '2026-04-28 10:00:00', '2026-04-28 12:00:00', 80, 25, 'https://cdn.jsdelivr.net/gh/Hanerdev/Image-Hosting@main/hanfu/lecture7.webp', '2026-03-14 10:00:00', '2026-03-14 10:00:00');
-INSERT INTO `lecture` VALUES (8, '汉服的国际化发展', '孙博士', '探讨汉服在国际舞台上的传播和发展，分析其作为文化符号的意义。', '广州文化中心', '2026-05-05 15:00:00', '2026-05-05 17:00:00', 120, 50, 'https://cdn.jsdelivr.net/gh/Hanerdev/Image-Hosting@main/hanfu/lecture8.webp', '2026-03-14 10:00:00', '2026-03-14 10:00:00');
+INSERT INTO `lecture` VALUES (1, '汉服的历史演变', '张教授', '历史学博士，专注于中国古代服饰史研究，出版《汉服史话》等多部学术著作，在汉服文化研究领域享有盛誉。', '详细介绍汉服从先秦到明清的历史演变过程，探讨不同朝代汉服的特点和文化内涵。', '北京文化中心', '2026-03-20 14:00:00', '2026-03-20 16:00:00', 100, 35, '请提前15分钟到场签到\n讲座期间请保持安静\n可携带笔记本记录\n讲座结束后设有互动问答环节', 'https://cdn.jsdelivr.net/gh/Hanerdev/Image-Hosting@main/hanfu/lecture1.webp', '2026-03-14 10:00:00', '2026-03-14 10:00:00');
+INSERT INTO `lecture` VALUES (2, '汉服制作工艺', '李师傅', '国家级非物质文化遗产传承人，从事传统汉服制作40余年，擅长各种传统缝制工艺，培养了众多汉服制作人才。', '讲解传统汉服的制作工艺和技巧，包括面料选择、裁剪方法和缝制技术。', '上海手工艺中心', '2026-03-25 10:00:00', '2026-03-25 12:00:00', 80, 28, '请提前10分钟到场\n现场将有互动制作环节\n可携带小型工具\n听从现场工作人员安排', 'https://cdn.jsdelivr.net/gh/Hanerdev/Image-Hosting@main/hanfu/lecture2.webp', '2026-03-14 10:00:00', '2026-03-14 10:00:00');
+INSERT INTO `lecture` VALUES (3, '汉服与传统礼仪', '王教授', '礼仪学专家，研究中国传统礼仪文化30余年，著有《中国传统礼仪大全》等著作，经常受邀参加国内外文化交流活动。', '探讨汉服与传统礼仪的关系，介绍不同场合的汉服穿着规范和礼仪要求。', '西安大唐芙蓉园', '2026-04-02 14:00:00', '2026-04-02 16:00:00', 120, 45, '请提前20分钟到场\n讲座期间将有礼仪演示\n建议穿着舒适服装\n保持手机静音', 'https://cdn.jsdelivr.net/gh/Hanerdev/Image-Hosting@main/hanfu/lecture3.webp', '2026-03-14 10:00:00', '2026-03-14 10:00:00');
+INSERT INTO `lecture` VALUES (4, '明代汉服的特点', '刘博士', '明史专家，专注于明代服饰研究，主持多项国家级研究课题，发表学术论文数十篇，对明代汉服有深入研究。', '深入解析明代汉服的款式、纹样和穿着特点，展示明代服饰的独特魅力。', '南京博物馆', '2026-04-10 09:30:00', '2026-04-10 11:30:00', 90, 32, '请提前15分钟到场签到\n讲座期间有实物展示\n禁止触摸展品\n遵守博物馆相关规定', 'https://cdn.jsdelivr.net/gh/Hanerdev/Image-Hosting@main/hanfu/lecture4.webp', '2026-03-14 10:00:00', '2026-03-14 10:00:00');
+INSERT INTO `lecture` VALUES (5, '汉服复兴运动', '陈老师', '汉服文化推广者，参与组织多次大型汉服文化活动，撰写《汉服复兴之路》等著作，致力于汉服文化的现代传承。', '讲述现代汉服复兴运动的发展历程，分析其文化意义和社会影响。', '杭州西湖文化广场', '2026-04-15 15:00:00', '2026-04-15 17:00:00', 150, 68, '请提前10分钟到场\n讲座结束后有交流环节\n可携带汉服相关问题\n保持会场整洁', 'https://cdn.jsdelivr.net/gh/Hanerdev/Image-Hosting@main/hanfu/lecture5.webp', '2026-03-14 10:00:00', '2026-03-14 10:00:00');
+INSERT INTO `lecture` VALUES (6, '唐代汉服与时尚', '赵教授', '服装史专家，研究唐代服饰文化20余年，曾参与多个唐代服饰复原项目，对唐代时尚文化有独特见解。', '探讨唐代汉服的时尚元素和设计特点，分析其对现代时尚的影响。', '洛阳龙门石窟', '2026-04-20 14:00:00', '2026-04-20 16:00:00', 100, 42, '请提前15分钟到场\n讲座期间有唐代服饰展示\n可拍照但禁止闪光灯\n遵守景区相关规定', 'https://cdn.jsdelivr.net/gh/Hanerdev/Image-Hosting@main/hanfu/lecture6.webp', '2026-03-14 10:00:00', '2026-03-14 10:00:00');
+INSERT INTO `lecture` VALUES (7, '汉服与文学艺术', '钱老师', '文学博士，研究中国古代文学与服饰文化的关系，发表多篇相关学术论文，对汉服在文学作品中的表现有深入研究。', '分析汉服在文学、绘画等艺术形式中的表现，探讨其文化象征意义。', '苏州园林', '2026-04-28 10:00:00', '2026-04-28 12:00:00', 80, 25, '请提前10分钟到场\n讲座期间有文学作品朗诵\n保持安静聆听\n遵守园林参观规定', 'https://cdn.jsdelivr.net/gh/Hanerdev/Image-Hosting@main/hanfu/lecture7.webp', '2026-03-14 10:00:00', '2026-03-14 10:00:00');
+INSERT INTO `lecture` VALUES (8, '汉服的国际化发展', '孙博士', '文化传播学专家，研究中国传统文化的国际传播，曾在多个国际学术会议上发表关于汉服国际化的演讲。', '探讨汉服在国际舞台上的传播和发展，分析其作为文化符号的意义。', '广州文化中心', '2026-05-05 15:00:00', '2026-05-05 17:00:00', 120, 50, '请提前15分钟到场\n讲座期间有国际汉服展示\n鼓励提问交流\n保持会场秩序', 'https://cdn.jsdelivr.net/gh/Hanerdev/Image-Hosting@main/hanfu/lecture8.webp', '2026-03-14 10:00:00', '2026-03-14 10:00:00');
 
 -- ----------------------------
 -- Table structure for exhibition

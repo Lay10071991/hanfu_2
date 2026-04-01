@@ -19,6 +19,9 @@ public class Lecture {
     @Column(nullable = false, length = 50)
     private String speaker;
 
+    @Column(columnDefinition = "TEXT")
+    private String speakerBio;
+
     @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
 
@@ -39,6 +42,9 @@ public class Lecture {
 
     @Column(length = 255)
     private String image;
+
+    @Column(columnDefinition = "TEXT")
+    private String notice;
 
     @CreationTimestamp
     @Column(name = "create_time", updatable = false)
@@ -71,6 +77,14 @@ public class Lecture {
 
     public void setSpeaker(String speaker) {
         this.speaker = speaker;
+    }
+
+    public String getSpeakerBio() {
+        return speakerBio;
+    }
+
+    public void setSpeakerBio(String speakerBio) {
+        this.speakerBio = speakerBio;
     }
 
     public String getDescription() {
@@ -127,6 +141,14 @@ public class Lecture {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getNotice() {
+        return notice;
+    }
+
+    public void setNotice(String notice) {
+        this.notice = notice;
     }
 
     public LocalDateTime getCreateTime() {

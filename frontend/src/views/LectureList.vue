@@ -175,10 +175,24 @@
         <div class="detail-section">
           <h4>参与须知</h4>
           <ul class="notice-list">
-            <li>请提前10分钟到场签到</li>
-            <li>讲座期间请保持安静</li>
-            <li>可携带笔记本记录</li>
-            <li>讲座结束后设有互动问答环节</li>
+            <template
+              v-if="selectedLecture && selectedLecture.notice && selectedLecture.notice.trim()"
+            >
+              <li
+                v-for="(noticeItem, index) in selectedLecture.notice
+                  .split('\n')
+                  .filter((item) => item && item.trim())"
+                :key="index"
+              >
+                {{ noticeItem.trim() }}
+              </li>
+            </template>
+            <template v-else>
+              <li>请提前10分钟到场签到</li>
+              <li>讲座期间请保持安静</li>
+              <li>可携带笔记本记录</li>
+              <li>讲座结束后设有互动问答环节</li>
+            </template>
           </ul>
         </div>
       </div>
@@ -278,6 +292,7 @@ const loadLectures = async () => {
         id: lecture.id,
         title: lecture.title,
         speaker: lecture.speaker || "待定",
+        speakerBio: lecture.speakerBio || "",
         date: lecture.startTime ? new Date(lecture.startTime).toLocaleDateString("zh-CN") : "待定",
         time:
           lecture.startTime && lecture.endTime
@@ -285,6 +300,9 @@ const loadLectures = async () => {
             : "待定",
         location: lecture.location || "待定",
         description: lecture.description || "",
+        notice:
+          lecture.notice ||
+          "请提前10分钟到场签到\n讲座期间请保持安静\n可携带笔记本记录\n讲座结束后设有互动问答环节",
       }));
       total.value = lectures.value.length;
     }
@@ -301,7 +319,39 @@ onMounted(async () => {
 
   initAppointments();
   await loadLectures();
+
+  // 检查用户的报名状态
+  const savedUserId = localStorage.getItem("userId");
+  if (savedUserId) {
+    await checkUserAppointments();
+  }
 });
+
+// 检查用户的报名状态
+const checkUserAppointments = async () => {
+  const userId = localStorage.getItem("userId");
+  if (!userId) return;
+
+  try {
+    // 检查讲座报名状态
+    for (const lecture of lectures.value) {
+      const response = await fetch(
+        `http://localhost:8082/api/lectures/${lecture.id}/registration/check?userId=${userId}`,
+      );
+      if (response.ok) {
+        const data = await response.json();
+        if (data.isRegistered) {
+          lectureAppointments.value.add(lecture.id);
+        }
+      }
+    }
+
+    // 更新本地存储
+    localStorage.setItem("lectureAppointments", JSON.stringify([...lectureAppointments.value]));
+  } catch (error) {
+    console.error("检查报名状态失败:", error);
+  }
+};
 
 const goToProfile = () => {
   const role = localStorage.getItem("role");
@@ -326,12 +376,18 @@ const getDefaultContents = () => {
   ];
 };
 
-const signUpFromDialog = () => {
+const signUpFromDialog = async () => {
   if (!selectedLecture.value) return;
 
   const lectureId = selectedLecture.value.id;
   const isExpired = isLectureExpired(selectedLecture.value.date);
   const isAppointed = lectureAppointments.value.has(lectureId);
+  const userId = localStorage.getItem("userId");
+
+  if (!userId) {
+    ElMessage.warning("请先登录后再报名！");
+    return;
+  }
 
   if (isExpired) {
     ElMessage.info("讲座已经结束，无法报名！");
@@ -345,10 +401,34 @@ const signUpFromDialog = () => {
       cancelButtonText: "取消",
       type: "warning",
     })
-      .then(() => {
-        lectureAppointments.value.delete(lectureId);
-        localStorage.setItem("lectureAppointments", JSON.stringify([...lectureAppointments.value]));
-        ElMessage.success(`成功取消报名"${selectedLecture.value.title}"讲座！`);
+      .then(async () => {
+        try {
+          const response = await fetch(
+            `http://localhost:8082/api/lectures/${lectureId}/registration?userId=${userId}`,
+            {
+              method: "DELETE",
+            },
+          );
+
+          if (response.ok) {
+            const data = await response.json();
+            if (data.success) {
+              lectureAppointments.value.delete(lectureId);
+              localStorage.setItem(
+                "lectureAppointments",
+                JSON.stringify([...lectureAppointments.value]),
+              );
+              ElMessage.success(`成功取消报名"${selectedLecture.value.title}"讲座！`);
+            } else {
+              ElMessage.error("取消报名失败！");
+            }
+          } else {
+            ElMessage.error("网络错误，请稍后重试！");
+          }
+        } catch (error) {
+          console.error("取消报名失败:", error);
+          ElMessage.error("取消报名失败，请稍后重试！");
+        }
       })
       .catch(() => {
         // 用户取消
@@ -360,10 +440,38 @@ const signUpFromDialog = () => {
       cancelButtonText: "取消",
       type: "info",
     })
-      .then(() => {
-        lectureAppointments.value.add(lectureId);
-        localStorage.setItem("lectureAppointments", JSON.stringify([...lectureAppointments.value]));
-        ElMessage.success(`成功报名"${selectedLecture.value.title}"讲座！`);
+      .then(async () => {
+        try {
+          const response = await fetch(
+            `http://localhost:8082/api/lectures/${lectureId}/registration`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ userId: parseInt(userId) }),
+            },
+          );
+
+          if (response.ok) {
+            const data = await response.json();
+            if (data.success) {
+              lectureAppointments.value.add(lectureId);
+              localStorage.setItem(
+                "lectureAppointments",
+                JSON.stringify([...lectureAppointments.value]),
+              );
+              ElMessage.success(`成功报名"${selectedLecture.value.title}"讲座！`);
+            } else {
+              ElMessage.error("报名失败！");
+            }
+          } else {
+            ElMessage.error("网络错误，请稍后重试！");
+          }
+        } catch (error) {
+          console.error("报名失败:", error);
+          ElMessage.error("报名失败，请稍后重试！");
+        }
       })
       .catch(() => {
         // 用户取消
@@ -371,10 +479,16 @@ const signUpFromDialog = () => {
   }
 };
 
-const signUp = (lecture) => {
+const signUp = async (lecture) => {
   const lectureId = lecture.id;
   const isExpired = isLectureExpired(lecture.date);
   const isAppointed = lectureAppointments.value.has(lectureId);
+  const userId = localStorage.getItem("userId");
+
+  if (!userId) {
+    ElMessage.warning("请先登录后再报名！");
+    return;
+  }
 
   if (isExpired) {
     ElMessage.info("讲座已经结束，无法报名！");
@@ -388,10 +502,34 @@ const signUp = (lecture) => {
       cancelButtonText: "取消",
       type: "warning",
     })
-      .then(() => {
-        lectureAppointments.value.delete(lectureId);
-        localStorage.setItem("lectureAppointments", JSON.stringify([...lectureAppointments.value]));
-        ElMessage.success(`成功取消报名"${lecture.title}"讲座！`);
+      .then(async () => {
+        try {
+          const response = await fetch(
+            `http://localhost:8082/api/lectures/${lectureId}/registration?userId=${userId}`,
+            {
+              method: "DELETE",
+            },
+          );
+
+          if (response.ok) {
+            const data = await response.json();
+            if (data.success) {
+              lectureAppointments.value.delete(lectureId);
+              localStorage.setItem(
+                "lectureAppointments",
+                JSON.stringify([...lectureAppointments.value]),
+              );
+              ElMessage.success(`成功取消报名"${lecture.title}"讲座！`);
+            } else {
+              ElMessage.error("取消报名失败！");
+            }
+          } else {
+            ElMessage.error("网络错误，请稍后重试！");
+          }
+        } catch (error) {
+          console.error("取消报名失败:", error);
+          ElMessage.error("取消报名失败，请稍后重试！");
+        }
       })
       .catch(() => {
         // 用户取消
@@ -403,10 +541,38 @@ const signUp = (lecture) => {
       cancelButtonText: "取消",
       type: "info",
     })
-      .then(() => {
-        lectureAppointments.value.add(lectureId);
-        localStorage.setItem("lectureAppointments", JSON.stringify([...lectureAppointments.value]));
-        ElMessage.success(`成功报名"${lecture.title}"讲座！`);
+      .then(async () => {
+        try {
+          const response = await fetch(
+            `http://localhost:8082/api/lectures/${lectureId}/registration`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ userId: parseInt(userId) }),
+            },
+          );
+
+          if (response.ok) {
+            const data = await response.json();
+            if (data.success) {
+              lectureAppointments.value.add(lectureId);
+              localStorage.setItem(
+                "lectureAppointments",
+                JSON.stringify([...lectureAppointments.value]),
+              );
+              ElMessage.success(`成功报名"${lecture.title}"讲座！`);
+            } else {
+              ElMessage.error("报名失败！");
+            }
+          } else {
+            ElMessage.error("网络错误，请稍后重试！");
+          }
+        } catch (error) {
+          console.error("报名失败:", error);
+          ElMessage.error("报名失败，请稍后重试！");
+        }
       })
       .catch(() => {
         // 用户取消
