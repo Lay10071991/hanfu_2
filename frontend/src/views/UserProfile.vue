@@ -43,7 +43,7 @@
               </el-menu-item>
               <el-menu-item index="likes">
                 <el-icon><Star /></el-icon>
-                <span>我的点赞</span>
+                <span>我的互动</span>
               </el-menu-item>
               <!-- 新增活动报名菜单 -->
               <el-menu-item index="activity-registrations">
@@ -175,21 +175,86 @@
               <el-empty v-if="userPosts.length === 0" description="暂无发帖记录" />
             </div>
 
-            <!-- 我的点赞 -->
+            <!-- 我的互动 -->
             <div v-else-if="activeMenu === 'likes'" class="section">
-              <h3 class="content-title">我的点赞</h3>
-              <div class="likes-list">
-                <div class="like-item" v-for="like in userLikes" :key="like.id">
-                  <div class="like-type">{{ like.type }}</div>
-                  <h4>{{ like.title }}</h4>
-                  <p>{{ like.content }}</p>
-                  <div class="like-meta">
-                    <span>{{ like.author }}</span>
-                    <span>{{ like.date }}</span>
+              <h3 class="content-title">我的互动</h3>
+              <div class="posts-list">
+                <div
+                  class="post-item"
+                  v-for="interaction in userInteractions"
+                  :key="interaction.id"
+                >
+                  <!-- 标题和按钮行 -->
+                  <div class="post-header-new">
+                    <h4 class="post-title">{{ interaction.postTitle }}</h4>
+                    <div class="post-actions-new">
+                      <el-button
+                        type="primary"
+                        size="small"
+                        @click="viewPostDetails(interaction.postId)"
+                      >
+                        查看帖子
+                      </el-button>
+                      <el-button
+                        :type="interaction.liked ? 'danger' : 'warning'"
+                        size="small"
+                        @click="toggleLike(interaction.postId)"
+                      >
+                        {{ interaction.liked ? "取消点赞" : "点赞" }}
+                      </el-button>
+                    </div>
+                  </div>
+                  <!-- 内容和图片区域 -->
+                  <div class="post-content-area">
+                    <!-- 图片区域 -->
+                    <div
+                      v-if="interaction.postImages && interaction.postImages.length > 0"
+                      class="post-image-area"
+                    >
+                      <img
+                        v-for="(image, index) in interaction.postImages"
+                        :key="index"
+                        :src="image"
+                        alt="帖子图片"
+                        class="post-image-new"
+                      />
+                    </div>
+                    <!-- 内容区域 -->
+                    <div class="post-text-area">
+                      <p class="post-content">{{ interaction.postContent }}</p>
+                    </div>
+                  </div>
+                  <!-- 日期和统计信息 -->
+                  <div class="post-meta-new">
+                    <span class="post-date">{{ interaction.date }}</span>
+                    <div class="post-stats-new">
+                      <span class="post-likes">❤️ {{ interaction.likes }}</span>
+                      <span class="post-comments">💬 {{ interaction.comments }}</span>
+                    </div>
+                  </div>
+                  <!-- 我的评论 -->
+                  <div
+                    v-if="interaction.myComments && interaction.myComments.length > 0"
+                    class="my-comments"
+                  >
+                    <h5>我的评论</h5>
+                    <div
+                      class="comment-item"
+                      v-for="comment in interaction.myComments"
+                      :key="comment.id"
+                    >
+                      <p class="comment-content">{{ comment.content }}</p>
+                      <div class="comment-meta">
+                        <span class="comment-date">{{ comment.date }}</span>
+                        <el-button type="text" size="small" @click="deleteComment(comment.id)">
+                          删除评论
+                        </el-button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-              <el-empty v-if="userLikes.length === 0" description="暂无点赞记录" />
+              <el-empty v-if="userInteractions.length === 0" description="暂无互动记录" />
             </div>
 
             <!-- 新增：活动报名 -->
@@ -446,6 +511,7 @@ const postDialogType = ref("view"); // view 或 edit
 const currentPost = ref(null);
 const postDetailVisible = ref(false);
 const selectedPost = ref(null);
+const userInteractions = ref([]);
 
 const userLikes = ref([
   {
@@ -577,6 +643,8 @@ onMounted(() => {
       fetchUserEvaluations();
     } else if (route.query.menu === "posts") {
       fetchUserPosts();
+    } else if (route.query.menu === "likes") {
+      fetchUserInteractions();
     }
   }
 });
@@ -587,6 +655,8 @@ const handleMenuSelect = (index) => {
     fetchUserEvaluations();
   } else if (index === "posts") {
     fetchUserPosts();
+  } else if (index === "likes") {
+    fetchUserInteractions();
   }
 };
 
@@ -985,6 +1055,10 @@ const handleCommentAdded = ({ postId }) => {
   if (post) {
     post.comments += 1;
   }
+  // 重新加载互动数据
+  if (activeMenu.value === "likes") {
+    fetchUserInteractions();
+  }
 };
 
 // 处理图片上传变化
@@ -999,6 +1073,116 @@ const handleImageChange = (file, fileList) => {
 // 处理图片上传超过限制
 const handleExceed = () => {
   ElMessage.warning("最多只能上传9张图片");
+};
+
+// 加载用户互动数据
+const fetchUserInteractions = async () => {
+  const userId = getUserId();
+  if (!userId) {
+    ElMessage.warning("请先登录");
+    router.push("/login");
+    return;
+  }
+
+  loading.value = true;
+  try {
+    // 这里需要调用后端API获取用户的互动数据
+    // 暂时使用模拟数据
+    const mockInteractions = [
+      {
+        id: 1,
+        postId: 1,
+        postTitle: "汉服出行日精彩回顾",
+        postContent:
+          "上周末的汉服出行日活动圆满结束，数百名同袍齐聚市中心广场，展示各朝代汉服风采。活动现场气氛热烈，吸引了不少市民驻足观看。大家穿着明制、唐制、宋制等不同朝代的汉服，成为城市一道靓丽的风景线。",
+        postImages: ["https://example.com/image1.jpg", "https://example.com/image2.jpg"],
+        author: "汉服爱好者",
+        date: "2024年12月20日",
+        likes: 25,
+        comments: 15,
+        liked: true,
+        myComments: [
+          {
+            id: 1,
+            content: "活动非常精彩，期待下一次",
+            date: "2024年12月21日",
+          },
+        ],
+      },
+    ];
+    userInteractions.value = mockInteractions;
+  } catch (error) {
+    console.error("获取互动记录失败:", error);
+    ElMessage.error("网络异常，请稍后重试");
+  } finally {
+    loading.value = false;
+  }
+};
+
+// 切换点赞状态
+const toggleLike = async (postId) => {
+  const userId = getUserId();
+  if (!userId) {
+    ElMessage.warning("请先登录");
+    router.push("/login");
+    return;
+  }
+
+  try {
+    // 这里需要调用后端API切换点赞状态
+    const response = await fetch(`${API_BASE}/posts/${postId}/like`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ userId }),
+    });
+    if (response.ok) {
+      const result = await response.json();
+      // 更新本地数据
+      const interaction = userInteractions.value.find((item) => item.postId === postId);
+      if (interaction) {
+        interaction.liked = result.liked;
+        interaction.likes = result.likes;
+      }
+      ElMessage.success(result.liked ? "点赞成功" : "取消点赞成功");
+    } else {
+      ElMessage.error("操作失败");
+    }
+  } catch (error) {
+    console.error("操作失败:", error);
+    ElMessage.error("网络异常，请稍后重试");
+  }
+};
+
+// 删除评论
+const deleteComment = async (commentId) => {
+  ElMessageBox.confirm("确定要删除这条评论吗？删除后无法恢复。", "删除确认", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
+  })
+    .then(async () => {
+      try {
+        // 这里需要调用后端API删除评论
+        const response = await fetch(`${API_BASE}/comments/${commentId}`, {
+          method: "DELETE",
+        });
+        if (response.ok) {
+          ElMessage.success("评论删除成功");
+          // 重新加载互动数据
+          fetchUserInteractions();
+        } else {
+          ElMessage.error("删除评论失败");
+        }
+      } catch (error) {
+        console.error("删除评论失败:", error);
+        ElMessage.error("网络异常，请稍后重试");
+      }
+    })
+    .catch(() => {
+      // 取消删除
+    });
 };
 
 // 删除帖子
@@ -1359,7 +1543,7 @@ const logout = () => {
   gap: 10px;
 }
 
-/* 新的帖子样式 */
+/* 简化的帖子样式 */
 .post-header-new {
   display: flex;
   justify-content: space-between;
@@ -1381,7 +1565,7 @@ const logout = () => {
 
 .post-content-area {
   display: flex;
-  gap: 15px;
+  gap: 10px;
   margin-bottom: 10px;
 }
 
@@ -1390,19 +1574,16 @@ const logout = () => {
 }
 
 .post-image-new {
-  width: 120px;
-  height: 120px;
+  width: 100px;
+  height: 100px;
   object-fit: cover;
-  border: 1px solid #ddd;
   border-radius: 4px;
 }
 
 .post-text-area {
   flex: 1;
-  border: 1px solid #ddd;
-  border-radius: 4px;
   padding: 10px;
-  min-height: 120px;
+  min-height: 100px;
 }
 
 .post-content {
@@ -1425,11 +1606,64 @@ const logout = () => {
   gap: 15px;
 }
 
-.post-likes,
-.post-comments {
+/* 简化的互动部分样式 */
+.interactions-list {
   display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.interaction-item {
+  background-color: #fff;
+  border-radius: 4px;
+  padding: 15px;
+  border: 1px solid #eee;
+}
+
+.interaction-post {
+  margin-bottom: 10px;
+}
+
+.interaction-actions {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+}
+
+.my-comments {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+}
+
+.my-comments h5 {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  font-weight: bold;
+  color: #8b4513;
+}
+
+.comment-item {
+  background-color: #f9f9f9;
+  border-radius: 4px;
+  padding: 8px;
+  margin-bottom: 8px;
+}
+
+.comment-content {
+  margin: 0 0 6px 0;
+  line-height: 1.5;
+  color: #333;
+}
+
+.comment-meta {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 4px;
+  font-size: 12px;
+  color: #999;
 }
 
 .like-type {
