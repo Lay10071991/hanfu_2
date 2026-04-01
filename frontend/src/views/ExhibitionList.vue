@@ -243,7 +243,6 @@ const initAppointments = () => {
 
 // 解析展览结束日期
 const parseExhibitionEndDate = (dateStr) => {
-  // 处理 "2024年12月1日 至 2024年12月31日" 格式
   const match = dateStr.match(/至\s*(\d{4})年(\d{1,2})月(\d{1,2})日/);
   if (match) {
     return new Date(parseInt(match[1]), parseInt(match[2]) - 1, parseInt(match[3]));
@@ -338,15 +337,6 @@ onMounted(async () => {
   if (savedUserId) {
     await checkUserAppointments();
   }
-
-  // 测试弹窗是否显示
-  // setTimeout(() => {
-  //   if (exhibitions.value.length > 0) {
-  //     selectedExhibition.value = exhibitions.value[0];
-  //     detailDialogVisible.value = true;
-  //     console.log('Testing dialog visibility');
-  //   }
-  // }, 2000);
 });
 
 // 检查用户的预约状态
