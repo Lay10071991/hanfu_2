@@ -662,15 +662,30 @@ const logout = () => {
 }
 
 .profile-layout {
-  display: grid;
-  grid-template-columns: 250px 1fr;
-  gap: 20px;
+  display: flex;
+  position: relative;
+  min-height: calc(100vh - 220px);
 }
 
 .sidebar {
   background-color: white;
   border-radius: 8px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  width: 250px;
+  position: sticky;
+  top: 20px;
+  align-self: flex-start;
+  height: fit-content;
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+}
+
+.content {
+  flex: 1;
+  margin-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .profile-menu {
