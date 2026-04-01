@@ -268,7 +268,7 @@ import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import { Plus, Edit, Picture, Star, StarFilled, ChatDotRound } from "@element-plus/icons-vue";
 import PostDetailDialog from "./PostDetailDialog.vue";
-import { processPostImages } from '../utils/imageHelper.js';
+import { processPostImages } from "../utils/imageHelper.js";
 
 const API_BASE = "http://localhost:8082/api";
 
@@ -340,11 +340,26 @@ const fetchPosts = async () => {
 onMounted(() => {
   const savedUsername = localStorage.getItem("username");
   const savedUserId = localStorage.getItem("userId");
+  // 尝试从user对象中获取userId
+  const userStr = localStorage.getItem("user");
+  if (userStr) {
+    try {
+      const user = JSON.parse(userStr);
+      if (user.id) {
+        userId.value = user.id;
+      } else if (user.userId) {
+        userId.value = user.userId;
+      }
+    } catch (e) {
+      console.error("解析用户信息失败", e);
+    }
+  }
+  // 如果从user对象中没有获取到userId，尝试从userId字段获取
+  if (!userId.value && savedUserId) {
+    userId.value = parseInt(savedUserId);
+  }
   if (savedUsername) {
     username.value = savedUsername;
-  }
-  if (savedUserId) {
-    userId.value = parseInt(savedUserId);
   }
   fetchPosts();
 });
@@ -394,6 +409,13 @@ const submitPublish = async () => {
 
   publishing.value = true;
   try {
+    // 确保userId存在
+    if (!userId.value) {
+      ElMessage.warning("请先登录后再发布内容");
+      publishing.value = false;
+      return;
+    }
+
     const imageUrls = publishForm.value.images.map((img) => {
       if (img.raw) {
         return URL.createObjectURL(img.raw);
@@ -401,11 +423,19 @@ const submitPublish = async () => {
       return img.url || img;
     });
 
+    console.log("发布帖子数据:", {
+      title: publishForm.value.title,
+      content: publishForm.value.content,
+      category: publishForm.value.category || "其他",
+      images: imageUrls,
+      userId: userId.value,
+    });
+
     const response = await fetch(`${API_BASE}/posts`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-User-Id": userId.value || 1,
+        "X-User-Id": userId.value,
       },
       body: JSON.stringify({
         title: publishForm.value.title,
@@ -459,11 +489,22 @@ const viewPost = (post) => {
 };
 
 const toggleLike = async (post) => {
+  // 确保userId存在
+  if (!userId.value) {
+    ElMessage.warning("请先登录后再进行点赞操作");
+    return;
+  }
+
   try {
+    console.log("点赞操作数据:", {
+      postId: post.id,
+      userId: userId.value,
+    });
+
     const response = await fetch(`${API_BASE}/posts/${post.id}/like`, {
       method: "POST",
       headers: {
-        "X-User-Id": userId.value || 1,
+        "X-User-Id": userId.value,
       },
     });
 
@@ -473,7 +514,8 @@ const toggleLike = async (post) => {
       post.likes = result.likes;
       ElMessage.success(result.liked ? "已点赞" : "已取消点赞");
     }
-  } catch {
+  } catch (error) {
+    console.error("点赞操作失败:", error);
     post.liked = !post.liked;
     post.likes += post.liked ? 1 : -1;
     ElMessage.success(post.liked ? "已点赞" : "已取消点赞");

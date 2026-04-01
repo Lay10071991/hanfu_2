@@ -192,7 +192,7 @@
 import { ref, computed, onMounted, nextTick, watch } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { Star, StarFilled, ChatDotRound, Picture } from "@element-plus/icons-vue";
-import { processPostImages } from '../utils/imageHelper.js';
+import { processPostImages } from "../utils/imageHelper.js";
 
 const API_BASE = "http://localhost:8082/api";
 
@@ -316,15 +316,43 @@ const handleSave = () => {
   });
 };
 
-const toggleLike = () => {
-  post.value.liked = !post.value.liked;
-  post.value.likes += post.value.liked ? 1 : -1;
-  ElMessage.success(post.value.liked ? "已点赞" : "已取消点赞");
-  emit("like-changed", {
-    postId: post.value.id,
-    liked: post.value.liked,
-    likes: post.value.likes,
-  });
+const toggleLike = async () => {
+  // 确保userId存在
+  if (!userId.value) {
+    ElMessage.warning("请先登录后再进行点赞操作");
+    return;
+  }
+
+  try {
+    const response = await fetch(`${API_BASE}/posts/${post.value.id}/like`, {
+      method: "POST",
+      headers: {
+        "X-User-Id": userId.value,
+      },
+    });
+
+    if (response.ok) {
+      const result = await response.json();
+      post.value.liked = result.liked;
+      post.value.likes = result.likes;
+      ElMessage.success(result.liked ? "已点赞" : "已取消点赞");
+      emit("like-changed", {
+        postId: post.value.id,
+        liked: post.value.liked,
+        likes: post.value.likes,
+      });
+    }
+  } catch (error) {
+    console.error("点赞操作失败:", error);
+    post.value.liked = !post.value.liked;
+    post.value.likes += post.value.liked ? 1 : -1;
+    ElMessage.success(post.value.liked ? "已点赞" : "已取消点赞");
+    emit("like-changed", {
+      postId: post.value.id,
+      liked: post.value.liked,
+      likes: post.value.likes,
+    });
+  }
 };
 
 const toggleCommentLike = (comment) => {
@@ -338,13 +366,26 @@ const submitComment = async () => {
     return;
   }
 
+  // 确保userId存在
+  if (!userId.value) {
+    ElMessage.warning("请先登录后再发表评论");
+    commenting.value = false;
+    return;
+  }
+
   commenting.value = true;
   try {
+    console.log("发表评论数据:", {
+      postId: post.value.id,
+      content: newComment.value,
+      userId: userId.value,
+    });
+
     const response = await fetch(`${API_BASE}/posts/${post.value.id}/comments`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-User-Id": userId.value || 1,
+        "X-User-Id": userId.value,
       },
       body: JSON.stringify({
         content: newComment.value,
@@ -363,9 +404,12 @@ const submitComment = async () => {
         comment: newCommentObj,
       });
     } else {
+      const errorText = await response.text();
+      console.error("评论发表失败响应:", errorText);
       ElMessage.error("评论发表失败");
     }
-  } catch {
+  } catch (error) {
+    console.error("评论发表失败:", error);
     ElMessage.error("评论发表失败");
   } finally {
     commenting.value = false;
@@ -430,9 +474,26 @@ const formatTime = (time) => {
 onMounted(() => {
   isMobile.value = window.innerWidth <= 768;
 
-  const savedUserId = localStorage.getItem("userId");
-  if (savedUserId) {
-    userId.value = parseInt(savedUserId);
+  // 尝试从user对象中获取userId
+  const userStr = localStorage.getItem("user");
+  if (userStr) {
+    try {
+      const user = JSON.parse(userStr);
+      if (user.id) {
+        userId.value = user.id;
+      } else if (user.userId) {
+        userId.value = user.userId;
+      }
+    } catch (e) {
+      console.error("解析用户信息失败", e);
+    }
+  }
+  // 如果从user对象中没有获取到userId，尝试从userId字段获取
+  if (!userId.value) {
+    const savedUserId = localStorage.getItem("userId");
+    if (savedUserId) {
+      userId.value = parseInt(savedUserId);
+    }
   }
 
   if (!props.postData && props.postId) {
