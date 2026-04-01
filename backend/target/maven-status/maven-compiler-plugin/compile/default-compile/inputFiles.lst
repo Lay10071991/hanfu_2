@@ -16,6 +16,7 @@ E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\bac
 E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\controller\FestivalAdminController.java
 E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\service\ShopServiceItemService.java
 E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\util\DatabaseCleanup.java
+E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\repository\ShopReviewRepository.java
 E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\repository\UserRepository.java
 E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\config\CorsConfig.java
 E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\entity\Evaluation.java
@@ -43,6 +44,7 @@ E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\bac
 E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\repository\FestivalActivityRepository.java
 E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\exception\ImageException.java
 E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\config\PatternCategoryInitializer.java
+E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\entity\ShopReview.java
 E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\repository\ExhibitionRepository.java
 E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\repository\ImageRepository.java
 E:\hanfu-cultural-platform-6\hanfu-cultural-platform\hanfu-cultural-platform\backend\src\main\java\com\example\demo\controller\ShopServiceItemController.java

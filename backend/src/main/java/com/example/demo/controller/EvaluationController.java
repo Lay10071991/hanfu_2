@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.Evaluation;
+import com.example.demo.entity.ShopReview;
 import com.example.demo.service.EvaluationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,12 +14,12 @@ public class EvaluationController {
     private EvaluationService evaluationService;
     
     @GetMapping("/shop/{shopId}")
-    public List<Evaluation> getEvaluationsByShopId(@PathVariable Long shopId) {
+    public List<ShopReview> getEvaluationsByShopId(@PathVariable Long shopId) {
         return evaluationService.getEvaluationsByShopId(shopId);
     }
     
     @PostMapping
-    public Evaluation createEvaluation(@RequestBody Evaluation evaluation) {
-        return evaluationService.createEvaluation(evaluation);
+    public ShopReview createEvaluation(@RequestBody ShopReview review) {
+        return evaluationService.createEvaluation(review);
     }
 }
