@@ -53,7 +53,7 @@ server:
 image:
   upload:
     # 图片存储的基础路径（绝对路径）
-    base-path: E:/hanfu-cultural-platform-3/hanfu-cultural-platform/hanfu-cultural-platform/frontend/public
+    base-path: E:/hanfu-cultural-platform/backend/uploads
     # 允许的文件扩展名
     allowed-extensions: jpg,jpeg,png,gif,webp
     # 最大文件大小（MB）
