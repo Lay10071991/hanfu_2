@@ -417,7 +417,7 @@ CREATE TABLE `festival_activity_registration`  (
   INDEX `user_id`(`user_id` ASC) USING BTREE,
   CONSTRAINT `festival_activity_registration_ibfk_1` FOREIGN KEY (`festival_activity_id`) REFERENCES `festival_activity` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
   CONSTRAINT `festival_activity_registration_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 184 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '节庆活动报名表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 179 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '节庆活动报名表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of festival_activity_registration
@@ -667,7 +667,7 @@ CREATE TABLE `exhibition_registration`  (
   INDEX `user_id`(`user_id` ASC) USING BTREE,
   CONSTRAINT `exhibition_registration_ibfk_1` FOREIGN KEY (`exhibition_id`) REFERENCES `exhibition` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
   CONSTRAINT `exhibition_registration_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 166 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '展览报名表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 162 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '展览报名表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of exhibition_registration
@@ -694,164 +694,159 @@ INSERT INTO `exhibition_registration` VALUES (18, 1, 31, 'registered', '2026-03-
 INSERT INTO `exhibition_registration` VALUES (19, 1, 32, 'registered', '2026-03-13 14:30:00');
 INSERT INTO `exhibition_registration` VALUES (20, 1, 33, 'registered', '2026-03-13 16:00:00');
 
--- 展览2(唐代服饰艺术展)的22条报名记录，包含lay(id=2)
-INSERT INTO `exhibition_registration` VALUES (21, 2, 2, 'registered', '2026-03-15 09:00:00');
-INSERT INTO `exhibition_registration` VALUES (22, 2, 4, 'registered', '2026-03-15 10:30:00');
-INSERT INTO `exhibition_registration` VALUES (23, 2, 5, 'registered', '2026-03-15 11:45:00');
-INSERT INTO `exhibition_registration` VALUES (24, 2, 6, 'registered', '2026-03-15 14:00:00');
-INSERT INTO `exhibition_registration` VALUES (25, 2, 7, 'registered', '2026-03-15 15:30:00');
-INSERT INTO `exhibition_registration` VALUES (26, 2, 8, 'registered', '2026-03-16 09:15:00');
-INSERT INTO `exhibition_registration` VALUES (27, 2, 9, 'registered', '2026-03-16 10:45:00');
-INSERT INTO `exhibition_registration` VALUES (28, 2, 10, 'registered', '2026-03-16 12:00:00');
-INSERT INTO `exhibition_registration` VALUES (29, 2, 22, 'registered', '2026-03-16 14:30:00');
-INSERT INTO `exhibition_registration` VALUES (30, 2, 23, 'registered', '2026-03-16 16:00:00');
-INSERT INTO `exhibition_registration` VALUES (31, 2, 24, 'registered', '2026-03-17 09:00:00');
-INSERT INTO `exhibition_registration` VALUES (32, 2, 25, 'registered', '2026-03-17 10:30:00');
-INSERT INTO `exhibition_registration` VALUES (33, 2, 26, 'registered', '2026-03-17 11:45:00');
-INSERT INTO `exhibition_registration` VALUES (34, 2, 27, 'registered', '2026-03-17 14:00:00');
-INSERT INTO `exhibition_registration` VALUES (35, 2, 28, 'registered', '2026-03-17 15:30:00');
-INSERT INTO `exhibition_registration` VALUES (36, 2, 29, 'registered', '2026-03-18 09:15:00');
-INSERT INTO `exhibition_registration` VALUES (37, 2, 30, 'registered', '2026-03-18 10:45:00');
-INSERT INTO `exhibition_registration` VALUES (38, 2, 31, 'registered', '2026-03-18 12:00:00');
-INSERT INTO `exhibition_registration` VALUES (39, 2, 32, 'registered', '2026-03-18 14:30:00');
-INSERT INTO `exhibition_registration` VALUES (40, 2, 33, 'registered', '2026-03-18 16:00:00');
-INSERT INTO `exhibition_registration` VALUES (41, 2, 34, 'registered', '2026-03-19 09:00:00');
-INSERT INTO `exhibition_registration` VALUES (42, 2, 35, 'registered', '2026-03-19 10:30:00');
+-- 展览2(唐代服饰艺术展)的21条报名记录
+INSERT INTO `exhibition_registration` VALUES (21, 2, 4, 'registered', '2026-03-15 10:30:00');
+INSERT INTO `exhibition_registration` VALUES (22, 2, 5, 'registered', '2026-03-15 11:45:00');
+INSERT INTO `exhibition_registration` VALUES (23, 2, 6, 'registered', '2026-03-15 14:00:00');
+INSERT INTO `exhibition_registration` VALUES (24, 2, 7, 'registered', '2026-03-15 15:30:00');
+INSERT INTO `exhibition_registration` VALUES (25, 2, 8, 'registered', '2026-03-16 09:15:00');
+INSERT INTO `exhibition_registration` VALUES (26, 2, 9, 'registered', '2026-03-16 10:45:00');
+INSERT INTO `exhibition_registration` VALUES (27, 2, 10, 'registered', '2026-03-16 12:00:00');
+INSERT INTO `exhibition_registration` VALUES (28, 2, 22, 'registered', '2026-03-16 14:30:00');
+INSERT INTO `exhibition_registration` VALUES (29, 2, 23, 'registered', '2026-03-16 16:00:00');
+INSERT INTO `exhibition_registration` VALUES (30, 2, 24, 'registered', '2026-03-17 09:00:00');
+INSERT INTO `exhibition_registration` VALUES (31, 2, 25, 'registered', '2026-03-17 10:30:00');
+INSERT INTO `exhibition_registration` VALUES (32, 2, 26, 'registered', '2026-03-17 11:45:00');
+INSERT INTO `exhibition_registration` VALUES (33, 2, 27, 'registered', '2026-03-17 14:00:00');
+INSERT INTO `exhibition_registration` VALUES (34, 2, 28, 'registered', '2026-03-17 15:30:00');
+INSERT INTO `exhibition_registration` VALUES (35, 2, 29, 'registered', '2026-03-18 09:15:00');
+INSERT INTO `exhibition_registration` VALUES (36, 2, 30, 'registered', '2026-03-18 10:45:00');
+INSERT INTO `exhibition_registration` VALUES (37, 2, 31, 'registered', '2026-03-18 12:00:00');
+INSERT INTO `exhibition_registration` VALUES (38, 2, 32, 'registered', '2026-03-18 14:30:00');
+INSERT INTO `exhibition_registration` VALUES (39, 2, 33, 'registered', '2026-03-18 16:00:00');
+INSERT INTO `exhibition_registration` VALUES (40, 2, 34, 'registered', '2026-03-19 09:00:00');
+INSERT INTO `exhibition_registration` VALUES (41, 2, 35, 'registered', '2026-03-19 10:30:00');
 
 -- 展览3(明代汉服精品展)的18条报名记录，包含lay(id=2)
-INSERT INTO `exhibition_registration` VALUES (43, 3, 2, 'registered', '2026-03-25 09:00:00');
-INSERT INTO `exhibition_registration` VALUES (44, 3, 4, 'registered', '2026-03-25 10:30:00');
-INSERT INTO `exhibition_registration` VALUES (45, 3, 5, 'registered', '2026-03-25 11:45:00');
-INSERT INTO `exhibition_registration` VALUES (46, 3, 6, 'registered', '2026-03-25 14:00:00');
-INSERT INTO `exhibition_registration` VALUES (47, 3, 7, 'registered', '2026-03-25 15:30:00');
-INSERT INTO `exhibition_registration` VALUES (48, 3, 8, 'registered', '2026-03-26 09:15:00');
-INSERT INTO `exhibition_registration` VALUES (49, 3, 9, 'registered', '2026-03-26 10:45:00');
-INSERT INTO `exhibition_registration` VALUES (50, 3, 10, 'registered', '2026-03-26 12:00:00');
-INSERT INTO `exhibition_registration` VALUES (51, 3, 22, 'registered', '2026-03-26 14:30:00');
-INSERT INTO `exhibition_registration` VALUES (52, 3, 23, 'registered', '2026-03-26 16:00:00');
-INSERT INTO `exhibition_registration` VALUES (53, 3, 24, 'registered', '2026-03-27 09:00:00');
-INSERT INTO `exhibition_registration` VALUES (54, 3, 25, 'registered', '2026-03-27 10:30:00');
-INSERT INTO `exhibition_registration` VALUES (55, 3, 26, 'registered', '2026-03-27 11:45:00');
-INSERT INTO `exhibition_registration` VALUES (56, 3, 27, 'registered', '2026-03-27 14:00:00');
-INSERT INTO `exhibition_registration` VALUES (57, 3, 28, 'registered', '2026-03-27 15:30:00');
-INSERT INTO `exhibition_registration` VALUES (58, 3, 29, 'registered', '2026-03-28 09:15:00');
-INSERT INTO `exhibition_registration` VALUES (59, 3, 30, 'registered', '2026-03-28 10:45:00');
-INSERT INTO `exhibition_registration` VALUES (60, 3, 31, 'registered', '2026-03-28 12:00:00');
+INSERT INTO `exhibition_registration` VALUES (42, 3, 2, 'registered', '2026-03-25 09:00:00');
+INSERT INTO `exhibition_registration` VALUES (43, 3, 4, 'registered', '2026-03-25 10:30:00');
+INSERT INTO `exhibition_registration` VALUES (44, 3, 5, 'registered', '2026-03-25 11:45:00');
+INSERT INTO `exhibition_registration` VALUES (45, 3, 6, 'registered', '2026-03-25 14:00:00');
+INSERT INTO `exhibition_registration` VALUES (46, 3, 7, 'registered', '2026-03-25 15:30:00');
+INSERT INTO `exhibition_registration` VALUES (47, 3, 8, 'registered', '2026-03-26 09:15:00');
+INSERT INTO `exhibition_registration` VALUES (48, 3, 9, 'registered', '2026-03-26 10:45:00');
+INSERT INTO `exhibition_registration` VALUES (49, 3, 10, 'registered', '2026-03-26 12:00:00');
+INSERT INTO `exhibition_registration` VALUES (50, 3, 22, 'registered', '2026-03-26 14:30:00');
+INSERT INTO `exhibition_registration` VALUES (51, 3, 23, 'registered', '2026-03-26 16:00:00');
+INSERT INTO `exhibition_registration` VALUES (52, 3, 24, 'registered', '2026-03-27 09:00:00');
+INSERT INTO `exhibition_registration` VALUES (53, 3, 25, 'registered', '2026-03-27 10:30:00');
+INSERT INTO `exhibition_registration` VALUES (54, 3, 26, 'registered', '2026-03-27 11:45:00');
+INSERT INTO `exhibition_registration` VALUES (55, 3, 27, 'registered', '2026-03-27 14:00:00');
+INSERT INTO `exhibition_registration` VALUES (56, 3, 28, 'registered', '2026-03-27 15:30:00');
+INSERT INTO `exhibition_registration` VALUES (57, 3, 29, 'registered', '2026-03-28 09:15:00');
+INSERT INTO `exhibition_registration` VALUES (58, 3, 30, 'registered', '2026-03-28 10:45:00');
+INSERT INTO `exhibition_registration` VALUES (59, 3, 31, 'registered', '2026-03-28 12:00:00');
 
--- 展览4(汉服纹样艺术展)的25条报名记录，包含lay(id=2)
-INSERT INTO `exhibition_registration` VALUES (61, 4, 2, 'registered', '2026-04-01 09:00:00');
-INSERT INTO `exhibition_registration` VALUES (62, 4, 4, 'registered', '2026-04-01 10:30:00');
-INSERT INTO `exhibition_registration` VALUES (63, 4, 5, 'registered', '2026-04-01 11:45:00');
-INSERT INTO `exhibition_registration` VALUES (64, 4, 6, 'registered', '2026-04-01 14:00:00');
-INSERT INTO `exhibition_registration` VALUES (65, 4, 7, 'registered', '2026-04-01 15:30:00');
-INSERT INTO `exhibition_registration` VALUES (66, 4, 8, 'registered', '2026-04-02 09:15:00');
-INSERT INTO `exhibition_registration` VALUES (67, 4, 9, 'registered', '2026-04-02 10:45:00');
-INSERT INTO `exhibition_registration` VALUES (68, 4, 10, 'registered', '2026-04-02 12:00:00');
-INSERT INTO `exhibition_registration` VALUES (69, 4, 22, 'registered', '2026-04-02 14:30:00');
-INSERT INTO `exhibition_registration` VALUES (70, 4, 23, 'registered', '2026-04-02 16:00:00');
-INSERT INTO `exhibition_registration` VALUES (71, 4, 24, 'registered', '2026-04-03 09:00:00');
-INSERT INTO `exhibition_registration` VALUES (72, 4, 25, 'registered', '2026-04-03 10:30:00');
-INSERT INTO `exhibition_registration` VALUES (73, 4, 26, 'registered', '2026-04-03 11:45:00');
-INSERT INTO `exhibition_registration` VALUES (74, 4, 27, 'registered', '2026-04-03 14:00:00');
-INSERT INTO `exhibition_registration` VALUES (75, 4, 28, 'registered', '2026-04-03 15:30:00');
-INSERT INTO `exhibition_registration` VALUES (76, 4, 29, 'registered', '2026-04-04 09:15:00');
-INSERT INTO `exhibition_registration` VALUES (77, 4, 30, 'registered', '2026-04-04 10:45:00');
-INSERT INTO `exhibition_registration` VALUES (78, 4, 31, 'registered', '2026-04-04 12:00:00');
-INSERT INTO `exhibition_registration` VALUES (79, 4, 32, 'registered', '2026-04-04 14:30:00');
-INSERT INTO `exhibition_registration` VALUES (80, 4, 33, 'registered', '2026-04-04 16:00:00');
-INSERT INTO `exhibition_registration` VALUES (81, 4, 34, 'registered', '2026-04-05 09:00:00');
-INSERT INTO `exhibition_registration` VALUES (82, 4, 35, 'registered', '2026-04-05 10:30:00');
-INSERT INTO `exhibition_registration` VALUES (83, 4, 36, 'registered', '2026-04-05 11:45:00');
-INSERT INTO `exhibition_registration` VALUES (84, 4, 37, 'registered', '2026-04-05 14:00:00');
-INSERT INTO `exhibition_registration` VALUES (85, 4, 38, 'registered', '2026-04-05 15:30:00');
+-- 展览4(汉服纹样艺术展)的24条报名记录
+INSERT INTO `exhibition_registration` VALUES (60, 4, 4, 'registered', '2026-04-01 10:30:00');
+INSERT INTO `exhibition_registration` VALUES (61, 4, 5, 'registered', '2026-04-01 11:45:00');
+INSERT INTO `exhibition_registration` VALUES (62, 4, 6, 'registered', '2026-04-01 14:00:00');
+INSERT INTO `exhibition_registration` VALUES (63, 4, 7, 'registered', '2026-04-01 15:30:00');
+INSERT INTO `exhibition_registration` VALUES (64, 4, 8, 'registered', '2026-04-02 09:15:00');
+INSERT INTO `exhibition_registration` VALUES (65, 4, 9, 'registered', '2026-04-02 10:45:00');
+INSERT INTO `exhibition_registration` VALUES (66, 4, 10, 'registered', '2026-04-02 12:00:00');
+INSERT INTO `exhibition_registration` VALUES (67, 4, 22, 'registered', '2026-04-02 14:30:00');
+INSERT INTO `exhibition_registration` VALUES (68, 4, 23, 'registered', '2026-04-02 16:00:00');
+INSERT INTO `exhibition_registration` VALUES (69, 4, 24, 'registered', '2026-04-03 09:00:00');
+INSERT INTO `exhibition_registration` VALUES (70, 4, 25, 'registered', '2026-04-03 10:30:00');
+INSERT INTO `exhibition_registration` VALUES (71, 4, 26, 'registered', '2026-04-03 11:45:00');
+INSERT INTO `exhibition_registration` VALUES (72, 4, 27, 'registered', '2026-04-03 14:00:00');
+INSERT INTO `exhibition_registration` VALUES (73, 4, 28, 'registered', '2026-04-03 15:30:00');
+INSERT INTO `exhibition_registration` VALUES (74, 4, 29, 'registered', '2026-04-04 09:15:00');
+INSERT INTO `exhibition_registration` VALUES (75, 4, 30, 'registered', '2026-04-04 10:45:00');
+INSERT INTO `exhibition_registration` VALUES (76, 4, 31, 'registered', '2026-04-04 12:00:00');
+INSERT INTO `exhibition_registration` VALUES (77, 4, 32, 'registered', '2026-04-04 14:30:00');
+INSERT INTO `exhibition_registration` VALUES (78, 4, 33, 'registered', '2026-04-04 16:00:00');
+INSERT INTO `exhibition_registration` VALUES (79, 4, 34, 'registered', '2026-04-05 09:00:00');
+INSERT INTO `exhibition_registration` VALUES (80, 4, 35, 'registered', '2026-04-05 10:30:00');
+INSERT INTO `exhibition_registration` VALUES (81, 4, 36, 'registered', '2026-04-05 11:45:00');
+INSERT INTO `exhibition_registration` VALUES (82, 4, 37, 'registered', '2026-04-05 14:00:00');
+INSERT INTO `exhibition_registration` VALUES (83, 4, 38, 'registered', '2026-04-05 15:30:00');
 
--- 展览5(现代汉服设计展)的19条报名记录，包含lay(id=2)
-INSERT INTO `exhibition_registration` VALUES (86, 5, 2, 'registered', '2026-04-08 09:00:00');
-INSERT INTO `exhibition_registration` VALUES (87, 5, 4, 'registered', '2026-04-08 10:30:00');
-INSERT INTO `exhibition_registration` VALUES (88, 5, 5, 'registered', '2026-04-08 11:45:00');
-INSERT INTO `exhibition_registration` VALUES (89, 5, 6, 'registered', '2026-04-08 14:00:00');
-INSERT INTO `exhibition_registration` VALUES (90, 5, 7, 'registered', '2026-04-08 15:30:00');
-INSERT INTO `exhibition_registration` VALUES (91, 5, 8, 'registered', '2026-04-09 09:15:00');
-INSERT INTO `exhibition_registration` VALUES (92, 5, 9, 'registered', '2026-04-09 10:45:00');
-INSERT INTO `exhibition_registration` VALUES (93, 5, 10, 'registered', '2026-04-09 12:00:00');
-INSERT INTO `exhibition_registration` VALUES (94, 5, 22, 'registered', '2026-04-09 14:30:00');
-INSERT INTO `exhibition_registration` VALUES (95, 5, 23, 'registered', '2026-04-09 16:00:00');
-INSERT INTO `exhibition_registration` VALUES (96, 5, 24, 'registered', '2026-04-10 09:00:00');
-INSERT INTO `exhibition_registration` VALUES (97, 5, 25, 'registered', '2026-04-10 10:30:00');
-INSERT INTO `exhibition_registration` VALUES (98, 5, 26, 'registered', '2026-04-10 11:45:00');
-INSERT INTO `exhibition_registration` VALUES (99, 5, 27, 'registered', '2026-04-10 14:00:00');
-INSERT INTO `exhibition_registration` VALUES (100, 5, 28, 'registered', '2026-04-10 15:30:00');
-INSERT INTO `exhibition_registration` VALUES (101, 5, 29, 'registered', '2026-04-11 09:15:00');
-INSERT INTO `exhibition_registration` VALUES (102, 5, 30, 'registered', '2026-04-11 10:45:00');
-INSERT INTO `exhibition_registration` VALUES (103, 5, 31, 'registered', '2026-04-11 12:00:00');
-INSERT INTO `exhibition_registration` VALUES (104, 5, 32, 'registered', '2026-04-11 14:30:00');
+-- 展览5(现代汉服设计展)的18条报名记录
+INSERT INTO `exhibition_registration` VALUES (84, 5, 4, 'registered', '2026-04-08 10:30:00');
+INSERT INTO `exhibition_registration` VALUES (85, 5, 5, 'registered', '2026-04-08 11:45:00');
+INSERT INTO `exhibition_registration` VALUES (86, 5, 6, 'registered', '2026-04-08 14:00:00');
+INSERT INTO `exhibition_registration` VALUES (87, 5, 7, 'registered', '2026-04-08 15:30:00');
+INSERT INTO `exhibition_registration` VALUES (88, 5, 8, 'registered', '2026-04-09 09:15:00');
+INSERT INTO `exhibition_registration` VALUES (89, 5, 9, 'registered', '2026-04-09 10:45:00');
+INSERT INTO `exhibition_registration` VALUES (90, 5, 10, 'registered', '2026-04-09 12:00:00');
+INSERT INTO `exhibition_registration` VALUES (91, 5, 22, 'registered', '2026-04-09 14:30:00');
+INSERT INTO `exhibition_registration` VALUES (92, 5, 23, 'registered', '2026-04-09 16:00:00');
+INSERT INTO `exhibition_registration` VALUES (93, 5, 24, 'registered', '2026-04-10 09:00:00');
+INSERT INTO `exhibition_registration` VALUES (94, 5, 25, 'registered', '2026-04-10 10:30:00');
+INSERT INTO `exhibition_registration` VALUES (95, 5, 26, 'registered', '2026-04-10 11:45:00');
+INSERT INTO `exhibition_registration` VALUES (96, 5, 27, 'registered', '2026-04-10 14:00:00');
+INSERT INTO `exhibition_registration` VALUES (97, 5, 28, 'registered', '2026-04-10 15:30:00');
+INSERT INTO `exhibition_registration` VALUES (98, 5, 29, 'registered', '2026-04-11 09:15:00');
+INSERT INTO `exhibition_registration` VALUES (99, 5, 30, 'registered', '2026-04-11 10:45:00');
+INSERT INTO `exhibition_registration` VALUES (100, 5, 31, 'registered', '2026-04-11 12:00:00');
+INSERT INTO `exhibition_registration` VALUES (101, 5, 32, 'registered', '2026-04-11 14:30:00');
 
 -- 展览6(汉服与生活展)的21条报名记录
-INSERT INTO `exhibition_registration` VALUES (105, 6, 4, 'registered', '2026-04-12 09:00:00');
-INSERT INTO `exhibition_registration` VALUES (106, 6, 5, 'registered', '2026-04-12 10:30:00');
-INSERT INTO `exhibition_registration` VALUES (107, 6, 6, 'registered', '2026-04-12 11:45:00');
-INSERT INTO `exhibition_registration` VALUES (108, 6, 7, 'registered', '2026-04-12 14:00:00');
-INSERT INTO `exhibition_registration` VALUES (109, 6, 8, 'registered', '2026-04-12 15:30:00');
-INSERT INTO `exhibition_registration` VALUES (110, 6, 9, 'registered', '2026-04-13 09:15:00');
-INSERT INTO `exhibition_registration` VALUES (111, 6, 10, 'registered', '2026-04-13 10:45:00');
-INSERT INTO `exhibition_registration` VALUES (112, 6, 22, 'registered', '2026-04-13 12:00:00');
-INSERT INTO `exhibition_registration` VALUES (113, 6, 23, 'registered', '2026-04-13 14:30:00');
-INSERT INTO `exhibition_registration` VALUES (114, 6, 24, 'registered', '2026-04-13 16:00:00');
-INSERT INTO `exhibition_registration` VALUES (115, 6, 25, 'registered', '2026-04-14 09:00:00');
-INSERT INTO `exhibition_registration` VALUES (116, 6, 26, 'registered', '2026-04-14 10:30:00');
-INSERT INTO `exhibition_registration` VALUES (117, 6, 27, 'registered', '2026-04-14 11:45:00');
-INSERT INTO `exhibition_registration` VALUES (118, 6, 28, 'registered', '2026-04-14 14:00:00');
-INSERT INTO `exhibition_registration` VALUES (119, 6, 29, 'registered', '2026-04-14 15:30:00');
-INSERT INTO `exhibition_registration` VALUES (120, 6, 30, 'registered', '2026-04-15 09:15:00');
-INSERT INTO `exhibition_registration` VALUES (121, 6, 31, 'registered', '2026-04-15 10:45:00');
-INSERT INTO `exhibition_registration` VALUES (122, 6, 32, 'registered', '2026-04-15 12:00:00');
-INSERT INTO `exhibition_registration` VALUES (123, 6, 33, 'registered', '2026-04-15 14:30:00');
-INSERT INTO `exhibition_registration` VALUES (124, 6, 34, 'registered', '2026-04-15 16:00:00');
-INSERT INTO `exhibition_registration` VALUES (125, 6, 35, 'registered', '2026-04-16 09:00:00');
-
+INSERT INTO `exhibition_registration` VALUES (102, 6, 4, 'registered', '2026-04-12 09:00:00');
+INSERT INTO `exhibition_registration` VALUES (103, 6, 5, 'registered', '2026-04-12 10:30:00');
+INSERT INTO `exhibition_registration` VALUES (104, 6, 6, 'registered', '2026-04-12 11:45:00');
+INSERT INTO `exhibition_registration` VALUES (105, 6, 7, 'registered', '2026-04-12 14:00:00');
+INSERT INTO `exhibition_registration` VALUES (106, 6, 8, 'registered', '2026-04-12 15:30:00');
+INSERT INTO `exhibition_registration` VALUES (107, 6, 9, 'registered', '2026-04-13 09:15:00');
+INSERT INTO `exhibition_registration` VALUES (108, 6, 10, 'registered', '2026-04-13 10:45:00');
+INSERT INTO `exhibition_registration` VALUES (109, 6, 22, 'registered', '2026-04-13 12:00:00');
+INSERT INTO `exhibition_registration` VALUES (110, 6, 23, 'registered', '2026-04-13 14:30:00');
+INSERT INTO `exhibition_registration` VALUES (111, 6, 24, 'registered', '2026-04-13 16:00:00');
+INSERT INTO `exhibition_registration` VALUES (112, 6, 25, 'registered', '2026-04-14 09:00:00');
+INSERT INTO `exhibition_registration` VALUES (113, 6, 26, 'registered', '2026-04-14 10:30:00');
+INSERT INTO `exhibition_registration` VALUES (114, 6, 27, 'registered', '2026-04-14 11:45:00');
+INSERT INTO `exhibition_registration` VALUES (115, 6, 28, 'registered', '2026-04-14 14:00:00');
+INSERT INTO `exhibition_registration` VALUES (116, 6, 29, 'registered', '2026-04-14 15:30:00');
+INSERT INTO `exhibition_registration` VALUES (117, 6, 30, 'registered', '2026-04-15 09:15:00');
+INSERT INTO `exhibition_registration` VALUES (118, 6, 31, 'registered', '2026-04-15 10:45:00');
+INSERT INTO `exhibition_registration` VALUES (119, 6, 32, 'registered', '2026-04-15 12:00:00');
+INSERT INTO `exhibition_registration` VALUES (120, 6, 33, 'registered', '2026-04-15 14:30:00');
+INSERT INTO `exhibition_registration` VALUES (121, 6, 34, 'registered', '2026-04-15 16:00:00');
+INSERT INTO `exhibition_registration` VALUES (122, 6, 35, 'registered', '2026-04-16 09:00:00');
 -- 展览7(少数民族与汉服展)的17条报名记录
-INSERT INTO `exhibition_registration` VALUES (126, 7, 4, 'registered', '2026-04-20 09:00:00');
-INSERT INTO `exhibition_registration` VALUES (127, 7, 5, 'registered', '2026-04-20 10:30:00');
-INSERT INTO `exhibition_registration` VALUES (128, 7, 6, 'registered', '2026-04-20 11:45:00');
-INSERT INTO `exhibition_registration` VALUES (129, 7, 7, 'registered', '2026-04-20 14:00:00');
-INSERT INTO `exhibition_registration` VALUES (130, 7, 8, 'registered', '2026-04-20 15:30:00');
-INSERT INTO `exhibition_registration` VALUES (131, 7, 9, 'registered', '2026-04-21 09:15:00');
-INSERT INTO `exhibition_registration` VALUES (132, 7, 10, 'registered', '2026-04-21 10:45:00');
-INSERT INTO `exhibition_registration` VALUES (133, 7, 22, 'registered', '2026-04-21 12:00:00');
-INSERT INTO `exhibition_registration` VALUES (134, 7, 23, 'registered', '2026-04-21 14:30:00');
-INSERT INTO `exhibition_registration` VALUES (135, 7, 24, 'registered', '2026-04-21 16:00:00');
-INSERT INTO `exhibition_registration` VALUES (136, 7, 25, 'registered', '2026-04-22 09:00:00');
-INSERT INTO `exhibition_registration` VALUES (137, 7, 26, 'registered', '2026-04-22 10:30:00');
-INSERT INTO `exhibition_registration` VALUES (138, 7, 27, 'registered', '2026-04-22 11:45:00');
-INSERT INTO `exhibition_registration` VALUES (139, 7, 28, 'registered', '2026-04-22 14:00:00');
-INSERT INTO `exhibition_registration` VALUES (140, 7, 29, 'registered', '2026-04-22 15:30:00');
-INSERT INTO `exhibition_registration` VALUES (141, 7, 30, 'registered', '2026-04-23 09:15:00');
-INSERT INTO `exhibition_registration` VALUES (142, 7, 31, 'registered', '2026-04-23 10:45:00');
+INSERT INTO `exhibition_registration` VALUES (123, 7, 4, 'registered', '2026-04-20 09:00:00');
+INSERT INTO `exhibition_registration` VALUES (124, 7, 5, 'registered', '2026-04-20 10:30:00');
+INSERT INTO `exhibition_registration` VALUES (125, 7, 6, 'registered', '2026-04-20 11:45:00');
+INSERT INTO `exhibition_registration` VALUES (126, 7, 7, 'registered', '2026-04-20 14:00:00');
+INSERT INTO `exhibition_registration` VALUES (127, 7, 8, 'registered', '2026-04-20 15:30:00');
+INSERT INTO `exhibition_registration` VALUES (128, 7, 9, 'registered', '2026-04-21 09:15:00');
+INSERT INTO `exhibition_registration` VALUES (129, 7, 10, 'registered', '2026-04-21 10:45:00');
+INSERT INTO `exhibition_registration` VALUES (130, 7, 22, 'registered', '2026-04-21 12:00:00');
+INSERT INTO `exhibition_registration` VALUES (131, 7, 23, 'registered', '2026-04-21 14:30:00');
+INSERT INTO `exhibition_registration` VALUES (132, 7, 24, 'registered', '2026-04-21 16:00:00');
+INSERT INTO `exhibition_registration` VALUES (133, 7, 25, 'registered', '2026-04-22 09:00:00');
+INSERT INTO `exhibition_registration` VALUES (134, 7, 26, 'registered', '2026-04-22 10:30:00');
+INSERT INTO `exhibition_registration` VALUES (135, 7, 27, 'registered', '2026-04-22 11:45:00');
+INSERT INTO `exhibition_registration` VALUES (136, 7, 28, 'registered', '2026-04-22 14:00:00');
+INSERT INTO `exhibition_registration` VALUES (137, 7, 29, 'registered', '2026-04-22 15:30:00');
+INSERT INTO `exhibition_registration` VALUES (138, 7, 30, 'registered', '2026-04-23 09:15:00');
+INSERT INTO `exhibition_registration` VALUES (139, 7, 31, 'registered', '2026-04-23 10:45:00');
 
--- 展览8(汉服国际交流展)的23条报名记录，包含lay(id=2)
-INSERT INTO `exhibition_registration` VALUES (143, 8, 2, 'registered', '2026-04-28 09:00:00');
-INSERT INTO `exhibition_registration` VALUES (144, 8, 4, 'registered', '2026-04-28 10:30:00');
-INSERT INTO `exhibition_registration` VALUES (145, 8, 5, 'registered', '2026-04-28 11:45:00');
-INSERT INTO `exhibition_registration` VALUES (146, 8, 6, 'registered', '2026-04-28 14:00:00');
-INSERT INTO `exhibition_registration` VALUES (147, 8, 7, 'registered', '2026-04-28 15:30:00');
-INSERT INTO `exhibition_registration` VALUES (148, 8, 8, 'registered', '2026-04-29 09:15:00');
-INSERT INTO `exhibition_registration` VALUES (149, 8, 9, 'registered', '2026-04-29 10:45:00');
-INSERT INTO `exhibition_registration` VALUES (150, 8, 10, 'registered', '2026-04-29 12:00:00');
-INSERT INTO `exhibition_registration` VALUES (151, 8, 22, 'registered', '2026-04-29 14:30:00');
-INSERT INTO `exhibition_registration` VALUES (152, 8, 23, 'registered', '2026-04-29 16:00:00');
-INSERT INTO `exhibition_registration` VALUES (153, 8, 24, 'registered', '2026-04-30 09:00:00');
-INSERT INTO `exhibition_registration` VALUES (154, 8, 25, 'registered', '2026-04-30 10:30:00');
-INSERT INTO `exhibition_registration` VALUES (155, 8, 26, 'registered', '2026-04-30 11:45:00');
-INSERT INTO `exhibition_registration` VALUES (156, 8, 27, 'registered', '2026-04-30 14:00:00');
-INSERT INTO `exhibition_registration` VALUES (157, 8, 28, 'registered', '2026-04-30 15:30:00');
-INSERT INTO `exhibition_registration` VALUES (158, 8, 29, 'registered', '2026-05-01 09:15:00');
-INSERT INTO `exhibition_registration` VALUES (159, 8, 30, 'registered', '2026-05-01 10:45:00');
-INSERT INTO `exhibition_registration` VALUES (160, 8, 31, 'registered', '2026-05-01 12:00:00');
-INSERT INTO `exhibition_registration` VALUES (161, 8, 32, 'registered', '2026-05-01 14:30:00');
-INSERT INTO `exhibition_registration` VALUES (162, 8, 33, 'registered', '2026-05-01 16:00:00');
-INSERT INTO `exhibition_registration` VALUES (163, 8, 34, 'registered', '2026-05-02 09:00:00');
-INSERT INTO `exhibition_registration` VALUES (164, 8, 35, 'registered', '2026-05-02 10:30:00');
-INSERT INTO `exhibition_registration` VALUES (165, 8, 36, 'registered', '2026-05-02 11:45:00');
+-- 展览8(汉服国际交流展)的22条报名记录
+INSERT INTO `exhibition_registration` VALUES (140, 8, 4, 'registered', '2026-04-28 10:30:00');
+INSERT INTO `exhibition_registration` VALUES (141, 8, 5, 'registered', '2026-04-28 11:45:00');
+INSERT INTO `exhibition_registration` VALUES (142, 8, 6, 'registered', '2026-04-28 14:00:00');
+INSERT INTO `exhibition_registration` VALUES (143, 8, 7, 'registered', '2026-04-28 15:30:00');
+INSERT INTO `exhibition_registration` VALUES (144, 8, 8, 'registered', '2026-04-29 09:15:00');
+INSERT INTO `exhibition_registration` VALUES (145, 8, 9, 'registered', '2026-04-29 10:45:00');
+INSERT INTO `exhibition_registration` VALUES (146, 8, 10, 'registered', '2026-04-29 12:00:00');
+INSERT INTO `exhibition_registration` VALUES (147, 8, 22, 'registered', '2026-04-29 14:30:00');
+INSERT INTO `exhibition_registration` VALUES (148, 8, 23, 'registered', '2026-04-29 16:00:00');
+INSERT INTO `exhibition_registration` VALUES (149, 8, 24, 'registered', '2026-04-30 09:00:00');
+INSERT INTO `exhibition_registration` VALUES (150, 8, 25, 'registered', '2026-04-30 10:30:00');
+INSERT INTO `exhibition_registration` VALUES (151, 8, 26, 'registered', '2026-04-30 11:45:00');
+INSERT INTO `exhibition_registration` VALUES (152, 8, 27, 'registered', '2026-04-30 14:00:00');
+INSERT INTO `exhibition_registration` VALUES (153, 8, 28, 'registered', '2026-04-30 15:30:00');
+INSERT INTO `exhibition_registration` VALUES (154, 8, 29, 'registered', '2026-05-01 09:15:00');
+INSERT INTO `exhibition_registration` VALUES (155, 8, 30, 'registered', '2026-05-01 10:45:00');
+INSERT INTO `exhibition_registration` VALUES (156, 8, 31, 'registered', '2026-05-01 12:00:00');
+INSERT INTO `exhibition_registration` VALUES (157, 8, 32, 'registered', '2026-05-01 14:30:00');
+INSERT INTO `exhibition_registration` VALUES (158, 8, 33, 'registered', '2026-05-01 16:00:00');
+INSERT INTO `exhibition_registration` VALUES (159, 8, 34, 'registered', '2026-05-02 09:00:00');
+INSERT INTO `exhibition_registration` VALUES (160, 8, 35, 'registered', '2026-05-02 10:30:00');
+INSERT INTO `exhibition_registration` VALUES (161, 8, 36, 'registered', '2026-05-02 11:45:00');
 
 -- ----------------------------
 -- Table structure for lecture
