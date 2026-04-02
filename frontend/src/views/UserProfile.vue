@@ -820,6 +820,7 @@ const fetchActivityRegistrations = async () => {
             if (checkResponse.ok) {
               const checkData = await checkResponse.json();
               if (checkData.isRegistered) {
+                const status = isActivityExpired(activity.date) ? "completed" : "upcoming";
                 return {
                   id: `festival-${activity.id}`,
                   activityId: activity.id,
@@ -828,7 +829,7 @@ const fetchActivityRegistrations = async () => {
                   location: activity.location,
                   time: activity.date,
                   registrationDate: new Date().toLocaleDateString(),
-                  status: "upcoming",
+                  status: status,
                 };
               }
             }
@@ -854,6 +855,7 @@ const fetchActivityRegistrations = async () => {
             if (checkResponse.ok) {
               const checkData = await checkResponse.json();
               if (checkData.isRegistered) {
+                const status = isActivityExpired(exhibition.endDate) ? "completed" : "upcoming";
                 return {
                   id: `exhibition-${exhibition.id}`,
                   activityId: exhibition.id,
@@ -862,7 +864,7 @@ const fetchActivityRegistrations = async () => {
                   location: exhibition.location,
                   time: `${exhibition.startDate} 至 ${exhibition.endDate}`,
                   registrationDate: new Date().toLocaleDateString(),
-                  status: "upcoming",
+                  status: status,
                 };
               }
             }
@@ -891,6 +893,7 @@ const fetchActivityRegistrations = async () => {
             if (checkResponse.ok) {
               const checkData = await checkResponse.json();
               if (checkData.isRegistered) {
+                const status = isActivityExpired(lecture.date) ? "completed" : "upcoming";
                 return {
                   id: `lecture-${lecture.id}`,
                   activityId: lecture.id,
@@ -899,7 +902,7 @@ const fetchActivityRegistrations = async () => {
                   location: lecture.location,
                   time: lecture.time,
                   registrationDate: new Date().toLocaleDateString(),
-                  status: "upcoming",
+                  status: status,
                 };
               }
             }
@@ -920,6 +923,38 @@ const fetchActivityRegistrations = async () => {
   } finally {
     loading.value = false;
   }
+};
+
+// 检查活动是否已结束
+const isActivityExpired = (dateStr) => {
+  // 提取日期部分
+  let dateStrClean = dateStr;
+  // 处理"2024-02-24（农历正月十五）"格式
+  if (dateStr.includes("（")) {
+    dateStrClean = dateStr.split("（")[0];
+  }
+  // 处理"2026年2月12日"格式
+  if (dateStr.includes("年")) {
+    dateStrClean = dateStr.replace("年", "-").replace("月", "-").replace("日", "");
+  }
+  // 处理"2026-02-12 至 2026-02-14"格式
+  if (dateStr.includes("至")) {
+    dateStrClean = dateStr.split("至")[1].trim();
+  }
+
+  // 解析日期
+  const activityDate = new Date(dateStrClean);
+  const now = new Date();
+
+  // 比较日期（只比较年月日，不比较时间）
+  const activityDateOnly = new Date(
+    activityDate.getFullYear(),
+    activityDate.getMonth(),
+    activityDate.getDate(),
+  );
+  const nowDateOnly = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+  return activityDateOnly < nowDateOnly;
 };
 
 // 计算属性：根据标签过滤活动
