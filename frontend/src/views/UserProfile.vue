@@ -758,48 +758,133 @@ const userLikes = ref([
 ]);
 
 // 新增：活动报名数据
-const activityRegistrations = ref([
-  {
-    id: 1,
-    activityId: 1,
-    activityName: "上元节灯会",
-    activityType: "festival",
-    location: "北京故宫",
-    time: "2026年2月12日",
-    registrationDate: "2024-02-20",
-    status: "upcoming", // registered, upcoming, completed, cancelled
-  },
-  {
-    id: 2,
-    activityId: 2,
-    activityName: "春日汉服游园会",
-    activityType: "festival",
-    location: "中山公园",
-    time: "2024-03-15 14:00-17:00",
-    registrationDate: "2024-02-15",
-    status: "completed",
-  },
-  {
-    id: 3,
-    activityId: 3,
-    activityName: "汉服文化展览",
-    activityType: "exhibition",
-    location: "市博物馆",
-    time: "2024-03-01至2024-03-15",
-    registrationDate: "2024-02-25",
-    status: "upcoming",
-  },
-  {
-    id: 4,
-    activityId: 4,
-    activityName: "汉服历史讲座",
-    activityType: "lecture",
-    location: "图书馆",
-    time: "2024-03-20 14:00-16:00",
-    registrationDate: "2024-02-28",
-    status: "upcoming",
-  },
-]);
+const activityRegistrations = ref([]);
+
+// 新增：获取活动报名数据
+const fetchActivityRegistrations = async () => {
+  const userId = getUserId();
+  if (!userId) {
+    ElMessage.warning("请先登录");
+    router.push("/login");
+    return;
+  }
+
+  loading.value = true;
+  try {
+    // 获取节庆雅集报名数据
+    const festivalResponse = await fetch(`${API_BASE}/festival-activity`);
+    if (festivalResponse.ok) {
+      const festivalActivities = await festivalResponse.json();
+      const festivalRegistrations = await Promise.all(
+        festivalActivities.map(async (activity) => {
+          try {
+            const checkResponse = await fetch(
+              `${API_BASE}/festival-activity/${activity.id}/registration/check?userId=${userId}`,
+            );
+            if (checkResponse.ok) {
+              const checkData = await checkResponse.json();
+              if (checkData.isRegistered) {
+                return {
+                  id: `festival-${activity.id}`,
+                  activityId: activity.id,
+                  activityName: activity.title,
+                  activityType: "festival",
+                  location: activity.location,
+                  time: activity.date,
+                  registrationDate: new Date().toLocaleDateString(),
+                  status: "upcoming",
+                };
+              }
+            }
+          } catch (error) {
+            console.error("检查节庆报名失败:", error);
+          }
+          return null;
+        }),
+      );
+      activityRegistrations.value = festivalRegistrations.filter((r) => r !== null);
+    }
+
+    // 获取展览报名数据
+    const exhibitionResponse = await fetch(`${API_BASE}/exhibitions`);
+    if (exhibitionResponse.ok) {
+      const exhibitions = await exhibitionResponse.json();
+      const exhibitionRegistrations = await Promise.all(
+        exhibitions.map(async (exhibition) => {
+          try {
+            const checkResponse = await fetch(
+              `${API_BASE}/exhibitions/${exhibition.id}/registration/check?userId=${userId}`,
+            );
+            if (checkResponse.ok) {
+              const checkData = await checkResponse.json();
+              if (checkData.isRegistered) {
+                return {
+                  id: `exhibition-${exhibition.id}`,
+                  activityId: exhibition.id,
+                  activityName: exhibition.title,
+                  activityType: "exhibition",
+                  location: exhibition.location,
+                  time: `${exhibition.startDate} 至 ${exhibition.endDate}`,
+                  registrationDate: new Date().toLocaleDateString(),
+                  status: "upcoming",
+                };
+              }
+            }
+          } catch (error) {
+            console.error("检查展览报名失败:", error);
+          }
+          return null;
+        }),
+      );
+      activityRegistrations.value = [
+        ...activityRegistrations.value,
+        ...exhibitionRegistrations.filter((r) => r !== null),
+      ];
+    }
+
+    // 获取讲座报名数据
+    const lectureResponse = await fetch(`${API_BASE}/lectures`);
+    if (lectureResponse.ok) {
+      const lectures = await lectureResponse.json();
+      const lectureRegistrations = await Promise.all(
+        lectures.map(async (lecture) => {
+          try {
+            const checkResponse = await fetch(
+              `${API_BASE}/lectures/${lecture.id}/registration/check?userId=${userId}`,
+            );
+            if (checkResponse.ok) {
+              const checkData = await checkResponse.json();
+              if (checkData.isRegistered) {
+                return {
+                  id: `lecture-${lecture.id}`,
+                  activityId: lecture.id,
+                  activityName: lecture.title,
+                  activityType: "lecture",
+                  location: lecture.location,
+                  time: lecture.time,
+                  registrationDate: new Date().toLocaleDateString(),
+                  status: "upcoming",
+                };
+              }
+            }
+          } catch (error) {
+            console.error("检查讲座报名失败:", error);
+          }
+          return null;
+        }),
+      );
+      activityRegistrations.value = [
+        ...activityRegistrations.value,
+        ...lectureRegistrations.filter((r) => r !== null),
+      ];
+    }
+  } catch (error) {
+    console.error("获取活动报名数据失败:", error);
+    ElMessage.error("获取活动报名数据失败");
+  } finally {
+    loading.value = false;
+  }
+};
 
 // 计算属性：根据标签过滤活动
 const filteredRegistrations = computed(() => {
@@ -880,6 +965,8 @@ onMounted(() => {
       fetchUserPosts();
     } else if (route.query.menu === "likes") {
       fetchUserInteractions();
+    } else if (route.query.menu === "activity-registrations") {
+      fetchActivityRegistrations();
     }
   }
 });
@@ -892,6 +979,8 @@ const handleMenuSelect = (index) => {
     fetchUserPosts();
   } else if (index === "likes") {
     fetchUserInteractions();
+  } else if (index === "activity-registrations") {
+    fetchActivityRegistrations();
   }
 };
 
@@ -1026,17 +1115,54 @@ const getEmptyDescription = () => {
 };
 
 // 新增：取消预约
-const cancelRegistration = (registrationId) => {
+const cancelRegistration = async (registrationId) => {
   ElMessageBox.confirm("确定要取消预约吗？取消后如需参加需要重新预约。", "取消预约确认", {
     confirmButtonText: "确定取消",
     cancelButtonText: "再想想",
     type: "warning",
   })
-    .then(() => {
-      const index = activityRegistrations.value.findIndex((item) => item.id === registrationId);
-      if (index !== -1) {
-        activityRegistrations.value[index].status = "cancelled";
-        ElMessage.success("已成功取消预约");
+    .then(async () => {
+      const userId = getUserId();
+      if (!userId) {
+        ElMessage.warning("请先登录");
+        router.push("/login");
+        return;
+      }
+
+      try {
+        // 解析registrationId，获取activityId和activityType
+        const [activityType, id] = registrationId.split("-");
+        let response;
+
+        if (activityType === "festival") {
+          response = await fetch(
+            `${API_BASE}/festival-activity/${id}/registration?userId=${userId}`,
+            {
+              method: "DELETE",
+            },
+          );
+        } else if (activityType === "exhibition") {
+          response = await fetch(`${API_BASE}/exhibitions/${id}/registration?userId=${userId}`, {
+            method: "DELETE",
+          });
+        } else if (activityType === "lecture") {
+          response = await fetch(`${API_BASE}/lectures/${id}/registration?userId=${userId}`, {
+            method: "DELETE",
+          });
+        }
+
+        if (response && response.ok) {
+          const index = activityRegistrations.value.findIndex((item) => item.id === registrationId);
+          if (index !== -1) {
+            activityRegistrations.value[index].status = "cancelled";
+            ElMessage.success("已成功取消预约");
+          }
+        } else {
+          ElMessage.error("取消预约失败");
+        }
+      } catch (error) {
+        console.error("取消预约失败:", error);
+        ElMessage.error("网络异常，请稍后重试");
       }
     })
     .catch(() => {

@@ -328,13 +328,26 @@ const loadUserSignUpStatus = async () => {
   }
 
   try {
-    const response = await fetch(
-      `http://localhost:8082/api/festival-activity-registration/user/${userId.value}`,
-    );
-    if (response.ok) {
-      const data = await response.json();
-      signedUpActivities.value = data.map((item) => item.festivalActivityId);
-    }
+    // 为每个活动检查报名状态
+    const signUpStatusPromises = festivals.value.map(async (festival) => {
+      try {
+        const response = await fetch(
+          `http://localhost:8082/api/festival-activity/${festival.id}/registration/check?userId=${userId.value}`,
+        );
+        if (response.ok) {
+          const data = await response.json();
+          if (data.isRegistered) {
+            return festival.id;
+          }
+        }
+      } catch (error) {
+        console.error(`检查活动${festival.id}报名状态失败:`, error);
+      }
+      return null;
+    });
+
+    const results = await Promise.all(signUpStatusPromises);
+    signedUpActivities.value = results.filter((id) => id !== null);
   } catch (error) {
     console.error("加载用户报名状态失败:", error);
     signedUpActivities.value = [];
@@ -390,14 +403,16 @@ const signUpFestival = async (id) => {
     })
       .then(async () => {
         try {
-          const response = await fetch("http://localhost:8082/api/festival-activity-registration", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              festivalActivityId: id,
-              userId: userId.value,
-            }),
-          });
+          const response = await fetch(
+            `http://localhost:8082/api/festival-activity/${id}/registration`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                userId: userId.value,
+              }),
+            },
+          );
           if (response.ok) {
             signedUpActivities.value.push(id);
             ElMessage.success(`成功报名参加"${festival.title}"活动！`);
@@ -437,7 +452,7 @@ const cancelSignUp = async (id) => {
       .then(async () => {
         try {
           const response = await fetch(
-            `http://localhost:8082/api/festival-activity-registration/${id}/${userId.value}`,
+            `http://localhost:8082/api/festival-activity/${id}/registration?userId=${userId.value}`,
             {
               method: "DELETE",
             },
