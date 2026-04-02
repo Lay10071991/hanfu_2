@@ -98,40 +98,57 @@ export default {
         this.currentPage++
       }
     },
-    formatDate(date) {
-      return new Date(date).toLocaleDateString('zh-CN')
+    formatDate(dateString) {
+      const date = new Date(dateString)
+      return date.toLocaleString('zh-CN', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+      })
     }
   }
 }
 </script>
 
 <style scoped>
-@import '../../admin/components/management-common.css';
+.management-container {
+  padding: 20px;
+}
+
+.management-container h2 {
+  margin: 0 0 20px 0;
+  color: #8B4513;
+}
 
 .empty-state {
   text-align: center;
-  padding: 60px 20px;
-  color: #999;
+  padding: 40px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  color: #666;
 }
 
 .evaluation-list {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 15px;
 }
 
 .evaluation-card {
-  border: 1px solid #e0e0e0;
-  padding: 15px;
-  border-radius: 8px;
   background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .evaluation-header {
   display: flex;
-  gap: 15px;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 10px;
-  font-size: 14px;
-  flex-wrap: wrap;
 }
 
 .user-name {
@@ -140,21 +157,54 @@ export default {
 }
 
 .rating {
-  color: #ff9800;
+  color: #FF9800;
 }
 
 .date {
+  font-size: 12px;
   color: #999;
 }
 
 .evaluation-content {
-  color: #666;
-  margin-bottom: 10px;
-  line-height: 1.6;
+  margin: 10px 0;
+  line-height: 1.4;
+  color: #333;
 }
 
 .shop-name {
-  font-size: 12px;
-  color: #999;
+  font-size: 14px;
+  color: #666;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+  gap: 15px;
+}
+
+.pagination button {
+  padding: 6px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination button:hover:not(:disabled) {
+  background: #f5f5f5;
+}
+
+.pagination span {
+  color: #666;
 }
 </style>

@@ -29,8 +29,8 @@
 </template>
 
 <script>
-import ShopManagement from './components/ShopManagement.vue'
-import EvaluationManagement from './components/EvaluationManagement.vue'
+import ShopManagement from './ShopManagement.vue'
+import EvaluationManagement from './EvaluationManagement.vue'
 
 export default {
   name: 'MerchantLayout',

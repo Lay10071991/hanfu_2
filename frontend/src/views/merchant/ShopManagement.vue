@@ -100,13 +100,19 @@ export default {
     this.loadShops()
   },
   methods: {
-    async loadShops() {
-      try {
-        const response = await fetch('http://localhost:8082/api/shops')
-        this.shops = await response.json()
-      } catch (error) {
-        console.error('加载店铺失败', error)
-      }
+    loadShops() {
+      const API_BASE = 'http://localhost:8080/api'
+      const user = JSON.parse(localStorage.getItem('user') || '{}')
+      if (!user.id) return
+
+      fetch(`${API_BASE}/shops?userId=${user.id}`)
+        .then(response => response.json())
+        .then(data => {
+          this.shops = data
+        })
+        .catch(error => {
+          console.error('加载店铺失败:', error)
+        })
     },
     showAddDialog() {
       this.isEdit = false
@@ -124,110 +130,138 @@ export default {
     editShop(shop) {
       this.isEdit = true
       this.form = { ...shop }
-      if (shop.image) {
-        this.imagePreview = shop.image.startsWith('http') ? shop.image : `http://localhost:8082${shop.image}`
-      } else {
-        this.imagePreview = null
-      }
+      this.imagePreview = shop.image || null
       this.showDialog = true
     },
-    async handleImageChange(event) {
-      const file = event.target.files[0]
-      if (!file) return
-      if (!file.type.startsWith('image/')) {
-        alert('请选择图片文件')
-        return
-      }
-      if (file.size > 5 * 1024 * 1024) {
-        alert('图片大小不能超过5MB')
-        return
-      }
-      this.uploading = true
-      try {
+    closeDialog() {
+      this.showDialog = false
+    },
+    handleImageChange(e) {
+      const file = e.target.files[0]
+      if (file) {
+        this.uploading = true
         const formData = new FormData()
         formData.append('file', file)
-        const response = await fetch('http://localhost:8082/api/upload/image', {
+
+        fetch('http://localhost:8080/api/upload', {
           method: 'POST',
           body: formData
         })
-        const result = await response.json()
-        if (result.success) {
-          this.form.image = result.url
-          this.imagePreview = `http://localhost:8082${result.url}`
-        } else {
-          alert(result.message || '上传失败')
-        }
-      } catch (error) {
-        console.error('上传失败', error)
-        alert('上传失败，请稍后重试')
-      } finally {
-        this.uploading = false
+        .then(response => response.json())
+        .then(data => {
+          this.form.image = data.url
+          this.imagePreview = data.url
+          this.uploading = false
+        })
+        .catch(error => {
+          console.error('上传图片失败:', error)
+          this.uploading = false
+        })
       }
     },
     removeImage() {
       this.form.image = ''
       this.imagePreview = null
-      if (this.$refs.imageInput) {
-        this.$refs.imageInput.value = ''
-      }
     },
-    async saveShop() {
-      try {
-        const url = this.isEdit 
-          ? `http://localhost:8082/api/shops/${this.form.id}`
-          : 'http://localhost:8082/api/shops'
-        
-        await fetch(url, {
-          method: this.isEdit ? 'PUT' : 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(this.form)
-        })
-        
-        this.closeDialog()
+    saveShop() {
+      const API_BASE = 'http://localhost:8080/api'
+      const user = JSON.parse(localStorage.getItem('user') || '{}')
+      if (!user.id) return
+
+      const url = this.isEdit 
+        ? `${API_BASE}/shops/${this.form.id}` 
+        : `${API_BASE}/shops`
+      const method = this.isEdit ? 'PUT' : 'POST'
+
+      const data = {
+        ...this.form,
+        userId: user.id
+      }
+
+      fetch(url, {
+        method,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => response.json())
+      .then(() => {
+        this.showDialog = false
         this.loadShops()
-      } catch (error) {
-        console.error('保存店铺失败', error)
-      }
+      })
+      .catch(error => {
+        console.error('保存店铺失败:', error)
+      })
     },
-    async deleteShop(id) {
+    deleteShop(shopId) {
       if (confirm('确定要删除这个店铺吗？')) {
-        try {
-          await fetch(`http://localhost:8082/api/shops/${id}`, {
-            method: 'DELETE'
-          })
+        const API_BASE = 'http://localhost:8080/api'
+        
+        fetch(`${API_BASE}/shops/${shopId}`, {
+          method: 'DELETE'
+        })
+        .then(() => {
           this.loadShops()
-        } catch (error) {
-          console.error('删除店铺失败', error)
-        }
+        })
+        .catch(error => {
+          console.error('删除店铺失败:', error)
+        })
       }
-    },
-    closeDialog() {
-      this.showDialog = false
-      this.imagePreview = null
     }
   }
 }
 </script>
 
 <style scoped>
-@import '../../admin/components/management-common.css';
+.management-container {
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.header h2 {
+  margin: 0;
+  color: #8B4513;
+}
+
+.btn-primary {
+  background: #8B4513;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background: #6B340E;
+}
 
 .empty-state {
   text-align: center;
-  padding: 60px 20px;
-  color: #999;
+  padding: 40px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .shop-list {
   display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
 }
 
 .shop-card {
-  border: 1px solid #e0e0e0;
+  background: white;
   padding: 20px;
   border-radius: 8px;
-  background: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .shop-card h3 {
@@ -236,17 +270,21 @@ export default {
 }
 
 .shop-desc {
+  margin: 0 0 15px 0;
   color: #666;
-  margin-bottom: 15px;
+  font-size: 14px;
+  line-height: 1.4;
 }
 
 .shop-info {
-  display: flex;
-  gap: 20px;
   margin-bottom: 15px;
   font-size: 14px;
   color: #666;
-  flex-wrap: wrap;
+}
+
+.shop-info span {
+  display: block;
+  margin-bottom: 5px;
 }
 
 .shop-actions {
@@ -254,23 +292,79 @@ export default {
   gap: 10px;
 }
 
+.btn-edit, .btn-delete {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-edit {
+  background: #4CAF50;
+  color: white;
+}
+
+.btn-delete {
+  background: #f44336;
+  color: white;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+}
+
+.modal-content h3 {
+  margin: 0 0 20px 0;
+  color: #8B4513;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #333;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
 .upload-area {
-  margin-top: 5px;
+  border: 1px dashed #ddd;
+  border-radius: 4px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
 }
 
 .upload-placeholder {
-  border: 2px dashed #ddd;
-  border-radius: 8px;
-  padding: 30px;
-  text-align: center;
-  cursor: pointer;
   color: #999;
-  transition: border-color 0.3s;
-}
-
-.upload-placeholder:hover {
-  border-color: #8B4513;
-  color: #8B4513;
 }
 
 .image-preview {
@@ -279,22 +373,44 @@ export default {
 }
 
 .image-preview img {
-  max-width: 200px;
-  max-height: 150px;
-  border-radius: 8px;
-  border: 1px solid #e0e0e0;
+  max-width: 100%;
+  max-height: 200px;
+  border-radius: 4px;
 }
 
 .btn-remove-img {
   position: absolute;
-  top: 5px;
-  right: 5px;
-  padding: 2px 8px;
-  background: #dc3545;
+  top: -10px;
+  right: -10px;
+  background: #f44336;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
   cursor: pointer;
   font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn-cancel {
+  padding: 8px 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+}
+
+.btn-cancel:hover {
+  background: #f5f5f5;
 }
 </style>
