@@ -187,7 +187,7 @@ public class PostService {
         map.put("imageUrl", post.getImageUrl()); // 添加imageUrl字段以保持一致性
         map.put("author", getAuthorName(post.getAuthorId()));
         map.put("authorId", post.getAuthorId());
-        map.put("likes", post.getLikes());
+        map.put("likes", likeRepository.countByPostId(post.getId()));
         map.put("comments", post.getComments());
         map.put("views", post.getViews());
         map.put("time", formatDate(post.getPublishDate()));
