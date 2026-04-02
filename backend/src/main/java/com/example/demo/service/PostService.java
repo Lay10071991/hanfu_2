@@ -125,24 +125,28 @@ public class PostService {
         Optional<Like> likeOpt = likeRepository.findByUserIdAndPostId(userId, postId);
         
         boolean liked;
+        
         if (likeOpt.isPresent()) {
             likeRepository.delete(likeOpt.get());
-            post.setLikes(post.getLikes() - 1);
             liked = false;
         } else {
             Like like = new Like();
             like.setUserId(userId);
             like.setPostId(postId);
             likeRepository.save(like);
-            post.setLikes(post.getLikes() + 1);
             liked = true;
         }
         
+        // 从数据库中获取实际的点赞数（基于post_like表的记录数）
+        long actualLikes = likeRepository.countByPostId(postId);
+        
+        // 更新post表中的likes字段为实际点赞数
+        post.setLikes((int) actualLikes);
         postRepository.save(post);
         
         Map<String, Object> result = new HashMap<>();
         result.put("liked", liked);
-        result.put("likes", post.getLikes());
+        result.put("likes", actualLikes);
         return result;
     }
 

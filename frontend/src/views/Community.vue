@@ -263,7 +263,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import { Plus, Edit, Picture, Star, StarFilled, ChatDotRound } from "@element-plus/icons-vue";
@@ -300,11 +300,21 @@ const displayLimit = ref(6);
 const allSortedPosts = computed(() => {
   const posts = [...discoveryPosts.value];
   if (sortBy.value === "hot") {
-    return posts.sort((a, b) => b.likes - a.likes);
+    return posts.sort((a, b) => {
+      // 先按点赞数排序
+      const likeDiff = b.likes - a.likes;
+      if (likeDiff !== 0) {
+        return likeDiff;
+      }
+      // 点赞数相同时，按发布日期排序
+      const dateA = new Date(a.publishDate || a.time);
+      const dateB = new Date(b.publishDate || b.time);
+      return dateB - dateA;
+    });
   } else {
     return posts.sort((a, b) => {
-      const dateA = new Date(a.publishDate);
-      const dateB = new Date(b.publishDate);
+      const dateA = new Date(a.publishDate || a.time);
+      const dateB = new Date(b.publishDate || b.time);
       return dateB - dateA;
     });
   }
@@ -367,12 +377,6 @@ const fetchPosts = async () => {
   }
 };
 
-// 检查用户点赞状态函数已不再需要，因为后端API在获取帖子时已经包含了liked字段
-// 保留此函数以保持代码结构完整性，实际使用时会被跳过
-const checkUserLikes = async () => {
-  // 由于后端API在获取帖子时已经包含了liked字段，此函数不再需要执行
-  return;
-};
 
 onMounted(() => {
   const savedUsername = localStorage.getItem("username");
@@ -586,11 +590,19 @@ const toggleLike = async (post) => {
     return;
   }
 
+  // 禁用按钮状态，防止重复点击
+  const originalLiked = post.liked;
+  const originalLikes = post.likes;
+
   try {
     console.log("点赞操作数据:", {
       postId: post.id,
       userId: userId.value,
     });
+
+    // 先更新本地状态，提供即时反馈
+    post.liked = !post.liked;
+    post.likes += post.liked ? 1 : -1;
 
     const response = await fetch(`${API_BASE}/posts/${post.id}/like`, {
       method: "POST",
@@ -602,16 +614,22 @@ const toggleLike = async (post) => {
 
     if (response.ok) {
       const result = await response.json();
+      // 确保状态与后端一致
       post.liked = result.liked;
       post.likes = result.likes;
       ElMessage.success(result.liked ? "已点赞" : "已取消点赞");
+    } else {
+      // 恢复原始状态
+      post.liked = originalLiked;
+      post.likes = originalLikes;
+      ElMessage.error("操作失败，请稍后重试");
     }
   } catch (error) {
     console.error("点赞操作失败:", error);
-    // 本地模拟点赞操作
-    post.liked = !post.liked;
-    post.likes += post.liked ? 1 : -1;
-    ElMessage.success(post.liked ? "已点赞" : "已取消点赞");
+    // 恢复原始状态
+    post.liked = originalLiked;
+    post.likes = originalLikes;
+    ElMessage.error("网络异常，请稍后重试");
   }
 };
 
@@ -619,8 +637,12 @@ const toggleLike = async (post) => {
 const handleLikeChanged = ({ postId, liked, likes }) => {
   const post = discoveryPosts.value.find((p) => p.id === postId);
   if (post) {
+    // 更新帖子状态
     post.liked = liked;
     post.likes = likes;
+
+    // 强制重新计算排序，确保页面显示最新数据
+    displayLimit.value = displayLimit.value;
   }
 };
 

@@ -241,8 +241,11 @@ watch(
   () => props.postData,
   (newVal) => {
     if (newVal && newVal.id) {
-      // 从后端获取最新的帖子数据
-      loadPostDataById(newVal.id);
+      // 直接使用postData的数据，保持与Community组件中的状态一致
+      post.value = {
+        ...newVal,
+        content: newVal.content || newVal.description || "",
+      };
     }
   },
   { immediate: true, deep: true },
@@ -354,7 +357,15 @@ const toggleLike = async () => {
     return;
   }
 
+  // 保存原始状态，用于错误恢复
+  const originalLiked = post.value.liked;
+  const originalLikes = post.value.likes;
+
   try {
+    // 先更新本地状态，提供即时反馈
+    post.value.liked = !post.value.liked;
+    post.value.likes += post.value.liked ? 1 : -1;
+
     const response = await fetch(`${API_BASE}/posts/${post.value.id}/like`, {
       method: "POST",
       headers: {
@@ -365,6 +376,7 @@ const toggleLike = async () => {
 
     if (response.ok) {
       const result = await response.json();
+      // 确保状态与后端一致
       post.value.liked = result.liked;
       post.value.likes = result.likes;
       ElMessage.success(result.liked ? "已点赞" : "已取消点赞");
@@ -373,18 +385,18 @@ const toggleLike = async () => {
         liked: post.value.liked,
         likes: post.value.likes,
       });
+    } else {
+      // 恢复原始状态
+      post.value.liked = originalLiked;
+      post.value.likes = originalLikes;
+      ElMessage.error("操作失败，请稍后重试");
     }
   } catch (error) {
     console.error("点赞操作失败:", error);
-    // 本地模拟点赞操作
-    post.value.liked = !post.value.liked;
-    post.value.likes += post.value.liked ? 1 : -1;
-    ElMessage.success(post.value.liked ? "已点赞" : "已取消点赞");
-    emit("like-changed", {
-      postId: post.value.id,
-      liked: post.value.liked,
-      likes: post.value.likes,
-    });
+    // 恢复原始状态
+    post.value.liked = originalLiked;
+    post.value.likes = originalLikes;
+    ElMessage.error("网络异常，请稍后重试");
   }
 };
 
