@@ -25,7 +25,7 @@ public class ImageService {
     @Autowired
     private ImageRepository imageRepository;
 
-    @Value("${image.upload.base-path:E:/hanfu-cultural-platform-3/hanfu-cultural-platform/hanfu-cultural-platform/frontend/public}")
+    @Value("${image.upload.base-path:E:/hanfu-cultural-platform/backend/uploads}")
     private String basePath;
 
     @Value("${image.access.base-url:}")

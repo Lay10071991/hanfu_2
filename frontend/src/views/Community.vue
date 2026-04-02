@@ -450,36 +450,56 @@ const submitPublish = async () => {
 
     // 上传图片到服务器
     const imageUrls = [];
+    console.log("开始上传图片，图片数量:", publishForm.value.images.length);
     for (const img of publishForm.value.images) {
+      console.log("处理图片:", img);
       if (img.raw) {
         // 创建FormData对象
         const formData = new FormData();
         formData.append("file", img.raw);
 
         // 上传图片到community-posts类别
-        const uploadResponse = await fetch(`${API_BASE}/image/upload/community-posts`, {
-          method: "POST",
-          body: formData,
-        });
+        const uploadUrl = `${API_BASE}/image/upload/community-posts`;
+        console.log("上传图片到:", uploadUrl);
+        try {
+          const uploadResponse = await fetch(uploadUrl, {
+            method: "POST",
+            body: formData,
+          });
 
-        if (uploadResponse.ok) {
-          const uploadData = await uploadResponse.json();
-          if (uploadData.success) {
-            imageUrls.push(uploadData.path);
+          console.log("图片上传响应状态:", uploadResponse.status);
+          if (uploadResponse.ok) {
+            const uploadData = await uploadResponse.json();
+            console.log("图片上传响应数据:", uploadData);
+            if (uploadData.success) {
+              // 使用path字段，因为后端返回的是相对路径
+              imageUrls.push(uploadData.path);
+              console.log("图片上传成功，路径:", uploadData.path);
+            } else {
+              ElMessage.error(`图片上传失败: ${uploadData.message}`);
+              publishing.value = false;
+              return;
+            }
           } else {
-            ElMessage.error(`图片上传失败: ${uploadData.message}`);
+            console.error("图片上传失败，响应状态:", uploadResponse.status);
+            const errorText = await uploadResponse.text();
+            console.error("图片上传失败，响应内容:", errorText);
+            ElMessage.error("图片上传失败，请重试");
             publishing.value = false;
             return;
           }
-        } else {
-          ElMessage.error("图片上传失败，请重试");
+        } catch (error) {
+          console.error("图片上传异常:", error);
+          ElMessage.error(`图片上传异常: ${error.message}`);
           publishing.value = false;
           return;
         }
       } else if (img.url) {
         imageUrls.push(img.url);
+        console.log("使用已有的图片URL:", img.url);
       }
     }
+    console.log("图片上传完成，imageUrls:", imageUrls);
 
     console.log("发布帖子数据:", {
       title: publishForm.value.title,

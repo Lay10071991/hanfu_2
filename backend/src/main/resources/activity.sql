@@ -2325,6 +2325,29 @@ INSERT INTO `post_like` VALUES (282, 11, 27, '2025-11-26 10:00:00');
 INSERT INTO `post_like` VALUES (283, 11, 28, '2025-11-26 10:30:00');
 INSERT INTO `post_like` VALUES (284, 11, 29, '2025-11-26 11:00:00');
 
+-- ----------------------------
+-- Table structure for image
+-- ----------------------------
+DROP TABLE IF EXISTS `image`;
+CREATE TABLE `image`  (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '图片ID',
+  `path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '图片路径',
+  `category` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '图片类别',
+  `file_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '文件名',
+  `mime_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT 'MIME类型',
+  `file_size` bigint NULL DEFAULT NULL COMMENT '文件大小',
+  `entity_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '实体类型',
+  `entity_id` bigint NULL DEFAULT NULL COMMENT '实体ID',
+  `status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '状态',
+  `remark` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '备注',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `update_time` datetime NOT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `idx_image_entity_type`(`entity_type` ASC) USING BTREE,
+  INDEX `idx_image_entity_id`(`entity_id` ASC) USING BTREE,
+  INDEX `idx_image_category`(`category` ASC) USING BTREE,
+  INDEX `idx_image_path`(`path` ASC) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '图片表' ROW_FORMAT = Dynamic;
 
 
 SET FOREIGN_KEY_CHECKS = 1;

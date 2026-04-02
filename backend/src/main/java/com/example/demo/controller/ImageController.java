@@ -59,6 +59,12 @@ public class ImageController {
             response.put("success", false);
             response.put("message", "文件上传失败: " + e.getMessage());
             return ResponseEntity.status(500).body(response);
+        } catch (Exception e) {
+            // 捕获所有其他异常
+            response.put("success", false);
+            response.put("message", "图片上传失败: " + e.getMessage());
+            e.printStackTrace(); // 打印异常信息到日志
+            return ResponseEntity.status(500).body(response);
         }
     }
 
