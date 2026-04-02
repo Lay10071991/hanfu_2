@@ -399,16 +399,22 @@ const loadFestivalData = async (id) => {
 // 加载评论数据
 const loadComments = async (activityId) => {
   try {
-    const response = await fetch(
-      `http://localhost:8082/api/festival-activity/${activityId}/comments`,
-    );
+    const response = await fetch("http://localhost:8082/api/festival-activity-comment");
     if (response.ok) {
       const data = await response.json();
-      comments.value = data.map((comment) => ({
-        id: comment.id,
-        username: comment.userName,
-        content: comment.content,
-      }));
+      // 过滤出当前活动的评论
+      comments.value = data
+        .filter((comment) => comment.festivalActivityId === activityId)
+        .map((comment) => ({
+          id: comment.id,
+          username: comment.username,
+          content: comment.content,
+          createdAt: comment.createdAt,
+        }));
+    } else {
+      console.error("加载评论数据失败:", response.status);
+      // 加载失败，使用空数据
+      comments.value = [];
     }
   } catch (error) {
     console.error("加载评论数据失败:", error);
@@ -421,11 +427,11 @@ const loadComments = async (activityId) => {
 const loadRegistrationCount = async () => {
   try {
     const response = await fetch(
-      `http://localhost:8082/api/festival-activity/${festivalData.value.id}/registration/count`,
+      `http://localhost:8082/api/festival-activity-registration/count/${festivalData.value.id}`,
     );
     if (response.ok) {
       const data = await response.json();
-      registrationCount.value = data.count;
+      registrationCount.value = data;
     }
   } catch (error) {
     console.error("加载报名人数失败:", error);
@@ -435,23 +441,21 @@ const loadRegistrationCount = async () => {
 // 检查用户状态
 const checkUserStatus = async () => {
   if (!userId.value) {
-    const signedUpActivities = JSON.parse(localStorage.getItem("signedUpActivities") || "[]");
-    isSignedUp.value = signedUpActivities.includes(festivalData.value.id);
+    isSignedUp.value = false;
     return;
   }
 
   try {
     const response = await fetch(
-      `http://localhost:8082/api/festival-activity/${festivalData.value.id}/registration/check?userId=${userId.value}`,
+      `http://localhost:8082/api/festival-activity-registration/user/${userId.value}`,
     );
     if (response.ok) {
       const data = await response.json();
-      isSignedUp.value = data.isRegistered;
+      isSignedUp.value = data.some((item) => item.festivalActivityId === festivalData.value.id);
     }
   } catch (error) {
     console.error("检查报名状态失败:", error);
-    const signedUpActivities = JSON.parse(localStorage.getItem("signedUpActivities") || "[]");
-    isSignedUp.value = signedUpActivities.includes(festivalData.value.id);
+    isSignedUp.value = false;
   }
 };
 
@@ -459,6 +463,11 @@ const checkUserStatus = async () => {
 const handleSignUp = async () => {
   if (isActivityExpired(festivalData.value.date)) {
     ElMessage.info("活动已经结束，无法操作！");
+    return;
+  }
+
+  if (!userId.value) {
+    ElMessage.error("请先登录后再进行操作！");
     return;
   }
 
@@ -470,34 +479,18 @@ const handleSignUp = async () => {
     })
       .then(async () => {
         try {
-          if (userId.value) {
-            const response = await fetch(
-              `http://localhost:8082/api/festival-activity/${festivalData.value.id}/registration?userId=${userId.value}`,
-              { method: "DELETE" },
-            );
-            if (response.ok) {
-              const data = await response.json();
-              if (data.success) {
-                isSignedUp.value = false;
-                registrationCount.value = Math.max(0, registrationCount.value - 1);
-                ElMessage.success("成功取消报名！");
-              } else {
-                ElMessage.error(data.message || "取消报名失败");
-              }
-            } else {
-              ElMessage.error("取消报名失败");
-            }
-          } else {
+          const response = await fetch(
+            `http://localhost:8082/api/festival-activity-registration/${festivalData.value.id}/${userId.value}`,
+            {
+              method: "DELETE",
+            },
+          );
+          if (response.ok) {
             isSignedUp.value = false;
-            const signedUpActivities = JSON.parse(
-              localStorage.getItem("signedUpActivities") || "[]",
-            );
-            const index = signedUpActivities.indexOf(festivalData.value.id);
-            if (index > -1) {
-              signedUpActivities.splice(index, 1);
-              localStorage.setItem("signedUpActivities", JSON.stringify(signedUpActivities));
-            }
+            registrationCount.value = Math.max(0, registrationCount.value - 1);
             ElMessage.success("成功取消报名！");
+          } else {
+            ElMessage.error("取消报名失败");
           }
         } catch (error) {
           console.error("取消报名失败:", error);
@@ -513,35 +506,20 @@ const handleSignUp = async () => {
     })
       .then(async () => {
         try {
-          if (userId.value) {
-            const response = await fetch(
-              `http://localhost:8082/api/festival-activity/${festivalData.value.id}/registration`,
-              {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ userId: userId.value }),
-              },
-            );
-            if (response.ok) {
-              const data = await response.json();
-              if (data.success) {
-                isSignedUp.value = true;
-                registrationCount.value += 1;
-                signUpDialogVisible.value = true;
-              } else {
-                ElMessage.error(data.message || "报名失败");
-              }
-            } else {
-              ElMessage.error("报名失败");
-            }
-          } else {
+          const response = await fetch("http://localhost:8082/api/festival-activity-registration", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              festivalActivityId: festivalData.value.id,
+              userId: userId.value,
+            }),
+          });
+          if (response.ok) {
             isSignedUp.value = true;
-            const signedUpActivities = JSON.parse(
-              localStorage.getItem("signedUpActivities") || "[]",
-            );
-            signedUpActivities.push(festivalData.value.id);
-            localStorage.setItem("signedUpActivities", JSON.stringify(signedUpActivities));
+            registrationCount.value += 1;
             signUpDialogVisible.value = true;
+          } else {
+            ElMessage.error("报名失败");
           }
         } catch (error) {
           console.error("报名失败:", error);
@@ -556,27 +534,31 @@ const handleSignUp = async () => {
 const submitComment = async () => {
   if (!commentText.value.trim()) return;
 
+  if (!userId.value) {
+    ElMessage.error("请先登录后再发表评论！");
+    return;
+  }
+
   try {
-    const response = await fetch(
-      `http://localhost:8082/api/festival-activity/${festivalData.value.id}/comments`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userName: username.value,
-          content: commentText.value,
-        }),
+    const response = await fetch("http://localhost:8082/api/festival-activity-comment", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
+      body: JSON.stringify({
+        festivalActivityId: festivalData.value.id,
+        userId: userId.value,
+        content: commentText.value.trim(),
+      }),
+    });
 
     if (response.ok) {
       const newComment = await response.json();
-      comments.value.unshift({
+      comments.value.push({
         id: newComment.id,
-        username: newComment.userName,
+        username: newComment.username,
         content: newComment.content,
+        createdAt: newComment.createdAt,
       });
       commentText.value = "";
       ElMessage.success("评论发表成功");
@@ -585,16 +567,7 @@ const submitComment = async () => {
     }
   } catch (error) {
     console.error("提交评论失败:", error);
-    // 本地模拟评论提交
-    const newComment = {
-      id: comments.value.length + 1,
-      username: username.value,
-      content: commentText.value,
-    };
-
-    comments.value.unshift(newComment);
-    commentText.value = "";
-    ElMessage.success("评论发表成功");
+    ElMessage.error("评论发表失败");
   }
 };
 

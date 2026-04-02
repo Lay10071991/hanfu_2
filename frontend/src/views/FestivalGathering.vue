@@ -153,7 +153,7 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { ElMessage } from "element-plus";
+import { ElMessage, ElMessageBox } from "element-plus";
 import {
   ArrowLeft,
   Search,
@@ -248,8 +248,16 @@ onMounted(async () => {
   if (savedUsername) {
     username.value = savedUsername;
   }
+
+  const savedUserId = localStorage.getItem("userId");
+  if (savedUserId) {
+    userId.value = parseInt(savedUserId);
+  }
+
   // 加载节庆活动数据
   await loadFestivals();
+  // 加载用户报名状态
+  await loadUserSignUpStatus();
 });
 
 // 方法
@@ -301,12 +309,36 @@ const isActivityExpired = (dateStr) => {
   return activityDateOnly < nowDateOnly;
 };
 
+// 用户ID
+const userId = ref(null);
+
 // 已报名活动列表（响应式）
-const signedUpActivities = ref(JSON.parse(localStorage.getItem("signedUpActivities") || "[]"));
+const signedUpActivities = ref([]);
 
 // 检查活动是否已报名
 const isActivitySignedUp = (id) => {
   return signedUpActivities.value.includes(id);
+};
+
+// 加载用户报名状态
+const loadUserSignUpStatus = async () => {
+  if (!userId.value) {
+    signedUpActivities.value = [];
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      `http://localhost:8082/api/festival-activity-registration/user/${userId.value}`,
+    );
+    if (response.ok) {
+      const data = await response.json();
+      signedUpActivities.value = data.map((item) => item.festivalActivityId);
+    }
+  } catch (error) {
+    console.error("加载用户报名状态失败:", error);
+    signedUpActivities.value = [];
+  }
 };
 
 const goToProfile = () => {
@@ -335,7 +367,8 @@ const viewFestivalDetail = (id) => {
   }, 100);
 };
 
-const signUpFestival = (id) => {
+// 处理报名
+const signUpFestival = async (id) => {
   const festival = festivals.value.find((f) => f.id === id);
   if (festival) {
     // 检查活动是否已过期
@@ -344,22 +377,44 @@ const signUpFestival = (id) => {
       return;
     }
 
-    // 检查用户是否已报名
-    if (signedUpActivities.value.includes(id)) {
-      ElMessage.info("您已经报名过此活动！");
+    // 检查用户是否已登录
+    if (!userId.value) {
+      ElMessage.error("请先登录后再进行报名！");
       return;
     }
 
-    // 保存到本地存储
-    signedUpActivities.value.push(id);
-    localStorage.setItem("signedUpActivities", JSON.stringify(signedUpActivities.value));
-
-    ElMessage.success(`成功报名参加"${festival.title}"活动！`);
+    ElMessageBox.confirm("确定要报名参加此活动吗？", "报名确认", {
+      confirmButtonText: "确定",
+      cancelButtonText: "取消",
+      type: "info",
+    })
+      .then(async () => {
+        try {
+          const response = await fetch("http://localhost:8082/api/festival-activity-registration", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              festivalActivityId: id,
+              userId: userId.value,
+            }),
+          });
+          if (response.ok) {
+            signedUpActivities.value.push(id);
+            ElMessage.success(`成功报名参加"${festival.title}"活动！`);
+          } else {
+            ElMessage.error("报名失败");
+          }
+        } catch (error) {
+          console.error("报名失败:", error);
+          ElMessage.error("报名失败");
+        }
+      })
+      .catch(() => {});
   }
 };
 
 // 取消报名
-const cancelSignUp = (id) => {
+const cancelSignUp = async (id) => {
   const festival = festivals.value.find((f) => f.id === id);
   if (festival) {
     // 检查活动是否已过期
@@ -368,13 +423,40 @@ const cancelSignUp = (id) => {
       return;
     }
 
-    // 从本地存储中移除
-    const index = signedUpActivities.value.indexOf(id);
-    if (index > -1) {
-      signedUpActivities.value.splice(index, 1);
-      localStorage.setItem("signedUpActivities", JSON.stringify(signedUpActivities.value));
-      ElMessage.success(`成功取消报名"${festival.title}"活动！`);
+    // 检查用户是否已登录
+    if (!userId.value) {
+      ElMessage.error("请先登录后再进行操作！");
+      return;
     }
+
+    ElMessageBox.confirm("确定要取消报名此活动吗？", "取消报名", {
+      confirmButtonText: "确定",
+      cancelButtonText: "取消",
+      type: "warning",
+    })
+      .then(async () => {
+        try {
+          const response = await fetch(
+            `http://localhost:8082/api/festival-activity-registration/${id}/${userId.value}`,
+            {
+              method: "DELETE",
+            },
+          );
+          if (response.ok) {
+            const index = signedUpActivities.value.indexOf(id);
+            if (index > -1) {
+              signedUpActivities.value.splice(index, 1);
+              ElMessage.success(`成功取消报名"${festival.title}"活动！`);
+            }
+          } else {
+            ElMessage.error("取消报名失败");
+          }
+        } catch (error) {
+          console.error("取消报名失败:", error);
+          ElMessage.error("取消报名失败");
+        }
+      })
+      .catch(() => {});
   }
 };
 
