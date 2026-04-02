@@ -46,7 +46,6 @@ export default {
       username: "",
       menuItems: [
         { name: "shops", label: "店铺管理", icon: "🏪" },
-        { name: "services", label: "服务管理", icon: "🛎️" },
         { name: "evaluations", label: "评价管理", icon: "⭐" },
       ],
     };
@@ -55,7 +54,6 @@ export default {
     currentComponent() {
       const componentMap = {
         shops: "ShopManagement",
-        services: "ServiceManagement",
         evaluations: "EvaluationManagement",
       };
       return componentMap[this.activeMenu];
@@ -110,11 +108,18 @@ export default {
 
 .logout-btn {
   padding: 8px 20px;
-  background: #dc3545;
+  background: linear-gradient(135deg, #8b4513 0%, #d2691e 100%);
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+  background: linear-gradient(135deg, #6b340e 0%, #b85a1a 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .merchant-content {
@@ -143,7 +148,7 @@ export default {
 }
 
 .menu-item.active {
-  background: #8b4513;
+  background: linear-gradient(135deg, #8b4513 0%, #d2691e 100%);
   color: white;
 }
 

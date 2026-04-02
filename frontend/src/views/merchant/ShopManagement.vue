@@ -11,16 +11,55 @@
 
     <div v-else class="shop-list">
       <div v-for="shop in shops" :key="shop.id" class="shop-card">
-        <h3>{{ shop.name }}</h3>
-        <p class="shop-desc">{{ shop.description }}</p>
-        <div class="shop-info">
-          <span>📍 {{ shop.address }}</span>
-          <span>📞 {{ shop.contact }}</span>
-          <span>⭐ {{ shop.averageRating || 0 }} ({{ shop.reviewCount || 0 }}条评价)</span>
+        <div class="shop-header">
+          <h3>{{ shop.name }}</h3>
+          <div class="shop-actions">
+            <button @click="editShop(shop)" class="btn-edit">编辑</button>
+            <button @click="deleteShop(shop.id)" class="btn-delete">删除</button>
+          </div>
         </div>
-        <div class="shop-actions">
-          <button @click="editShop(shop)" class="btn-edit">编辑</button>
-          <button @click="deleteShop(shop.id)" class="btn-delete">删除</button>
+        <div class="shop-content">
+          <div class="shop-image">
+            <img :src="shop.image || 'https://via.placeholder.com/150'" alt="店铺图片" />
+          </div>
+          <div class="shop-details">
+            <div class="shop-desc">{{ shop.description }}</div>
+            <div class="shop-info">
+              <div class="info-item">
+                <span class="label">店铺地址：</span>
+                <span class="value">{{ shop.address }}</span>
+              </div>
+              <div class="info-item">
+                <span class="label">店铺电话：</span>
+                <span class="value">{{ shop.contact }}</span>
+              </div>
+              <div class="info-item">
+                <span class="label">店铺综合评分：</span>
+                <span class="value"
+                  >{{ shop.averageRating || 0 }} ({{ shop.reviewCount || 0 }}条评价)</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 服务管理部分 -->
+        <div class="service-management">
+          <div class="service-header">
+            <h4>服务项目</h4>
+            <button @click="showAddServiceDialog(shop.id)" class="btn-add-service">添加服务</button>
+          </div>
+          <div class="service-list">
+            <div v-if="services.length === 0" class="no-services">
+              <p>暂无服务项目</p>
+            </div>
+            <div v-else v-for="service in services" :key="service.id" class="service-item">
+              <span>{{ service.serviceName }}</span>
+              <div class="service-actions">
+                <button @click="editService(service)" class="btn-edit">编辑</button>
+                <button @click="deleteService(service.id, shop.id)" class="btn-delete">删除</button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -86,6 +125,23 @@
         </form>
       </div>
     </div>
+
+    <!-- 服务项目添加/编辑对话框 -->
+    <div v-if="showServiceDialog" class="modal" @click.self="closeServiceDialog">
+      <div class="modal-content">
+        <h3>{{ isServiceEdit ? "编辑服务项目" : "添加服务项目" }}</h3>
+        <form @submit.prevent="saveService">
+          <div class="form-group">
+            <label>服务名称</label>
+            <input v-model="serviceForm.serviceName" required />
+          </div>
+          <div class="form-actions">
+            <button type="button" @click="closeServiceDialog" class="btn-cancel">取消</button>
+            <button type="submit" class="btn-primary">保存</button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -108,6 +164,15 @@ export default {
       },
       imagePreview: null,
       uploading: false,
+      // 服务管理相关状态
+      selectedShopId: null,
+      services: [],
+      showServiceDialog: false,
+      isServiceEdit: false,
+      serviceForm: {
+        id: null,
+        serviceName: "",
+      },
     };
   },
   mounted() {
@@ -226,6 +291,85 @@ export default {
           });
       }
     },
+    // 服务管理相关方法
+    loadServices(shopId) {
+      if (!shopId) {
+        this.services = [];
+        return;
+      }
+
+      const API_BASE = "http://localhost:8082/api";
+      fetch(`${API_BASE}/shop-services?shopId=${shopId}`)
+        .then((response) => response.json())
+        .then((data) => {
+          this.services = data;
+        })
+        .catch((error) => {
+          console.error("加载服务项目失败:", error);
+        });
+    },
+    showAddServiceDialog(shopId) {
+      this.selectedShopId = shopId;
+      this.isServiceEdit = false;
+      this.serviceForm = {
+        id: null,
+        serviceName: "",
+      };
+      this.showServiceDialog = true;
+    },
+    editService(service) {
+      this.isServiceEdit = true;
+      this.serviceForm = { ...service };
+      this.showServiceDialog = true;
+    },
+    closeServiceDialog() {
+      this.showServiceDialog = false;
+    },
+    saveService() {
+      const API_BASE = "http://localhost:8082/api";
+      if (!this.selectedShopId) return;
+
+      const url = this.isServiceEdit
+        ? `${API_BASE}/shop-services/${this.serviceForm.id}`
+        : `${API_BASE}/shop-services`;
+      const method = this.isServiceEdit ? "PUT" : "POST";
+
+      const data = {
+        ...this.serviceForm,
+        shopId: this.selectedShopId,
+      };
+
+      fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      })
+        .then((response) => response.json())
+        .then(() => {
+          this.showServiceDialog = false;
+          this.loadServices(this.selectedShopId);
+        })
+        .catch((error) => {
+          console.error("保存服务项目失败:", error);
+        });
+    },
+    deleteService(serviceId, shopId) {
+      if (confirm("确定要删除这个服务项目吗？")) {
+        const API_BASE = "http://localhost:8082/api";
+
+        fetch(`${API_BASE}/shop-services/${serviceId}`, {
+          method: "DELETE",
+        })
+          .then(() => {
+            this.loadServices(shopId);
+          })
+          .catch((error) => {
+            console.error("删除服务项目失败:", error);
+          });
+      }
+    },
   },
 };
 </script>
@@ -248,16 +392,19 @@ export default {
 }
 
 .btn-primary {
-  background: #8b4513;
+  background: linear-gradient(135deg, #8b4513 0%, #d2691e 100%);
   color: white;
   border: none;
   padding: 8px 16px;
   border-radius: 4px;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .btn-primary:hover {
-  background: #6b340e;
+  background: linear-gradient(135deg, #6b340e 0%, #b85a1a 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .empty-state {
@@ -269,21 +416,59 @@ export default {
 }
 
 .shop-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  display: flex;
+  flex-direction: column;
   gap: 20px;
 }
 
 .shop-card {
   background: white;
-  padding: 20px;
+  border: 1px solid #ddd;
   border-radius: 8px;
+  overflow: hidden;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
 }
 
-.shop-card h3 {
-  margin: 0 0 10px 0;
+.shop-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid #eee;
+  background: #f9f9f9;
+}
+
+.shop-header h3 {
+  margin: 0;
   color: #8b4513;
+  font-size: 18px;
+}
+
+.shop-content {
+  padding: 20px;
+}
+
+.shop-content {
+  display: flex;
+  gap: 20px;
+}
+
+.shop-image {
+  flex: 0 0 150px;
+  height: 150px;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.shop-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.shop-details {
+  flex: 1;
 }
 
 .shop-desc {
@@ -291,17 +476,30 @@ export default {
   color: #666;
   font-size: 14px;
   line-height: 1.4;
+  min-height: 60px;
 }
 
 .shop-info {
-  margin-bottom: 15px;
-  font-size: 14px;
-  color: #666;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.shop-info span {
-  display: block;
-  margin-bottom: 5px;
+.info-item {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+}
+
+.info-item .label {
+  font-weight: bold;
+  color: #333;
+  margin-right: 8px;
+  min-width: 100px;
+}
+
+.info-item .value {
+  color: #666;
 }
 
 .shop-actions {
@@ -315,6 +513,7 @@ export default {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  font-size: 14px;
 }
 
 .btn-edit {
@@ -430,5 +629,81 @@ export default {
 
 .btn-cancel:hover {
   background: #f5f5f5;
+}
+
+/* 服务管理样式 */
+.service-management {
+  border-top: 1px solid #eee;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.service-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.service-header h4 {
+  margin: 0;
+  color: #8b4513;
+  font-size: 16px;
+}
+
+.btn-add-service {
+  background: linear-gradient(135deg, #8b4513 0%, #d2691e 100%);
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.btn-add-service:hover {
+  background: linear-gradient(135deg, #6b340e 0%, #b85a1a 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.service-list {
+  background: #f9f9f9;
+  border-radius: 4px;
+  padding: 15px;
+}
+
+.no-services {
+  text-align: center;
+  color: #666;
+  padding: 20px;
+}
+
+.service-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background: white;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.service-item span {
+  color: #333;
+  font-size: 14px;
+}
+
+.service-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.service-actions .btn-edit,
+.service-actions .btn-delete {
+  padding: 4px 8px;
+  font-size: 12px;
 }
 </style>
