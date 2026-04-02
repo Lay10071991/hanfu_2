@@ -211,6 +211,28 @@ const filteredFestivals = computed(() => {
     );
   }
 
+  // 按时间顺序排序（从早到晚）
+  result.sort((a, b) => {
+    // 解析日期函数
+    const parseDate = (dateStr) => {
+      let dateStrClean = dateStr;
+      // 处理"2026-02-24（农历正月十五）"格式
+      if (dateStr.includes("（")) {
+        dateStrClean = dateStr.split("（")[0];
+      }
+      // 处理"2026年2月12日"格式
+      if (dateStr.includes("年")) {
+        dateStrClean = dateStr.replace("年", "-").replace("月", "-").replace("日", "");
+      }
+      return new Date(dateStrClean);
+    };
+
+    const dateA = parseDate(a.date);
+    const dateB = parseDate(b.date);
+
+    return dateA - dateB;
+  });
+
   return result;
 });
 
@@ -364,6 +386,8 @@ const resetFilters = () => {
 
 const handleCurrentChange = (page) => {
   currentPage.value = page;
+  // 直接跳转到页面顶部
+  window.scrollTo({ top: 0, behavior: "auto" });
 };
 
 const goBack = () => {
