@@ -12,6 +12,7 @@ public class ShopDTO {
     private Double averageRating;
     private Integer reviewCount;
     private String priceRange;
+    private Long userId;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
     
@@ -86,6 +87,14 @@ public class ShopDTO {
     
     public void setPriceRange(String priceRange) {
         this.priceRange = priceRange;
+    }
+    
+    public Long getUserId() {
+        return userId;
+    }
+    
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
     
     public LocalDateTime getCreateTime() {

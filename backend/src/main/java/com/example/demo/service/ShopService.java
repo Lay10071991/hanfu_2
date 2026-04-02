@@ -49,6 +49,7 @@ public class ShopService {
         dto.setAddress(shop.getAddress());
         dto.setContact(shop.getContact());
         dto.setPriceRange(shop.getPriceRange());
+        dto.setUserId(shop.getUserId());
         dto.setCreateTime(shop.getCreateTime());
         dto.setUpdateTime(shop.getUpdateTime());
         
@@ -77,6 +78,8 @@ public class ShopService {
             shop.setImage(shopDetails.getImage());
             shop.setAddress(shopDetails.getAddress());
             shop.setContact(shopDetails.getContact());
+            shop.setPriceRange(shopDetails.getPriceRange());
+            shop.setUserId(shopDetails.getUserId());
             return shopRepository.save(shop);
         }
         return null;
