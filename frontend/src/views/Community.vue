@@ -324,17 +324,49 @@ const totalPosts = computed(() => {
 
 const fetchPosts = async () => {
   try {
-    const response = await fetch(`${API_BASE}/posts?sortBy=${sortBy.value}`);
+    const response = await fetch(`${API_BASE}/posts`);
     if (response.ok) {
       const data = await response.json();
       discoveryPosts.value = data.map((post) => {
         // 使用工具函数处理图片URL
-        return processPostImages(post);
+        const processedPost = processPostImages(post);
+        return {
+          ...processedPost,
+          // 确保有必要的字段
+          title: post.title,
+          description:
+            post.description || (post.content ? post.content.substring(0, 100) + "..." : ""),
+          author: post.author,
+          likes: post.likes || 0,
+          comments: post.comments || 0,
+          time: post.time,
+          category: post.category || "其他",
+          categoryType: getCategoryType(post.category || "其他"),
+          liked: post.liked || false,
+          image: post.image || post.imageUrl,
+        };
       });
+    } else {
+      console.error("获取帖子失败，状态码:", response.status);
+      // 显示错误信息
+      ElMessage.error("获取帖子失败，请稍后重试");
+      // 确保discoveryPosts为空数组，这样会显示空状态
+      discoveryPosts.value = [];
     }
   } catch (error) {
     console.error("获取帖子失败:", error);
+    // 显示错误信息
+    ElMessage.error("获取帖子失败，请稍后重试");
+    // 确保discoveryPosts为空数组，这样会显示空状态
+    discoveryPosts.value = [];
   }
+};
+
+// 检查用户点赞状态函数已不再需要，因为后端API在获取帖子时已经包含了liked字段
+// 保留此函数以保持代码结构完整性，实际使用时会被跳过
+const checkUserLikes = async () => {
+  // 由于后端API在获取帖子时已经包含了liked字段，此函数不再需要执行
+  return;
 };
 
 onMounted(() => {
@@ -475,9 +507,16 @@ const submitPublish = async () => {
       const newPost = await response.json();
       discoveryPosts.value.unshift({
         ...newPost,
-        image:
-          newPost.image ||
-          (newPost.images && newPost.images.length > 0 ? newPost.images[0].url : null),
+        title: newPost.title,
+        description: newPost.content.substring(0, 100) + "...",
+        author: newPost.username,
+        likes: 0,
+        comments: 0,
+        time: newPost.createdAt,
+        category: newPost.category || "其他",
+        categoryType: getCategoryType(newPost.category || "其他"),
+        liked: false,
+        image: newPost.image,
       });
       ElMessage.success("发布成功！");
       publishDialogVisible.value = false;
@@ -531,6 +570,7 @@ const toggleLike = async (post) => {
     const response = await fetch(`${API_BASE}/posts/${post.id}/like`, {
       method: "POST",
       headers: {
+        "Content-Type": "application/json",
         "X-User-Id": userId.value,
       },
     });
@@ -543,6 +583,7 @@ const toggleLike = async (post) => {
     }
   } catch (error) {
     console.error("点赞操作失败:", error);
+    // 本地模拟点赞操作
     post.liked = !post.liked;
     post.likes += post.liked ? 1 : -1;
     ElMessage.success(post.liked ? "已点赞" : "已取消点赞");

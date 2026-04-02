@@ -11,7 +11,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // 配置上传文件的访问路径
         registry.addResourceHandler("/uploads/**")
-                .addResourceLocations("file:E:/hanfu-cultural-platform-3/hanfu-cultural-platform/hanfu-cultural-platform/uploads/");
+                .addResourceLocations("file:E:/hanfu-cultural-platform/backend/uploads/");
         
         // 配置前端静态资源访问路径
         registry.addResourceHandler("/exhibitions/**")

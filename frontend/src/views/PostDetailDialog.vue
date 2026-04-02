@@ -268,11 +268,24 @@ const fetchComments = async () => {
     const response = await fetch(`${API_BASE}/posts/${post.value.id}/comments`);
     if (response.ok) {
       const data = await response.json();
-      comments.value = data;
+      comments.value = data.map((comment) => ({
+        ...comment,
+        author: comment.author,
+        time: comment.time,
+        likes: 0,
+        liked: false,
+      }));
     }
   } catch (error) {
     console.error("获取评论失败:", error);
   }
+};
+
+// 检查用户评论点赞状态函数已不再需要，因为后端API在获取评论时没有包含liked字段
+// 保留此函数以保持代码结构完整性，实际使用时会被跳过
+const checkCommentLikes = async () => {
+  // 由于后端API在获取评论时没有包含liked字段，此函数不再需要执行
+  return;
 };
 
 watch(
@@ -327,6 +340,7 @@ const toggleLike = async () => {
     const response = await fetch(`${API_BASE}/posts/${post.value.id}/like`, {
       method: "POST",
       headers: {
+        "Content-Type": "application/json",
         "X-User-Id": userId.value,
       },
     });
@@ -344,6 +358,7 @@ const toggleLike = async () => {
     }
   } catch (error) {
     console.error("点赞操作失败:", error);
+    // 本地模拟点赞操作
     post.value.liked = !post.value.liked;
     post.value.likes += post.value.liked ? 1 : -1;
     ElMessage.success(post.value.liked ? "已点赞" : "已取消点赞");
@@ -356,6 +371,13 @@ const toggleLike = async () => {
 };
 
 const toggleCommentLike = (comment) => {
+  // 确保userId存在
+  if (!userId.value) {
+    ElMessage.warning("请先登录后再进行点赞操作");
+    return;
+  }
+
+  // 由于后端API没有提供评论点赞功能，仅在前端模拟点赞操作
   comment.liked = !comment.liked;
   comment.likes += comment.liked ? 1 : -1;
 };
@@ -388,13 +410,19 @@ const submitComment = async () => {
         "X-User-Id": userId.value,
       },
       body: JSON.stringify({
-        content: newComment.value,
+        content: newComment.value.trim(),
       }),
     });
 
     if (response.ok) {
       const newCommentObj = await response.json();
-      comments.value.unshift(newCommentObj);
+      comments.value.push({
+        ...newCommentObj,
+        author: newCommentObj.author,
+        time: newCommentObj.time,
+        likes: 0,
+        liked: false,
+      });
       post.value.comments = newCommentObj.postComments || post.value.comments + 1;
       newComment.value = "";
 

@@ -18,10 +18,10 @@ import java.util.UUID;
 public class FileUploadController {
 
     // 上传目录路径
-    private static final String UPLOAD_DIR = "E:/hanfu-cultural-platform-3/hanfu-cultural-platform/hanfu-cultural-platform/uploads";
+    private static final String UPLOAD_DIR = "E:/hanfu-cultural-platform/backend/uploads";
 
     @PostMapping("/image")
-    public ResponseEntity<Map<String, Object>> uploadImage(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<Map<String, Object>> uploadImage(@RequestParam("file") MultipartFile file, @RequestParam(value = "type", defaultValue = "general") String type) {
         Map<String, Object> response = new HashMap<>();
         
         try {
@@ -40,8 +40,14 @@ public class FileUploadController {
                 return ResponseEntity.badRequest().body(response);
             }
 
+            // 确定子目录
+            String subDir = "general";
+            if ("community_post".equals(type)) {
+                subDir = "community_post";
+            }
+
             // 创建上传目录
-            File uploadDir = new File(UPLOAD_DIR);
+            File uploadDir = new File(UPLOAD_DIR, subDir);
             if (!uploadDir.exists()) {
                 uploadDir.mkdirs();
             }
@@ -55,11 +61,11 @@ public class FileUploadController {
             String filename = UUID.randomUUID().toString() + extension;
 
             // 保存文件
-            Path filePath = Paths.get(UPLOAD_DIR, filename);
+            Path filePath = Paths.get(UPLOAD_DIR, subDir, filename);
             Files.write(filePath, file.getBytes());
 
             // 返回文件访问路径
-            String fileUrl = "/uploads/" + filename;
+            String fileUrl = "/uploads/" + subDir + "/" + filename;
             
             response.put("success", true);
             response.put("url", fileUrl);
