@@ -156,8 +156,8 @@
                     <div class="post-stats">
                       <span class="likes" @click.stop="toggleLike(post)">
                         <el-icon :class="{ liked: post.liked }">
-                          <Star v-if="post.liked" />
-                          <StarFilled v-else />
+                          <StarFilled v-if="post.liked" />
+                          <Star v-else />
                         </el-icon>
                         {{ post.likes }}
                       </span>
@@ -324,7 +324,11 @@ const totalPosts = computed(() => {
 
 const fetchPosts = async () => {
   try {
-    const response = await fetch(`${API_BASE}/posts`);
+    const response = await fetch(`${API_BASE}/posts`, {
+      headers: {
+        "X-User-Id": userId.value || 1,
+      },
+    });
     if (response.ok) {
       const data = await response.json();
       discoveryPosts.value = data.map((post) => {
@@ -333,6 +337,7 @@ const fetchPosts = async () => {
         return {
           ...processedPost,
           // 确保有必要的字段
+          id: post.id,
           title: post.title,
           description:
             post.description || (post.content ? post.content.substring(0, 100) + "..." : ""),
