@@ -1424,8 +1424,27 @@ const getCategoryType = (value) => {
 
 // 查看帖子详情
 const viewPostDetails = (postId) => {
-  // 查找对应帖子
-  const post = userPosts.value.find((p) => p.id === postId);
+  // 先在userPosts中查找
+  let post = userPosts.value.find((p) => p.id === postId);
+
+  // 如果找不到，在userInteractions中查找
+  if (!post) {
+    const interaction = userInteractions.value.find((i) => i.postId === postId);
+    if (interaction) {
+      post = {
+        id: interaction.postId,
+        title: interaction.postTitle,
+        content: interaction.postContent,
+        category: interaction.postCategory,
+        date: interaction.date,
+        likes: interaction.likes,
+        comments: interaction.comments,
+        images: interaction.postImages || [],
+        author: interaction.author,
+      };
+    }
+  }
+
   if (post) {
     selectedPost.value = { ...post };
     postDetailVisible.value = true;
