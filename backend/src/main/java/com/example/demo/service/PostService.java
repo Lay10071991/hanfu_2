@@ -40,14 +40,23 @@ public class PostService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<Map<String, Object>> getAllPosts(String sortBy) {
+    public List<Map<String, Object>> getAllPosts(String sortBy, Long currentUserId) {
         List<Post> posts;
         if ("hot".equals(sortBy)) {
             posts = postRepository.findAllOrderByLikesDesc();
         } else {
             posts = postRepository.findAllOrderByPublishDateDesc();
         }
-        return posts.stream().map(this::convertToMap).collect(Collectors.toList());
+        return posts.stream().map(post -> {
+            Map<String, Object> map = convertToMap(post);
+            if (currentUserId != null) {
+                boolean liked = likeRepository.existsByUserIdAndPostId(currentUserId, post.getId());
+                map.put("liked", liked);
+            } else {
+                map.put("liked", false);
+            }
+            return map;
+        }).collect(Collectors.toList());
     }
 
     public Map<String, Object> getPostById(Long id, Long currentUserId) {

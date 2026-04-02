@@ -18,8 +18,9 @@ public class PostController {
 
     @GetMapping
     public ResponseEntity<List<Map<String, Object>>> getAllPosts(
-            @RequestParam(defaultValue = "hot") String sortBy) {
-        List<Map<String, Object>> posts = postService.getAllPosts(sortBy);
+            @RequestParam(defaultValue = "hot") String sortBy,
+            @RequestHeader(value = "X-User-Id", required = false) Long userId) {
+        List<Map<String, Object>> posts = postService.getAllPosts(sortBy, userId);
         return ResponseEntity.ok(posts);
     }
 

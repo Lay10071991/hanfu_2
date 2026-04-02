@@ -132,7 +132,17 @@
                 <div class="post-item" v-for="post in userPosts" :key="post.id">
                   <!-- 标题和按钮行 -->
                   <div class="post-header-new">
-                    <h4 class="post-title">{{ post.title }}</h4>
+                    <div class="post-title-area">
+                      <h4 class="post-title">{{ post.title }}</h4>
+                      <el-tag
+                        v-if="post.category"
+                        :type="getCategoryType(post.category)"
+                        size="small"
+                        class="post-tag"
+                      >
+                        {{ post.category }}
+                      </el-tag>
+                    </div>
                     <div class="post-actions-new">
                       <el-button type="primary" size="small" @click="viewPostDetails(post.id)">
                         查看
@@ -186,7 +196,17 @@
                 >
                   <!-- 标题和按钮行 -->
                   <div class="post-header-new">
-                    <h4 class="post-title">{{ interaction.postTitle }}</h4>
+                    <div class="post-title-area">
+                      <h4 class="post-title">{{ interaction.postTitle }}</h4>
+                      <el-tag
+                        v-if="interaction.postCategory"
+                        :type="getCategoryType(interaction.postCategory)"
+                        size="small"
+                        class="post-tag"
+                      >
+                        {{ interaction.postCategory }}
+                      </el-tag>
+                    </div>
                     <div class="post-actions-new">
                       <el-button
                         type="primary"
@@ -1372,6 +1392,7 @@ const fetchUserPosts = async () => {
         id: post.id,
         title: post.title || "",
         content: post.content || "",
+        category: post.category || "",
         date: post.time || "",
         likes: post.likes || 0,
         comments: post.comments || 0,
@@ -1387,6 +1408,18 @@ const fetchUserPosts = async () => {
   } finally {
     loading.value = false;
   }
+};
+
+// 获取标签类型
+const getCategoryType = (value) => {
+  const map = {
+    穿搭分享: "success",
+    发型教程: "warning",
+    摄影作品: "info",
+    汉服制作: "",
+    文化活动: "danger",
+  };
+  return map[value] || "";
 };
 
 // 查看帖子详情
@@ -1532,34 +1565,46 @@ const fetchUserInteractions = async () => {
 
   loading.value = true;
   try {
-    // 这里需要调用后端API获取用户的互动数据
-    // 暂时使用模拟数据
-    const mockInteractions = [
-      {
-        id: 1,
-        postId: 1,
-        postTitle: "汉服出行日精彩回顾",
-        postContent:
-          "上周末的汉服出行日活动圆满结束，数百名同袍齐聚市中心广场，展示各朝代汉服风采。活动现场气氛热烈，吸引了不少市民驻足观看。大家穿着明制、唐制、宋制等不同朝代的汉服，成为城市一道靓丽的风景线。",
-        postImages: ["https://example.com/image1.jpg", "https://example.com/image2.jpg"],
-        author: "汉服爱好者",
-        date: "2024年12月20日",
-        likes: 25,
-        comments: 15,
-        liked: true,
-        myComments: [
-          {
-            id: 1,
-            content: "活动非常精彩，期待下一次",
-            date: "2024年12月21日",
-          },
-        ],
+    // 获取所有帖子（带用户ID以获取点赞状态）
+    const response = await fetch(`${API_BASE}/posts`, {
+      headers: {
+        "X-User-Id": userId,
       },
-    ];
-    userInteractions.value = mockInteractions;
+    });
+    if (response.ok) {
+      const allPosts = await response.json();
+
+      // 筛选出用户点赞的帖子
+      const likedPosts = allPosts.filter((post) => post.liked);
+
+      // 转换为互动数据格式
+      const interactions = likedPosts.map((post) => ({
+        id: post.id,
+        postId: post.id,
+        postTitle: post.title,
+        postContent: post.content,
+        postCategory: post.category || "",
+        postImages: post.images
+          ? post.images.map((img) => img.url || img)
+          : post.image
+            ? [post.image]
+            : [],
+        author: post.author,
+        date: post.time || "",
+        likes: post.likes || 0,
+        comments: post.comments || 0,
+        liked: true,
+        myComments: [],
+      }));
+
+      userInteractions.value = interactions;
+    } else {
+      userInteractions.value = [];
+    }
   } catch (error) {
     console.error("获取互动记录失败:", error);
     ElMessage.error("网络异常，请稍后重试");
+    userInteractions.value = [];
   } finally {
     loading.value = false;
   }
@@ -1997,11 +2042,22 @@ const logout = () => {
   margin-bottom: 10px;
 }
 
+.post-title-area {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+
 .post-title {
   font-size: 16px;
   font-weight: bold;
   color: #8b4513;
   margin: 0;
+}
+
+.post-tag {
+  flex-shrink: 0;
 }
 
 .post-actions-new {
