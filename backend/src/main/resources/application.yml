@@ -8,7 +8,7 @@ spring:
       connection-init-sql: SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci
   jpa:
     hibernate:
-      ddl-auto: update # create
+      ddl-auto: none # 禁用自动表结构生成
     show-sql: true
     defer-datasource-initialization: true
     properties:
@@ -23,6 +23,7 @@ spring:
       mode: always
       continue-on-error: true
       encoding: UTF-8
+      schema-locations: classpath:activity.sql
       data-locations: classpath:activity.sql
   servlet:
     multipart:
