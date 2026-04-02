@@ -37,9 +37,6 @@ public class Post {
     @Column(columnDefinition = "INT DEFAULT 0")
     private Integer comments = 0;
 
-    @Column(columnDefinition = "INT DEFAULT 0")
-    private Integer views = 0;
-
     @Column(name = "publish_date")
     private LocalDate publishDate;
 
@@ -141,13 +138,6 @@ public class Post {
         this.comments = comments;
     }
 
-    public Integer getViews() {
-        return views;
-    }
-
-    public void setViews(Integer views) {
-        this.views = views;
-    }
 
     public LocalDate getPublishDate() {
         return publishDate;

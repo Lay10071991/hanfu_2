@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
+import jakarta.annotation.PostConstruct;
 
 @Service
 public class PostService {
@@ -54,8 +56,6 @@ public class PostService {
             return null;
         }
         Post post = postOpt.get();
-        post.setViews(post.getViews() + 1);
-        postRepository.save(post);
         
         Map<String, Object> result = convertToMap(post);
         
@@ -80,7 +80,6 @@ public class PostService {
         post.setPublishDate(LocalDate.now());
         post.setLikes(0);
         post.setComments(0);
-        post.setViews(0);
         
         if (content != null && content.length() > 100) {
             post.setDescription(content.substring(0, 100) + "...");
@@ -189,7 +188,7 @@ public class PostService {
         map.put("authorId", post.getAuthorId());
         map.put("likes", likeRepository.countByPostId(post.getId()));
         map.put("comments", post.getComments());
-        map.put("views", post.getViews());
+
         map.put("time", formatDate(post.getPublishDate()));
         map.put("publishDate", post.getPublishDate() != null ? post.getPublishDate().toString() : null);
         map.put("category", post.getCategory());
@@ -293,6 +292,21 @@ public class PostService {
     public List<Map<String, Object>> getPostsByUserId(Long userId) {
         List<Post> posts = postRepository.findByAuthorId(userId);
         return posts.stream().map(this::convertToMap).collect(Collectors.toList());
+    }
+
+    @PostConstruct
+    public void init() {
+        // 更新所有帖子的日期为2025年
+        List<Post> posts = postRepository.findAll();
+        for (Post post : posts) {
+            LocalDate publishDate = post.getPublishDate();
+            if (publishDate != null) {
+                // 将年份设置为2025年
+                LocalDate newDate = LocalDate.of(2025, publishDate.getMonth(), publishDate.getDayOfMonth());
+                post.setPublishDate(newDate);
+                postRepository.save(post);
+            }
+        }
     }
 
 }
