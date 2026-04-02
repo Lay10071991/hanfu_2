@@ -10,8 +10,8 @@
 
     <div class="merchant-content">
       <div class="sidebar">
-        <div 
-          v-for="item in menuItems" 
+        <div
+          v-for="item in menuItems"
           :key="item.name"
           :class="['menu-item', { active: activeMenu === item.name }]"
           @click="activeMenu = item.name"
@@ -29,53 +29,57 @@
 </template>
 
 <script>
-import ShopManagement from './ShopManagement.vue'
-import EvaluationManagement from './EvaluationManagement.vue'
+import ShopManagement from "./ShopManagement.vue";
+import EvaluationManagement from "./EvaluationManagement.vue";
+import ServiceManagement from "./ServiceManagement.vue";
 
 export default {
-  name: 'MerchantLayout',
+  name: "MerchantLayout",
   components: {
     ShopManagement,
-    EvaluationManagement
+    EvaluationManagement,
+    ServiceManagement,
   },
   data() {
     return {
-      activeMenu: 'shops',
-      username: '',
+      activeMenu: "shops",
+      username: "",
       menuItems: [
-        { name: 'shops', label: '店铺管理', icon: '🏪' },
-        { name: 'evaluations', label: '评价管理', icon: '⭐' }
-      ]
-    }
+        { name: "shops", label: "店铺管理", icon: "🏪" },
+        { name: "services", label: "服务管理", icon: "🛎️" },
+        { name: "evaluations", label: "评价管理", icon: "⭐" },
+      ],
+    };
   },
   computed: {
     currentComponent() {
       const componentMap = {
-        shops: 'ShopManagement',
-        evaluations: 'EvaluationManagement'
-      }
-      return componentMap[this.activeMenu]
-    }
+        shops: "ShopManagement",
+        services: "ServiceManagement",
+        evaluations: "EvaluationManagement",
+      };
+      return componentMap[this.activeMenu];
+    },
   },
   mounted() {
-    this.checkAuth()
+    this.checkAuth();
   },
   methods: {
     checkAuth() {
-      const user = JSON.parse(localStorage.getItem('user') || '{}')
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
       if (!user.userRole || user.userRole.id !== 2) {
-        this.$router.push('/login')
+        this.$router.push("/login");
       } else {
-        this.username = user.username
+        this.username = user.username;
       }
     },
     logout() {
-      localStorage.removeItem('user')
-      localStorage.removeItem('isLoggedIn')
-      this.$router.push('/login')
-    }
-  }
-}
+      localStorage.removeItem("user");
+      localStorage.removeItem("isLoggedIn");
+      this.$router.push("/login");
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -87,7 +91,7 @@ export default {
 .merchant-header {
   background: white;
   padding: 20px 40px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -95,7 +99,7 @@ export default {
 
 .merchant-header h1 {
   margin: 0;
-  color: #8B4513;
+  color: #8b4513;
 }
 
 .user-info {
@@ -122,7 +126,7 @@ export default {
   width: 200px;
   background: white;
   padding: 20px 0;
-  box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
 }
 
 .menu-item {
@@ -139,7 +143,7 @@ export default {
 }
 
 .menu-item.active {
-  background: #8B4513;
+  background: #8b4513;
   color: white;
 }
 

@@ -28,7 +28,7 @@
     <!-- 添加/编辑对话框 -->
     <div v-if="showDialog" class="modal" @click.self="closeDialog">
       <div class="modal-content">
-        <h3>{{ isEdit ? '编辑店铺' : '添加店铺' }}</h3>
+        <h3>{{ isEdit ? "编辑店铺" : "添加店铺" }}</h3>
         <form @submit.prevent="saveShop">
           <div class="form-group">
             <label>店铺名称</label>
@@ -47,16 +47,29 @@
             <input v-model="form.contact" />
           </div>
           <div class="form-group">
+            <label>价格区间</label>
+            <select v-model="form.priceRange">
+              <option value="普通档（0-400）">普通档（0-400）</option>
+              <option value="中档（400-700）">中档（400-700）</option>
+              <option value="中高档（700-1000）">中高档（700-1000）</option>
+              <option value="高档（1000以上）">高档（1000以上）</option>
+            </select>
+          </div>
+          <div class="form-group">
             <label>店铺图片</label>
             <div class="upload-area">
-              <input 
-                type="file" 
-                ref="imageInput" 
-                @change="handleImageChange" 
+              <input
+                type="file"
+                ref="imageInput"
+                @change="handleImageChange"
                 accept="image/*"
                 style="display: none"
               />
-              <div v-if="!imagePreview" class="upload-placeholder" @click="$refs.imageInput.click()">
+              <div
+                v-if="!imagePreview"
+                class="upload-placeholder"
+                @click="$refs.imageInput.click()"
+              >
                 <span>点击上传店铺图片</span>
               </div>
               <div v-else class="image-preview">
@@ -64,7 +77,7 @@
                 <button type="button" @click="removeImage" class="btn-remove-img">删除</button>
               </div>
             </div>
-            <small v-if="uploading" style="color: #666;">上传中...</small>
+            <small v-if="uploading" style="color: #666">上传中...</small>
           </div>
           <div class="form-actions">
             <button type="button" @click="closeDialog" class="btn-cancel">取消</button>
@@ -78,7 +91,7 @@
 
 <script>
 export default {
-  name: 'ShopManagement',
+  name: "ShopManagement",
   data() {
     return {
       shops: [],
@@ -86,131 +99,135 @@ export default {
       isEdit: false,
       form: {
         id: null,
-        name: '',
-        description: '',
-        address: '',
-        contact: '',
-        image: ''
+        name: "",
+        description: "",
+        address: "",
+        contact: "",
+        priceRange: "普通档（0-400）",
+        image: "",
       },
       imagePreview: null,
-      uploading: false
-    }
+      uploading: false,
+    };
   },
   mounted() {
-    this.loadShops()
+    this.loadShops();
   },
   methods: {
     loadShops() {
-      const API_BASE = 'http://localhost:8080/api'
-      const user = JSON.parse(localStorage.getItem('user') || '{}')
-      if (!user.id) return
+      const API_BASE = "http://localhost:8080/api";
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+      if (!user.id) return;
 
       fetch(`${API_BASE}/shops?userId=${user.id}`)
-        .then(response => response.json())
-        .then(data => {
-          this.shops = data
+        .then((response) => response.json())
+        .then((data) => {
+          this.shops = data;
         })
-        .catch(error => {
-          console.error('加载店铺失败:', error)
-        })
+        .catch((error) => {
+          console.error("加载店铺失败:", error);
+        });
     },
     showAddDialog() {
-      this.isEdit = false
+      this.isEdit = false;
       this.form = {
         id: null,
-        name: '',
-        description: '',
-        address: '',
-        contact: '',
-        image: ''
-      }
-      this.imagePreview = null
-      this.showDialog = true
+        name: "",
+        description: "",
+        address: "",
+        contact: "",
+        priceRange: "普通档（0-400）",
+        image: "",
+      };
+      this.imagePreview = null;
+      this.showDialog = true;
     },
     editShop(shop) {
-      this.isEdit = true
-      this.form = { ...shop }
-      this.imagePreview = shop.image || null
-      this.showDialog = true
+      this.isEdit = true;
+      this.form = {
+        ...shop,
+        priceRange: shop.priceRange || shop.price_range || "普通档（0-400）",
+      };
+      this.imagePreview = shop.image || null;
+      this.showDialog = true;
     },
     closeDialog() {
-      this.showDialog = false
+      this.showDialog = false;
     },
     handleImageChange(e) {
-      const file = e.target.files[0]
+      const file = e.target.files[0];
       if (file) {
-        this.uploading = true
-        const formData = new FormData()
-        formData.append('file', file)
+        this.uploading = true;
+        const formData = new FormData();
+        formData.append("file", file);
 
-        fetch('http://localhost:8080/api/upload', {
-          method: 'POST',
-          body: formData
+        fetch("http://localhost:8080/api/upload", {
+          method: "POST",
+          body: formData,
         })
-        .then(response => response.json())
-        .then(data => {
-          this.form.image = data.url
-          this.imagePreview = data.url
-          this.uploading = false
-        })
-        .catch(error => {
-          console.error('上传图片失败:', error)
-          this.uploading = false
-        })
+          .then((response) => response.json())
+          .then((data) => {
+            this.form.image = data.url;
+            this.imagePreview = data.url;
+            this.uploading = false;
+          })
+          .catch((error) => {
+            console.error("上传图片失败:", error);
+            this.uploading = false;
+          });
       }
     },
     removeImage() {
-      this.form.image = ''
-      this.imagePreview = null
+      this.form.image = "";
+      this.imagePreview = null;
     },
     saveShop() {
-      const API_BASE = 'http://localhost:8080/api'
-      const user = JSON.parse(localStorage.getItem('user') || '{}')
-      if (!user.id) return
+      const API_BASE = "http://localhost:8080/api";
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+      if (!user.id) return;
 
-      const url = this.isEdit 
-        ? `${API_BASE}/shops/${this.form.id}` 
-        : `${API_BASE}/shops`
-      const method = this.isEdit ? 'PUT' : 'POST'
+      const url = this.isEdit ? `${API_BASE}/shops/${this.form.id}` : `${API_BASE}/shops`;
+      const method = this.isEdit ? "PUT" : "POST";
 
       const data = {
         ...this.form,
-        userId: user.id
-      }
+        price_range: this.form.priceRange,
+        userId: user.id,
+      };
 
       fetch(url, {
         method,
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
       })
-      .then(response => response.json())
-      .then(() => {
-        this.showDialog = false
-        this.loadShops()
-      })
-      .catch(error => {
-        console.error('保存店铺失败:', error)
-      })
+        .then((response) => response.json())
+        .then(() => {
+          this.showDialog = false;
+          this.loadShops();
+        })
+        .catch((error) => {
+          console.error("保存店铺失败:", error);
+        });
     },
     deleteShop(shopId) {
-      if (confirm('确定要删除这个店铺吗？')) {
-        const API_BASE = 'http://localhost:8080/api'
-        
+      if (confirm("确定要删除这个店铺吗？")) {
+        const API_BASE = "http://localhost:8080/api";
+
         fetch(`${API_BASE}/shops/${shopId}`, {
-          method: 'DELETE'
+          method: "DELETE",
         })
-        .then(() => {
-          this.loadShops()
-        })
-        .catch(error => {
-          console.error('删除店铺失败:', error)
-        })
+          .then(() => {
+            this.loadShops();
+          })
+          .catch((error) => {
+            console.error("删除店铺失败:", error);
+          });
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -227,11 +244,11 @@ export default {
 
 .header h2 {
   margin: 0;
-  color: #8B4513;
+  color: #8b4513;
 }
 
 .btn-primary {
-  background: #8B4513;
+  background: #8b4513;
   color: white;
   border: none;
   padding: 8px 16px;
@@ -240,7 +257,7 @@ export default {
 }
 
 .btn-primary:hover {
-  background: #6B340E;
+  background: #6b340e;
 }
 
 .empty-state {
@@ -248,7 +265,7 @@ export default {
   padding: 40px;
   background: white;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .shop-list {
@@ -261,12 +278,12 @@ export default {
   background: white;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .shop-card h3 {
   margin: 0 0 10px 0;
-  color: #8B4513;
+  color: #8b4513;
 }
 
 .shop-desc {
@@ -292,7 +309,8 @@ export default {
   gap: 10px;
 }
 
-.btn-edit, .btn-delete {
+.btn-edit,
+.btn-delete {
   padding: 6px 12px;
   border: none;
   border-radius: 4px;
@@ -300,7 +318,7 @@ export default {
 }
 
 .btn-edit {
-  background: #4CAF50;
+  background: #4caf50;
   color: white;
 }
 
@@ -315,7 +333,7 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -332,7 +350,7 @@ export default {
 
 .modal-content h3 {
   margin: 0 0 20px 0;
-  color: #8B4513;
+  color: #8b4513;
 }
 
 .form-group {
