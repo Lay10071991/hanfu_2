@@ -25,6 +25,13 @@ public class ShopService {
                 .collect(Collectors.toList());
     }
     
+    public List<ShopDTO> getShopsByUserId(Long userId) {
+        List<Shop> shops = shopRepository.findByUserId(userId);
+        return shops.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+    
     public ShopDTO getShopById(Long id) {
         Shop shop = shopRepository.findById(id).orElse(null);
         if (shop != null) {

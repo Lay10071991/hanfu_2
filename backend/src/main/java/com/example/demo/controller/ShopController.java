@@ -16,8 +16,13 @@ public class ShopController {
     private ShopService shopService;
     
     @GetMapping
-    public ResponseEntity<List<ShopDTO>> getAllShops() {
-        List<ShopDTO> shops = shopService.getAllShops();
+    public ResponseEntity<List<ShopDTO>> getAllShops(@RequestParam(required = false) Long userId) {
+        List<ShopDTO> shops;
+        if (userId != null) {
+            shops = shopService.getShopsByUserId(userId);
+        } else {
+            shops = shopService.getAllShops();
+        }
         return ResponseEntity.ok(shops);
     }
     
