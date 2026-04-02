@@ -2346,71 +2346,71 @@ const logout = () => {
   overflow-y: auto;
 }
 
-.exhibition-detail-dialog .detail-header {
+.detail-header {
   margin-bottom: 20px;
 }
 
-.exhibition-detail-dialog .detail-image {
+.detail-image {
   width: 100%;
   height: 300px;
   border-radius: 8px;
   overflow: hidden;
 }
 
-.exhibition-detail-dialog .detail-content {
+.detail-content {
   padding: 0 10px;
 }
 
-.exhibition-detail-dialog .detail-info {
+.detail-info {
   background-color: #f9f5f0;
   border-radius: 8px;
   padding: 20px;
   margin-bottom: 20px;
 }
 
-.exhibition-detail-dialog .info-row {
+.info-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
   margin-bottom: 15px;
 }
 
-.exhibition-detail-dialog .info-row:last-child {
+.info-row:last-child {
   margin-bottom: 0;
 }
 
-.exhibition-detail-dialog .info-item {
+.info-item {
   display: flex;
   align-items: center;
   gap: 15px;
 }
 
-.exhibition-detail-dialog .info-item .el-icon {
+.info-item .el-icon {
   color: #8b4513;
   font-size: 24px;
 }
 
-.exhibition-detail-dialog .info-content {
+.info-content {
   flex: 1;
 }
 
-.exhibition-detail-dialog .info-label {
+.info-label {
   font-size: 12px;
   color: #999;
   margin-bottom: 4px;
 }
 
-.exhibition-detail-dialog .info-value {
+.info-value {
   font-size: 16px;
   font-weight: 500;
   color: #333;
 }
 
-.exhibition-detail-dialog .detail-section {
+.detail-section {
   margin-bottom: 25px;
 }
 
-.exhibition-detail-dialog .detail-section h4 {
+.detail-section h4 {
   color: #8b4513;
   font-size: 18px;
   margin: 0 0 15px 0;
@@ -2418,31 +2418,46 @@ const logout = () => {
   border-bottom: 2px solid #d4a76a;
 }
 
-.exhibition-detail-dialog .detail-section p {
+.detail-section p {
   color: #666;
   line-height: 1.8;
   margin-bottom: 15px;
 }
 
-.exhibition-detail-dialog .highlight-list,
-.exhibition-detail-dialog .notice-list {
+.highlight-list,
+.notice-list {
   padding-left: 20px;
   margin: 0;
 }
 
-.exhibition-detail-dialog .highlight-list li,
-.exhibition-detail-dialog .notice-list li {
+.highlight-list li,
+.notice-list li {
   color: #666;
   line-height: 1.8;
   margin-bottom: 8px;
+  position: relative;
+  padding-left: 10px;
 }
 
-.exhibition-detail-dialog .highlight-list li:last-child,
-.exhibition-detail-dialog .notice-list li:last-child {
+.highlight-list li:last-child,
+.notice-list li:last-child {
   margin-bottom: 0;
 }
 
-.exhibition-detail-dialog .dialog-footer {
+.highlight-list li::before {
+  content: "✨";
+  position: absolute;
+  left: -15px;
+}
+
+.notice-list li::before {
+  content: "•";
+  position: absolute;
+  left: -10px;
+  color: #8b4513;
+}
+
+.dialog-footer {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
@@ -2455,57 +2470,57 @@ const logout = () => {
   padding: 10px;
 }
 
-.lecture-detail-content .detail-info-section {
+.detail-info-section {
   background-color: #f9f5f0;
   border-radius: 8px;
   padding: 20px;
   margin-bottom: 20px;
 }
 
-.lecture-detail-content .info-row {
+.info-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
   margin-bottom: 15px;
 }
 
-.lecture-detail-content .info-row:last-child {
+.info-row:last-child {
   margin-bottom: 0;
 }
 
-.lecture-detail-content .info-item {
+.info-item {
   display: flex;
   align-items: center;
   gap: 15px;
 }
 
-.lecture-detail-content .info-item .el-icon {
+.info-item .el-icon {
   color: #8b4513;
   font-size: 24px;
   flex-shrink: 0;
 }
 
-.lecture-detail-content .info-content {
+.info-content {
   flex: 1;
 }
 
-.lecture-detail-content .info-label {
+.info-label {
   font-size: 12px;
   color: #999;
   margin-bottom: 4px;
 }
 
-.lecture-detail-content .info-value {
+.info-value {
   font-size: 16px;
   font-weight: 500;
   color: #333;
 }
 
-.lecture-detail-content .detail-section {
+.detail-section {
   margin-bottom: 25px;
 }
 
-.lecture-detail-content .detail-section h4 {
+.detail-section h4 {
   color: #8b4513;
   font-size: 18px;
   margin: 0 0 15px 0;
@@ -2513,54 +2528,54 @@ const logout = () => {
   border-bottom: 2px solid #d4a76a;
 }
 
-.lecture-detail-content .detail-section p {
+.detail-section p {
   color: #666;
   line-height: 1.8;
   margin: 0;
 }
 
-.lecture-detail-content .content-list,
-.lecture-detail-content .notice-list {
+.content-list,
+.notice-list {
   padding-left: 20px;
   margin: 0;
 }
 
-.lecture-detail-content .content-list li,
-.lecture-detail-content .notice-list li {
+.content-list li,
+.notice-list li {
   color: #666;
   line-height: 1.8;
   margin-bottom: 8px;
 }
 
-.lecture-detail-content .content-list li:last-child,
-.lecture-detail-content .notice-list li:last-child {
+.content-list li:last-child,
+.notice-list li:last-child {
   margin-bottom: 0;
 }
 
-.lecture-detail-content .content-list li {
+.content-list li {
   position: relative;
   padding-left: 10px;
 }
 
-.lecture-detail-content .content-list li::before {
+.content-list li::before {
   content: "📚";
   position: absolute;
   left: -15px;
 }
 
-.lecture-detail-content .notice-list li {
+.notice-list li {
   position: relative;
   padding-left: 10px;
 }
 
-.lecture-detail-content .notice-list li::before {
+.notice-list li::before {
   content: "•";
   position: absolute;
   left: -10px;
   color: #8b4513;
 }
 
-.lecture-detail-content .dialog-footer {
+.dialog-footer {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
