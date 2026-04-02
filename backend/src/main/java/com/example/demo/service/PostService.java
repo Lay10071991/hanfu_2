@@ -303,6 +303,20 @@ public class PostService {
         return posts.stream().map(this::convertToMap).collect(Collectors.toList());
     }
 
+    public List<Map<String, Object>> getUserLikedPosts(Long userId) {
+        List<Like> likes = likeRepository.findByUserIdOrderByCreateTimeDesc(userId);
+        return likes.stream().map(like -> {
+            Post post = postRepository.findById(like.getPostId()).orElse(null);
+            if (post == null) {
+                return null;
+            }
+            Map<String, Object> map = convertToMap(post);
+            map.put("liked", true);
+            map.put("likeTime", like.getCreateTime());
+            return map;
+        }).filter(map -> map != null).collect(Collectors.toList());
+    }
+
     @PostConstruct
     public void init() {
         // 更新所有帖子的日期为2025年

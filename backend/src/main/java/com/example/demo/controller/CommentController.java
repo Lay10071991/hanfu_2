@@ -52,4 +52,25 @@ public class CommentController {
         commentRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/user/{userId}")
+    public List<Map<String, Object>> getCommentsByUserId(@PathVariable Long userId) {
+        return commentRepository.findByUserIdOrderByCreateTimeDesc(userId).stream().map(comment -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", comment.getId());
+            map.put("content", comment.getContent());
+            map.put("createTime", comment.getCreateTime());
+            map.put("updateTime", comment.getUpdateTime());
+
+            Post post = postRepository.findById(comment.getPost().getId()).orElse(null);
+            map.put("postId", post != null ? post.getId() : null);
+            map.put("postTitle", post != null ? post.getTitle() : "Unknown Post");
+            map.put("postCategory", post != null ? post.getCategory() : "");
+
+            User user = userRepository.findById(comment.getUserId()).orElse(null);
+            map.put("username", user != null ? user.getUsername() : "Unknown User");
+
+            return map;
+        }).collect(Collectors.toList());
+    }
 }

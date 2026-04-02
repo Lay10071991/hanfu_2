@@ -102,4 +102,10 @@ public class PostController {
         List<Map<String, Object>> posts = postService.getPostsByUserId(userId);
         return ResponseEntity.ok(posts);
     }
+
+    @GetMapping("/user/{userId}/likes")
+    public ResponseEntity<List<Map<String, Object>>> getUserLikedPosts(@PathVariable Long userId) {
+        List<Map<String, Object>> posts = postService.getUserLikedPosts(userId);
+        return ResponseEntity.ok(posts);
+    }
 }

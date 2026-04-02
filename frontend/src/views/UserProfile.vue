@@ -188,93 +188,108 @@
             <!-- 我的互动 -->
             <div v-else-if="activeMenu === 'likes'" class="section">
               <h3 class="content-title">我的互动</h3>
-              <div class="posts-list">
-                <div
-                  class="post-item"
-                  v-for="interaction in userInteractions"
-                  :key="interaction.id"
-                >
-                  <!-- 标题和按钮行 -->
-                  <div class="post-header-new">
-                    <div class="post-title-area">
-                      <h4 class="post-title">{{ interaction.postTitle }}</h4>
-                      <el-tag
-                        v-if="interaction.postCategory"
-                        :type="getCategoryType(interaction.postCategory)"
-                        size="small"
-                        class="post-tag"
-                      >
-                        {{ interaction.postCategory }}
-                      </el-tag>
-                    </div>
-                    <div class="post-actions-new">
-                      <el-button
-                        type="primary"
-                        size="small"
-                        @click="viewPostDetails(interaction.postId)"
-                      >
-                        查看帖子
-                      </el-button>
-                      <el-button
-                        :type="interaction.liked ? 'danger' : 'warning'"
-                        size="small"
-                        @click="toggleLike(interaction.postId)"
-                      >
-                        {{ interaction.liked ? "取消点赞" : "点赞" }}
-                      </el-button>
-                    </div>
-                  </div>
-                  <!-- 内容和图片区域 -->
-                  <div class="post-content-area">
-                    <!-- 图片区域 -->
-                    <div
-                      v-if="interaction.postImages && interaction.postImages.length > 0"
-                      class="post-image-area"
-                    >
-                      <img
-                        v-for="(image, index) in interaction.postImages"
-                        :key="index"
-                        :src="image"
-                        alt="帖子图片"
-                        class="post-image-new"
-                      />
-                    </div>
-                    <!-- 内容区域 -->
-                    <div class="post-text-area">
-                      <p class="post-content">{{ interaction.postContent }}</p>
-                    </div>
-                  </div>
-                  <!-- 日期和统计信息 -->
-                  <div class="post-meta-new">
-                    <span class="post-date">{{ interaction.date }}</span>
-                    <div class="post-stats-new">
-                      <span class="post-likes">❤️ {{ interaction.likes }}</span>
-                      <span class="post-comments">💬 {{ interaction.comments }}</span>
-                    </div>
-                  </div>
-                  <!-- 我的评论 -->
-                  <div
-                    v-if="interaction.myComments && interaction.myComments.length > 0"
-                    class="my-comments"
-                  >
-                    <h5>我的评论</h5>
-                    <div
-                      class="comment-item"
-                      v-for="comment in interaction.myComments"
-                      :key="comment.id"
-                    >
-                      <p class="comment-content">{{ comment.content }}</p>
-                      <div class="comment-meta">
-                        <span class="comment-date">{{ comment.date }}</span>
-                        <el-button type="text" size="small" @click="deleteComment(comment.id)">
-                          删除评论
-                        </el-button>
+              <el-tabs v-model="interactionTab" class="interaction-tabs">
+                <el-tab-pane label="我的点赞" name="likes">
+                  <div class="posts-list">
+                    <div class="post-item" v-for="like in userLikes" :key="like.id">
+                      <!-- 标题和按钮行 -->
+                      <div class="post-header-new">
+                        <div class="post-title-area">
+                          <h4 class="post-title">{{ like.title }}</h4>
+                          <el-tag
+                            v-if="like.category"
+                            :type="getCategoryType(like.category)"
+                            size="small"
+                            class="post-tag"
+                          >
+                            {{ like.category }}
+                          </el-tag>
+                        </div>
+                        <div class="post-actions-new">
+                          <el-button type="primary" size="small" @click="viewPostDetails(like.id)">
+                            查看帖子
+                          </el-button>
+                          <el-button type="danger" size="small" @click="cancelLike(like.id)">
+                            取消点赞
+                          </el-button>
+                        </div>
+                      </div>
+                      <!-- 内容和图片区域 -->
+                      <div class="post-content-area">
+                        <!-- 图片区域 -->
+                        <div v-if="like.images && like.images.length > 0" class="post-image-area">
+                          <img
+                            v-for="(image, index) in like.images"
+                            :key="index"
+                            :src="image.url || image"
+                            alt="帖子图片"
+                            class="post-image-new"
+                          />
+                        </div>
+                        <!-- 内容区域 -->
+                        <div class="post-text-area">
+                          <p class="post-content">{{ like.content }}</p>
+                        </div>
+                      </div>
+                      <!-- 日期和统计信息 -->
+                      <div class="post-meta-new">
+                        <span class="post-date">{{ like.time }}</span>
+                        <div class="post-stats-new">
+                          <span class="post-likes">❤️ {{ like.likes }}</span>
+                          <span class="post-comments">💬 {{ like.comments }}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
-              <el-empty v-if="userInteractions.length === 0" description="暂无互动记录" />
+                  <el-empty v-if="userLikes.length === 0" description="暂无点赞记录" />
+                </el-tab-pane>
+                <el-tab-pane label="我的评论" name="comments">
+                  <div class="comments-list">
+                    <div
+                      class="comment-item-full"
+                      v-for="comment in userComments"
+                      :key="comment.id"
+                    >
+                      <div class="comment-post-header">
+                        <h4 class="post-title">{{ comment.postTitle }}</h4>
+                        <el-tag
+                          v-if="comment.postCategory"
+                          :type="getCategoryType(comment.postCategory)"
+                          size="small"
+                          class="post-tag"
+                        >
+                          {{ comment.postCategory }}
+                        </el-tag>
+                      </div>
+                      <div class="comment-content-box">
+                        <p class="comment-text">{{ comment.content }}</p>
+                      </div>
+                      <div class="comment-actions">
+                        <span class="comment-date">{{
+                          formatCommentTime(comment.createTime)
+                        }}</span>
+                        <div class="action-buttons">
+                          <el-button
+                            type="primary"
+                            size="small"
+                            @click="viewPostDetails(comment.postId)"
+                          >
+                            查看帖子
+                          </el-button>
+                          <el-button
+                            type="danger"
+                            size="small"
+                            @click="deleteUserComment(comment.id)"
+                          >
+                            删除评论
+                          </el-button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <el-empty v-if="userComments.length === 0" description="暂无评论记录" />
+                </el-tab-pane>
+              </el-tabs>
             </div>
 
             <!-- 新增：活动报名 -->
@@ -758,6 +773,11 @@ const postDetailVisible = ref(false);
 const selectedPost = ref(null);
 const userInteractions = ref([]);
 
+// 我的互动标签页
+const interactionTab = ref("likes");
+const userLikes = ref([]);
+const userComments = ref([]);
+
 // 展览详情弹窗
 const exhibitionDialogVisible = ref(false);
 const selectedExhibition = ref(null);
@@ -765,17 +785,6 @@ const selectedExhibition = ref(null);
 // 讲座详情弹窗
 const lectureDialogVisible = ref(false);
 const selectedLecture = ref(null);
-
-const userLikes = ref([
-  {
-    id: 1,
-    type: "帖子",
-    title: "汉服穿搭技巧",
-    content: "分享一些日常汉服穿搭的小技巧...",
-    author: "穿搭达人",
-    date: "2023-11-08",
-  },
-]);
 
 // 新增：活动报名数据
 const activityRegistrations = ref([]);
@@ -1573,8 +1582,8 @@ const handleExceed = () => {
   ElMessage.warning("最多只能上传9张图片");
 };
 
-// 加载用户互动数据
-const fetchUserInteractions = async () => {
+// 加载用户点赞数据
+const fetchUserLikes = async () => {
   const userId = getUserId();
   if (!userId) {
     ElMessage.warning("请先登录");
@@ -1584,49 +1593,52 @@ const fetchUserInteractions = async () => {
 
   loading.value = true;
   try {
-    // 获取所有帖子（带用户ID以获取点赞状态）
-    const response = await fetch(`${API_BASE}/posts`, {
-      headers: {
-        "X-User-Id": userId,
-      },
-    });
+    const response = await fetch(`${API_BASE}/posts/user/${userId}/likes`);
     if (response.ok) {
-      const allPosts = await response.json();
-
-      // 筛选出用户点赞的帖子
-      const likedPosts = allPosts.filter((post) => post.liked);
-
-      // 转换为互动数据格式
-      const interactions = likedPosts.map((post) => ({
-        id: post.id,
-        postId: post.id,
-        postTitle: post.title,
-        postContent: post.content,
-        postCategory: post.category || "",
-        postImages: post.images
-          ? post.images.map((img) => img.url || img)
-          : post.image
-            ? [post.image]
-            : [],
-        author: post.author,
-        date: post.time || "",
-        likes: post.likes || 0,
-        comments: post.comments || 0,
-        liked: true,
-        myComments: [],
-      }));
-
-      userInteractions.value = interactions;
+      const likes = await response.json();
+      userLikes.value = likes;
     } else {
-      userInteractions.value = [];
+      userLikes.value = [];
     }
   } catch (error) {
-    console.error("获取互动记录失败:", error);
+    console.error("获取点赞记录失败:", error);
     ElMessage.error("网络异常，请稍后重试");
-    userInteractions.value = [];
+    userLikes.value = [];
   } finally {
     loading.value = false;
   }
+};
+
+// 加载用户评论数据
+const fetchUserComments = async () => {
+  const userId = getUserId();
+  if (!userId) {
+    ElMessage.warning("请先登录");
+    router.push("/login");
+    return;
+  }
+
+  loading.value = true;
+  try {
+    const response = await fetch(`${API_BASE}/comments/user/${userId}`);
+    if (response.ok) {
+      const comments = await response.json();
+      userComments.value = comments;
+    } else {
+      userComments.value = [];
+    }
+  } catch (error) {
+    console.error("获取评论记录失败:", error);
+    ElMessage.error("网络异常，请稍后重试");
+    userComments.value = [];
+  } finally {
+    loading.value = false;
+  }
+};
+
+// 加载用户互动数据（同时加载点赞和评论）
+const fetchUserInteractions = async () => {
+  await Promise.all([fetchUserLikes(), fetchUserComments()]);
 };
 
 // 切换点赞状态
@@ -1665,7 +1677,82 @@ const toggleLike = async (postId) => {
   }
 };
 
-// 删除评论
+// 取消点赞
+const cancelLike = async (postId) => {
+  const userId = getUserId();
+  if (!userId) {
+    ElMessage.warning("请先登录");
+    router.push("/login");
+    return;
+  }
+
+  try {
+    const response = await fetch(`${API_BASE}/posts/${postId}/like`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ userId }),
+    });
+    if (response.ok) {
+      const result = await response.json();
+      if (!result.liked) {
+        ElMessage.success("已取消点赞");
+        // 从列表中移除
+        userLikes.value = userLikes.value.filter((like) => like.id !== postId);
+      }
+    } else {
+      ElMessage.error("操作失败");
+    }
+  } catch (error) {
+    console.error("取消点赞失败:", error);
+    ElMessage.error("网络异常，请稍后重试");
+  }
+};
+
+// 删除评论（用于用户互动页面）
+const deleteUserComment = async (commentId) => {
+  ElMessageBox.confirm("确定要删除这条评论吗？删除后无法恢复。", "删除确认", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
+  })
+    .then(async () => {
+      try {
+        const response = await fetch(`${API_BASE}/comments/${commentId}`, {
+          method: "DELETE",
+        });
+        if (response.ok) {
+          ElMessage.success("评论删除成功");
+          // 从列表中移除
+          userComments.value = userComments.value.filter((comment) => comment.id !== commentId);
+        } else {
+          ElMessage.error("删除评论失败");
+        }
+      } catch (error) {
+        console.error("删除评论失败:", error);
+        ElMessage.error("网络异常，请稍后重试");
+      }
+    })
+    .catch(() => {
+      // 取消删除
+    });
+};
+
+// 格式化评论时间
+const formatCommentTime = (time) => {
+  if (!time) return "";
+  const date = new Date(time);
+  return date.toLocaleString("zh-CN", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
+
+// 删除评论（旧版，用于帖子详情弹窗）
 const deleteComment = async (commentId) => {
   ElMessageBox.confirm("确定要删除这条评论吗？删除后无法恢复。", "删除确认", {
     confirmButtonText: "确定",
@@ -1674,7 +1761,6 @@ const deleteComment = async (commentId) => {
   })
     .then(async () => {
       try {
-        // 这里需要调用后端API删除评论
         const response = await fetch(`${API_BASE}/comments/${commentId}`, {
           method: "DELETE",
         });
@@ -2575,5 +2661,93 @@ const logout = () => {
   .registration-actions {
     align-self: flex-end;
   }
+}
+
+/* 我的互动标签页样式 */
+.interaction-tabs {
+  margin-top: 10px;
+}
+
+.interaction-tabs :deep(.el-tabs__header) {
+  margin-bottom: 20px;
+}
+
+.interaction-tabs :deep(.el-tabs__item) {
+  font-size: 15px;
+  color: #666;
+}
+
+.interaction-tabs :deep(.el-tabs__item.is-active) {
+  color: #8b4513;
+  font-weight: bold;
+}
+
+.interaction-tabs :deep(.el-tabs__active-bar) {
+  background-color: #8b4513;
+}
+
+/* 评论列表样式 */
+.comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.comment-item-full {
+  background-color: #fff;
+  border: 1px solid #e8d5c4;
+  border-radius: 8px;
+  padding: 15px;
+  transition: box-shadow 0.3s;
+}
+
+.comment-item-full:hover {
+  box-shadow: 0 2px 8px rgba(139, 69, 19, 0.1);
+}
+
+.comment-post-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #f0e6dc;
+}
+
+.comment-post-header .post-title {
+  margin: 0;
+  font-size: 16px;
+  color: #8b4513;
+  font-weight: 600;
+}
+
+.comment-content-box {
+  background-color: #faf8f5;
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.comment-text {
+  margin: 0;
+  line-height: 1.6;
+  color: #333;
+  font-size: 14px;
+}
+
+.comment-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.comment-actions .comment-date {
+  color: #999;
+  font-size: 13px;
+}
+
+.comment-actions .action-buttons {
+  display: flex;
+  gap: 8px;
 }
 </style>

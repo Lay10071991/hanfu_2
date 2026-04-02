@@ -8,10 +8,12 @@ import java.util.List;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-    
+
     List<Comment> findByPostIdOrderByCreateTimeDesc(Long postId);
-    
+
     List<Comment> findByPostId(Long postId);
-    
+
     long countByPostId(Long postId);
+
+    List<Comment> findByUserIdOrderByCreateTimeDesc(Long userId);
 }
