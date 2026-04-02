@@ -64,13 +64,6 @@
                       <div class="info-value">{{ festivalData.location }}</div>
                     </div>
                   </div>
-                  <div class="info-item">
-                    <el-icon><Clock /></el-icon>
-                    <div class="info-content">
-                      <div class="info-label">活动时间</div>
-                      <div class="info-value">{{ festivalData.time || "全天" }}</div>
-                    </div>
-                  </div>
                 </div>
               </div>
 
@@ -240,7 +233,6 @@ import {
   Calendar,
   Location,
   User,
-  Clock,
   Check,
   Document,
   MagicStick,
@@ -259,7 +251,6 @@ const festivalData = ref({
   title: "",
   season: "",
   date: "",
-  time: "",
   location: "",
   image: "",
   description: "",
@@ -351,7 +342,6 @@ const loadFestivalData = async (id) => {
         title: data.title,
         season: data.season,
         date: data.date,
-        time: data.date, // 后端返回的是date字段，前端模板使用time字段
         location: data.location,
         image: data.image,
         description: data.description,
@@ -366,7 +356,6 @@ const loadFestivalData = async (id) => {
         title: "活动加载失败",
         season: "",
         date: "",
-        time: "",
         location: "",
         image: "",
         description: "无法加载活动数据，请稍后再试",
@@ -383,7 +372,6 @@ const loadFestivalData = async (id) => {
       title: "活动加载失败",
       season: "",
       date: "",
-      time: "",
       location: "",
       image: "",
       description: "无法加载活动数据，请稍后再试",
