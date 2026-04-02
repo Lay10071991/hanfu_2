@@ -35,7 +35,7 @@
     <!-- 添加/编辑对话框 -->
     <div v-if="showDialog" class="modal" @click.self="closeDialog">
       <div class="modal-content">
-        <h3>{{ isEdit ? '编辑服务项目' : '添加服务项目' }}</h3>
+        <h3>{{ isEdit ? "编辑服务项目" : "添加服务项目" }}</h3>
         <form @submit.prevent="saveService">
           <div class="form-group">
             <label>服务名称</label>
@@ -53,117 +53,117 @@
 
 <script>
 export default {
-  name: 'ServiceManagement',
+  name: "ServiceManagement",
   data() {
     return {
       shops: [],
       services: [],
-      selectedShopId: '',
+      selectedShopId: "",
       showDialog: false,
       isEdit: false,
       form: {
         id: null,
-        serviceName: ''
-      }
-    }
+        serviceName: "",
+      },
+    };
   },
   mounted() {
-    this.loadShops()
+    this.loadShops();
   },
   methods: {
     loadShops() {
-      const API_BASE = 'http://localhost:8080/api'
-      const user = JSON.parse(localStorage.getItem('user') || '{}')
-      if (!user.id) return
+      const API_BASE = "http://localhost:8082/api";
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+      if (!user.id) return;
 
       fetch(`${API_BASE}/shops?userId=${user.id}`)
-        .then(response => response.json())
-        .then(data => {
-          this.shops = data
+        .then((response) => response.json())
+        .then((data) => {
+          this.shops = data;
         })
-        .catch(error => {
-          console.error('加载店铺失败:', error)
-        })
+        .catch((error) => {
+          console.error("加载店铺失败:", error);
+        });
     },
     loadServices() {
       if (!this.selectedShopId) {
-        this.services = []
-        return
+        this.services = [];
+        return;
       }
 
-      const API_BASE = 'http://localhost:8080/api'
+      const API_BASE = "http://localhost:8082/api";
       fetch(`${API_BASE}/shop-services?shopId=${this.selectedShopId}`)
-        .then(response => response.json())
-        .then(data => {
-          this.services = data
+        .then((response) => response.json())
+        .then((data) => {
+          this.services = data;
         })
-        .catch(error => {
-          console.error('加载服务项目失败:', error)
-        })
+        .catch((error) => {
+          console.error("加载服务项目失败:", error);
+        });
     },
     showAddDialog() {
-      this.isEdit = false
+      this.isEdit = false;
       this.form = {
         id: null,
-        serviceName: ''
-      }
-      this.showDialog = true
+        serviceName: "",
+      };
+      this.showDialog = true;
     },
     editService(service) {
-      this.isEdit = true
-      this.form = { ...service }
-      this.showDialog = true
+      this.isEdit = true;
+      this.form = { ...service };
+      this.showDialog = true;
     },
     closeDialog() {
-      this.showDialog = false
+      this.showDialog = false;
     },
     saveService() {
-      const API_BASE = 'http://localhost:8080/api'
-      if (!this.selectedShopId) return
+      const API_BASE = "http://localhost:8082/api";
+      if (!this.selectedShopId) return;
 
-      const url = this.isEdit 
-        ? `${API_BASE}/shop-services/${this.form.id}` 
-        : `${API_BASE}/shop-services`
-      const method = this.isEdit ? 'PUT' : 'POST'
+      const url = this.isEdit
+        ? `${API_BASE}/shop-services/${this.form.id}`
+        : `${API_BASE}/shop-services`;
+      const method = this.isEdit ? "PUT" : "POST";
 
       const data = {
         ...this.form,
-        shopId: this.selectedShopId
-      }
+        shopId: this.selectedShopId,
+      };
 
       fetch(url, {
         method,
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
       })
-      .then(response => response.json())
-      .then(() => {
-        this.showDialog = false
-        this.loadServices()
-      })
-      .catch(error => {
-        console.error('保存服务项目失败:', error)
-      })
+        .then((response) => response.json())
+        .then(() => {
+          this.showDialog = false;
+          this.loadServices();
+        })
+        .catch((error) => {
+          console.error("保存服务项目失败:", error);
+        });
     },
     deleteService(serviceId) {
-      if (confirm('确定要删除这个服务项目吗？')) {
-        const API_BASE = 'http://localhost:8080/api'
-        
+      if (confirm("确定要删除这个服务项目吗？")) {
+        const API_BASE = "http://localhost:8082/api";
+
         fetch(`${API_BASE}/shop-services/${serviceId}`, {
-          method: 'DELETE'
+          method: "DELETE",
         })
-        .then(() => {
-          this.loadServices()
-        })
-        .catch(error => {
-          console.error('删除服务项目失败:', error)
-        })
+          .then(() => {
+            this.loadServices();
+          })
+          .catch((error) => {
+            console.error("删除服务项目失败:", error);
+          });
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -182,7 +182,7 @@ export default {
 
 .header h2 {
   margin: 0;
-  color: #8B4513;
+  color: #8b4513;
 }
 
 .shop-selector {
@@ -198,7 +198,7 @@ export default {
 }
 
 .btn-primary {
-  background: #8B4513;
+  background: #8b4513;
   color: white;
   border: none;
   padding: 8px 16px;
@@ -207,7 +207,7 @@ export default {
 }
 
 .btn-primary:hover {
-  background: #6B340E;
+  background: #6b340e;
 }
 
 .empty-state {
@@ -215,7 +215,7 @@ export default {
   padding: 40px;
   background: white;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   color: #666;
 }
 
@@ -229,7 +229,7 @@ export default {
   background: white;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -237,7 +237,7 @@ export default {
 
 .service-card h3 {
   margin: 0;
-  color: #8B4513;
+  color: #8b4513;
 }
 
 .service-actions {
@@ -245,7 +245,8 @@ export default {
   gap: 10px;
 }
 
-.btn-edit, .btn-delete {
+.btn-edit,
+.btn-delete {
   padding: 6px 12px;
   border: none;
   border-radius: 4px;
@@ -253,7 +254,7 @@ export default {
 }
 
 .btn-edit {
-  background: #4CAF50;
+  background: #4caf50;
   color: white;
 }
 
@@ -268,7 +269,7 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -285,7 +286,7 @@ export default {
 
 .modal-content h3 {
   margin: 0 0 20px 0;
-  color: #8B4513;
+  color: #8b4513;
 }
 
 .form-group {

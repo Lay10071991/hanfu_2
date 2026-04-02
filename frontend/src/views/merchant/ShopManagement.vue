@@ -115,7 +115,7 @@ export default {
   },
   methods: {
     loadShops() {
-      const API_BASE = "http://localhost:8080/api";
+      const API_BASE = "http://localhost:8082/api";
       const user = JSON.parse(localStorage.getItem("user") || "{}");
       if (!user.id) return;
 
@@ -161,7 +161,7 @@ export default {
         const formData = new FormData();
         formData.append("file", file);
 
-        fetch("http://localhost:8080/api/upload", {
+        fetch("http://localhost:8082/api/upload", {
           method: "POST",
           body: formData,
         })
@@ -182,7 +182,7 @@ export default {
       this.imagePreview = null;
     },
     saveShop() {
-      const API_BASE = "http://localhost:8080/api";
+      const API_BASE = "http://localhost:8082/api";
       const user = JSON.parse(localStorage.getItem("user") || "{}");
       if (!user.id) return;
 
@@ -213,7 +213,7 @@ export default {
     },
     deleteShop(shopId) {
       if (confirm("确定要删除这个店铺吗？")) {
-        const API_BASE = "http://localhost:8080/api";
+        const API_BASE = "http://localhost:8082/api";
 
         fetch(`${API_BASE}/shops/${shopId}`, {
           method: "DELETE",
