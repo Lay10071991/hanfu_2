@@ -1749,7 +1749,7 @@ CREATE TABLE `post`  (
   `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '帖子简介',
   `image_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '封面图片URL',
   `author_id` bigint NOT NULL COMMENT '作者ID',
-  `category` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '帖子分类(穿搭分享/发型教程/摄影作品/汉服制作/文化活动)',
+  `category` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '帖子标签',
   `likes` int NULL DEFAULT 0 COMMENT '点赞数',
   `comments` int NULL DEFAULT 0 COMMENT '评论数',
   `publish_date` date NOT NULL COMMENT '发布日期',

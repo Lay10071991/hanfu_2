@@ -198,10 +198,10 @@
             show-word-limit
           />
         </el-form-item>
-        <el-form-item label="分类">
+        <el-form-item label="标签" required>
           <el-input
             v-model="publishForm.category"
-            placeholder="请输入分类（最多10字）"
+            placeholder="请输入标签（最多10字）"
             maxlength="10"
             show-word-limit
           />
@@ -434,8 +434,8 @@ const formatDate = (date) => {
 };
 
 const submitPublish = async () => {
-  if (!publishForm.value.title || !publishForm.value.content) {
-    ElMessage.warning("请填写标题和内容");
+  if (!publishForm.value.title || !publishForm.value.content || !publishForm.value.category) {
+    ElMessage.warning("请填写标题、标签和内容");
     return;
   }
 
@@ -508,14 +508,14 @@ const submitPublish = async () => {
       discoveryPosts.value.unshift({
         ...newPost,
         title: newPost.title,
-        description: newPost.content.substring(0, 100) + "...",
-        author: newPost.username,
-        likes: 0,
-        comments: 0,
-        time: newPost.createdAt,
+        description: newPost.description || newPost.content.substring(0, 100) + "...",
+        author: newPost.author,
+        likes: newPost.likes || 0,
+        comments: newPost.comments || 0,
+        time: newPost.time,
         category: newPost.category || "其他",
-        categoryType: getCategoryType(newPost.category || "其他"),
-        liked: false,
+        categoryType: newPost.categoryType || getCategoryType(newPost.category || "其他"),
+        liked: newPost.liked || false,
         image: newPost.image,
       });
       ElMessage.success("发布成功！");
