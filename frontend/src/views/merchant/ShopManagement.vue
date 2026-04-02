@@ -5,6 +5,12 @@
       <button @click="showAddDialog" class="btn-primary">添加店铺</button>
     </div>
 
+    <!-- 调试信息 -->
+    <div class="debug-info" v-if="debugInfo">
+      <h3>调试信息</h3>
+      <pre>{{ debugInfo }}</pre>
+    </div>
+
     <div v-if="shops.length === 0" class="empty-state">
       <p>暂无店铺信息，点击上方按钮添加店铺</p>
     </div>
@@ -46,17 +52,34 @@
         <div class="service-management">
           <div class="service-header">
             <h4>服务项目</h4>
-            <button @click="showAddServiceDialog(shop.id)" class="btn-add-service">添加服务</button>
+            <button @click="showAddServiceDialog(shop.id, shop)" class="btn-add-service">
+              添加服务
+            </button>
           </div>
           <div class="service-list">
-            <div v-if="services.length === 0" class="no-services">
+            <!-- 调试信息 -->
+            <div class="debug-service-info">
+              <p>服务项目数量: {{ shop.services.length }}</p>
+              <p>服务项目数据: {{ JSON.stringify(shop.services) }}</p>
+              <div v-if="shop.serviceDebug">
+                <p>
+                  服务调试: 加载中={{ shop.serviceDebug.loading }}, 错误={{
+                    shop.serviceDebug.error
+                  }}
+                </p>
+                <p>API路径: {{ shop.serviceDebug.url }}</p>
+                <p>响应状态: {{ shop.serviceDebug.responseStatus }}</p>
+                <p>响应数据: {{ JSON.stringify(shop.serviceDebug.response) }}</p>
+              </div>
+            </div>
+            <div v-if="shop.services.length === 0" class="no-services">
               <p>暂无服务项目</p>
             </div>
-            <div v-else v-for="service in services" :key="service.id" class="service-item">
+            <div v-else v-for="service in shop.services" :key="service.id" class="service-item">
               <span>{{ service.serviceName }}</span>
               <div class="service-actions">
-                <button @click="editService(service)" class="btn-edit">编辑</button>
-                <button @click="deleteService(service.id, shop.id)" class="btn-delete">删除</button>
+                <button @click="editService(service, shop)" class="btn-edit">编辑</button>
+                <button @click="deleteService(service.id, shop)" class="btn-delete">删除</button>
               </div>
             </div>
           </div>
@@ -166,13 +189,15 @@ export default {
       uploading: false,
       // 服务管理相关状态
       selectedShopId: null,
-      services: [],
+      currentShop: null,
       showServiceDialog: false,
       isServiceEdit: false,
       serviceForm: {
         id: null,
         serviceName: "",
       },
+      // 调试信息
+      debugInfo: null,
     };
   },
   mounted() {
@@ -182,15 +207,104 @@ export default {
     loadShops() {
       const API_BASE = "http://localhost:8082/api";
       const user = JSON.parse(localStorage.getItem("user") || "{}");
-      if (!user.id) return;
+
+      this.debugInfo = `用户信息: ${JSON.stringify(user, null, 2)}`;
+
+      if (!user || !user.id) {
+        this.debugInfo += "\n用户未登录或无用户ID";
+        return;
+      }
+
+      this.debugInfo += `\n用户ID: ${user.id}`;
+      this.debugInfo += `\nAPI路径: ${API_BASE}/shops?userId=${user.id}`;
 
       fetch(`${API_BASE}/shops?userId=${user.id}`)
-        .then((response) => response.json())
+        .then((response) => {
+          this.debugInfo += `\n响应状态: ${response.status}`;
+          return response.json();
+        })
         .then((data) => {
+          this.debugInfo += `\n店铺数据: ${JSON.stringify(data, null, 2)}`;
+          // 为每个店铺添加services属性
+          data.forEach((shop) => {
+            shop.services = [];
+            shop.serviceDebug = {
+              loading: false,
+              error: null,
+              url: `http://localhost:8082/api/shop-services/shop/${shop.id}`,
+              response: null,
+            };
+          });
           this.shops = data;
+          console.log("店铺数据加载完成，共", this.shops.length, "家店铺");
+          // 为每个店铺加载服务项目
+          setTimeout(() => {
+            this.shops.forEach((shop, index) => {
+              console.log("加载第", index + 1, "家店铺的服务项目:", shop.id, shop.name);
+              this.loadServices(shop);
+            });
+          }, 1000);
         })
         .catch((error) => {
+          this.debugInfo += `\n加载店铺失败: ${error.message}`;
           console.error("加载店铺失败:", error);
+        });
+    },
+    loadServices(shop) {
+      if (!shop || !shop.id) {
+        return;
+      }
+
+      // 添加调试信息到shop对象
+      shop.serviceDebug = {
+        loading: true,
+        error: null,
+        url: `http://localhost:8082/api/shop-services/shop/${shop.id}`,
+        response: null,
+      };
+
+      console.log("加载服务项目 for shop:", shop.id, shop.name);
+      const API_BASE = "http://localhost:8082/api";
+      const url = `${API_BASE}/shop-services/shop/${shop.id}`;
+      console.log("服务项目API路径:", url);
+
+      // 手动测试API调用
+      fetch(url)
+        .then((response) => {
+          console.log("服务项目响应状态:", response.status);
+          shop.serviceDebug.responseStatus = response.status;
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then((data) => {
+          console.log("服务项目数据:", data);
+          shop.serviceDebug.response = data;
+          // 确保数据是数组
+          if (Array.isArray(data)) {
+            console.log("服务项目数量:", data.length);
+            shop.services = data;
+          } else {
+            console.error("服务项目数据不是数组:", data);
+            shop.services = [];
+            shop.serviceDebug.error = "服务项目数据不是数组";
+          }
+        })
+        .catch((error) => {
+          console.error("加载服务项目失败:", error);
+          shop.services = [];
+          shop.serviceDebug.error = error.message;
+        })
+        .finally(() => {
+          shop.serviceDebug.loading = false;
+          console.log(
+            "服务项目加载完成 for shop:",
+            shop.id,
+            shop.name,
+            "服务项目数量:",
+            shop.services.length,
+          );
         });
     },
     showAddDialog() {
@@ -299,7 +413,7 @@ export default {
       }
 
       const API_BASE = "http://localhost:8082/api";
-      fetch(`${API_BASE}/shop-services?shopId=${shopId}`)
+      fetch(`${API_BASE}/shop-services/shop/${shopId}`)
         .then((response) => response.json())
         .then((data) => {
           this.services = data;
@@ -308,8 +422,9 @@ export default {
           console.error("加载服务项目失败:", error);
         });
     },
-    showAddServiceDialog(shopId) {
+    showAddServiceDialog(shopId, shop) {
       this.selectedShopId = shopId;
+      this.currentShop = shop;
       this.isServiceEdit = false;
       this.serviceForm = {
         id: null,
@@ -317,9 +432,11 @@ export default {
       };
       this.showServiceDialog = true;
     },
-    editService(service) {
+    editService(service, shop) {
       this.isServiceEdit = true;
       this.serviceForm = { ...service };
+      this.selectedShopId = shop.id;
+      this.currentShop = shop;
       this.showServiceDialog = true;
     },
     closeServiceDialog() {
@@ -327,7 +444,7 @@ export default {
     },
     saveService() {
       const API_BASE = "http://localhost:8082/api";
-      if (!this.selectedShopId) return;
+      if (!this.selectedShopId || !this.currentShop) return;
 
       const url = this.isServiceEdit
         ? `${API_BASE}/shop-services/${this.serviceForm.id}`
@@ -349,13 +466,13 @@ export default {
         .then((response) => response.json())
         .then(() => {
           this.showServiceDialog = false;
-          this.loadServices(this.selectedShopId);
+          this.loadServices(this.currentShop);
         })
         .catch((error) => {
           console.error("保存服务项目失败:", error);
         });
     },
-    deleteService(serviceId, shopId) {
+    deleteService(serviceId, shop) {
       if (confirm("确定要删除这个服务项目吗？")) {
         const API_BASE = "http://localhost:8082/api";
 
@@ -363,7 +480,7 @@ export default {
           method: "DELETE",
         })
           .then(() => {
-            this.loadServices(shopId);
+            this.loadServices(shop);
           })
           .catch((error) => {
             console.error("删除服务项目失败:", error);
@@ -629,6 +746,43 @@ export default {
 
 .btn-cancel:hover {
   background: #f5f5f5;
+}
+
+/* 调试信息样式 */
+.debug-info {
+  background: #f0f0f0;
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+}
+
+.debug-info h3 {
+  margin: 0 0 10px 0;
+  color: #8b4513;
+  font-size: 16px;
+}
+
+.debug-info pre {
+  margin: 0;
+  font-size: 12px;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+/* 服务项目调试信息样式 */
+.debug-service-info {
+  background: #e8f0fe;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  border: 1px solid #d0e0fc;
+  font-size: 12px;
+  color: #333;
+}
+
+.debug-service-info p {
+  margin: 5px 0;
 }
 
 /* 服务管理样式 */
