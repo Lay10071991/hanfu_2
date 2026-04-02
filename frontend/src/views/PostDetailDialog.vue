@@ -240,18 +240,36 @@ const post = ref({
 watch(
   () => props.postData,
   (newVal) => {
-    if (newVal) {
-      // 使用工具函数处理图片URL
-      const processed = processPostImages(newVal);
-      post.value = {
-        ...processed,
-        // 确保 content 字段存在
-        content: processed.content || processed.description || "",
-      };
+    if (newVal && newVal.id) {
+      // 从后端获取最新的帖子数据
+      loadPostDataById(newVal.id);
     }
   },
   { immediate: true, deep: true },
 );
+
+// 根据ID加载帖子数据
+const loadPostDataById = async (postId) => {
+  try {
+    const response = await fetch(`${API_BASE}/posts/${postId}`, {
+      headers: {
+        "X-User-Id": userId.value || 1,
+      },
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      // 使用工具函数处理图片URL
+      const processed = processPostImages(data);
+      post.value = {
+        ...processed,
+        content: processed.content || processed.description || "",
+      };
+    }
+  } catch (error) {
+    console.error("加载帖子详情失败:", error);
+  }
+};
 
 const newComment = ref("");
 const commenting = ref(false);

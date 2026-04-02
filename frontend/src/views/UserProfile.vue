@@ -1436,7 +1436,32 @@ const viewPostDetails = (postId) => {
   // 先在userPosts中查找
   let post = userPosts.value.find((p) => p.id === postId);
 
-  // 如果找不到，在userInteractions中查找
+  // 如果找不到，在userLikes中查找
+  if (!post) {
+    post = userLikes.value.find((like) => like.id === postId);
+  }
+
+  // 如果找不到，在userComments中查找帖子信息
+  if (!post) {
+    const comment = userComments.value.find((c) => c.postId === postId);
+    if (comment) {
+      // 从评论中构造帖子信息
+      post = {
+        id: comment.postId,
+        title: comment.postTitle,
+        category: comment.postCategory,
+        // 评论中没有帖子内容和图片，需要从其他地方获取
+        content: "",
+        images: [],
+        date: comment.createTime || "",
+        likes: 0, // 评论中没有点赞数信息
+        comments: 1, // 至少有一条评论（当前评论）
+        author: "",
+      };
+    }
+  }
+
+  // 如果找不到，在userInteractions中查找（兼容旧数据）
   if (!post) {
     const interaction = userInteractions.value.find((i) => i.postId === postId);
     if (interaction) {
