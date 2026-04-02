@@ -63,7 +63,7 @@
           <div class="timeline">
             <div
               class="timeline-item"
-              v-for="item in culturalContents.filter((item) => item.type === 'history')"
+              v-for="item in historicalEras"
               :key="item.id"
             >
               <div class="timeline-period">
@@ -73,7 +73,17 @@
               <div class="timeline-content">
                 <div class="era-details">
                   <h4>{{ item.title }}</h4>
-                  <p>{{ item.content }}</p>
+                  <p>{{ item.description }}</p>
+                </div>
+              </div>
+            </div>
+            <div v-if="historicalEras.length === 0" class="timeline-item">
+              <div class="timeline-period">
+                <span class="era-name">加载中</span>
+              </div>
+              <div class="timeline-content">
+                <div class="era-details">
+                  <p>历史发展时间线数据正在加载中...</p>
                 </div>
               </div>
             </div>
