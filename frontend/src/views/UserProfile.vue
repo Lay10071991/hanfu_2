@@ -83,7 +83,7 @@
                 </div>
                 <div class="detail-item">
                   <label>性别：</label>
-                  <span>{{ userInfo.gender || "未设置" }}</span>
+                  <span>{{ genderMap[userInfo.gender] || "未知" }}</span>
                 </div>
                 <div class="detail-item">
                   <label>简介：</label>
@@ -380,8 +380,8 @@
         </el-form-item>
         <el-form-item label="性别">
           <el-radio-group v-model="editForm.gender">
-            <el-radio label="男">男</el-radio>
-            <el-radio label="女">女</el-radio>
+            <el-radio label="male">男</el-radio>
+            <el-radio label="female">女</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="简介">
@@ -723,6 +723,13 @@ const passwordDialogVisible = ref(false);
 const passwordFormRef = ref();
 const registrationTab = ref("festival");
 const loading = ref(false);
+
+// 性别映射
+const genderMap = {
+  male: "男",
+  female: "女",
+  unknown: "未知",
+};
 
 const userInfo = ref({
   username: "",
