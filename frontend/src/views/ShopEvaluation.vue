@@ -91,12 +91,7 @@
               @click="viewShopDetail(shop)"
             >
               <div class="shop-img">
-                <el-image
-                  :src="shop.image"
-                  :alt="shop.name"
-                  fit="cover"
-                  style="width: 100%; height: 100%"
-                />
+                <el-image :src="shop.image" :alt="shop.name" />
               </div>
               <div class="shop-info">
                 <div class="shop-header-info">
@@ -360,54 +355,93 @@ const logout = () => {
 }
 
 .shop-card {
-  border: 1px solid #f0f0f0;
-  border-radius: 8px;
+  border: none;
+  border-radius: 12px;
   overflow: hidden;
   cursor: pointer;
   transition: all 0.3s ease;
   background-color: white;
   display: flex;
   flex-direction: column;
-  min-height: 320px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  min-height: 420px;
 }
 
 .shop-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(139, 69, 19, 0.15);
+  transform: translateY(-8px);
+  box-shadow: 0 12px 30px rgba(139, 69, 19, 0.2);
 }
 
 .shop-img {
   width: 100%;
-  height: 180px;
-  background-color: #f0f0f0;
+  height: 240px;
+  background: linear-gradient(135deg, #f5f0e4 0%, #e8e0d0 100%);
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.shop-img::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, transparent 60%, rgba(0, 0, 0, 0.1) 100%);
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.shop-card:hover .shop-img::before {
+  opacity: 1;
+}
+
+.shop-img :deep(.el-image) {
+  width: 100%;
+  height: 100%;
+  transition: transform 0.5s ease;
+}
+
+.shop-img :deep(.el-image__inner) {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+.shop-card:hover .shop-img :deep(.el-image) {
+  transform: scale(1.05);
 }
 
 .shop-info {
-  padding: 20px 15px 15px;
+  padding: 16px;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  min-height: 120px;
+  background: linear-gradient(to bottom, #ffffff 0%, #fdfcfa 100%);
 }
 
 .shop-header-info {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-  flex-wrap: wrap;
+  align-items: flex-start;
+  margin-bottom: 10px;
+  gap: 8px;
 }
 
 .shop-name {
   margin: 0;
-  color: #8b4513;
-  font-size: 18px;
-  font-weight: bold;
+  color: #5c3a1e;
+  font-size: 17px;
+  font-weight: 600;
   word-wrap: break-word;
-  line-height: 1.3;
+  line-height: 1.4;
   flex: 1;
-  margin-right: 10px;
+  letter-spacing: 0.5px;
 }
 
 .shop-rating {
@@ -416,8 +450,11 @@ const logout = () => {
   gap: 4px;
   white-space: nowrap;
   flex-shrink: 0;
-  transform: scale(0.8);
-  transform-origin: right center;
+  transform: scale(0.85);
+  transform-origin: right top;
+  background: rgba(255, 193, 7, 0.15);
+  padding: 2px 8px;
+  border-radius: 12px;
 }
 
 .review-count {
@@ -427,8 +464,9 @@ const logout = () => {
 
 /* 店铺介绍部分 */
 .shop-description-section {
-  margin: 16px 0 12px;
+  margin-top: 8px;
   flex-grow: 1;
+  position: relative;
 }
 
 .description-title {
@@ -441,15 +479,14 @@ const logout = () => {
 .description-content {
   margin: 0;
   color: #666;
-  line-height: 1.5;
-  font-size: 14px;
+  line-height: 1.6;
+  font-size: 13px;
   overflow: hidden;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
-  display: box;
-  box-orient: vertical;
   line-clamp: 3;
+  text-align: justify;
 }
 
 .no-shops {
@@ -476,12 +513,14 @@ const logout = () => {
 @media (max-width: 1024px) {
   .shop-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
   }
 }
 
 @media (max-width: 768px) {
   .shop-grid {
     grid-template-columns: 1fr;
+    gap: 16px;
   }
 
   .nav-container {
@@ -500,11 +539,18 @@ const logout = () => {
   }
 
   .shop-img {
-    height: 160px;
+    height: 200px;
   }
 
-  .shop-desc {
-    height: auto;
+  .shop-info {
+    padding: 14px;
+  }
+
+  .shop-name {
+    font-size: 16px;
+  }
+
+  .description-content {
     -webkit-line-clamp: 2;
     line-clamp: 2;
   }
