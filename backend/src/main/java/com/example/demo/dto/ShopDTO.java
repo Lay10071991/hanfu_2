@@ -1,6 +1,7 @@
 package com.example.demo.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class ShopDTO {
     private Long id;
@@ -15,6 +16,7 @@ public class ShopDTO {
     private Long userId;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
+    private List<String> hanfuImages;
     
     // Getters and Setters
     public Long getId() {
@@ -111,5 +113,13 @@ public class ShopDTO {
     
     public void setUpdateTime(LocalDateTime updateTime) {
         this.updateTime = updateTime;
+    }
+    
+    public List<String> getHanfuImages() {
+        return hanfuImages;
+    }
+    
+    public void setHanfuImages(List<String> hanfuImages) {
+        this.hanfuImages = hanfuImages;
     }
 }

@@ -52,6 +52,7 @@ public class ShopService {
         dto.setUserId(shop.getUserId());
         dto.setCreateTime(shop.getCreateTime());
         dto.setUpdateTime(shop.getUpdateTime());
+        dto.setHanfuImages(shop.getHanfuImages());
         
         // 从评分表获取评分数据
         ShopRating rating = shopRatingService.getRatingByShopId(shop.getId());
@@ -80,6 +81,7 @@ public class ShopService {
             shop.setContact(shopDetails.getContact());
             shop.setPriceRange(shopDetails.getPriceRange());
             shop.setUserId(shopDetails.getUserId());
+            shop.setHanfuImages(shopDetails.getHanfuImages());
             return shopRepository.save(shop);
         }
         return null;

@@ -271,6 +271,7 @@ const loadShop = async (shopId) => {
         priceRange: data.priceRange || "中档",
         address: data.address || "暂无地址信息",
         contact: data.contact || "暂无联系方式",
+        hanfuImages: data.hanfuImages || [],
       };
 
       // 加载店铺图片
@@ -294,12 +295,11 @@ const loadShop = async (shopId) => {
 // 从后端加载店铺图片
 const loadShopImages = async (shopId) => {
   try {
-    const response = await fetch(`http://localhost:8082/api/shop-images/shop/${shopId}`);
-    if (response.ok) {
-      const data = await response.json();
-      shopImages.value = data.map((img) => ({
-        url: getImageUrl(img.imageUrl),
-        description: img.description || "",
+    // 从店铺数据中获取汉服展示图片
+    if (shop.value && shop.value.hanfuImages) {
+      shopImages.value = shop.value.hanfuImages.map((imageUrl, index) => ({
+        url: getImageUrl(imageUrl),
+        description: `汉服展示 ${index + 1}`,
       }));
     }
   } catch (error) {

@@ -2,6 +2,7 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 public class Shop {
@@ -25,6 +26,9 @@ public class Shop {
     
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
+    
+    @ElementCollection
+    private List<String> hanfuImages;
     
     @PrePersist
     protected void onCreate() {
@@ -116,5 +120,13 @@ public class Shop {
     
     public void setUpdateTime(LocalDateTime updateTime) {
         this.updateTime = updateTime;
+    }
+    
+    public List<String> getHanfuImages() {
+        return hanfuImages;
+    }
+    
+    public void setHanfuImages(List<String> hanfuImages) {
+        this.hanfuImages = hanfuImages;
     }
 }

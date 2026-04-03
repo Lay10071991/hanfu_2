@@ -235,33 +235,7 @@ export default {
           console.error("加载店铺失败:", error);
         });
     },
-    loadServices(shop) {
-      if (!shop || !shop.id) {
-        return;
-      }
 
-      const API_BASE = "http://localhost:8082/api";
-      const url = `${API_BASE}/shop-services/shop/${shop.id}`;
-
-      fetch(url)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          return response.json();
-        })
-        .then((data) => {
-          if (Array.isArray(data)) {
-            shop.services = data;
-          } else {
-            shop.services = [];
-          }
-        })
-        .catch((error) => {
-          console.error("加载服务项目失败:", error);
-          shop.services = [];
-        });
-    },
     showAddDialog() {
       this.isEdit = false;
       this.form = {
