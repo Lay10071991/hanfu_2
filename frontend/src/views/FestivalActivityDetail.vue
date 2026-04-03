@@ -270,6 +270,9 @@ const registrationCount = ref(0);
 const comments = ref([]);
 
 onMounted(() => {
+  // 滚动到页面顶部
+  window.scrollTo({ top: 0, behavior: "auto" });
+
   const savedUsername = localStorage.getItem("username");
   if (savedUsername) {
     username.value = savedUsername;
@@ -582,10 +585,6 @@ const goBack = () => {
     // 否则，使用默认的返回方法
     router.back();
   }
-  // 滚动到顶部
-  setTimeout(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, 100);
 };
 
 const logout = () => {

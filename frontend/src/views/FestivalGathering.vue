@@ -151,8 +151,8 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
-import { useRouter } from "vue-router";
+import { ref, computed, onMounted, onBeforeUnmount, nextTick } from "vue";
+import { useRouter, onBeforeRouteLeave } from "vue-router";
 import { ElMessage, ElMessageBox } from "element-plus";
 import {
   ArrowLeft,
@@ -167,6 +167,22 @@ import {
 import { getImageUrl } from "../utils/imageHelper.js";
 
 const router = useRouter();
+
+// 禁用浏览器自动滚动恢复
+if ("scrollRestoration" in history) {
+  history.scrollRestoration = "manual";
+}
+
+// 保存滚动位置信息（在组件渲染之前读取）
+const savedScrollPosImmediate = sessionStorage.getItem("festivalGatheringScrollPos");
+const savedPageImmediate = sessionStorage.getItem("festivalGatheringCurrentPage");
+if (savedPageImmediate) {
+  sessionStorage.removeItem("festivalGatheringCurrentPage");
+}
+if (savedScrollPosImmediate) {
+  sessionStorage.removeItem("festivalGatheringScrollPos");
+}
+
 const username = ref("");
 
 // 搜索和筛选
@@ -263,6 +279,17 @@ onMounted(async () => {
   await loadFestivals();
   // 加载用户报名状态
   await loadUserSignUpStatus();
+
+  // 恢复页码
+  if (savedPageImmediate) {
+    currentPage.value = parseInt(savedPageImmediate);
+  }
+
+  // 恢复滚动位置（在 DOM 渲染完成后）
+  if (savedScrollPosImmediate) {
+    await nextTick();
+    window.scrollTo(0, parseInt(savedScrollPosImmediate));
+  }
 });
 
 // 方法
@@ -377,12 +404,7 @@ const filterActivities = () => {
 };
 
 const viewFestivalDetail = (id) => {
-  // 跳转到节庆活动详情页（对应图二的页面）
   router.push(`/festival-activity/${id}`);
-  // 滚动到顶部
-  setTimeout(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, 100);
 };
 
 // 处理报名
@@ -494,10 +516,6 @@ const handleCurrentChange = (page) => {
 
 const goBack = () => {
   router.back();
-  // 滚动到顶部
-  setTimeout(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, 100);
 };
 
 const logout = () => {
@@ -507,6 +525,19 @@ const logout = () => {
   ElMessage.success("退出登录成功");
   router.push("/login");
 };
+
+onBeforeRouteLeave((to, from, next) => {
+  if (to.path.startsWith("/festival-activity/")) {
+    // 跳转到详情页，保存滚动位置
+    sessionStorage.setItem("festivalGatheringScrollPos", window.scrollY);
+    sessionStorage.setItem("festivalGatheringCurrentPage", currentPage.value);
+  } else {
+    // 跳转到其他页面，清除保存的滚动位置
+    sessionStorage.removeItem("festivalGatheringScrollPos");
+    sessionStorage.removeItem("festivalGatheringCurrentPage");
+  }
+  next();
+});
 </script>
 
 <style scoped>
