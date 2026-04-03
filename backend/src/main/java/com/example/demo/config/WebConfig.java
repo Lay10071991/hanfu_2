@@ -70,5 +70,9 @@ public class WebConfig implements WebMvcConfigurer {
         // 配置节日习俗图片
         registry.addResourceHandler("/uploads/festival_custom/**")
                 .addResourceLocations("file:E:/hanfu-cultural-platform/backend/uploads/festival_custom/");
+        
+        // 配置节庆雅集活动图片
+        registry.addResourceHandler("/uploads/festival_gathering/**")
+                .addResourceLocations("file:E:/hanfu-cultural-platform/backend/uploads/festival_gathering/");
     }
 }
