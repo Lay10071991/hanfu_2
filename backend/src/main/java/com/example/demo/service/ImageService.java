@@ -2,6 +2,8 @@ package com.example.demo.service;
 
 import com.example.demo.entity.Image;
 import com.example.demo.repository.ImageRepository;
+import net.coobird.thumbnailator.Thumbnails;
+import net.coobird.thumbnailator.geometry.Positions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -69,7 +71,9 @@ public class ImageService {
 
         // 保存文件
         Path filePath = targetDir.resolve(filename);
-        Files.write(filePath, file.getBytes());
+        
+        // 处理图片，确保完整展示
+        processImage(file, filePath.toFile());
 
         // 保存图片信息到数据库
         Image imageEntity = new Image();
@@ -77,12 +81,49 @@ public class ImageService {
         imageEntity.setCategory(category);
         imageEntity.setFileName(filename);
         imageEntity.setMimeType(file.getContentType());
-        imageEntity.setFileSize(file.getSize());
+        imageEntity.setFileSize(new File(filePath.toString()).length());
         imageEntity.setStatus("active");
         imageRepository.save(imageEntity);
 
         // 返回相对路径
         return "/" + category + "/" + filename;
+    }
+    
+    /**
+     * 处理图片，确保完整展示
+     *
+     * @param file 图片文件
+     * @param targetFile 目标文件
+     * @throws IOException 当文件操作失败时
+     */
+    private void processImage(MultipartFile file, File targetFile) throws IOException {
+        // 读取图片
+        java.awt.image.BufferedImage image = javax.imageio.ImageIO.read(file.getInputStream());
+        
+        if (image != null) {
+            int width = image.getWidth();
+            int height = image.getHeight();
+            
+            // 确定目标尺寸
+            int targetWidth = 800;
+            int targetHeight = 600;
+            
+            // 计算缩放比例
+            double scale = Math.min((double) targetWidth / width, (double) targetHeight / height);
+            
+            // 计算新的尺寸
+            int newWidth = (int) (width * scale);
+            int newHeight = (int) (height * scale);
+            
+            // 裁剪并保存图片
+            Thumbnails.of(file.getInputStream())
+                .size(newWidth, newHeight)
+                .outputFormat(getFileExtension(file.getOriginalFilename()))
+                .toFile(targetFile);
+        } else {
+            // 如果无法读取图片，直接保存原始文件
+            Files.write(targetFile.toPath(), file.getBytes());
+        }
     }
 
     /**
@@ -110,7 +151,9 @@ public class ImageService {
 
         // 保存文件
         Path filePath = targetDir.resolve(filename);
-        Files.write(filePath, file.getBytes());
+        
+        // 处理图片，确保完整展示
+        processImage(file, filePath.toFile());
 
         // 保存图片信息到数据库
         Image imageEntity = new Image();
@@ -118,7 +161,7 @@ public class ImageService {
         imageEntity.setCategory(category);
         imageEntity.setFileName(filename);
         imageEntity.setMimeType(file.getContentType());
-        imageEntity.setFileSize(file.getSize());
+        imageEntity.setFileSize(new File(filePath.toString()).length());
         imageEntity.setStatus("active");
         imageRepository.save(imageEntity);
 

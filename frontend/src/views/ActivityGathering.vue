@@ -147,7 +147,7 @@
     >
       <div v-if="selectedExhibition" class="exhibition-detail-dialog">
         <div class="detail-header">
-          <el-image :src="selectedExhibition.image" fit="cover" class="detail-image" />
+          <el-image :src="selectedExhibition.image" fit="contain" class="detail-image" />
         </div>
         <div class="detail-content">
           <div class="detail-info">
@@ -281,6 +281,13 @@
     <!-- 讲座详情对话框 -->
     <el-dialog v-model="showLectureDialog" :title="selectedLecture?.title" width="700px" center>
       <div v-if="selectedLecture" class="lecture-detail-content">
+        <div class="detail-image">
+          <el-image
+            :src="selectedLecture.image"
+            fit="contain"
+            style="width: 100%; max-height: 300px; border-radius: 8px; background-color: #f9f5f0"
+          />
+        </div>
         <div class="detail-info-section">
           <div class="info-row">
             <div class="info-item">
@@ -1127,6 +1134,13 @@ const logout = () => {
   overflow: hidden;
   margin-right: 15px;
   flex-shrink: 0;
+  background-color: #f9f5f0;
+}
+
+.activity-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .activity-info h4 {
@@ -1205,9 +1219,19 @@ const logout = () => {
 
 .detail-image {
   width: 100%;
-  height: 300px;
+  height: 200px;
   border-radius: 8px;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f9f5f0;
+}
+
+.detail-image img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
 }
 
 .detail-content {

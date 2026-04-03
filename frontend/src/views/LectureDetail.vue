@@ -37,7 +37,7 @@
             <div class="lecture-image">
               <el-image
                 :src="lecture.detailImage || lecture.image"
-                fit="cover"
+                fit="contain"
                 class="main-image"
               />
             </div>
@@ -89,7 +89,7 @@
               <div class="action-buttons">
                 <el-button type="primary" size="large" @click="handleSignUp" :disabled="isSignedUp">
                   <el-icon><Check /></el-icon>
-                  {{ isSignedUp ? '已报名' : '立即报名' }}
+                  {{ isSignedUp ? "已报名" : "立即报名" }}
                 </el-button>
               </div>
             </div>
@@ -146,8 +146,8 @@
     >
       <div class="dialog-content">
         <el-icon color="#67C23A" size="60px"><CircleCheck /></el-icon>
-        <p style="margin-top: 20px; text-align: center;">恭喜您成功报名参加讲座！</p>
-        <p style="color: #666; font-size: 14px; text-align: center; margin-top: 10px;">
+        <p style="margin-top: 20px; text-align: center">恭喜您成功报名参加讲座！</p>
+        <p style="color: #666; font-size: 14px; text-align: center; margin-top: 10px">
           讲座开始前会通过短信/邮箱提醒您
         </p>
       </div>
@@ -161,9 +161,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted} from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ref, onMounted } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import { ElMessage, ElMessageBox } from "element-plus";
 import {
   ArrowLeft,
   Calendar,
@@ -173,105 +173,104 @@ import {
   Check,
   Document,
   Warning,
-  CircleCheck
-} from '@element-plus/icons-vue'
+  CircleCheck,
+} from "@element-plus/icons-vue";
 
-const router = useRouter()
-const route = useRoute()
-const username = ref('')
+const router = useRouter();
+const route = useRoute();
+const username = ref("");
 
 // 讲座数据
-const lecture = ref(null)
-const isSignedUp = ref(false)
-const signUpDialogVisible = ref(false)
+const lecture = ref(null);
+const isSignedUp = ref(false);
+const signUpDialogVisible = ref(false);
 
 // 图片URL处理函数
 const getImageUrl = (url) => {
-  if (!url) return ''
-  if (url.startsWith('http://') || url.startsWith('https://')) {
-    return url
+  if (!url) return "";
+  if (url.startsWith("http://") || url.startsWith("https://")) {
+    return url;
   }
-  const path = url.startsWith('/') ? url : `/${url}`
-  return `http://localhost:8082${path}`
-}
+  const path = url.startsWith("/") ? url : `/${url}`;
+  return `http://localhost:8082${path}`;
+};
 
 onMounted(() => {
-  const savedUsername = localStorage.getItem('username')
+  const savedUsername = localStorage.getItem("username");
   if (savedUsername) {
-    username.value = savedUsername
+    username.value = savedUsername;
   }
 
   // 根据路由参数加载讲座数据
-  const lectureId = parseInt(route.params.id) || 1
-  loadLectureData(lectureId)
-})
+  const lectureId = parseInt(route.params.id) || 1;
+  loadLectureData(lectureId);
+});
 
 const loadLectureData = async (id) => {
   try {
-    const response = await fetch(`http://localhost:8082/api/lectures/${id}`)
+    const response = await fetch(`http://localhost:8082/api/lectures/${id}`);
     if (response.ok) {
-      const data = await response.json()
+      const data = await response.json();
       lecture.value = {
         id: data.id,
         title: data.title,
-        speaker: data.speaker || '待定',
-        speakerTitle: data.speakerBio || '资深汉服文化研究者',
-        speakerAvatar: `https://placehold.co/60/8B4513/ffffff?text=${data.speaker?.charAt(0) || '讲'}`,
-        date: data.startTime ? new Date(data.startTime).toLocaleDateString('zh-CN') : '待定',
-        time: data.startTime && data.endTime
-          ? `${new Date(data.startTime).toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })}-${new Date(data.endTime).toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })}`
-          : '待定',
-        location: data.location || '待定',
-        image: getImageUrl(data.image) || 'http://localhost:8082/uploads/talk/1.jpg',
-        detailImage: getImageUrl(data.image) || 'http://localhost:8082/uploads/talk/1.jpg',
-        description: data.description || '',
-        detailDescription: data.content || data.description || '',
-        participants: data.currentParticipants || 0
-      }
+        speaker: data.speaker || "待定",
+        speakerTitle: data.speakerBio || "资深汉服文化研究者",
+        speakerAvatar: `https://placehold.co/60/8B4513/ffffff?text=${data.speaker?.charAt(0) || "讲"}`,
+        date: data.startTime ? new Date(data.startTime).toLocaleDateString("zh-CN") : "待定",
+        time:
+          data.startTime && data.endTime
+            ? `${new Date(data.startTime).toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" })}-${new Date(data.endTime).toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" })}`
+            : "待定",
+        location: data.location || "待定",
+        image: getImageUrl(data.image) || "http://localhost:8082/uploads/talk/1.jpg",
+        detailImage: getImageUrl(data.image) || "http://localhost:8082/uploads/talk/1.jpg",
+        description: data.description || "",
+        detailDescription: data.content || data.description || "",
+        participants: data.currentParticipants || 0,
+      };
     }
   } catch (error) {
-    console.error('加载讲座数据失败:', error)
+    console.error("加载讲座数据失败:", error);
   }
-}
+};
 
 const goToProfile = () => {
-  const role = localStorage.getItem('role')
-  if (role === 'shop') {
-    router.push('/shop-profile')
+  const role = localStorage.getItem("role");
+  if (role === "shop") {
+    router.push("/shop-profile");
   } else {
-    router.push('/profile')
+    router.push("/profile");
   }
-}
+};
 
 const handleSignUp = () => {
-  if (isSignedUp.value) return
+  if (isSignedUp.value) return;
 
-  ElMessageBox.confirm(
-    '确定要报名参加此讲座吗？',
-    '报名确认',
-    {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'info'
-    }
-  ).then(() => {
-    isSignedUp.value = true
-    if (lecture.value) {
-      lecture.value.participants++
-    }
-    signUpDialogVisible.value = true
-  }).catch(() => {
-    // 用户取消
+  ElMessageBox.confirm("确定要报名参加此讲座吗？", "报名确认", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "info",
   })
-}
+    .then(() => {
+      isSignedUp.value = true;
+      if (lecture.value) {
+        lecture.value.participants++;
+      }
+      signUpDialogVisible.value = true;
+    })
+    .catch(() => {
+      // 用户取消
+    });
+};
 
 const logout = () => {
-  localStorage.removeItem('isLoggedIn')
-  localStorage.removeItem('username')
-  localStorage.removeItem('role')
-  ElMessage.success('退出登录成功')
-  router.push('/login')
-}
+  localStorage.removeItem("isLoggedIn");
+  localStorage.removeItem("username");
+  localStorage.removeItem("role");
+  ElMessage.success("退出登录成功");
+  router.push("/login");
+};
 </script>
 
 <style scoped>
@@ -405,7 +404,8 @@ const logout = () => {
 .main-image {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  background-color: #f9f5f0;
 }
 
 .lecture-basic-info {

@@ -42,7 +42,7 @@
             :key="exhibition.id"
           >
             <div class="exhibition-img">
-              <el-image :src="exhibition.image" fit="cover" />
+              <el-image :src="exhibition.image" fit="contain" />
             </div>
             <div class="exhibition-content">
               <h3>{{ exhibition.title }}</h3>
@@ -89,7 +89,7 @@
         <div class="detail-header">
           <el-image
             :src="selectedExhibition.detailImage || selectedExhibition.image"
-            fit="cover"
+            fit="contain"
             class="detail-image"
           />
         </div>
@@ -626,8 +626,19 @@ const logout = () => {
 }
 
 .exhibition-img {
-  height: 200px;
+  width: 100%;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f9f5f0;
+}
+
+.exhibition-img img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  display: block;
 }
 
 .exhibition-content {
@@ -710,9 +721,19 @@ const logout = () => {
 
 .detail-image {
   width: 100%;
-  height: 300px;
+  height: 200px;
   border-radius: 8px;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f9f5f0;
+}
+
+.detail-image img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
 }
 
 .detail-content {

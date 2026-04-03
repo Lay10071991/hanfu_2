@@ -735,7 +735,7 @@ const logout = () => {
 
 .lecture-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 30px;
 }
 
@@ -754,16 +754,20 @@ const logout = () => {
 
 .lecture-image {
   width: 100%;
-  height: 200px;
   margin-bottom: 20px;
   overflow: hidden;
   border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f9f5f0;
 }
 
 .lecture-image img {
   width: 100%;
-  height: 100%;
+  height: auto;
   object-fit: cover;
+  display: block;
 }
 
 .lecture-header {
@@ -994,13 +998,15 @@ const logout = () => {
   gap: 10px;
 }
 
+@media (max-width: 1200px) {
+  .lecture-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 768px) {
   .lecture-grid {
     grid-template-columns: 1fr;
-  }
-
-  .lecture-image {
-    height: 150px;
   }
 
   .lecture-info {
