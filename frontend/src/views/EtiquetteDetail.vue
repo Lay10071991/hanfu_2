@@ -31,18 +31,8 @@
           <h2 class="page-title">古代礼容仪态</h2>
         </div>
 
-        <!-- 礼容仪态分类 -->
+        <!-- 礼容仪态列表 -->
         <div class="category-section">
-          <div class="category-tabs">
-            <el-tabs v-model="activeCategory" @tab-click="handleCategoryChange">
-              <el-tab-pane label="全部礼仪" name="all"></el-tab-pane>
-              <el-tab-pane label="站立礼仪" name="standing"></el-tab-pane>
-              <el-tab-pane label="行走礼仪" name="walking"></el-tab-pane>
-              <el-tab-pane label="坐姿礼仪" name="sitting"></el-tab-pane>
-              <el-tab-pane label="拜礼" name="worship"></el-tab-pane>
-            </el-tabs>
-          </div>
-
           <!-- 礼仪列表 -->
           <div class="etiquette-list">
             <div class="etiquette-item" v-for="item in paginatedEtiquettes" :key="item.id">
@@ -79,7 +69,7 @@
           <el-pagination
             v-model:current-page="currentPage"
             v-model:page-size="pageSize"
-            :page-sizes="[6, 12]"
+            :page-sizes="[9, 18, 27]"
             :total="totalItems"
             layout="total, prev, pager, next, jumper"
             @current-change="handleCurrentChange"
@@ -166,10 +156,9 @@ const router = useRouter();
 const username = ref("");
 const dialogVisible = ref(false);
 
-// 分类和分页
-const activeCategory = ref("all");
+// 分页
 const currentPage = ref(1);
-const pageSize = ref(6);
+const pageSize = ref(9);
 const totalItems = ref(0);
 
 // 当前选中的礼仪
@@ -206,11 +195,19 @@ const loadEtiquettes = async () => {
         steps: item.steps ? item.steps.split("|") : [],
         note: item.note || "",
       }));
+      totalItems.value = etiquettes.value.length;
     }
   } catch (error) {
     console.error("加载礼仪数据失败:", error);
   }
 };
+
+// 计算分页后的礼仪
+const paginatedEtiquettes = computed(() => {
+  const start = (currentPage.value - 1) * pageSize.value;
+  const end = start + pageSize.value;
+  return etiquettes.value.slice(start, end);
+});
 
 onMounted(() => {
   const savedUsername = localStorage.getItem("username");
@@ -220,35 +217,7 @@ onMounted(() => {
   loadEtiquettes();
 });
 
-// 计算过滤后的礼仪（无副作用）
-const filteredEtiquettes = computed(() => {
-  let filtered = etiquettes.value;
-
-  // 按分类过滤
-  if (activeCategory.value !== "all") {
-    filtered = filtered.filter((item) => item.category === activeCategory.value);
-  }
-
-  return filtered;
-});
-
-// 计算分页后的礼仪
-const paginatedEtiquettes = computed(() => {
-  const start = (currentPage.value - 1) * pageSize.value;
-  const end = start + pageSize.value;
-  return filteredEtiquettes.value.slice(start, end);
-});
-
-// 监听过滤后的数据变化，更新总数
-watch(
-  filteredEtiquettes,
-  (newFiltered) => {
-    totalItems.value = newFiltered.length;
-  },
-  { immediate: true },
-);
-
-// 分类类型和文本
+// 分类类型和文本（用于弹窗显示）
 const getCategoryType = (category) => {
   const typeMap = {
     standing: "success",
@@ -280,15 +249,7 @@ const handleClose = (done) => {
   done();
 };
 
-const handleCategoryChange = () => {
-  currentPage.value = 1;
-};
-
-const handleSizeChange = (size) => {
-  pageSize.value = size;
-  currentPage.value = 1;
-};
-
+// 分页处理
 const handleCurrentChange = (page) => {
   currentPage.value = page;
 };
@@ -432,36 +393,6 @@ const logout = () => {
   border-radius: 12px;
   padding: 30px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-}
-
-.category-tabs {
-  margin-bottom: 30px;
-}
-
-:deep(.el-tabs__header) {
-  margin-bottom: 0;
-}
-
-:deep(.el-tabs__nav-wrap::after) {
-  background-color: #e8e8e8;
-}
-
-:deep(.el-tabs__active-bar) {
-  background-color: #8b4513;
-}
-
-:deep(.el-tabs__item) {
-  font-size: 16px;
-  color: #666;
-}
-
-:deep(.el-tabs__item.is-active) {
-  color: #8b4513;
-  font-weight: 600;
-}
-
-:deep(.el-tabs__item:hover) {
-  color: #8b4513;
 }
 
 .etiquette-list {
