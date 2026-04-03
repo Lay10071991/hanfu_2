@@ -217,6 +217,7 @@ import { ref, onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { ArrowLeft, Calendar, Location, Ticket, User } from "@element-plus/icons-vue";
+import { getImageUrl } from "../utils/imageHelper.js";
 
 const router = useRouter();
 const username = ref("");
@@ -294,8 +295,9 @@ const loadExhibitions = async () => {
         title: exhibition.title,
         date: formatDateRange(exhibition.startDate, exhibition.endDate),
         location: exhibition.location || "待定",
-        image: exhibition.image || "http://localhost:8082/uploads/exhibition-1.png",
-        detailImage: exhibition.image || "http://localhost:8082/uploads/exhibition-1.png",
+        image: getImageUrl(exhibition.image) || "http://localhost:8082/uploads/exhibition-1.png",
+        detailImage:
+          getImageUrl(exhibition.image) || "http://localhost:8082/uploads/exhibition-1.png",
         description: exhibition.description || "",
         detailDescription: exhibition.description || "",
         ticket: exhibition.ticketPrice ? `¥${exhibition.ticketPrice}` : "免费",

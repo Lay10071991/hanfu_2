@@ -74,5 +74,9 @@ public class WebConfig implements WebMvcConfigurer {
         // 配置节庆雅集活动图片
         registry.addResourceHandler("/uploads/festival_gathering/**")
                 .addResourceLocations("file:E:/hanfu-cultural-platform/backend/uploads/festival_gathering/");
+        
+        // 配置展览图片
+        registry.addResourceHandler("/uploads/exhibition/**")
+                .addResourceLocations("file:E:/hanfu-cultural-platform/backend/uploads/exhibition/");
     }
 }

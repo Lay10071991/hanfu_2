@@ -555,7 +555,7 @@ const loadActivities = async () => {
         title: exhibition.title,
         date: formatDateRange(exhibition.startDate, exhibition.endDate),
         location: exhibition.location || "待定",
-        image: exhibition.image || "http://localhost:8082/uploads/exhibition-1.png",
+        image: getImageUrl(exhibition.image) || "http://localhost:8082/uploads/exhibition-1.png",
         description: exhibition.description || "",
         organizer: exhibition.organizer || "汉服文化中心",
         ticket: exhibition.ticketPrice ? `¥${exhibition.ticketPrice}` : "免费",
