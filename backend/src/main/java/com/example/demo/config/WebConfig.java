@@ -43,6 +43,10 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/etiquette/**")
                 .addResourceLocations("file:E:/hanfu-cultural-platform-3/hanfu-cultural-platform/hanfu-cultural-platform/frontend/public/etiquette/");
         
+        // 配置礼仪姿势图片
+        registry.addResourceHandler("/etiquette-posture/**")
+                .addResourceLocations("file:E:/hanfu-cultural-platform/backend/uploads/etiquette_posture/");
+        
         // 配置古代节俗礼仪图片
         registry.addResourceHandler("/festivals/**")
                 .addResourceLocations("file:E:/hanfu-cultural-platform-3/hanfu-cultural-platform/hanfu-cultural-platform/frontend/public/festivals/");
@@ -62,5 +66,9 @@ public class WebConfig implements WebMvcConfigurer {
         // 配置社区互动帖子图片
         registry.addResourceHandler("/community-posts/**")
                 .addResourceLocations("file:E:/hanfu-cultural-platform-3/hanfu-cultural-platform/hanfu-cultural-platform/frontend/public/community-posts/");
+        
+        // 配置节日习俗图片
+        registry.addResourceHandler("/uploads/festival_custom/**")
+                .addResourceLocations("file:E:/hanfu-cultural-platform/backend/uploads/festival_custom/");
     }
 }

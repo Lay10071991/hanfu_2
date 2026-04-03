@@ -160,6 +160,7 @@ import { ref, computed, onMounted, watch, reactive } from "vue";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import { ArrowLeft, Picture } from "@element-plus/icons-vue";
+import { getImageUrl } from "../utils/imageHelper.js";
 
 const router = useRouter();
 const username = ref("");
@@ -198,7 +199,7 @@ const loadEtiquettes = async () => {
         period: item.period,
         category: item.category,
         image: item.image
-          ? `http://localhost:8082${item.image}`
+          ? getImageUrl(item.image)
           : `https://placehold.co/300x200/FFE4E1/000000?text=${item.name}`,
         description: item.description,
         features: item.features ? item.features.split("|") : [],
