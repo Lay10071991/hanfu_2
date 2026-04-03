@@ -5,6 +5,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 汉服形制分类实体
@@ -33,7 +34,7 @@ public class ShapeType {
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    @Column
+    @Column(length = 255)
     private String image;
 
     @Column(nullable = false)

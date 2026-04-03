@@ -105,7 +105,7 @@
     <el-dialog
       v-model="dialogVisible"
       :title="currentDetail.title"
-      width="65%"
+      width="80%"
       :before-close="handleClose"
       class="detail-dialog"
       destroy-on-close
@@ -122,14 +122,7 @@
         <div class="image-gallery" v-if="currentDetail.images && currentDetail.images.length > 0">
           <div class="image-grid">
             <div class="image-item" v-for="(image, index) in currentDetail.images" :key="index">
-              <el-image
-                :src="image.url"
-                :alt="image.alt"
-                fit="cover"
-                class="detail-image"
-                :preview-src-list="currentDetail.images.map((img) => img.url)"
-                :initial-index="index"
-              >
+              <el-image :src="image.url" :alt="image.alt" fit="contain" class="detail-image">
                 <template #error>
                   <div class="image-slot">
                     <el-icon><Picture /></el-icon>
@@ -137,7 +130,6 @@
                   </div>
                 </template>
               </el-image>
-              <div class="image-caption">{{ image.caption }}</div>
             </div>
           </div>
         </div>
@@ -323,21 +315,23 @@ const showDetail = async (type, item) => {
         const data = await response.json();
         // 解析特点（顿号分隔）
         const features = data.characteristics ? data.characteristics.split("、") : [];
-        // 构建图片数组（1-2张）
+        // 构建图片数组
         const images = [];
         if (data.image) {
+          // 从后端获取的图片
           images.push({
             url: data.image,
             alt: data.name,
             caption: data.name,
           });
+        } else {
+          // 如果没有图片，使用默认图片
+          images.push({
+            url: `https://placehold.co/400x300/8B4513/FFFFFF?text=${encodeURIComponent(data.name)}`,
+            alt: data.name,
+            caption: data.name,
+          });
         }
-        // 添加第二张图片
-        images.push({
-          url: `https://placehold.co/400x300/8B4513/FFFFFF?text=${encodeURIComponent(data.name + "展示")}`,
-          alt: data.name + "展示",
-          caption: data.name + "展示效果",
-        });
         // 构建详细内容
         Object.assign(currentDetail, {
           title: data.name,
@@ -894,12 +888,14 @@ const logout = () => {
 
 .detail-image {
   width: 100%;
-  height: 160px;
-  border-radius: 8px;
-  object-fit: cover;
+  height: 300px;
+  object-fit: contain;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .detail-image:hover {
@@ -920,7 +916,7 @@ const logout = () => {
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 160px;
+  height: 120px;
   background: #f5f7fa;
   color: #909399;
   flex-direction: column;
@@ -988,5 +984,90 @@ const logout = () => {
   .components-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* 弹窗样式优化 */
+:deep(.detail-dialog .el-dialog__header) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f8f5f0;
+  border-bottom: 1px solid #d4a76a;
+}
+
+:deep(.detail-dialog .el-dialog__title) {
+  color: #8b4513;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+}
+
+:deep(.detail-dialog .el-dialog__body) {
+  padding: 20px;
+  background-color: #fff;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #333;
+}
+
+:deep(.detail-dialog .el-dialog__footer) {
+  background-color: #f8f5f0;
+  border-top: 1px solid #d4a76a;
+  padding: 15px 20px;
+}
+
+.content-section {
+  margin-bottom: 20px;
+}
+
+.content-text {
+  line-height: 1.6;
+  color: #333;
+  font-size: 18px;
+}
+
+.content-text p {
+  margin: 0;
+}
+
+.image-gallery {
+  margin-top: 20px;
+}
+
+.image-grid {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 解决图片放大闪烁问题 */
+:deep(.el-image-viewer__img) {
+  transition: none !important;
+  animation: none !important;
+}
+
+:deep(.el-image-viewer__mask) {
+  transition: none !important;
+  animation: none !important;
+}
+
+:deep(.el-image-viewer__close) {
+  transition: none !important;
+  animation: none !important;
+}
+
+:deep(.el-image-viewer__actions) {
+  transition: none !important;
+  animation: none !important;
+}
+
+:deep(.el-image-viewer) {
+  transition: none !important;
+  animation: none !important;
+}
+
+:deep(.el-image-viewer__canvas) {
+  transition: none !important;
+  animation: none !important;
 }
 </style>
