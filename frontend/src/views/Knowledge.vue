@@ -152,7 +152,7 @@
           </div>
 
           <!-- 图案象征部分 -->
-          <div class="section pattern-symbolism-section">
+          <div id="pattern-symbolism" class="section pattern-symbolism-section">
             <div class="section-header">
               <h3 class="section-title">
                 <el-icon><PictureFilled /></el-icon>
@@ -300,7 +300,7 @@ defineOptions({
 });
 
 const router = useRouter();
-// eslint-disable-next-line no-unused-vars
+
 const route = useRoute();
 // TODO: 后续会使用这个 route 变量
 const username = ref("汉服爱好者");
@@ -468,6 +468,19 @@ onMounted(() => {
   if (savedUsername) {
     username.value = savedUsername;
   }
+
+  // 检查路由查询参数，如果有scroll参数，滚动到指定位置
+  if (route.query.scroll) {
+    setTimeout(() => {
+      const scrollPosition = parseInt(route.query.scroll);
+      if (!isNaN(scrollPosition)) {
+        window.scrollTo(0, scrollPosition);
+      }
+    }, 100);
+  } else {
+    // 确保页面加载时滚动到顶部
+    window.scrollTo(0, 0);
+  }
 });
 
 const goToProfile = () => {
@@ -592,11 +605,14 @@ const viewMore = (type) => {
 
     // 方案1：跳转到第一个图案的详细页面
     if (patterns.value.length > 0) {
+      // 记录当前页面的滚动位置
+      const scrollPosition = window.scrollY;
       const firstPattern = patterns.value[0];
       router
         .push({
           name: "PatternSymbolismDetail",
           params: { id: firstPattern.id },
+          query: { from: "knowledge-patterns", scroll: scrollPosition },
         })
         .then(() => {
           console.log("跳转到图案详细页面成功");

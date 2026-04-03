@@ -90,6 +90,37 @@
             </div>
           </div>
         </div>
+
+        <!-- 汉服展示 -->
+        <div class="section">
+          <h3 class="section-title">
+            <el-icon><PictureFilled /></el-icon>
+            千载衣冠 - 汉服展示
+          </h3>
+          <div class="hanfu-grid">
+            <div
+              class="hanfu-card"
+              v-for="hanfu in hanfuDisplays"
+              :key="hanfu.id"
+              @click="showHanfuDetail(hanfu)"
+            >
+              <div class="hanfu-image">
+                <el-image :src="getImageUrl(hanfu.image)" :alt="hanfu.name" fit="cover">
+                  <template #error>
+                    <div class="image-slot">
+                      <el-icon><Picture /></el-icon>
+                      <div>{{ hanfu.name }}</div>
+                    </div>
+                  </template>
+                </el-image>
+              </div>
+              <div class="hanfu-info">
+                <h4>{{ hanfu.name }}</h4>
+                <p>{{ hanfu.description }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -155,6 +186,7 @@ import {
   SetUp,
   Goods,
   Picture,
+  PictureFilled,
   InfoFilled,
   Collection,
   Clock,
@@ -228,6 +260,9 @@ const setDefaultShapeTypes = () => {
 // 服饰部件数据 - 从后端加载
 const components = ref([]);
 
+// 汉服展示数据 - 从后端加载
+const hanfuDisplays = ref([]);
+
 // 加载服饰部件数据
 const loadComponents = async () => {
   try {
@@ -249,6 +284,21 @@ const loadComponents = async () => {
     console.error("加载服饰部件数据失败:", error);
     // 使用默认数据
     setDefaultComponents();
+  }
+};
+
+// 加载汉服展示数据
+const loadHanfuDisplays = async () => {
+  try {
+    const response = await fetch("http://localhost:8082/api/hanfu-display");
+    if (response.ok) {
+      const data = await response.json();
+      hanfuDisplays.value = data;
+    } else {
+      console.error("加载汉服展示数据失败，响应状态:", response.status);
+    }
+  } catch (error) {
+    console.error("加载汉服展示数据失败:", error);
   }
 };
 
@@ -387,6 +437,44 @@ const showDetail = async (type, item) => {
   }
 };
 
+// 显示汉服详情
+const showHanfuDetail = async (hanfu) => {
+  try {
+    // 从后端获取汉服详细信息
+    const response = await fetch(`http://localhost:8082/api/hanfu-display/${hanfu.id}`);
+    if (response.ok) {
+      const data = await response.json();
+      // 从后端获取汉服图片
+      const imagesResponse = await fetch(
+        `http://localhost:8082/api/hanfu-display/${hanfu.id}/images`,
+      );
+      const imagesData = await imagesResponse.json();
+      // 构建图片数组
+      const images = imagesData.map((img) => ({
+        url: getImageUrl(img.imagePath),
+        alt: hanfu.name,
+        caption: `${hanfu.name} 图片 ${img.sortOrder}`,
+      }));
+      // 构建详细内容
+      Object.assign(currentDetail, {
+        title: data.name,
+        description: data.description,
+        period: "",
+        features: [],
+        content: data.content || "",
+        images: images,
+      });
+      dialogVisible.value = true;
+    } else {
+      ElMessage.error("获取汉服详细信息失败");
+    }
+  } catch (error) {
+    console.error("获取汉服详细信息失败:", error);
+    // 如果后端接口不可用，显示提示信息
+    ElMessage.info("详细内容正在完善中...");
+  }
+};
+
 // 关闭弹窗
 const handleClose = (done) => {
   done();
@@ -404,6 +492,9 @@ onMounted(async () => {
 
   // 加载服饰部件数据
   await loadComponents();
+
+  // 加载汉服展示数据
+  await loadHanfuDisplays();
 });
 
 const goToProfile = () => {
@@ -758,6 +849,77 @@ const logout = () => {
   background-color: #f5f5f5;
   padding: 2px 6px;
   border-radius: 3px;
+}
+
+/* 汉服展示样式 */
+.hanfu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.hanfu-card {
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  background-color: white;
+}
+
+.hanfu-card:hover {
+  border-color: #d4a76a;
+  box-shadow: 0 4px 15px rgba(139, 69, 19, 0.15);
+  transform: translateY(-3px);
+}
+
+.hanfu-image {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  background-color: #f5f5f5;
+}
+
+.hanfu-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.hanfu-card:hover .hanfu-image img {
+  transform: scale(1.05);
+}
+
+.hanfu-info {
+  padding: 15px;
+}
+
+.hanfu-info h4 {
+  margin: 0 0 8px 0;
+  color: #8b4513;
+  font-size: 16px;
+}
+
+.hanfu-info p {
+  margin: 0 0 10px 0;
+  color: #666;
+  font-size: 14px;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hanfu-type {
+  font-size: 12px;
+  color: #999;
+  background-color: #f5f5f5;
+  padding: 4px 8px;
+  border-radius: 4px;
+  display: inline-block;
 }
 
 /* 弹窗样式 */
