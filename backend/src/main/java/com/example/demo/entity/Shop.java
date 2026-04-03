@@ -27,8 +27,9 @@ public class Shop {
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
     
-    @ElementCollection
-    private List<String> hanfuImages;
+    // 暂时注释掉hanfuImages字段，避免Hibernate尝试访问不存在的表
+    // @ElementCollection
+    // private List<String> hanfuImages;
     
     @PrePersist
     protected void onCreate() {
@@ -122,11 +123,12 @@ public class Shop {
         this.updateTime = updateTime;
     }
     
-    public List<String> getHanfuImages() {
-        return hanfuImages;
-    }
+    // 暂时注释掉hanfuImages的getter和setter
+    // public List<String> getHanfuImages() {
+    //     return hanfuImages;
+    // }
     
-    public void setHanfuImages(List<String> hanfuImages) {
-        this.hanfuImages = hanfuImages;
-    }
+    // public void setHanfuImages(List<String> hanfuImages) {
+    //     this.hanfuImages = hanfuImages;
+    // }
 }
