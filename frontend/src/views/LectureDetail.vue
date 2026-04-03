@@ -185,24 +185,15 @@ const lecture = ref(null)
 const isSignedUp = ref(false)
 const signUpDialogVisible = ref(false)
 
-// 模拟讲座数据
-const lecturesData = [
-  {
-    id: 1,
-    title: '汉服文化讲座：从历史到现代的传承',
-    speaker: '张教授',
-    speakerTitle: '历史文化研究专家',
-    speakerAvatar: 'https://placehold.co/60/8B4513/ffffff?text=张',
-    date: '2023-11-20',
-    time: '14:00-16:00',
-    location: '南京大学报告厅',
-    image: 'https://placehold.co/100x80/FFF0F5/000000?text=讲座',
-    detailImage: 'https://placehold.co/800x400/98FB98/000000?text=汉服文化讲座',
-    description: '介绍汉服的历史演变、文化内涵及现代传承。',
-    detailDescription: '本讲座将深入探讨汉服从先秦时期到现代的完整发展历程，分析各个历史时期汉服的特点、文化内涵和社会意义。同时，讲座还将关注汉服在现代社会的复兴现象，探讨如何将传统服饰文化融入当代生活，实现传统文化的创造性转化和创新性发展。',
-    participants: 156
+// 图片URL处理函数
+const getImageUrl = (url) => {
+  if (!url) return ''
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return url
   }
-]
+  const path = url.startsWith('/') ? url : `/${url}`
+  return `http://localhost:8082${path}`
+}
 
 onMounted(() => {
   const savedUsername = localStorage.getItem('username')
@@ -215,10 +206,31 @@ onMounted(() => {
   loadLectureData(lectureId)
 })
 
-const loadLectureData = (id) => {
-  const foundLecture = lecturesData.find(l => l.id === id)
-  if (foundLecture) {
-    lecture.value = foundLecture
+const loadLectureData = async (id) => {
+  try {
+    const response = await fetch(`http://localhost:8082/api/lectures/${id}`)
+    if (response.ok) {
+      const data = await response.json()
+      lecture.value = {
+        id: data.id,
+        title: data.title,
+        speaker: data.speaker || '待定',
+        speakerTitle: data.speakerBio || '资深汉服文化研究者',
+        speakerAvatar: `https://placehold.co/60/8B4513/ffffff?text=${data.speaker?.charAt(0) || '讲'}`,
+        date: data.startTime ? new Date(data.startTime).toLocaleDateString('zh-CN') : '待定',
+        time: data.startTime && data.endTime
+          ? `${new Date(data.startTime).toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })}-${new Date(data.endTime).toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })}`
+          : '待定',
+        location: data.location || '待定',
+        image: getImageUrl(data.image) || 'http://localhost:8082/uploads/talk/1.jpg',
+        detailImage: getImageUrl(data.image) || 'http://localhost:8082/uploads/talk/1.jpg',
+        description: data.description || '',
+        detailDescription: data.content || data.description || '',
+        participants: data.currentParticipants || 0
+      }
+    }
+  } catch (error) {
+    console.error('加载讲座数据失败:', error)
   }
 }
 

@@ -581,7 +581,7 @@ const loadActivities = async () => {
             ? `${new Date(lecture.startTime).toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" })}-${new Date(lecture.endTime).toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" })}`
             : "待定",
         location: lecture.location || "待定",
-        image: lecture.image || "http://localhost:8082/uploads/v (1).png",
+        image: getImageUrl(lecture.image) || "http://localhost:8082/uploads/talk/1.jpg",
         description: lecture.description || "",
         content: lecture.content || "",
         notice:

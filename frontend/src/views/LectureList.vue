@@ -37,6 +37,9 @@
         <!-- 讲座列表 -->
         <div class="lecture-grid">
           <div class="lecture-card" v-for="lecture in paginatedLectures" :key="lecture.id">
+            <div class="lecture-image">
+              <el-image :src="lecture.image" fit="cover" />
+            </div>
             <div class="lecture-header">
               <h3>{{ lecture.title }}</h3>
               <div class="lecture-speaker">
@@ -110,6 +113,9 @@
     <!-- 讲座详情对话框 -->
     <el-dialog v-model="detailDialogVisible" :title="selectedLecture?.title" width="700px" center>
       <div v-if="selectedLecture" class="lecture-detail-content">
+        <div class="detail-image">
+          <el-image :src="selectedLecture.image" fit="cover" />
+        </div>
         <div class="detail-info-section">
           <div class="info-row">
             <div class="info-item">
@@ -295,6 +301,16 @@ const handleCurrentChange = (val) => {
   currentPage.value = val;
 };
 
+// 图片URL处理函数
+const getImageUrl = (url) => {
+  if (!url) return "";
+  if (url.startsWith("http://") || url.startsWith("https://")) {
+    return url;
+  }
+  const path = url.startsWith("/") ? url : `/${url}`;
+  return `http://localhost:8082${path}`;
+};
+
 const loadLectures = async () => {
   try {
     const response = await fetch("http://localhost:8082/api/lectures");
@@ -316,6 +332,7 @@ const loadLectures = async () => {
         notice:
           lecture.notice ||
           "请提前10分钟到场签到\n讲座期间请保持安静\n可携带笔记本记录\n讲座结束后设有互动问答环节",
+        image: getImageUrl(lecture.image) || "http://localhost:8082/uploads/talk/1.jpg",
       }));
       total.value = lectures.value.length;
     }
@@ -735,6 +752,20 @@ const logout = () => {
   box-shadow: 0 8px 30px rgba(139, 69, 19, 0.15);
 }
 
+.lecture-image {
+  width: 100%;
+  height: 200px;
+  margin-bottom: 20px;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.lecture-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .lecture-header {
   margin-bottom: 20px;
 }
@@ -836,6 +867,20 @@ const logout = () => {
   max-height: 70vh;
   overflow-y: auto;
   padding: 10px;
+}
+
+.detail-image {
+  width: 100%;
+  height: 250px;
+  margin-bottom: 20px;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.detail-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .detail-info-section {
@@ -954,6 +999,10 @@ const logout = () => {
     grid-template-columns: 1fr;
   }
 
+  .lecture-image {
+    height: 150px;
+  }
+
   .lecture-info {
     grid-template-columns: 1fr;
   }
@@ -979,6 +1028,10 @@ const logout = () => {
 
   .info-row {
     grid-template-columns: 1fr;
+  }
+
+  .detail-image {
+    height: 200px;
   }
 }
 </style>
