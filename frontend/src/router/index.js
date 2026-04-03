@@ -177,4 +177,45 @@ const router = createRouter({
   routes,
 });
 
+// 路由守卫
+router.beforeEach((to, from, next) => {
+  const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const userRole = user.userRole;
+  
+  // 不需要登录的页面
+  const publicPages = ["/login", "/register"];
+  
+  // 需要登录的页面
+  if (!publicPages.includes(to.path) && !isLoggedIn) {
+    next("/login");
+    return;
+  }
+  
+  // 权限控制
+  if (isLoggedIn) {
+    // 管理员页面只能管理员访问
+    if (to.path.startsWith("/admin") && (!userRole || userRole.id !== 3)) {
+      if (userRole && userRole.id === 2) {
+        next("/merchant");
+      } else {
+        next("/knowledge");
+      }
+      return;
+    }
+    
+    // 商家页面只能商家访问
+    if (to.path.startsWith("/merchant") && (!userRole || userRole.id !== 2)) {
+      if (userRole && userRole.id === 3) {
+        next("/admin");
+      } else {
+        next("/knowledge");
+      }
+      return;
+    }
+  }
+  
+  next();
+});
+
 export default router;

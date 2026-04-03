@@ -170,13 +170,29 @@ onUnmounted(() => {
   loginSuccessShown.value = false;
 });
 
-// 可选：检查是否已经登录，如果已登录则直接跳转到汉服知识库页面
+// 可选：检查是否已经登录，如果已登录则根据角色跳转到对应页面
 onMounted(() => {
   const isLoggedIn = localStorage.getItem("isLoggedIn");
   if (isLoggedIn === "true") {
     // 避免重复弹窗
     loginSuccessShown.value = true;
-    router.push("/knowledge");
+    // 根据用户角色跳转到对应页面
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    if (user.userRole) {
+      if (user.userRole.id === 3) {
+        // 管理员跳转到管理后台
+        router.push("/admin");
+      } else if (user.userRole.id === 2) {
+        // 商家跳转到商家后台
+        router.push("/merchant");
+      } else {
+        // 普通用户跳转到汉服知识库页面
+        router.push("/knowledge");
+      }
+    } else {
+      // 默认跳转到汉服知识库页面
+      router.push("/knowledge");
+    }
   }
 });
 </script>
