@@ -295,24 +295,34 @@ const loadShop = async (shopId) => {
 // 从后端加载店铺图片
 const loadShopImages = async (shopId) => {
   try {
-    // 从店铺数据中获取汉服展示图片
-    if (shop.value && shop.value.hanfuImages) {
-      shopImages.value = shop.value.hanfuImages.map((imageUrl, index) => ({
-        url: getImageUrl(imageUrl),
-        description: `汉服展示 ${index + 1}`,
-      }));
+    const response = await fetch(`http://localhost:8082/api/shop-shows/shop/${shopId}/images`);
+    if (response.ok) {
+      const imageUrls = await response.json();
+      if (imageUrls && imageUrls.length > 0) {
+        shopImages.value = imageUrls.map((imageUrl, index) => ({
+          url: getImageUrl(imageUrl),
+          description: `汉服展示 ${index + 1}`,
+        }));
+      } else {
+        setDefaultImages();
+      }
+    } else {
+      setDefaultImages();
     }
   } catch (error) {
     console.error("加载店铺图片失败:", error);
-    // 使用默认图片
-    shopImages.value = [
-      { url: "/shop-hanfu/q (1).png", description: "传统礼服系列" },
-      { url: "/shop-hanfu/q (2).png", description: "日常汉服系列" },
-      { url: "/shop-hanfu/q (3).png", description: "婚庆特别款" },
-      { url: "/shop-hanfu/q (4).png", description: "手工刺绣款" },
-      { url: "/shop-hanfu/q (5).png", description: "改良设计款" },
-    ];
+    setDefaultImages();
   }
+};
+
+const setDefaultImages = () => {
+  shopImages.value = [
+    { url: "/shop-hanfu/q (1).png", description: "传统礼服系列" },
+    { url: "/shop-hanfu/q (2).png", description: "日常汉服系列" },
+    { url: "/shop-hanfu/q (3).png", description: "婚庆特别款" },
+    { url: "/shop-hanfu/q (4).png", description: "手工刺绣款" },
+    { url: "/shop-hanfu/q (5).png", description: "改良设计款" },
+  ];
 };
 
 // 从后端加载店铺服务

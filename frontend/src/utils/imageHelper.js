@@ -39,7 +39,9 @@ export function getImageUrl(url) {
 
   // 如果是相对路径,添加服务器地址
   // 确保路径以/开头
-  const path = url.startsWith('/') ? url : `/${url}`;
+  let path = url.startsWith('/') ? url : `/${url}`;
+  // 移除可能的backend/前缀
+  path = path.replace(/^\/backend\//, '/');
   return `${API_BASE}${path}`;
 }
 

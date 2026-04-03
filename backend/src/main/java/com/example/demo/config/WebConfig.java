@@ -63,6 +63,14 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/shop-details/**")
                 .addResourceLocations("file:E:/hanfu-cultural-platform-3/hanfu-cultural-platform/hanfu-cultural-platform/frontend/public/shop-details/");
         
+        // 配置店铺图片
+        registry.addResourceHandler("/shop/**")
+                .addResourceLocations("file:E:/hanfu-cultural-platform/backend/uploads/shop/");
+        
+        // 配置店铺汉服展示图片
+        registry.addResourceHandler("/shopshow/**")
+                .addResourceLocations("file:E:/hanfu-cultural-platform/backend/uploads/shopshow/");
+        
         // 配置社区互动帖子图片
         registry.addResourceHandler("/community-posts/**")
                 .addResourceLocations("file:E:/hanfu-cultural-platform-3/hanfu-cultural-platform/hanfu-cultural-platform/frontend/public/community-posts/");
