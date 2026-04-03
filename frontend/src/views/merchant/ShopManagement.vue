@@ -198,11 +198,9 @@ export default {
           });
           this.shops = data;
           // 为每个店铺加载服务项目
-          setTimeout(() => {
-            this.shops.forEach((shop) => {
-              this.loadServices(shop);
-            });
-          }, 1000);
+          this.shops.forEach((shop) => {
+            this.loadServices(shop);
+          });
         })
         .catch((error) => {
           console.error("加载店铺失败:", error);
