@@ -108,14 +108,42 @@
               />
               <div
                 v-if="!imagePreview"
-                class="upload-placeholder"
+                class="upload-placeholder add-button"
                 @click="$refs.imageInput.click()"
               >
-                <span>点击上传店铺图片</span>
+                <span>添加</span>
               </div>
               <div v-else class="image-preview">
                 <img :src="imagePreview" alt="店铺图片" />
                 <button type="button" @click="removeImage" class="btn-remove-img">删除</button>
+              </div>
+            </div>
+            <small v-if="uploading" style="color: #666">上传中...</small>
+          </div>
+          <div class="form-group">
+            <label>汉服展示</label>
+            <div class="upload-area">
+              <input
+                type="file"
+                ref="hanfuImageInput"
+                @change="handleHanfuImageChange"
+                accept="image/*"
+                style="display: none"
+              />
+              <div class="upload-placeholder" @click="$refs.hanfuImageInput.click()">
+                <span>点击上传汉服展示图片</span>
+              </div>
+              <div v-if="form.hanfuImages.length > 0" class="hanfu-images-preview">
+                <div
+                  v-for="(image, index) in form.hanfuImages"
+                  :key="index"
+                  class="hanfu-image-item"
+                >
+                  <img :src="image" alt="汉服展示" />
+                  <button type="button" @click="removeHanfuImage(index)" class="btn-remove-img">
+                    删除
+                  </button>
+                </div>
               </div>
             </div>
             <small v-if="uploading" style="color: #666">上传中...</small>
@@ -163,6 +191,7 @@ export default {
         contact: "",
         priceRange: "普通档（0-400）",
         image: "",
+        hanfuImages: [],
       },
       imagePreview: null,
       uploading: false,
@@ -243,6 +272,7 @@ export default {
         contact: "",
         priceRange: "普通档（0-400）",
         image: "",
+        hanfuImages: [],
       };
       this.imagePreview = null;
       this.showDialog = true;
@@ -252,6 +282,7 @@ export default {
       this.form = {
         ...shop,
         priceRange: shop.priceRange || shop.price_range || "普通档（0-400）",
+        hanfuImages: shop.hanfuImages || [],
       };
       this.imagePreview = shop.image || null;
       this.showDialog = true;
@@ -285,6 +316,31 @@ export default {
     removeImage() {
       this.form.image = "";
       this.imagePreview = null;
+    },
+    handleHanfuImageChange(e) {
+      const file = e.target.files[0];
+      if (file) {
+        this.uploading = true;
+        const formData = new FormData();
+        formData.append("file", file);
+
+        fetch("http://localhost:8082/api/upload", {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            this.form.hanfuImages.push(data.url);
+            this.uploading = false;
+          })
+          .catch((error) => {
+            console.error("上传图片失败:", error);
+            this.uploading = false;
+          });
+      }
+    },
+    removeHanfuImage(index) {
+      this.form.hanfuImages.splice(index, 1);
     },
     saveShop() {
       const API_BASE = "http://localhost:8082/api";
@@ -621,19 +677,47 @@ export default {
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .modal-content {
   background: white;
-  padding: 30px;
-  border-radius: 8px;
+  padding: 20px;
+  border-radius: 12px;
   width: 90%;
-  max-width: 500px;
+  max-width: 700px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .modal-content h3 {
   margin: 0 0 20px 0;
   color: #8b4513;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f0f0f0;
 }
 
 .form-group {
@@ -642,45 +726,126 @@ export default {
 
 .form-group label {
   display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
+  margin-bottom: 6px;
+  font-weight: 600;
   color: #333;
+  font-size: 14px;
 }
 
 .form-group input,
 .form-group textarea,
 .form-group select {
   width: 100%;
-  padding: 8px;
+  padding: 8px 10px;
   border: 1px solid #ddd;
-  border-radius: 4px;
+  border-radius: 6px;
   font-size: 14px;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #d2691e;
+  box-shadow: 0 0 0 2px rgba(210, 105, 30, 0.2);
 }
 
 .form-group textarea {
   resize: vertical;
+  min-height: 60px;
+}
+
+.upload-area {
+  margin-top: 10px;
+}
+
+.upload-placeholder {
+  border: 2px dashed #ddd;
+  border-radius: 6px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: #f9f9f9;
+}
+
+.upload-placeholder:hover {
+  border-color: #d2691e;
+  background: #f5f0e8;
+}
+
+.add-button {
+  font-weight: 600;
+  color: #8b4513;
+}
+
+.upload-placeholder span {
+  font-size: 14px;
+}
+
+.upload-placeholder:not(.add-button) span {
+  color: #666;
+}
+
+.add-button span {
+  color: #8b4513;
+  font-weight: 600;
 }
 
 .image-preview {
-  margin-top: 10px;
-  max-width: 200px;
+  margin-top: 8px;
+  max-width: 150px;
+  border: 1px solid #eee;
+  border-radius: 6px;
+  padding: 8px;
+  background: #f9f9f9;
 }
 
 .image-preview img {
   width: 100%;
   border-radius: 4px;
+  display: block;
 }
 
-.upload-btn {
-  padding: 8px 16px;
-  background: #f5f5f5;
-  border: 1px solid #ddd;
+.btn-remove-img {
+  margin-top: 8px;
+  width: 100%;
+  padding: 5px 10px;
+  background: #f44336;
+  color: white;
+  border: none;
   border-radius: 4px;
   cursor: pointer;
+  font-size: 12px;
+  transition: all 0.3s ease;
 }
 
-.upload-btn:hover {
-  background: #e8e8e8;
+.btn-remove-img:hover {
+  background: #d32f2f;
+}
+
+.hanfu-images-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.hanfu-image-item {
+  max-width: 120px;
+  border: 1px solid #eee;
+  border-radius: 6px;
+  padding: 8px;
+  background: #f9f9f9;
+}
+
+.hanfu-image-item img {
+  width: 100%;
+  border-radius: 4px;
+  display: block;
+  margin-bottom: 8px;
 }
 
 .form-actions {
@@ -688,23 +853,40 @@ export default {
   justify-content: flex-end;
   gap: 10px;
   margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #f0f0f0;
 }
 
 .btn-cancel {
-  padding: 8px 16px;
+  padding: 10px 20px;
   border: 1px solid #ddd;
   background: white;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
 }
 
-.btn-save {
-  padding: 8px 16px;
+.btn-cancel:hover {
+  border-color: #999;
+  background: #f5f5f5;
+}
+
+.btn-primary {
+  padding: 10px 20px;
   background: linear-gradient(135deg, #8b4513 0%, #d2691e 100%);
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #6b340e 0%, #b85a1a 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .empty-state {
