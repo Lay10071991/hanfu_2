@@ -240,6 +240,7 @@ import {
   ChatDotRound,
   CircleCheck,
 } from "@element-plus/icons-vue";
+import { getImageUrl } from "../utils/imageHelper.js";
 
 const router = useRouter();
 const route = useRoute();
@@ -339,11 +340,11 @@ const loadFestivalData = async (id) => {
       // 确保数据字段映射正确
       festivalData.value = {
         id: data.id,
-        title: data.title,
+        title: data.name || data.title, // 确保使用正确的字段名
         season: data.season,
         date: data.date,
         location: data.location,
-        image: data.image,
+        image: getImageUrl(data.image),
         description: data.description,
         traditionExperience: data.traditionExperience,
         precautions: data.precautions,

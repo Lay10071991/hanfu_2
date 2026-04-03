@@ -164,6 +164,7 @@ import {
   Check,
   DataAnalysis,
 } from "@element-plus/icons-vue";
+import { getImageUrl } from "../utils/imageHelper.js";
 
 const router = useRouter();
 const username = ref("");
@@ -182,7 +183,11 @@ const loadFestivals = async () => {
     const response = await fetch("http://localhost:8082/api/festival-activity");
     if (response.ok) {
       const data = await response.json();
-      festivals.value = data;
+      festivals.value = data.map((item) => ({
+        ...item,
+        image: getImageUrl(item.image),
+        title: item.title, // 直接使用title字段
+      }));
     } else {
       console.error("加载节庆活动数据失败:", response.status);
     }
@@ -668,6 +673,7 @@ const logout = () => {
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
   display: flex;
+  min-height: 220px;
 }
 
 .festival-card:hover {
@@ -676,10 +682,14 @@ const logout = () => {
 }
 
 .festival-image {
-  width: 200px;
-  height: 250px;
+  width: 180px;
+  min-height: 180px;
   position: relative;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 }
 
 .festival-image img {
@@ -696,9 +706,10 @@ const logout = () => {
 
 .festival-content {
   flex: 1;
-  padding: 20px;
+  padding: 15px;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
 }
 
 .festival-header {
@@ -708,7 +719,9 @@ const logout = () => {
 .festival-header h3 {
   margin: 0 0 10px 0;
   color: #8b4513;
-  font-size: 20px;
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 1.3;
 }
 
 .festival-meta {

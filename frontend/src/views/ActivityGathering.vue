@@ -418,6 +418,7 @@ import { ref, onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { Calendar, Location, Ticket, User, Clock } from "@element-plus/icons-vue";
+import { getImageUrl } from "../utils/imageHelper.js";
 
 const router = useRouter();
 const username = ref("");
@@ -529,10 +530,10 @@ const loadCarouselItems = async () => {
 
       carouselItems.value = sortedData.map((item) => ({
         id: item.id,
-        title: item.title,
+        title: item.name || item.title, // 确保使用正确的字段名
         description:
           item.description.substring(0, 50) + (item.description.length > 50 ? "..." : ""),
-        image: item.image,
+        image: getImageUrl(item.image),
       }));
     }
   } catch (error) {
