@@ -1939,6 +1939,73 @@ CREATE TABLE `post_image`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '帖子图片表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Records of post_image - 帖子图片
+-- ----------------------------
+-- 帖子1 (汉服出行日精彩回顾) - 2张图片
+INSERT INTO `post_image` VALUES (1, 1, 'backend/uploads/community_post/1-1.jpg', '2025-12-20 10:00:00');
+INSERT INTO `post_image` VALUES (2, 1, 'backend/uploads/community_post/1-2.jpg', '2025-12-20 10:00:00');
+
+-- 帖子2 (春日汉服赏花图集) - 3张图片
+INSERT INTO `post_image` VALUES (3, 2, 'backend/uploads/community_post/2-1.jpg', '2025-12-18 14:30:00');
+INSERT INTO `post_image` VALUES (4, 2, 'backend/uploads/community_post/2-2.jpg', '2025-12-18 14:30:00');
+INSERT INTO `post_image` VALUES (5, 2, 'backend/uploads/community_post/2-3.jpg', '2025-12-18 14:30:00');
+
+-- 帖子3 (明制汉服穿搭分享) - 3张图片
+INSERT INTO `post_image` VALUES (6, 3, 'backend/uploads/community_post/3-1.jpg', '2025-12-15 10:00:00');
+INSERT INTO `post_image` VALUES (7, 3, 'backend/uploads/community_post/3-2.jpg', '2025-12-15 10:00:00');
+INSERT INTO `post_image` VALUES (8, 3, 'backend/uploads/community_post/3-3.jpg', '2025-12-15 10:00:00');
+
+-- 帖子4 (汉服妆造手把手教学) - 8张图片
+INSERT INTO `post_image` VALUES (9, 4, 'backend/uploads/community_post/4-1.jpg', '2025-12-12 09:15:00');
+INSERT INTO `post_image` VALUES (10, 4, 'backend/uploads/community_post/4-2.jpg', '2025-12-12 09:15:00');
+INSERT INTO `post_image` VALUES (11, 4, 'backend/uploads/community_post/4-3.jpg', '2025-12-12 09:15:00');
+INSERT INTO `post_image` VALUES (12, 4, 'backend/uploads/community_post/4-4.jpg', '2025-12-12 09:15:00');
+INSERT INTO `post_image` VALUES (13, 4, 'backend/uploads/community_post/4-5.jpg', '2025-12-12 09:15:00');
+INSERT INTO `post_image` VALUES (14, 4, 'backend/uploads/community_post/4-6.jpg', '2025-12-12 09:15:00');
+INSERT INTO `post_image` VALUES (15, 4, 'backend/uploads/community_post/4-7.jpg', '2025-12-12 09:15:00');
+INSERT INTO `post_image` VALUES (16, 4, 'backend/uploads/community_post/4-8.jpg', '2025-12-12 09:15:00');
+
+-- 帖子5 (古风摄影作品欣赏) - 3张图片
+INSERT INTO `post_image` VALUES (17, 5, 'backend/uploads/community_post/5-1.jpg', '2025-12-10 16:00:00');
+INSERT INTO `post_image` VALUES (18, 5, 'backend/uploads/community_post/5-2.jpg', '2025-12-10 16:00:00');
+INSERT INTO `post_image` VALUES (19, 5, 'backend/uploads/community_post/5-3.jpg', '2025-12-10 16:00:00');
+
+-- 帖子6 (魏晋风骨穿搭指南) - 3张图片
+INSERT INTO `post_image` VALUES (20, 6, 'backend/uploads/community_post/6-1.jpg', '2025-12-08 11:00:00');
+INSERT INTO `post_image` VALUES (21, 6, 'backend/uploads/community_post/6-2.jpg', '2025-12-08 11:00:00');
+INSERT INTO `post_image` VALUES (22, 6, 'backend/uploads/community_post/6-3.jpg', '2025-12-08 11:00:00');
+
+-- 帖子7 (汉服街拍合集) - 2张图片
+INSERT INTO `post_image` VALUES (23, 7, 'backend/uploads/community_post/7-1.jpg', '2025-12-05 14:00:00');
+INSERT INTO `post_image` VALUES (24, 7, 'backend/uploads/community_post/7-2.jpg', '2025-12-05 14:00:00');
+
+-- 帖子8 (传统发饰制作教程) - 9张图片
+INSERT INTO `post_image` VALUES (25, 8, 'backend/uploads/community_post/8-1.jpg', '2025-12-03 10:30:00');
+INSERT INTO `post_image` VALUES (26, 8, 'backend/uploads/community_post/8-2.jpg', '2025-12-03 10:30:00');
+INSERT INTO `post_image` VALUES (27, 8, 'backend/uploads/community_post/8-3.jpg', '2025-12-03 10:30:00');
+INSERT INTO `post_image` VALUES (28, 8, 'backend/uploads/community_post/8-4.jpg', '2025-12-03 10:30:00');
+INSERT INTO `post_image` VALUES (29, 8, 'backend/uploads/community_post/8-5.jpg', '2025-12-03 10:30:00');
+INSERT INTO `post_image` VALUES (30, 8, 'backend/uploads/community_post/8-6.jpg', '2025-12-03 10:30:00');
+INSERT INTO `post_image` VALUES (31, 8, 'backend/uploads/community_post/8-7.jpg', '2025-12-03 10:30:00');
+INSERT INTO `post_image` VALUES (32, 8, 'backend/uploads/community_post/8-8.jpg', '2025-12-03 10:30:00');
+INSERT INTO `post_image` VALUES (33, 8, 'backend/uploads/community_post/8-9.jpg', '2025-12-03 10:30:00');
+
+-- 帖子9 (汉服日常穿搭记录) - 3张图片
+INSERT INTO `post_image` VALUES (34, 9, 'backend/uploads/community_post/9-1.jpg', '2025-12-01 15:30:00');
+INSERT INTO `post_image` VALUES (35, 9, 'backend/uploads/community_post/9-2.jpg', '2025-12-01 15:30:00');
+INSERT INTO `post_image` VALUES (36, 9, 'backend/uploads/community_post/9-3.jpg', '2025-12-01 15:30:00');
+
+-- 帖子10 (古风写真拍摄技巧) - 3张图片
+INSERT INTO `post_image` VALUES (37, 10, 'backend/uploads/community_post/10-1.jpg', '2025-11-28 09:00:00');
+INSERT INTO `post_image` VALUES (38, 10, 'backend/uploads/community_post/10-2.jpg', '2025-11-28 09:00:00');
+INSERT INTO `post_image` VALUES (39, 10, 'backend/uploads/community_post/10-3.jpg', '2025-11-28 09:00:00');
+
+-- 帖子11 (汉服活动精彩花絮) - 3张图片
+INSERT INTO `post_image` VALUES (40, 11, 'backend/uploads/community_post/11-1.jpg', '2025-11-25 13:00:00');
+INSERT INTO `post_image` VALUES (41, 11, 'backend/uploads/community_post/11-2.jpg', '2025-11-25 13:00:00');
+INSERT INTO `post_image` VALUES (42, 11, 'backend/uploads/community_post/11-3.jpg', '2025-11-25 13:00:00');
+
+-- ----------------------------
 -- Table structure for post_comment
 -- ----------------------------
 DROP TABLE IF EXISTS `post_comment`;

@@ -88,11 +88,11 @@
               <div class="image-grid">
                 <div
                   v-for="(image, index) in hanfuImages.slice(0, 9)"
-                  :key="index"
+                  :key="image"
                   class="image-item"
                   @click="previewImage(index)"
                 >
-                  <el-image :src="image" fit="cover" class="display-image" />
+                  <img :src="image" class="display-image" />
                 </div>
               </div>
             </div>
@@ -298,11 +298,13 @@ const loadShopImages = async (shopId) => {
     const response = await fetch(`http://localhost:8082/api/shop-shows/shop/${shopId}/images`);
     if (response.ok) {
       const imageUrls = await response.json();
+      console.log("从API获取的图片URL:", imageUrls);
       if (imageUrls && imageUrls.length > 0) {
         shopImages.value = imageUrls.map((imageUrl, index) => ({
           url: getImageUrl(imageUrl),
           description: `汉服展示 ${index + 1}`,
         }));
+        console.log("设置后的shopImages:", shopImages.value);
       } else {
         setDefaultImages();
       }
@@ -506,7 +508,9 @@ const contact = computed(() => {
 const hanfuImages = computed(() => {
   // 使用从后端加载的图片
   if (shopImages.value.length > 0) {
-    return shopImages.value.map((img) => img.url);
+    const urls = shopImages.value.map((img) => img.url);
+    console.log("hanfuImages computed:", urls);
+    return urls;
   }
   // 默认图片（最少1张）
   return ["/shop-hanfu/q (1).png"];
@@ -951,6 +955,7 @@ const goBack = () => {
 .display-image {
   width: 100%;
   height: 100%;
+  object-fit: cover;
 }
 
 .image-overlay {
