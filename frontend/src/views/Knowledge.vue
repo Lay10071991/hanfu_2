@@ -85,7 +85,7 @@
                 <el-image
                   src="/history.png"
                   alt="汉服历史演变图"
-                  fit="cover"
+                  fit="contain"
                   class="history-main-img"
                 >
                   <template #error>
@@ -779,20 +779,18 @@ const logout = () => {
 
 .history-content-wrapper {
   display: flex;
-  gap: 30px;
+  gap: 0;
   align-items: flex-start;
 }
 
 .history-image {
-  flex: 0 0 45%;
-  border-radius: 8px;
+  flex: 0 0 70%;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .history-main-img {
   width: 100%;
-  height: 300px;
+  height: 400px;
   display: block;
 }
 
@@ -1050,7 +1048,7 @@ const logout = () => {
   /* 历史演变部分响应式 */
   .history-content-wrapper {
     flex-direction: column;
-    gap: 20px;
+    gap: 0;
   }
 
   .history-image {
@@ -1059,7 +1057,7 @@ const logout = () => {
   }
 
   .history-main-img {
-    height: 200px;
+    height: 250px;
   }
 
   .timeline-item {

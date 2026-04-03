@@ -160,6 +160,7 @@ import {
   Clock,
   Document,
 } from "@element-plus/icons-vue";
+import { getImageUrl } from "../utils/imageHelper.js";
 
 const router = useRouter();
 const username = ref("汉服爱好者");
@@ -320,7 +321,7 @@ const showDetail = async (type, item) => {
         if (data.image) {
           // 从后端获取的图片
           images.push({
-            url: data.image,
+            url: getImageUrl(data.image),
             alt: data.name,
             caption: data.name,
           });
