@@ -800,7 +800,7 @@ const logout = () => {
 }
 
 .history-image {
-  flex: 0 0 70%;
+  flex: 0 0 55%;
   overflow: hidden;
 }
 

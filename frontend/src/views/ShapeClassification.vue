@@ -66,36 +66,11 @@
           </div>
         </div>
 
-        <!-- 服饰部件介绍 -->
-        <div class="section">
-          <h3 class="section-title">
-            <el-icon><SetUp /></el-icon>
-            服饰部件详解
-          </h3>
-          <div class="components-grid">
-            <div
-              class="component-card"
-              v-for="component in components"
-              :key="component.name"
-              @click="showDetail('component', component)"
-            >
-              <div class="component-icon">
-                <el-icon><Goods /></el-icon>
-              </div>
-              <div class="component-info">
-                <h4>{{ component.name }}</h4>
-                <p>{{ component.description }}</p>
-                <span class="component-type">{{ component.type }}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
         <!-- 汉服展示 -->
         <div class="section">
           <h3 class="section-title">
             <el-icon><PictureFilled /></el-icon>
-            千载衣冠 - 汉服展示
+            千载衣冠
           </h3>
           <div class="hanfu-grid">
             <div
@@ -105,7 +80,7 @@
               @click="showHanfuDetail(hanfu)"
             >
               <div class="hanfu-image">
-                <el-image :src="getImageUrl(hanfu.image)" :alt="hanfu.name" fit="cover">
+                <el-image :src="getHanfuFirstImage(hanfu.id)" :alt="hanfu.name" fit="cover">
                   <template #error>
                     <div class="image-slot">
                       <el-icon><Picture /></el-icon>
@@ -263,6 +238,18 @@ const components = ref([]);
 // 汉服展示数据 - 从后端加载
 const hanfuDisplays = ref([]);
 
+// 汉服图片数据 - 存储每个汉服的图片列表
+const hanfuImagesMap = ref({});
+
+// 获取汉服的第一张图片
+const getHanfuFirstImage = (hanfuId) => {
+  const images = hanfuImagesMap.value[hanfuId];
+  if (images && images.length > 0) {
+    return getImageUrl(images[0].imagePath);
+  }
+  return "";
+};
+
 // 加载服饰部件数据
 const loadComponents = async () => {
   try {
@@ -294,6 +281,23 @@ const loadHanfuDisplays = async () => {
     if (response.ok) {
       const data = await response.json();
       hanfuDisplays.value = data;
+
+      // 加载每个汉服的图片数据
+      for (const hanfu of data) {
+        try {
+          const imagesResponse = await fetch(
+            `http://localhost:8082/api/hanfu-display/${hanfu.id}/images`,
+          );
+          if (imagesResponse.ok) {
+            const imagesData = await imagesResponse.json();
+            // 按sortOrder排序
+            imagesData.sort((a, b) => a.sortOrder - b.sortOrder);
+            hanfuImagesMap.value[hanfu.id] = imagesData;
+          }
+        } catch (error) {
+          console.error(`加载汉服 ${hanfu.id} 的图片数据失败:`, error);
+        }
+      }
     } else {
       console.error("加载汉服展示数据失败，响应状态:", response.status);
     }
@@ -444,11 +448,8 @@ const showHanfuDetail = async (hanfu) => {
     const response = await fetch(`http://localhost:8082/api/hanfu-display/${hanfu.id}`);
     if (response.ok) {
       const data = await response.json();
-      // 从后端获取汉服图片
-      const imagesResponse = await fetch(
-        `http://localhost:8082/api/hanfu-display/${hanfu.id}/images`,
-      );
-      const imagesData = await imagesResponse.json();
+      // 使用已加载的图片数据
+      const imagesData = hanfuImagesMap.value[hanfu.id] || [];
       // 构建图片数组
       const images = imagesData.map((img) => ({
         url: getImageUrl(img.imagePath),
