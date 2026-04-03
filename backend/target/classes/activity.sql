@@ -233,26 +233,28 @@ CREATE TABLE `pattern_symbol`  (
   `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '图案象征表-汉服常见图案及寓意' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '图案象征表-汉服常见图案及寓意' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of pattern_symbol
 -- ----------------------------
-INSERT INTO `pattern_symbol` VALUES (1, '祥云', '吉祥如意', '/uploads/DM_20260301185757_001.png', '祥云纹是中国传统图案，象征吉祥如意，常用于宫廷和民间装饰。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
-INSERT INTO `pattern_symbol` VALUES (2, '龙', '权势尊贵', '/uploads/DM_20260301185757_002.png', '龙是中国古代神话中的神兽，象征权势、尊贵和祥瑞，是帝王的象征。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
-INSERT INTO `pattern_symbol` VALUES (3, '凤', '吉祥和谐', '/uploads/DM_20260301185757_003.png', '凤是中国古代神话中的神鸟，象征吉祥、和谐和高贵，是皇后的象征。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
-INSERT INTO `pattern_symbol` VALUES (4, '牡丹', '富贵荣华', '/uploads/DM_20260301185757_004.png', '牡丹是中国传统名花，象征富贵荣华和繁荣昌盛，被称为"花中之王"。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
-INSERT INTO `pattern_symbol` VALUES (5, '莲花', '纯洁高雅', '/uploads/DM_20260301185757_005.png', '莲花象征纯洁高雅和超凡脱俗，是佛教中的圣物。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
-INSERT INTO `pattern_symbol` VALUES (6, '菊花', '长寿安康', '/uploads/DM_20260301185757_006.png', '菊花象征长寿安康和高洁品格，是重阳节的象征花卉。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
-INSERT INTO `pattern_symbol` VALUES (7, '梅花', '坚韧不拔', '/uploads/DM_20260301185757_007.png', '梅花象征坚韧不拔和高洁品格，在严寒中绽放，象征顽强的生命力。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
-INSERT INTO `pattern_symbol` VALUES (8, '竹子', '正直虚心', '/uploads/DM_20260301185757_008.png', '竹子象征正直虚心和高洁品格，四季常青，象征坚韧不拔。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
-INSERT INTO `pattern_symbol` VALUES (9, '兰草', '高雅脱俗', '/uploads/DM_20260301185757_009.png', '兰草象征高雅脱俗和君子品格，是"四君子"之一。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
-INSERT INTO `pattern_symbol` VALUES (10, '麒麟', '祥瑞太平', '/uploads/DM_20260301185757_010.png', '麒麟是中国古代神话中的瑞兽，象征祥瑞太平和吉祥如意。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
-INSERT INTO `pattern_symbol` VALUES (11, '仙鹤', '长寿吉祥', '/uploads/DM_20260301185757_011.png', '仙鹤象征长寿吉祥和高洁品格，是道教中的灵禽。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
-INSERT INTO `pattern_symbol` VALUES (12, '蝙蝠', '福气临门', '/uploads/DM_20260301185757_012.png', '蝙蝠因与"福"谐音，象征福气临门和吉祥如意。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
-INSERT INTO `pattern_symbol` VALUES (13, '鱼纹', '年年有余', '/uploads/DM_20260301185757_013.png', '鱼因与"余"谐音，象征年年有余和富足吉祥。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
-INSERT INTO `pattern_symbol` VALUES (14, '回纹', '富贵不断', '/uploads/DM_20260301185758_014.png', '回纹象征富贵不断和吉祥如意，是中国传统纹样之一。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
-INSERT INTO `pattern_symbol` VALUES (15, '云雷纹', '威严神秘', '/uploads/DM_20260301185758_014.png', '云雷纹象征威严神秘和神圣不可侵犯，常用于青铜器装饰。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
+INSERT INTO `pattern_symbol` VALUES (1, '龙纹', '权势尊贵', '/pattern-symbols/1.jpg', '龙纹是中国传统图案中最尊贵的纹样，象征权势、尊贵和祥瑞，是帝王的象征。常用于宫廷服饰和重要礼仪场合。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
+INSERT INTO `pattern_symbol` VALUES (2, '凤鸟纹', '吉祥和谐', '/pattern-symbols/2.jpg', '凤鸟纹象征吉祥、和谐和高贵，是皇后的象征。凤鸟姿态优美，常与牡丹、云纹等组合使用。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
+INSERT INTO `pattern_symbol` VALUES (3, '麒麟纹', '祥瑞太平', '/pattern-symbols/3.jpg', '麒麟纹象征祥瑞太平和吉祥如意，是中国古代神话中的瑞兽，寓意美好和幸福。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
+INSERT INTO `pattern_symbol` VALUES (4, '缠枝莲纹', '纯洁高雅', '/pattern-symbols/4.jpg', '缠枝莲纹以莲花为主体，枝蔓缠绕，象征纯洁高雅和生生不息，是佛教文化的重要象征。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
+INSERT INTO `pattern_symbol` VALUES (5, '宝相花纹', '吉祥如意', '/pattern-symbols/5.jpg', '宝相花纹是中国传统花纹之一，由莲花、牡丹等纹样组合而成，象征吉祥如意和富贵荣华。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
+INSERT INTO `pattern_symbol` VALUES (6, '牡丹纹', '富贵荣华', '/pattern-symbols/6.jpg', '牡丹纹象征富贵荣华和繁荣昌盛，被称为"花中之王"，是中国传统吉祥纹样的重要组成部分。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
+INSERT INTO `pattern_symbol` VALUES (7, '如意纹', '称心如意', '/pattern-symbols/7.jpg', '如意纹象征称心如意和吉祥美好，形状如灵芝，寓意万事如意、吉祥安康。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
+INSERT INTO `pattern_symbol` VALUES (8, '方胜纹', '同心相连', '/pattern-symbols/8.jpg', '方胜纹由两个菱形交叠而成，象征同心相连、永结同心，常用于婚庆和喜庆场合。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
+INSERT INTO `pattern_symbol` VALUES (9, '云纹', '吉祥如意', '/pattern-symbols/9.jpg', '云纹象征吉祥如意和高升，是中国传统纹样中最常见的装饰元素之一，常与其他纹样组合使用。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
+INSERT INTO `pattern_symbol` VALUES (10, '蟠螭纹', '权势尊贵', '/pattern-symbols/10.jpg', '蟠螭纹是龙纹的一种变体，象征权势尊贵和祥瑞，常用于青铜器和玉器装饰。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
+INSERT INTO `pattern_symbol` VALUES (11, '回纹', '富贵不断', '/pattern-symbols/11.jpg', '回纹是中国传统纹样之一，象征富贵不断和吉祥如意，因形如"回"字而得名。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
+INSERT INTO `pattern_symbol` VALUES (12, '八宝纹', '吉祥如意', '/pattern-symbols/12.jpg', '八宝纹由八种吉祥宝物组成，象征吉祥如意和幸福美满，常用于佛教和道教装饰。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
+INSERT INTO `pattern_symbol` VALUES (13, '锦鲤纹', '年年有余', '/pattern-symbols/13.jpg', '锦鲤纹象征年年有余和富足吉祥，因"鱼"与"余"谐音，是中国传统吉祥纹样之一。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
+INSERT INTO `pattern_symbol` VALUES (14, '龟背纹', '长寿安康', '/pattern-symbols/14.jpg', '龟背纹因形如龟甲而得名，象征长寿安康和坚韧不拔，是中国传统纹样之一。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
+INSERT INTO `pattern_symbol` VALUES (15, '柿蒂纹', '事事如意', '/pattern-symbols/15.jpg', '柿蒂纹因形如柿子蒂而得名，象征事事如意和吉祥美好，常用于服饰和器物装饰。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
+INSERT INTO `pattern_symbol` VALUES (16, '忍冬纹', '坚韧不拔', '/pattern-symbols/16.jpg', '忍冬纹因忍冬花耐寒而得名，象征坚韧不拔和生命力顽强，是中国传统纹样之一。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
+INSERT INTO `pattern_symbol` VALUES (17, '芙蓉纹', '高洁优雅', '/pattern-symbols/17.jpg', '芙蓉纹象征高洁优雅和纯洁美丽，是中国传统花卉纹样之一，常用于女性服饰装饰。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
 
 -- ----------------------------
 -- Table structure for etiquette

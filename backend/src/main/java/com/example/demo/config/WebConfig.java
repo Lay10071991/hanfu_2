@@ -37,7 +37,7 @@ public class WebConfig implements WebMvcConfigurer {
         
         // 配置图案象征图片
         registry.addResourceHandler("/pattern-symbols/**")
-                .addResourceLocations("file:E:/hanfu-cultural-platform-3/hanfu-cultural-platform/hanfu-cultural-platform/frontend/public/pattern-symbols/");
+                .addResourceLocations("file:E:/hanfu-cultural-platform/backend/uploads/pattern_symbol/");
         
         // 配置古代仪容仪态图片
         registry.addResourceHandler("/etiquette/**")

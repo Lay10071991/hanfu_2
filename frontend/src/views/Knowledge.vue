@@ -170,7 +170,7 @@
                 @click="viewPattern(pattern)"
               >
                 <div class="dynasty-img">
-                  <el-image :src="pattern.img" :alt="pattern.name" fit="cover">
+                  <el-image :src="pattern.img" :alt="pattern.name" fit="contain">
                     <template #error>
                       <div class="image-slot">
                         <el-icon><Picture /></el-icon>
@@ -306,7 +306,7 @@ const route = useRoute();
 const username = ref("汉服爱好者");
 
 // 最大显示数量
-const maxDisplayCount = ref(6);
+const maxDisplayCount = ref(10);
 
 const dynasties = ref([]);
 const patterns = ref([]);
@@ -903,11 +903,11 @@ const logout = () => {
   overflow: hidden;
 }
 
-/* 形制分类网格 - 3等分 */
+/* 形制分类网格 - 5等分 */
 .dynasty-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
   margin-top: 15px;
 }
 
@@ -916,7 +916,7 @@ const logout = () => {
   cursor: pointer;
   transition: all 0.3s ease;
   border-radius: 8px;
-  padding: 15px 10px;
+  padding: 8px 6px;
   background: #fafafa;
   border: 1px solid #f0f0f0;
 }
@@ -930,7 +930,7 @@ const logout = () => {
 
 .dynasty-img {
   width: 100%;
-  height: 120px;
+  aspect-ratio: 1/1;
   border-radius: 6px;
   background-color: #f0f0f0;
   margin-bottom: 12px;
@@ -985,8 +985,8 @@ const logout = () => {
 /* 响应式设计 */
 @media (max-width: 1200px) {
   .dynasty-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
   }
 }
 
@@ -1020,7 +1020,7 @@ const logout = () => {
 
   .dynasty-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+    gap: 6px;
   }
 
   .logo {
@@ -1038,7 +1038,7 @@ const logout = () => {
   }
 
   .dynasty-img {
-    height: 100px;
+    aspect-ratio: 1/1;
   }
 
   .dynasty-name {
@@ -1078,7 +1078,7 @@ const logout = () => {
   }
 
   .dynasty-img {
-    height: 80px;
+    aspect-ratio: 1/1;
   }
 
   .dynasty-name {
