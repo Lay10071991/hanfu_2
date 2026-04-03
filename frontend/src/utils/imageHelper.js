@@ -129,18 +129,22 @@ export function processPostImages(post) {
 
   const processed = { ...post };
 
-  // 处理主图片
-  if (processed.imageUrl || processed.image) {
+  // 处理主图片 - 优先使用images数组的第一张，否则使用image/imageUrl
+  if (post.images && Array.isArray(post.images) && post.images.length > 0) {
+    // 处理images数组中的图片URL
+    processed.images = processImageArray(post.images, 'url');
+    // 第一张图片作为主图
+    if (processed.images[0]) {
+      const firstImage = processed.images[0];
+      processed.image = typeof firstImage === 'string' ? firstImage : firstImage.url;
+      processed.imageUrl = processed.image;
+    }
+  } else if (processed.imageUrl || processed.image) {
+    // 如果没有images数组但有主图，使用主图
     const mainImage = processed.imageUrl || processed.image;
     processed.image = getImageUrl(mainImage);
     processed.imageUrl = processed.image;
-  }
-
-  // 处理图片数组
-  if (processed.images && Array.isArray(processed.images)) {
-    processed.images = processImageArray(processed.images, 'url');
-  } else if (processed.image) {
-    // 如果没有images数组但有主图,创建images数组
+    // 创建images数组
     processed.images = [{ url: processed.image }];
   }
 

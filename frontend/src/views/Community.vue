@@ -133,13 +133,13 @@
                 @click="viewPost(post)"
               >
                 <div class="post-img">
-                  <el-image :src="post.image" :alt="post.title" fit="cover" loading="lazy">
-                    <template #placeholder>
-                      <div class="image-skeleton">
-                        <el-icon><Picture /></el-icon>
-                      </div>
-                    </template>
-                  </el-image>
+                  <img
+                    :src="post.image"
+                    :alt="post.title"
+                    loading="lazy"
+                    @load="handleImageLoad($event, post)"
+                    :style="post.imgStyle"
+                  />
                 </div>
                 <div class="post-content">
                   <div class="post-header">
@@ -170,12 +170,6 @@
                   <div class="post-time">{{ post.time }}</div>
                 </div>
               </div>
-            </div>
-
-            <!-- 加载更多 -->
-            <div class="load-more">
-              <el-button v-if="hasMorePosts" @click="loadMorePosts"> 更多 </el-button>
-              <span v-else-if="totalPosts > 0" class="no-more-text">以上为全部内容</span>
             </div>
           </div>
         </div>
@@ -263,7 +257,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from "vue";
+import { ref, computed, onMounted, watch, nextTick } from "vue";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import { Plus, Edit, Picture, Star, StarFilled, ChatDotRound } from "@element-plus/icons-vue";
@@ -295,9 +289,8 @@ const publishForm = ref({
 });
 
 const discoveryPosts = ref([]);
-const displayLimit = ref(6);
 
-const allSortedPosts = computed(() => {
+const sortedPosts = computed(() => {
   const posts = [...discoveryPosts.value];
   if (sortBy.value === "hot") {
     return posts.sort((a, b) => {
@@ -320,17 +313,18 @@ const allSortedPosts = computed(() => {
   }
 });
 
-const sortedPosts = computed(() => {
-  return allSortedPosts.value.slice(0, displayLimit.value);
-});
+const handleImageLoad = (event, post) => {
+  const img = event.target;
+  if (img && img.naturalWidth && img.naturalHeight) {
+    const aspectRatio = img.naturalWidth / img.naturalHeight;
 
-const hasMorePosts = computed(() => {
-  return displayLimit.value < allSortedPosts.value.length;
-});
-
-const totalPosts = computed(() => {
-  return allSortedPosts.value.length;
-});
+    post.imgStyle = {
+      width: "100%",
+      height: "auto",
+      display: "block",
+    };
+  }
+};
 
 const fetchPosts = async () => {
   try {
@@ -358,7 +352,11 @@ const fetchPosts = async () => {
           category: post.category || "其他",
           categoryType: getCategoryType(post.category || "其他"),
           liked: post.liked || false,
-          image: post.image || post.imageUrl,
+          imgStyle: {
+            width: "100%",
+            height: "auto",
+            display: "block",
+          },
         };
       });
     } else {
@@ -376,7 +374,6 @@ const fetchPosts = async () => {
     discoveryPosts.value = [];
   }
 };
-
 
 onMounted(() => {
   const savedUsername = localStorage.getItem("username");
@@ -534,18 +531,24 @@ const submitPublish = async () => {
 
     if (response.ok) {
       const newPost = await response.json();
+      const processedPost = processPostImages(newPost);
       discoveryPosts.value.unshift({
-        ...newPost,
-        title: newPost.title,
-        description: newPost.description || newPost.content.substring(0, 100) + "...",
-        author: newPost.author,
-        likes: newPost.likes || 0,
-        comments: newPost.comments || 0,
-        time: newPost.time,
-        category: newPost.category || "其他",
-        categoryType: newPost.categoryType || getCategoryType(newPost.category || "其他"),
-        liked: newPost.liked || false,
-        image: newPost.image,
+        ...processedPost,
+        title: processedPost.title,
+        description: processedPost.description || processedPost.content.substring(0, 100) + "...",
+        author: processedPost.author,
+        likes: processedPost.likes || 0,
+        comments: processedPost.comments || 0,
+        time: processedPost.time,
+        category: processedPost.category || "其他",
+        categoryType:
+          processedPost.categoryType || getCategoryType(processedPost.category || "其他"),
+        liked: processedPost.liked || false,
+        imgStyle: {
+          width: "100%",
+          height: "auto",
+          display: "block",
+        },
       });
       ElMessage.success("发布成功！");
       publishDialogVisible.value = false;
@@ -640,9 +643,6 @@ const handleLikeChanged = ({ postId, liked, likes }) => {
     // 更新帖子状态
     post.liked = liked;
     post.likes = likes;
-
-    // 强制重新计算排序，确保页面显示最新数据
-    displayLimit.value = displayLimit.value;
   }
 };
 
@@ -656,12 +656,7 @@ const handleCommentAdded = ({ postId }) => {
 
 const changeSort = (type) => {
   sortBy.value = type;
-  displayLimit.value = 6;
   fetchPosts();
-};
-
-const loadMorePosts = () => {
-  displayLimit.value += 6;
 };
 
 const logout = () => {
@@ -927,15 +922,15 @@ const logout = () => {
   padding: 6px 16px;
 }
 
-/* 帖子网格 */
+/* 帖子网格 - 瀑布流布局 */
 .posts-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 20px;
+  column-count: 3;
+  column-gap: 20px;
   margin-bottom: 24px;
 }
 
 .post-card {
+  break-inside: avoid;
   border-radius: 16px;
   overflow: hidden;
   cursor: pointer;
@@ -943,24 +938,25 @@ const logout = () => {
   border: 1px solid rgba(139, 69, 19, 0.1);
   background-color: white;
   position: relative;
+  margin-bottom: 20px;
 }
 
 .post-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 16px 40px rgba(139, 69, 19, 0.15);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(139, 69, 19, 0.15);
 }
 
 .post-img {
   width: 100%;
-  height: 200px;
-  background-color: #f0f0f0;
+  background-color: #f8f8f8;
   position: relative;
   overflow: hidden;
 }
 
-.post-img .el-image {
+.post-img img {
   width: 100%;
-  height: 100%;
+  height: auto;
+  display: block;
 }
 
 .image-skeleton {
@@ -1069,23 +1065,6 @@ const logout = () => {
   font-weight: normal;
 }
 
-/* 加载更多 */
-.load-more {
-  display: flex;
-  justify-content: center;
-  padding: 20px 0;
-}
-
-.load-more .el-button {
-  min-width: 120px;
-  border-radius: 20px;
-}
-
-.no-more-text {
-  color: #999;
-  font-size: 14px;
-}
-
 /* 上传提示 */
 .upload-tips {
   font-size: 12px;
@@ -1132,6 +1111,10 @@ const logout = () => {
     grid-template-columns: 280px 1fr;
     gap: 20px;
   }
+
+  .posts-grid {
+    column-count: 2;
+  }
 }
 
 @media (max-width: 768px) {
@@ -1165,7 +1148,7 @@ const logout = () => {
   }
 
   .posts-grid {
-    grid-template-columns: 1fr;
+    column-count: 2;
   }
 
   .footer-links {
@@ -1193,6 +1176,10 @@ const logout = () => {
 
   .action-tips {
     justify-content: flex-start;
+  }
+
+  .posts-grid {
+    column-count: 1;
   }
 }
 </style>
