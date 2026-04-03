@@ -92,7 +92,7 @@
                   class="image-item"
                   @click="previewImage(index)"
                 >
-                  <img :src="image" class="display-image" />
+                  <img :src="image" class="display-image" loading="lazy" />
                 </div>
               </div>
             </div>
@@ -302,10 +302,8 @@ const loadShopImages = async (shopId) => {
       const imageUrls = await response.json();
       console.log(`从API获取的图片URL (${imageUrls?.length || 0}张):`, imageUrls);
       if (imageUrls && imageUrls.length > 0) {
-        // 添加时间戳防止缓存
-        const timestamp = new Date().getTime();
         shopImages.value = imageUrls.map((imageUrl, index) => ({
-          url: getImageUrl(imageUrl) + `?t=${timestamp}`,
+          url: getImageUrl(imageUrl),
           description: `汉服展示 ${index + 1}`,
         }));
         console.log("设置后的shopImages:", shopImages.value);
@@ -608,13 +606,21 @@ onMounted(() => {
   }
 
   // 从路由参数获取店铺ID并加载数据
-  const shopId = parseInt(route.params.id);
-  if (shopId) {
+  const idParam = route.params.id;
+  let shopId;
+  if (idParam) {
+    // 移除可能存在的查询参数
+    const cleanId = String(idParam).split("?")[0];
+    shopId = parseInt(cleanId);
+  }
+
+  if (shopId && !isNaN(shopId)) {
     console.log(`页面加载，开始加载店铺${shopId}的数据...`);
     loadShop(shopId);
     loadShopRatingDistribution(shopId);
     loadShopReviews(shopId);
   } else {
+    console.error("无效的店铺ID:", idParam);
     ElMessage.error("店铺ID无效");
     router.push("/shop-list");
   }
@@ -948,6 +954,7 @@ const goBack = () => {
   cursor: pointer;
   transition: transform 0.3s;
   background-color: #f5f5f5;
+  aspect-ratio: 1 / 1;
 }
 
 .image-item:hover {
@@ -956,9 +963,9 @@ const goBack = () => {
 
 .display-image {
   width: 100%;
-  height: auto;
+  height: 100%;
   display: block;
-  object-fit: contain;
+  object-fit: cover;
 }
 
 .image-overlay {
@@ -1224,7 +1231,7 @@ const goBack = () => {
   }
 
   .image-item {
-    height: 200px;
+    aspect-ratio: 1 / 1;
   }
 
   .service-list {

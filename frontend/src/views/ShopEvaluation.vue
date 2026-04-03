@@ -184,12 +184,7 @@ onMounted(() => {
 
 // 跳转到店铺详情
 const viewShopDetail = (shop) => {
-  router.push({
-    path: `/shop-detail/${shop.id}`,
-    query: {
-      from: "shop-evaluation",
-    },
-  });
+  router.push(`/shop-detail/${shop.id}`);
 };
 
 const goToProfile = () => {
