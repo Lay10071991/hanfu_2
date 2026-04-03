@@ -32,6 +32,7 @@
 import ShopManagement from "./ShopManagement.vue";
 import EvaluationManagement from "./EvaluationManagement.vue";
 import ServiceManagement from "./ServiceManagement.vue";
+import Profile from "./Profile.vue";
 
 export default {
   name: "MerchantLayout",
@@ -39,12 +40,14 @@ export default {
     ShopManagement,
     EvaluationManagement,
     ServiceManagement,
+    Profile,
   },
   data() {
     return {
-      activeMenu: "shops",
+      activeMenu: "profile",
       username: "",
       menuItems: [
+        { name: "profile", label: "个人信息", icon: "👤" },
         { name: "shops", label: "店铺管理", icon: "🏪" },
         { name: "evaluations", label: "评价管理", icon: "⭐" },
       ],
@@ -53,6 +56,7 @@ export default {
   computed: {
     currentComponent() {
       const componentMap = {
+        profile: "Profile",
         shops: "ShopManagement",
         evaluations: "EvaluationManagement",
       };
@@ -74,6 +78,10 @@ export default {
     logout() {
       localStorage.removeItem("user");
       localStorage.removeItem("isLoggedIn");
+      localStorage.removeItem("username");
+      localStorage.removeItem("gender");
+      localStorage.removeItem("bio");
+      localStorage.removeItem("role");
       this.$router.push("/login");
     },
   },

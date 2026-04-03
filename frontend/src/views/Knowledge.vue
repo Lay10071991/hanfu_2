@@ -630,6 +630,7 @@ const logout = () => {
   localStorage.removeItem("gender");
   localStorage.removeItem("bio");
   localStorage.removeItem("role");
+  localStorage.removeItem("user");
   ElMessage.success("退出登录成功");
   router.push("/login");
 };
