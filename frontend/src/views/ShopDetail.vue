@@ -9,7 +9,7 @@
           <li class="nav-item" @click="goToHome">汉服知识库</li>
           <li class="nav-item" @click="goToCulture">传统文化学习</li>
           <li class="nav-item" @click="goToActivity">汉服活动召集</li>
-          <li class="nav-item active">汉服店铺测评</li>
+          <li class="nav-item active" @click="goToShopList">汉服店铺测评</li>
           <li class="nav-item" @click="goToCommunity">社区互动</li>
           <li class="nav-item" @click="$router.push('/ai-chat')">AI问答</li>
           <li class="nav-item" @click="goToProfile">个人中心</li>
@@ -88,7 +88,7 @@
               <div class="image-grid">
                 <div
                   v-for="(image, index) in hanfuImages.slice(0, 9)"
-                  :key="image"
+                  :key="index"
                   class="image-item"
                   @click="previewImage(index)"
                 >
@@ -224,7 +224,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { ElMessage } from "element-plus";
 import {
@@ -295,20 +295,26 @@ const loadShop = async (shopId) => {
 // 从后端加载店铺图片
 const loadShopImages = async (shopId) => {
   try {
+    console.log(`开始加载店铺${shopId}的图片...`);
     const response = await fetch(`http://localhost:8082/api/shop-shows/shop/${shopId}/images`);
+    console.log(`API响应状态:`, response.status);
     if (response.ok) {
       const imageUrls = await response.json();
-      console.log("从API获取的图片URL:", imageUrls);
+      console.log(`从API获取的图片URL (${imageUrls?.length || 0}张):`, imageUrls);
       if (imageUrls && imageUrls.length > 0) {
+        // 添加时间戳防止缓存
+        const timestamp = new Date().getTime();
         shopImages.value = imageUrls.map((imageUrl, index) => ({
-          url: getImageUrl(imageUrl),
+          url: getImageUrl(imageUrl) + `?t=${timestamp}`,
           description: `汉服展示 ${index + 1}`,
         }));
         console.log("设置后的shopImages:", shopImages.value);
       } else {
+        console.warn(`店铺${shopId}没有图片数据，使用默认图片`);
         setDefaultImages();
       }
     } else {
+      console.error(`API请求失败，状态码: ${response.status}`);
       setDefaultImages();
     }
   } catch (error) {
@@ -507,12 +513,14 @@ const contact = computed(() => {
 // 汉服展示图片
 const hanfuImages = computed(() => {
   // 使用从后端加载的图片
+  console.log("hanfuImages computed, shopImages.length:", shopImages.value.length);
   if (shopImages.value.length > 0) {
     const urls = shopImages.value.map((img) => img.url);
-    console.log("hanfuImages computed:", urls);
+    console.log("hanfuImages返回的URL列表:", urls);
     return urls;
   }
   // 默认图片（最少1张）
+  console.log("使用默认图片");
   return ["/shop-hanfu/q (1).png"];
 });
 
@@ -584,6 +592,15 @@ const calculatedRating = computed(() => {
   return parseFloat((weightedSum / totalCount).toFixed(1));
 });
 
+// 监听 shopImages 变化
+watch(
+  shopImages,
+  (newVal, oldVal) => {
+    console.log(`shopImages 变化: ${oldVal?.length || 0} -> ${newVal?.length || 0}`, newVal);
+  },
+  { deep: true },
+);
+
 onMounted(() => {
   const savedUsername = localStorage.getItem("username");
   if (savedUsername) {
@@ -593,8 +610,8 @@ onMounted(() => {
   // 从路由参数获取店铺ID并加载数据
   const shopId = parseInt(route.params.id);
   if (shopId) {
+    console.log(`页面加载，开始加载店铺${shopId}的数据...`);
     loadShop(shopId);
-    loadShopServices(shopId);
     loadShopRatingDistribution(shopId);
     loadShopReviews(shopId);
   } else {
@@ -639,9 +656,8 @@ const toggleShowAllReviews = () => {
   showAllReviews.value = !showAllReviews.value;
 };
 
-// 在 ShopDetail.vue 的 goToEvaluation 函数中
+// 跳转到评价表单页面
 const goToEvaluation = () => {
-  // 跳转到评价表单页面
   router.push(`/shop-evaluation-form/${shop.value.id}`);
 };
 
@@ -650,6 +666,7 @@ const goToHome = () => router.push("/");
 const goToCulture = () => router.push("/culture");
 const goToActivity = () => router.push("/activity");
 const goToCommunity = () => router.push("/community");
+const goToShopList = () => router.push("/shop-list");
 
 // 个人中心跳转
 const goToProfile = () => {
@@ -672,22 +689,7 @@ const logout = () => {
 
 // 返回方法
 const goBack = () => {
-  // 检查是否从profile页面跳转过来
-  const from = route.query.from;
-  const menu = route.query.menu;
-
-  if (from === "profile" && menu) {
-    // 返回到profile页面并恢复菜单状态
-    router.push({
-      path: "/profile",
-      query: {
-        menu: menu,
-      },
-    });
-  } else {
-    // 否则使用默认的返回
-    router.back();
-  }
+  router.push("/shop-list");
 };
 </script>
 
@@ -941,11 +943,11 @@ const goBack = () => {
 
 .image-item {
   position: relative;
-  height: 250px;
   border-radius: 8px;
   overflow: hidden;
   cursor: pointer;
   transition: transform 0.3s;
+  background-color: #f5f5f5;
 }
 
 .image-item:hover {
@@ -954,8 +956,9 @@ const goBack = () => {
 
 .display-image {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto;
+  display: block;
+  object-fit: contain;
 }
 
 .image-overlay {

@@ -26,7 +26,7 @@
         <!-- 页面标题区域 - 上下排布 -->
         <div class="page-header-vertical">
           <!-- 返回按钮在上方 -->
-          <el-button type="text" @click="$router.back()" class="back-btn-vertical">
+          <el-button type="text" @click="goBack" class="back-btn-vertical">
             <el-icon><ArrowLeft /></el-icon> 返回
           </el-button>
           <!-- 页面标题在下方 -->
@@ -80,19 +80,9 @@
 
         <!-- 店铺列表 -->
         <div class="shop-list">
-          <div
-            class="shop-item"
-            v-for="shop in currentPageShops"
-            :key="shop.id"
-            @click="viewShopDetail(shop)"
-          >
+          <div class="shop-item" v-for="shop in currentPageShops" :key="shop.id">
             <div class="shop-item-img">
-              <el-image
-                :src="shop.image"
-                :alt="shop.name"
-                fit="cover"
-                :preview-src-list="[shop.image]"
-              />
+              <el-image :src="shop.image" :alt="shop.name" fit="cover" :preview-src-list="[]" />
             </div>
             <div class="shop-item-info">
               <div class="shop-item-header">
@@ -164,12 +154,13 @@
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { ElMessage } from "element-plus";
 import { ArrowLeft, Search, Location, ShoppingBag, PriceTag } from "@element-plus/icons-vue";
 import { getImageUrl } from "../utils/imageHelper.js";
 
 const router = useRouter();
+const route = useRoute();
 const username = ref("");
 
 // 搜索和筛选相关 - 确保初始值为空字符串而不是undefined
@@ -183,6 +174,26 @@ const pageSize = ref(6);
 
 // 店铺数据 - 从数据库加载
 const allShops = ref([]);
+
+// 从URL参数恢复页面状态
+const restorePageState = () => {
+  const query = route.query;
+  if (query.page) {
+    currentPage.value = parseInt(query.page) || 1;
+  }
+  if (query.pageSize) {
+    pageSize.value = parseInt(query.pageSize) || 6;
+  }
+  if (query.keyword !== undefined) {
+    searchKeyword.value = query.keyword || "";
+  }
+  if (query.priceRange !== undefined) {
+    selectedPriceRange.value = query.priceRange || "";
+  }
+  if (query.sort) {
+    sortBy.value = query.sort;
+  }
+};
 
 // 计算属性：过滤后的店铺
 const filteredShops = computed(() => {
@@ -230,8 +241,16 @@ onMounted(async () => {
     username.value = savedUsername;
   }
 
+  // 先恢复页面状态，再加载数据
+  restorePageState();
+
   // 加载店铺数据
   await loadShops();
+
+  // 数据加载完成后，如果有URL参数，确保分页组件正确显示
+  if (route.query.page) {
+    currentPage.value = parseInt(route.query.page) || 1;
+  }
 });
 
 // 加载店铺数据
@@ -305,6 +324,10 @@ const resetFilters = () => {
   selectedPriceRange.value = "";
   sortBy.value = "rating_desc";
   currentPage.value = 1;
+};
+
+const goBack = () => {
+  router.push("/shop-evaluation");
 };
 
 const viewShopDetail = (shop) => {

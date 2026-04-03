@@ -227,7 +227,11 @@ const submitEvaluation = async () => {
       ElMessageBox.alert("感谢您的评价！您的反馈将帮助其他用户做出更好的选择。", "提交成功", {
         confirmButtonText: "确定",
         callback: () => {
-          router.push(`/shop-detail/${shopId}`);
+          // 评价提交成功后返回店铺详情页，并标记是从评价页面返回
+          router.push({
+            path: `/shop-detail/${shopId}`,
+            query: { from: "evaluation-form" },
+          });
         },
       });
     } else {

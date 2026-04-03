@@ -1311,9 +1311,11 @@ INSERT INTO `shop_show` VALUES (54, 16, 'backend/uploads/shopshow/16-2.jpg', 2, 
 INSERT INTO `shop_show` VALUES (55, 16, 'backend/uploads/shopshow/16-3.jpg', 3, '2026-01-16 10:00:00', '2026-01-16 10:00:00');
 
 -- 店铺17 (天衣无缝) - 3张图片
-INSERT INTO `shop_show` VALUES (54, 17, 'backend/uploads/shopshow/17-1.jpg', 1, '2026-01-17 10:00:00', '2026-01-17 10:00:00');
-INSERT INTO `shop_show` VALUES (55, 17, 'backend/uploads/shopshow/17-2.jpg', 2, '2026-01-17 10:00:00', '2026-01-17 10:00:00');
-INSERT INTO `shop_show` VALUES (56, 17, 'backend/uploads/shopshow/17-3.jpg', 3, '2026-01-17 10:00:00', '2026-01-17 10:00:00');
+-- 先删除店铺17的旧数据（如果有重复主键）
+DELETE FROM `shop_show` WHERE `id` IN (54, 55, 56) AND `shop_id` = 17;
+INSERT INTO `shop_show` VALUES (57, 17, 'backend/uploads/shopshow/17-1.jpg', 1, '2026-01-17 10:00:00', '2026-01-17 10:00:00');
+INSERT INTO `shop_show` VALUES (58, 17, 'backend/uploads/shopshow/17-2.jpg', 2, '2026-01-17 10:00:00', '2026-01-17 10:00:00');
+INSERT INTO `shop_show` VALUES (59, 17, 'backend/uploads/shopshow/17-3.jpg', 3, '2026-01-17 10:00:00', '2026-01-17 10:00:00');
 
 
 -- ----------------------------
