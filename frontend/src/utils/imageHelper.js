@@ -3,25 +3,25 @@
  * 统一处理前台所有图片URL,确保正确显示
  */
 
-const API_BASE = 'http://localhost:8082';
+const API_BASE = "http://localhost:8082";
 
 /**
  * 图片类别配置
  * 对应后端存储的各个文件夹
  */
 export const IMAGE_CATEGORIES = {
-  FESTIVALS: 'festivals',           // 古代节俗礼仪
-  EXHIBITIONS: 'exhibitions',       // 展览
-  SHOP_HANFU: 'shop-hanfu',         // 汉服店铺
-  ETIQUETTE: 'etiquette',           // 古代仪容仪态
-  PATTERN_SYMBOLS: 'pattern-symbols', // 图案象征
-  DYNASTY_SHAPES: 'dynasty-shapes', // 各朝代形制
-  SHAPE_TYPES: 'shape-types',       // 基本形制分类
-  CLOTHING_COMPONENTS: 'clothing-components', // 服饰部件
-  FESTIVAL_ACTIVITIES: 'festival-activities', // 节庆雅集活动
-  LECTURES: 'lectures',             // 讲座
-  SHOP_DETAILS: 'shop-details',     // 店铺详情
-  COMMUNITY_POSTS: 'community-posts' // 社区帖子
+  FESTIVALS: "festivals", // 古代节俗礼仪
+  EXHIBITIONS: "exhibitions", // 展览
+  SHOP_HANFU: "shop-hanfu", // 汉服店铺
+  ETIQUETTE: "etiquette", // 古代仪容仪态
+  PATTERN_SYMBOLS: "pattern-symbols", // 图案象征
+  DYNASTY_SHAPES: "dynasty-shapes", // 各朝代形制
+  SHAPE_TYPES: "shape-types", // 基本形制分类
+  CLOTHING_COMPONENTS: "clothing-components", // 服饰部件
+  FESTIVAL_ACTIVITIES: "festival-activities", // 节庆雅集活动
+  LECTURES: "lectures", // 讲座
+  SHOP_DETAILS: "shop-details", // 店铺详情
+  COMMUNITY_POSTS: "community-posts", // 社区帖子
 };
 
 /**
@@ -30,19 +30,24 @@ export const IMAGE_CATEGORIES = {
  * @returns {string} 完整的图片URL
  */
 export function getImageUrl(url) {
-  if (!url) return '';
+  if (!url) return "";
 
   // 如果已经是完整URL,直接返回
-  if (url.startsWith('http://') || url.startsWith('https://')) {
+  if (url.startsWith("http://") || url.startsWith("https://")) {
     return url;
   }
 
   // 如果是相对路径,添加服务器地址
   // 确保路径以/开头
-  let path = url.startsWith('/') ? url : `/${url}`;
-  // 移除可能的backend/前缀
-  path = path.replace(/^\/backend\//, '/');
-  return `${API_BASE}${path}`;
+  let path = url.startsWith("/") ? url : `/${url}`;
+  // 移除可能的backend/前缀（无论是否有前导斜杠）
+  path = path.replace(/^\/?backend\//, "/");
+
+  // 对路径进行URL编码，处理包含空格等特殊字符的文件名
+  const parts = path.split("/");
+  const encodedPath = parts.map((part) => encodeURIComponent(part)).join("/");
+
+  return `${API_BASE}${encodedPath}`;
 }
 
 /**
@@ -51,11 +56,11 @@ export function getImageUrl(url) {
  * @returns {string} 相对路径
  */
 export function getRelativePath(fullUrl) {
-  if (!fullUrl) return '';
+  if (!fullUrl) return "";
 
   // 如果已经是相对路径，直接返回
-  if (!fullUrl.startsWith('http://') && !fullUrl.startsWith('https://')) {
-    return fullUrl.startsWith('/') ? fullUrl : `/${fullUrl}`;
+  if (!fullUrl.startsWith("http://") && !fullUrl.startsWith("https://")) {
+    return fullUrl.startsWith("/") ? fullUrl : `/${fullUrl}`;
   }
 
   // 从完整URL中提取相对路径
@@ -73,18 +78,18 @@ export function getRelativePath(fullUrl) {
  * @param {string} urlField - URL字段名,默认为'url'
  * @returns {Array} 处理后的图片数组
  */
-export function processImageArray(images, urlField = 'url') {
+export function processImageArray(images, urlField = "url") {
   if (!Array.isArray(images)) return [];
 
-  return images.map(img => {
-    if (typeof img === 'string') {
+  return images.map((img) => {
+    if (typeof img === "string") {
       return getImageUrl(img);
     }
 
-    if (typeof img === 'object' && img[urlField]) {
+    if (typeof img === "object" && img[urlField]) {
       return {
         ...img,
-        [urlField]: getImageUrl(img[urlField])
+        [urlField]: getImageUrl(img[urlField]),
       };
     }
 
@@ -98,7 +103,7 @@ export function processImageArray(images, urlField = 'url') {
  * @param {string} imageField - 图片字段名，默认为'image'
  * @returns {Object} 处理后的实体对象
  */
-export function processEntityImage(entity, imageField = 'image') {
+export function processEntityImage(entity, imageField = "image") {
   if (!entity) return entity;
 
   const processed = { ...entity };
@@ -116,7 +121,7 @@ export function processEntityImage(entity, imageField = 'image') {
  * @returns {Object} 处理后的节日对象
  */
 export function processFestivalImages(festival) {
-  return processEntityImage(festival, 'image');
+  return processEntityImage(festival, "image");
 }
 
 /**
@@ -132,11 +137,11 @@ export function processPostImages(post) {
   // 处理主图片 - 优先使用images数组的第一张，否则使用image/imageUrl
   if (post.images && Array.isArray(post.images) && post.images.length > 0) {
     // 处理images数组中的图片URL
-    processed.images = processImageArray(post.images, 'url');
+    processed.images = processImageArray(post.images, "url");
     // 第一张图片作为主图
     if (processed.images[0]) {
       const firstImage = processed.images[0];
-      processed.image = typeof firstImage === 'string' ? firstImage : firstImage.url;
+      processed.image = typeof firstImage === "string" ? firstImage : firstImage.url;
       processed.imageUrl = processed.image;
     }
   } else if (processed.imageUrl || processed.image) {
@@ -180,7 +185,7 @@ export function processShopImages(shop) {
  * @returns {Object} 处理后的活动对象
  */
 export function processActivityImages(activity) {
-  return processEntityImage(activity, 'image');
+  return processEntityImage(activity, "image");
 }
 
 /**
@@ -200,8 +205,8 @@ export function processAvatar(avatar) {
 export function isValidImageFile(file) {
   if (!file) return false;
 
-  const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
-  const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+  const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp"];
+  const allowedExtensions = [".jpg", ".jpeg", ".png", ".gif", ".webp"];
 
   // 检查 MIME 类型
   if (allowedTypes.includes(file.type)) {
@@ -210,7 +215,7 @@ export function isValidImageFile(file) {
 
   // 检查文件扩展名
   const fileName = file.name.toLowerCase();
-  return allowedExtensions.some(ext => fileName.endsWith(ext));
+  return allowedExtensions.some((ext) => fileName.endsWith(ext));
 }
 
 /**
@@ -232,10 +237,10 @@ export function isValidFileSize(file, maxSizeMB = 10) {
  * @returns {string} 扩展名（不含点）
  */
 export function getFileExtension(fileName) {
-  if (!fileName || !fileName.includes('.')) {
-    return '';
+  if (!fileName || !fileName.includes(".")) {
+    return "";
   }
-  return fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
+  return fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
 }
 
 /**
@@ -258,12 +263,7 @@ export function generateUniqueFileName(originalName) {
  */
 export function compressImage(file, options = {}) {
   return new Promise((resolve, reject) => {
-    const {
-      maxWidth = 1920,
-      maxHeight = 1080,
-      quality = 0.8,
-      type = 'image/jpeg'
-    } = options;
+    const { maxWidth = 1920, maxHeight = 1080, quality = 0.8, type = "image/jpeg" } = options;
 
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -278,11 +278,11 @@ export function compressImage(file, options = {}) {
           height *= ratio;
         }
 
-        const canvas = document.createElement('canvas');
+        const canvas = document.createElement("canvas");
         canvas.width = width;
         canvas.height = height;
 
-        const ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext("2d");
         ctx.drawImage(img, 0, 0, width, height);
 
         canvas.toBlob(
@@ -290,17 +290,17 @@ export function compressImage(file, options = {}) {
             if (blob) {
               resolve(blob);
             } else {
-              reject(new Error('图片压缩失败'));
+              reject(new Error("图片压缩失败"));
             }
           },
           type,
-          quality
+          quality,
         );
       };
-      img.onerror = () => reject(new Error('图片加载失败'));
+      img.onerror = () => reject(new Error("图片加载失败"));
       img.src = e.target.result;
     };
-    reader.onerror = () => reject(new Error('文件读取失败'));
+    reader.onerror = () => reject(new Error("文件读取失败"));
     reader.readAsDataURL(file);
   });
 }
@@ -312,11 +312,11 @@ export function compressImage(file, options = {}) {
  * @param {string} fileFieldName - 文件字段名，默认'image'
  * @returns {FormData} FormData对象
  */
-export function createUploadFormData(file, additionalData = {}, fileFieldName = 'image') {
+export function createUploadFormData(file, additionalData = {}, fileFieldName = "image") {
   const formData = new FormData();
   formData.append(fileFieldName, file);
 
-  Object.keys(additionalData).forEach(key => {
+  Object.keys(additionalData).forEach((key) => {
     if (additionalData[key] !== undefined && additionalData[key] !== null) {
       formData.append(key, additionalData[key]);
     }
@@ -342,5 +342,5 @@ export default {
   getFileExtension,
   generateUniqueFileName,
   compressImage,
-  createUploadFormData
+  createUploadFormData,
 };

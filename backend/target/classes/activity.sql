@@ -1225,97 +1225,96 @@ CREATE TABLE `shop_show` (
 -- ----------------------------
 -- Records of shop_show - 店铺汉服展示图片
 -- ----------------------------
--- 店铺1 (汉服小铺) - 3张图片
+-- 店铺1 (汉服小铺) - 2张图片
 INSERT INTO `shop_show` VALUES (1, 1, 'backend/uploads/shopshow/1-1.jpg', 1, '2026-01-01 10:00:00', '2026-01-01 10:00:00');
 INSERT INTO `shop_show` VALUES (2, 1, 'backend/uploads/shopshow/1-2.jpg', 2, '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_show` VALUES (3, 1, 'backend/uploads/shopshow/1-3.jpg', 3, '2026-01-01 10:00:00', '2026-01-01 10:00:00');
 
 -- 店铺2 (霓裳羽衣) - 4张图片
-INSERT INTO `shop_show` VALUES (6, 2, 'backend/uploads/shopshow/2-1.jpg', 1, '2026-01-02 10:00:00', '2026-01-02 10:00:00');
-INSERT INTO `shop_show` VALUES (7, 2, 'backend/uploads/shopshow/2-2.jpg', 2, '2026-01-02 10:00:00', '2026-01-02 10:00:00');
-INSERT INTO `shop_show` VALUES (8, 2, 'backend/uploads/shopshow/2-3.jpg', 3, '2026-01-02 10:00:00', '2026-01-02 10:00:00');
-INSERT INTO `shop_show` VALUES (9, 2, 'backend/uploads/shopshow/2-4.jpg', 4, '2026-01-02 10:00:00', '2026-01-02 10:00:00');
+INSERT INTO `shop_show` VALUES (3, 2, 'backend/uploads/shopshow/2-1.jpg', 1, '2026-01-02 10:00:00', '2026-01-02 10:00:00');
+INSERT INTO `shop_show` VALUES (4, 2, 'backend/uploads/shopshow/2-2.jpg', 2, '2026-01-02 10:00:00', '2026-01-02 10:00:00');
+INSERT INTO `shop_show` VALUES (5, 2, 'backend/uploads/shopshow/2-3.jpg', 3, '2026-01-02 10:00:00', '2026-01-02 10:00:00');
+INSERT INTO `shop_show` VALUES (6, 2, 'backend/uploads/shopshow/2-4.jpg', 4, '2026-01-02 10:00:00', '2026-01-02 10:00:00');
 
 -- 店铺3 (汉风堂) - 5张图片
-INSERT INTO `shop_show` VALUES (10, 3, 'backend/uploads/shopshow/3-1.jpg', 1, '2026-01-03 10:00:00', '2026-01-03 10:00:00');
-INSERT INTO `shop_show` VALUES (11, 3, 'backend/uploads/shopshow/3-2.jpg', 2, '2026-01-03 10:00:00', '2026-01-03 10:00:00');
-INSERT INTO `shop_show` VALUES (12, 3, 'backend/uploads/shopshow/3-3.jpg', 3, '2026-01-03 10:00:00', '2026-01-03 10:00:00');
-INSERT INTO `shop_show` VALUES (13, 3, 'backend/uploads/shopshow/3-4.jpg', 4, '2026-01-03 10:00:00', '2026-01-03 10:00:00');
-INSERT INTO `shop_show` VALUES (14, 3, 'backend/uploads/shopshow/3-5.jpg', 5, '2026-01-03 10:00:00', '2026-01-03 10:00:00');
+INSERT INTO `shop_show` VALUES (7, 3, 'backend/uploads/shopshow/3-1.jpg', 1, '2026-01-03 10:00:00', '2026-01-03 10:00:00');
+INSERT INTO `shop_show` VALUES (8, 3, 'backend/uploads/shopshow/3-2.jpg', 2, '2026-01-03 10:00:00', '2026-01-03 10:00:00');
+INSERT INTO `shop_show` VALUES (9, 3, 'backend/uploads/shopshow/3-3.jpg', 3, '2026-01-03 10:00:00', '2026-01-03 10:00:00');
+INSERT INTO `shop_show` VALUES (10, 3, 'backend/uploads/shopshow/3-4.jpg', 4, '2026-01-03 10:00:00', '2026-01-03 10:00:00');
+INSERT INTO `shop_show` VALUES (11, 3, 'backend/uploads/shopshow/3-5.jpg', 5, '2026-01-03 10:00:00', '2026-01-03 10:00:00');
 
 -- 店铺4 (华服小馆) - 3张图片
-INSERT INTO `shop_show` VALUES (15, 4, 'backend/uploads/shopshow/4-1.jpg', 1, '2026-01-04 10:00:00', '2026-01-04 10:00:00');
-INSERT INTO `shop_show` VALUES (16, 4, 'backend/uploads/shopshow/4-2.jpg', 2, '2026-01-04 10:00:00', '2026-01-04 10:00:00');
-INSERT INTO `shop_show` VALUES (17, 4, 'backend/uploads/shopshow/4-3.jpg', 3, '2026-01-04 10:00:00', '2026-01-04 10:00:00');
+INSERT INTO `shop_show` VALUES (12, 4, 'backend/uploads/shopshow/4-1.jpg', 1, '2026-01-04 10:00:00', '2026-01-04 10:00:00');
+INSERT INTO `shop_show` VALUES (13, 4, 'backend/uploads/shopshow/4-2.jpg', 2, '2026-01-04 10:00:00', '2026-01-04 10:00:00');
+INSERT INTO `shop_show` VALUES (14, 4, 'backend/uploads/shopshow/4-3.jpg', 3, '2026-01-04 10:00:00', '2026-01-04 10:00:00');
 
 -- 店铺5 (汉服世家) - 3张图片
-INSERT INTO `shop_show` VALUES (18, 5, 'backend/uploads/shopshow/5-1.jpg', 1, '2026-01-05 10:00:00', '2026-01-05 10:00:00');
-INSERT INTO `shop_show` VALUES (19, 5, 'backend/uploads/shopshow/5-2.jpg', 2, '2026-01-05 10:00:00', '2026-01-05 10:00:00');
-INSERT INTO `shop_show` VALUES (20, 5, 'backend/uploads/shopshow/5-3.jpg', 3, '2026-01-05 10:00:00', '2026-01-05 10:00:00');
+INSERT INTO `shop_show` VALUES (15, 5, 'backend/uploads/shopshow/5-1.jpg', 1, '2026-01-05 10:00:00', '2026-01-05 10:00:00');
+INSERT INTO `shop_show` VALUES (16, 5, 'backend/uploads/shopshow/5-2.jpg', 2, '2026-01-05 10:00:00', '2026-01-05 10:00:00');
+INSERT INTO `shop_show` VALUES (17, 5, 'backend/uploads/shopshow/5-3.jpg', 3, '2026-01-05 10:00:00', '2026-01-05 10:00:00');
 
 -- 店铺6 (雅韵汉服) - 3张图片
-INSERT INTO `shop_show` VALUES (21, 6, 'backend/uploads/shopshow/6-1.jpg', 1, '2026-01-06 10:00:00', '2026-01-06 10:00:00');
-INSERT INTO `shop_show` VALUES (22, 6, 'backend/uploads/shopshow/6-2.jpg', 2, '2026-01-06 10:00:00', '2026-01-06 10:00:00');
-INSERT INTO `shop_show` VALUES (23, 6, 'backend/uploads/shopshow/6-3.jpg', 3, '2026-01-06 10:00:00', '2026-01-06 10:00:00');
+INSERT INTO `shop_show` VALUES (18, 6, 'backend/uploads/shopshow/6-1.jpg', 1, '2026-01-06 10:00:00', '2026-01-06 10:00:00');
+INSERT INTO `shop_show` VALUES (19, 6, 'backend/uploads/shopshow/6-2.jpg', 2, '2026-01-06 10:00:00', '2026-01-06 10:00:00');
+INSERT INTO `shop_show` VALUES (20, 6, 'backend/uploads/shopshow/6-3.jpg', 3, '2026-01-06 10:00:00', '2026-01-06 10:00:00');
 
 -- 店铺7 (汉唐华服) - 3张图片
-INSERT INTO `shop_show` VALUES (24, 7, 'backend/uploads/shopshow/7-1.jpg', 1, '2026-01-07 10:00:00', '2026-01-07 10:00:00');
-INSERT INTO `shop_show` VALUES (25, 7, 'backend/uploads/shopshow/7-2.jpg', 2, '2026-01-07 10:00:00', '2026-01-07 10:00:00');
-INSERT INTO `shop_show` VALUES (26, 7, 'backend/uploads/shopshow/7-3.jpg', 3, '2026-01-07 10:00:00', '2026-01-07 10:00:00');
+INSERT INTO `shop_show` VALUES (21, 7, 'backend/uploads/shopshow/7-1.jpg', 1, '2026-01-07 10:00:00', '2026-01-07 10:00:00');
+INSERT INTO `shop_show` VALUES (22, 7, 'backend/uploads/shopshow/7-2.jpg', 2, '2026-01-07 10:00:00', '2026-01-07 10:00:00');
+INSERT INTO `shop_show` VALUES (23, 7, 'backend/uploads/shopshow/7-3.jpg', 3, '2026-01-07 10:00:00', '2026-01-07 10:00:00');
 
 -- 店铺8 (锦绣坊) - 3张图片
-INSERT INTO `shop_show` VALUES (27, 8, 'backend/uploads/shopshow/8-1.jpg', 1, '2026-01-08 10:00:00', '2026-01-08 10:00:00');
-INSERT INTO `shop_show` VALUES (28, 8, 'backend/uploads/shopshow/8-2.jpg', 2, '2026-01-08 10:00:00', '2026-01-08 10:00:00');
-INSERT INTO `shop_show` VALUES (29, 8, 'backend/uploads/shopshow/8-3.jpg', 3, '2026-01-08 10:00:00', '2026-01-08 10:00:00');
+INSERT INTO `shop_show` VALUES (24, 8, 'backend/uploads/shopshow/8-1.jpg', 1, '2026-01-08 10:00:00', '2026-01-08 10:00:00');
+INSERT INTO `shop_show` VALUES (25, 8, 'backend/uploads/shopshow/8-2.jpg', 2, '2026-01-08 10:00:00', '2026-01-08 10:00:00');
+INSERT INTO `shop_show` VALUES (26, 8, 'backend/uploads/shopshow/8-3.jpg', 3, '2026-01-08 10:00:00', '2026-01-08 10:00:00');
 
 -- 店铺9 (古风雅韵) - 3张图片
-INSERT INTO `shop_show` VALUES (30, 9, 'backend/uploads/shopshow/9-1.jpg', 1, '2026-01-09 10:00:00', '2026-01-09 10:00:00');
-INSERT INTO `shop_show` VALUES (31, 9, 'backend/uploads/shopshow/9-2.jpg', 2, '2026-01-09 10:00:00', '2026-01-09 10:00:00');
-INSERT INTO `shop_show` VALUES (32, 9, 'backend/uploads/shopshow/9-3.jpg', 3, '2026-01-09 10:00:00', '2026-01-09 10:00:00');
+INSERT INTO `shop_show` VALUES (27, 9, 'backend/uploads/shopshow/9-1.jpg', 1, '2026-01-09 10:00:00', '2026-01-09 10:00:00');
+INSERT INTO `shop_show` VALUES (28, 9, 'backend/uploads/shopshow/9-2.jpg', 2, '2026-01-09 10:00:00', '2026-01-09 10:00:00');
+INSERT INTO `shop_show` VALUES (29, 9, 'backend/uploads/shopshow/9-3.jpg', 3, '2026-01-09 10:00:00', '2026-01-09 10:00:00');
 
 -- 店铺10 (汉衣坊) - 3张图片
-INSERT INTO `shop_show` VALUES (33, 10, 'backend/uploads/shopshow/10-1.jpg', 1, '2026-01-10 10:00:00', '2026-01-10 10:00:00');
-INSERT INTO `shop_show` VALUES (34, 10, 'backend/uploads/shopshow/10-2.jpg', 2, '2026-01-10 10:00:00', '2026-01-10 10:00:00');
-INSERT INTO `shop_show` VALUES (35, 10, 'backend/uploads/shopshow/10-3.jpg', 3, '2026-01-10 10:00:00', '2026-01-10 10:00:00');
+INSERT INTO `shop_show` VALUES (30, 10, 'backend/uploads/shopshow/10-1.jpg', 1, '2026-01-10 10:00:00', '2026-01-10 10:00:00');
+INSERT INTO `shop_show` VALUES (31, 10, 'backend/uploads/shopshow/10-2.jpg', 2, '2026-01-10 10:00:00', '2026-01-10 10:00:00');
+INSERT INTO `shop_show` VALUES (32, 10, 'backend/uploads/shopshow/10-3.jpg', 3, '2026-01-10 10:00:00', '2026-01-10 10:00:00');
 
 -- 店铺11 (华裳九州) - 3张图片
-INSERT INTO `shop_show` VALUES (36, 11, 'backend/uploads/shopshow/11-1.jpg', 1, '2026-01-11 10:00:00', '2026-01-11 10:00:00');
-INSERT INTO `shop_show` VALUES (37, 11, 'backend/uploads/shopshow/11-2.jpg', 2, '2026-01-11 10:00:00', '2026-01-11 10:00:00');
-INSERT INTO `shop_show` VALUES (38, 11, 'backend/uploads/shopshow/11-3.jpg', 3, '2026-01-11 10:00:00', '2026-01-11 10:00:00');
+INSERT INTO `shop_show` VALUES (33, 11, 'backend/uploads/shopshow/11-1.jpg', 1, '2026-01-11 10:00:00', '2026-01-11 10:00:00');
+INSERT INTO `shop_show` VALUES (34, 11, 'backend/uploads/shopshow/11-2.jpg', 2, '2026-01-11 10:00:00', '2026-01-11 10:00:00');
+INSERT INTO `shop_show` VALUES (35, 11, 'backend/uploads/shopshow/11-3.jpg', 3, '2026-01-11 10:00:00', '2026-01-11 10:00:00');
 
 -- 店铺12 (礼乐衣冠) - 3张图片
-INSERT INTO `shop_show` VALUES (39, 12, 'backend/uploads/shopshow/12-1.jpg', 1, '2026-01-12 10:00:00', '2026-01-12 10:00:00');
-INSERT INTO `shop_show` VALUES (40, 12, 'backend/uploads/shopshow/12-2.jpg', 2, '2026-01-12 10:00:00', '2026-01-12 10:00:00');
-INSERT INTO `shop_show` VALUES (41, 12, 'backend/uploads/shopshow/12-3.jpg', 3, '2026-01-12 10:00:00', '2026-01-12 10:00:00');
+INSERT INTO `shop_show` VALUES (36, 12, 'backend/uploads/shopshow/12-1.jpg', 1, '2026-01-12 10:00:00', '2026-01-12 10:00:00');
+INSERT INTO `shop_show` VALUES (37, 12, 'backend/uploads/shopshow/12-2.jpg', 2, '2026-01-12 10:00:00', '2026-01-12 10:00:00');
+INSERT INTO `shop_show` VALUES (38, 12, 'backend/uploads/shopshow/12-3.jpg', 3, '2026-01-12 10:00:00', '2026-01-12 10:00:00');
 
 -- 店铺13 (盛世华服) - 3张图片
-INSERT INTO `shop_show` VALUES (42, 13, 'backend/uploads/shopshow/13-1.jpg', 1, '2026-01-13 10:00:00', '2026-01-13 10:00:00');
-INSERT INTO `shop_show` VALUES (43, 13, 'backend/uploads/shopshow/13-2.jpg', 2, '2026-01-13 10:00:00', '2026-01-13 10:00:00');
-INSERT INTO `shop_show` VALUES (44, 13, 'backend/uploads/shopshow/13-3.jpg', 3, '2026-01-13 10:00:00', '2026-01-13 10:00:00');
+INSERT INTO `shop_show` VALUES (39, 13, 'backend/uploads/shopshow/13-1.jpg', 1, '2026-01-13 10:00:00', '2026-01-13 10:00:00');
+INSERT INTO `shop_show` VALUES (40, 13, 'backend/uploads/shopshow/13-2.jpg', 2, '2026-01-13 10:00:00', '2026-01-13 10:00:00');
+INSERT INTO `shop_show` VALUES (41, 13, 'backend/uploads/shopshow/13-3.jpg', 3, '2026-01-13 10:00:00', '2026-01-13 10:00:00');
 
 -- 店铺14 (古风堂) - 3张图片
-INSERT INTO `shop_show` VALUES (45, 14, 'backend/uploads/shopshow/14-1.jpg', 1, '2026-01-14 10:00:00', '2026-01-14 10:00:00');
-INSERT INTO `shop_show` VALUES (46, 14, 'backend/uploads/shopshow/14-2.jpg', 2, '2026-01-14 10:00:00', '2026-01-14 10:00:00');
-INSERT INTO `shop_show` VALUES (47, 14, 'backend/uploads/shopshow/14-3.jpg', 3, '2026-01-14 10:00:00', '2026-01-14 10:00:00');
+INSERT INTO `shop_show` VALUES (42, 14, 'backend/uploads/shopshow/14-1.jpg', 1, '2026-01-14 10:00:00', '2026-01-14 10:00:00');
+INSERT INTO `shop_show` VALUES (43, 14, 'backend/uploads/shopshow/14-2.jpg', 2, '2026-01-14 10:00:00', '2026-01-14 10:00:00');
+INSERT INTO `shop_show` VALUES (44, 14, 'backend/uploads/shopshow/14-3.jpg', 3, '2026-01-14 10:00:00', '2026-01-14 10:00:00');
 
 -- 店铺15 (皇家织造) - 5张图片
-INSERT INTO `shop_show` VALUES (48, 15, 'backend/uploads/shopshow/15-1.jpg', 1, '2026-01-15 10:00:00', '2026-01-15 10:00:00');
-INSERT INTO `shop_show` VALUES (49, 15, 'backend/uploads/shopshow/15-2.jpg', 2, '2026-01-15 10:00:00', '2026-01-15 10:00:00');
-INSERT INTO `shop_show` VALUES (50, 15, 'backend/uploads/shopshow/15-3.jpg', 3, '2026-01-15 10:00:00', '2026-01-15 10:00:00');
-INSERT INTO `shop_show` VALUES (51, 15, 'backend/uploads/shopshow/15-4.jpg', 4, '2026-01-15 10:00:00', '2026-01-15 10:00:00');
-INSERT INTO `shop_show` VALUES (52, 15, 'backend/uploads/shopshow/15-5.jpg', 5, '2026-01-15 10:00:00', '2026-01-15 10:00:00');
+INSERT INTO `shop_show` VALUES (45, 15, 'backend/uploads/shopshow/15-1.jpg', 1, '2026-01-15 10:00:00', '2026-01-15 10:00:00');
+INSERT INTO `shop_show` VALUES (46, 15, 'backend/uploads/shopshow/15-2.jpg', 2, '2026-01-15 10:00:00', '2026-01-15 10:00:00');
+INSERT INTO `shop_show` VALUES (47, 15, 'backend/uploads/shopshow/15-3.jpg', 3, '2026-01-15 10:00:00', '2026-01-15 10:00:00');
+INSERT INTO `shop_show` VALUES (48, 15, 'backend/uploads/shopshow/15-4.jpg', 4, '2026-01-15 10:00:00', '2026-01-15 10:00:00');
+INSERT INTO `shop_show` VALUES (49, 15, 'backend/uploads/shopshow/15-5.jpg', 5, '2026-01-15 10:00:00', '2026-01-15 10:00:00');
 
 -- 店铺16 (御品华服) - 3张图片
-INSERT INTO `shop_show` VALUES (53, 16, 'backend/uploads/shopshow/16-1.jpg', 1, '2026-01-16 10:00:00', '2026-01-16 10:00:00');
-INSERT INTO `shop_show` VALUES (54, 16, 'backend/uploads/shopshow/16-2.jpg', 2, '2026-01-16 10:00:00', '2026-01-16 10:00:00');
-INSERT INTO `shop_show` VALUES (55, 16, 'backend/uploads/shopshow/16-3.jpg', 3, '2026-01-16 10:00:00', '2026-01-16 10:00:00');
+INSERT INTO `shop_show` VALUES (50, 16, 'backend/uploads/shopshow/16-1.jpg', 1, '2026-01-16 10:00:00', '2026-01-16 10:00:00');
+INSERT INTO `shop_show` VALUES (51, 16, 'backend/uploads/shopshow/16-2.jpg', 2, '2026-01-16 10:00:00', '2026-01-16 10:00:00');
+INSERT INTO `shop_show` VALUES (52, 16, 'backend/uploads/shopshow/16-3.jpg', 3, '2026-01-16 10:00:00', '2026-01-16 10:00:00');
 
 -- 店铺17 (天衣无缝) - 3张图片
 -- 先删除店铺17的旧数据（如果有重复主键）
 DELETE FROM `shop_show` WHERE `id` IN (54, 55, 56) AND `shop_id` = 17;
-INSERT INTO `shop_show` VALUES (57, 17, 'backend/uploads/shopshow/17-1.jpg', 1, '2026-01-17 10:00:00', '2026-01-17 10:00:00');
-INSERT INTO `shop_show` VALUES (58, 17, 'backend/uploads/shopshow/17-2.jpg', 2, '2026-01-17 10:00:00', '2026-01-17 10:00:00');
-INSERT INTO `shop_show` VALUES (59, 17, 'backend/uploads/shopshow/17-3.jpg', 3, '2026-01-17 10:00:00', '2026-01-17 10:00:00');
+INSERT INTO `shop_show` VALUES (53, 17, 'backend/uploads/shopshow/17-1.jpg', 1, '2026-01-17 10:00:00', '2026-01-17 10:00:00');
+INSERT INTO `shop_show` VALUES (54, 17, 'backend/uploads/shopshow/17-2.jpg', 2, '2026-01-17 10:00:00', '2026-01-17 10:00:00');
+INSERT INTO `shop_show` VALUES (55, 17, 'backend/uploads/shopshow/17-3.jpg', 3, '2026-01-17 10:00:00', '2026-01-17 10:00:00');
 
 
 -- ----------------------------

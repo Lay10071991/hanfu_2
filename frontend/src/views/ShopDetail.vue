@@ -323,11 +323,11 @@ const loadShopImages = async (shopId) => {
 
 const setDefaultImages = () => {
   shopImages.value = [
-    { url: "/shop-hanfu/q (1).png", description: "传统礼服系列" },
-    { url: "/shop-hanfu/q (2).png", description: "日常汉服系列" },
-    { url: "/shop-hanfu/q (3).png", description: "婚庆特别款" },
-    { url: "/shop-hanfu/q (4).png", description: "手工刺绣款" },
-    { url: "/shop-hanfu/q (5).png", description: "改良设计款" },
+    { url: getImageUrl("/shop-hanfu/q (1).png"), description: "传统礼服系列" },
+    { url: getImageUrl("/shop-hanfu/q (2).png"), description: "日常汉服系列" },
+    { url: getImageUrl("/shop-hanfu/q (3).png"), description: "婚庆特别款" },
+    { url: getImageUrl("/shop-hanfu/q (4).png"), description: "手工刺绣款" },
+    { url: getImageUrl("/shop-hanfu/q (5).png"), description: "改良设计款" },
   ];
 };
 
@@ -519,7 +519,7 @@ const hanfuImages = computed(() => {
   }
   // 默认图片（最少1张）
   console.log("使用默认图片");
-  return ["/shop-hanfu/q (1).png"];
+  return [getImageUrl("/shop-hanfu/q (1).png")];
 });
 
 // 获取图片描述文字
@@ -954,7 +954,7 @@ const goBack = () => {
   cursor: pointer;
   transition: transform 0.3s;
   background-color: #f5f5f5;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 4 / 3;
 }
 
 .image-item:hover {
@@ -965,7 +965,7 @@ const goBack = () => {
   width: 100%;
   height: 100%;
   display: block;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .image-overlay {
