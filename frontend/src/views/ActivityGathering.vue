@@ -257,7 +257,7 @@
           <el-button
             :type="
               isExhibitionExpired(selectedExhibition.date)
-                ? 'danger'
+                ? 'info'
                 : exhibitionAppointments.has(selectedExhibition.id)
                   ? 'warning'
                   : 'primary'
@@ -397,7 +397,7 @@
           <el-button
             :type="
               isLectureExpired(selectedLecture.date)
-                ? 'danger'
+                ? 'info'
                 : lectureAppointments.has(selectedLecture.id)
                   ? 'warning'
                   : 'primary'
@@ -487,10 +487,35 @@ const parseChineseDate = (dateStr) => {
 // 解析展览结束日期
 const parseExhibitionEndDate = (dateStr) => {
   // 处理 "2024年12月1日 至 2024年12月31日" 格式
-  const match = dateStr.match(/至\s*(\d{4})年(\d{1,2})月(\d{1,2})日/);
-  if (match) {
-    return new Date(parseInt(match[1]), parseInt(match[2]) - 1, parseInt(match[3]));
+  const match1 = dateStr.match(/至\s*(\d{4})年(\d{1,2})月(\d{1,2})日/);
+  if (match1) {
+    return new Date(parseInt(match1[1]), parseInt(match1[2]) - 1, parseInt(match1[3]));
   }
+
+  // 处理 "2024/12/1 至 2024/12/31" 格式
+  const match2 = dateStr.match(/至\s*(\d{4})\/(\d{1,2})\/(\d{1,2})/);
+  if (match2) {
+    return new Date(parseInt(match2[1]), parseInt(match2[2]) - 1, parseInt(match2[3]));
+  }
+
+  // 处理 "2024-12-1 至 2024-12-31" 格式
+  const match3 = dateStr.match(/至\s*(\d{4})-(\d{1,2})-(\d{1,2})/);
+  if (match3) {
+    return new Date(parseInt(match3[1]), parseInt(match3[2]) - 1, parseInt(match3[3]));
+  }
+
+  // 处理 "2024/12/1 2024/12/31" 格式（无"至"字）
+  const match4 = dateStr.match(/(\d{4})\/(\d{1,2})\/(\d{1,2})\s+(\d{4})\/(\d{1,2})\/(\d{1,2})/);
+  if (match4) {
+    return new Date(parseInt(match4[4]), parseInt(match4[5]) - 1, parseInt(match4[6]));
+  }
+
+  // 处理 "2024-12-1 2024-12-31" 格式（无"至"字）
+  const match5 = dateStr.match(/(\d{4})-(\d{1,2})-(\d{1,2})\s+(\d{4})-(\d{1,2})-(\d{1,2})/);
+  if (match5) {
+    return new Date(parseInt(match5[4]), parseInt(match5[5]) - 1, parseInt(match5[6]));
+  }
+
   // 处理单个日期格式
   return parseChineseDate(dateStr);
 };
@@ -504,13 +529,30 @@ const isExhibitionExpired = (dateStr) => {
 
 // 判断讲座是否已过期
 const isLectureExpired = (dateStr) => {
-  // 解析讲座日期
-  const match = dateStr.match(/(\d{4})年(\d{1,2})月(\d{1,2})日/);
-  if (match) {
-    const lectureDate = new Date(parseInt(match[1]), parseInt(match[2]) - 1, parseInt(match[3]));
+  // 解析讲座日期 - 年-月-日格式
+  const match1 = dateStr.match(/(\d{4})年(\d{1,2})月(\d{1,2})日/);
+  if (match1) {
+    const lectureDate = new Date(parseInt(match1[1]), parseInt(match1[2]) - 1, parseInt(match1[3]));
     const now = new Date();
     return lectureDate < now;
   }
+
+  // 解析讲座日期 - /分隔格式
+  const match2 = dateStr.match(/(\d{4})\/(\d{1,2})\/(\d{1,2})/);
+  if (match2) {
+    const lectureDate = new Date(parseInt(match2[1]), parseInt(match2[2]) - 1, parseInt(match2[3]));
+    const now = new Date();
+    return lectureDate < now;
+  }
+
+  // 解析讲座日期 - -分隔格式
+  const match3 = dateStr.match(/(\d{4})-(\d{1,2})-(\d{1,2})/);
+  if (match3) {
+    const lectureDate = new Date(parseInt(match3[1]), parseInt(match3[2]) - 1, parseInt(match3[3]));
+    const now = new Date();
+    return lectureDate < now;
+  }
+
   return false;
 };
 
@@ -1407,13 +1449,13 @@ const logout = () => {
   margin-bottom: 20px;
 }
 
-/* 修改预约按钮颜色 */
-.signup-btn {
+/* 修改预约按钮颜色 - 只对非禁用状态生效 */
+.signup-btn:not(:disabled) {
   background: linear-gradient(135deg, #8b4513 0%, #d2691e 100%) !important;
   border-color: #8b4513 !important;
 }
 
-.signup-btn:hover {
+.signup-btn:not(:disabled):hover {
   background: linear-gradient(135deg, #7a3c10 0%, #b85c1a 100%) !important;
   border-color: #7a3c10 !important;
 }

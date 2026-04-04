@@ -64,26 +64,6 @@
             <p class="lecture-desc">{{ lecture.description }}</p>
             <div class="lecture-actions">
               <el-button type="primary" @click="viewDetail(lecture)">查看详情</el-button>
-              <el-button
-                :type="
-                  isLectureExpired(lecture.date)
-                    ? 'danger'
-                    : lectureAppointments.has(lecture.id)
-                      ? 'warning'
-                      : 'primary'
-                "
-                :disabled="isLectureExpired(lecture.date)"
-                @click="signUp(lecture)"
-                class="signup-btn"
-              >
-                {{
-                  isLectureExpired(lecture.date)
-                    ? "讲座结束"
-                    : lectureAppointments.has(lecture.id)
-                      ? "取消报名"
-                      : "立即报名"
-                }}
-              </el-button>
             </div>
           </div>
         </div>
@@ -220,7 +200,7 @@
           <el-button
             :type="
               isLectureExpired(selectedLecture.date)
-                ? 'danger'
+                ? 'info'
                 : lectureAppointments.has(selectedLecture.id)
                   ? 'warning'
                   : 'primary'
@@ -274,13 +254,30 @@ const initAppointments = () => {
 
 // 判断讲座是否已过期
 const isLectureExpired = (dateStr) => {
-  // 解析讲座日期
-  const match = dateStr.match(/(\d{4})年(\d{1,2})月(\d{1,2})日/);
-  if (match) {
-    const lectureDate = new Date(parseInt(match[1]), parseInt(match[2]) - 1, parseInt(match[3]));
+  // 解析讲座日期 - 年-月-日格式
+  const match1 = dateStr.match(/(\d{4})年(\d{1,2})月(\d{1,2})日/);
+  if (match1) {
+    const lectureDate = new Date(parseInt(match1[1]), parseInt(match1[2]) - 1, parseInt(match1[3]));
     const now = new Date();
     return lectureDate < now;
   }
+
+  // 解析讲座日期 - /分隔格式
+  const match2 = dateStr.match(/(\d{4})\/(\d{1,2})\/(\d{1,2})/);
+  if (match2) {
+    const lectureDate = new Date(parseInt(match2[1]), parseInt(match2[2]) - 1, parseInt(match2[3]));
+    const now = new Date();
+    return lectureDate < now;
+  }
+
+  // 解析讲座日期 - -分隔格式
+  const match3 = dateStr.match(/(\d{4})-(\d{1,2})-(\d{1,2})/);
+  if (match3) {
+    const lectureDate = new Date(parseInt(match3[1]), parseInt(match3[2]) - 1, parseInt(match3[3]));
+    const now = new Date();
+    return lectureDate < now;
+  }
+
   return false;
 };
 
@@ -821,11 +818,14 @@ const logout = () => {
 
 .lecture-actions {
   display: flex;
+  justify-content: flex-end;
   gap: 15px;
+  margin-top: 15px;
 }
 
 .lecture-actions .el-button {
-  flex: 1;
+  flex: none;
+  width: auto;
 }
 
 .lecture-actions .el-button:first-child {
@@ -833,13 +833,13 @@ const logout = () => {
   border-color: #8b4513;
 }
 
-/* 修改立即报名按钮样式 */
-.signup-btn {
+/* 修改立即报名按钮样式 - 只对非禁用状态生效 */
+.signup-btn:not(:disabled) {
   background: linear-gradient(135deg, #8b4513 0%, #d2691e 100%) !important;
   border-color: #8b4513 !important;
 }
 
-.signup-btn:hover {
+.signup-btn:not(:disabled):hover {
   background: linear-gradient(135deg, #7a3c10 0%, #b85c1a 100%) !important;
   border-color: #7a3c10 !important;
 }
