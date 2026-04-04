@@ -616,14 +616,42 @@ const formatDateTime = (datetime) => {
   return `${date.toLocaleDateString("zh-CN")} ${date.toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" })}`;
 };
 
-// 计算显示的展览数据（只显示3个）
+// 计算显示的展览数据（只显示3个，按距离当前时间最近排序）
 const displayedExhibitions = computed(() => {
-  return allExhibitions.value.slice(0, displayCount.value);
+  const today = new Date();
+  return [...allExhibitions.value]
+    .map((exhibition) => {
+      // 解析展览结束日期
+      const endDate = parseExhibitionEndDate(exhibition.date);
+      return {
+        ...exhibition,
+        distance: Math.abs(endDate - today),
+      };
+    })
+    .sort((a, b) => a.distance - b.distance)
+    .slice(0, displayCount.value);
 });
 
-// 计算显示的讲座数据（只显示3个）
+// 计算显示的讲座数据（只显示3个，按距离当前时间最近排序）
 const displayedLectures = computed(() => {
-  return allLectures.value.slice(0, displayCount.value);
+  const today = new Date();
+  return [...allLectures.value]
+    .map((lecture) => {
+      // 解析讲座日期
+      const match = lecture.date.match(/(\d{4})年(\d{1,2})月(\d{1,2})日/);
+      let lectureDate;
+      if (match) {
+        lectureDate = new Date(parseInt(match[1]), parseInt(match[2]) - 1, parseInt(match[3]));
+      } else {
+        lectureDate = new Date(lecture.date);
+      }
+      return {
+        ...lecture,
+        distance: Math.abs(lectureDate - today),
+      };
+    })
+    .sort((a, b) => a.distance - b.distance)
+    .slice(0, displayCount.value);
 });
 
 onMounted(async () => {
@@ -632,7 +660,10 @@ onMounted(async () => {
     username.value = savedUsername;
   }
 
-  initAppointments();
+  // 先清空预约状态，确保从数据库重新获取
+  exhibitionAppointments.value = new Set();
+  lectureAppointments.value = new Set();
+
   await loadActivities();
 
   // 检查用户的预约和报名状态
