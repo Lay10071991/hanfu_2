@@ -472,7 +472,7 @@
         <div class="detail-header">
           <el-image
             :src="getImageUrl(selectedExhibition.detailImage || selectedExhibition.image)"
-            fit="cover"
+            fit="contain"
             class="detail-image"
           />
         </div>
@@ -2441,9 +2441,13 @@ const logout = () => {
 
 .detail-image {
   width: 100%;
-  height: 300px;
+  height: 200px;
   border-radius: 8px;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f9f5f0;
 }
 
 .detail-content {

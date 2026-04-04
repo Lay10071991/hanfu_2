@@ -93,8 +93,8 @@
     <!-- 讲座详情对话框 -->
     <el-dialog v-model="detailDialogVisible" :title="selectedLecture?.title" width="700px" center>
       <div v-if="selectedLecture" class="lecture-detail-content">
-        <div class="detail-image">
-          <el-image :src="selectedLecture.image" fit="cover" />
+        <div class="detail-header">
+          <el-image :src="getImageUrl(selectedLecture.image)" fit="contain" class="detail-image" />
         </div>
         <div class="detail-info-section">
           <div class="info-row">
@@ -870,21 +870,27 @@ const logout = () => {
 .lecture-detail-content {
   max-height: 70vh;
   overflow-y: auto;
-  padding: 10px;
+}
+
+.detail-header {
+  margin-bottom: 20px;
 }
 
 .detail-image {
   width: 100%;
-  height: 250px;
-  margin-bottom: 20px;
-  overflow: hidden;
+  height: 200px;
   border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f9f5f0;
 }
 
 .detail-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
 }
 
 .detail-info-section {
