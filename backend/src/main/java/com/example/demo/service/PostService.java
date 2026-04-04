@@ -67,9 +67,8 @@ public class PostService {
         Post post = postOpt.get();
         
         Map<String, Object> result = convertToMap(post);
-        
         if (currentUserId != null) {
-            boolean liked = likeRepository.existsByUserIdAndPostId(currentUserId, id);
+            boolean liked = likeRepository.existsByUserIdAndPostId(currentUserId, post.getId());
             result.put("liked", liked);
         } else {
             result.put("liked", false);
@@ -293,6 +292,29 @@ public class PostService {
             post.setImageUrl((String) request.get("imageUrl"));
         }
         
+        // 处理图片更新
+        if (request.containsKey("images")) {
+            @SuppressWarnings("unchecked")
+            List<String> imageUrls = (List<String>) request.get("images");
+            if (imageUrls != null && !imageUrls.isEmpty()) {
+                // 删除旧的图片记录
+                postImageRepository.deleteByPostId(id);
+                // 添加新的图片记录
+                for (String imageUrl : imageUrls) {
+                    PostImage postImage = new PostImage();
+                    postImage.setPost(post);
+                    postImage.setImageUrl(imageUrl);
+                    postImageRepository.save(postImage);
+                }
+                // 更新主图
+                post.setImageUrl(imageUrls.get(0));
+            } else {
+                // 如果没有图片，删除所有图片记录
+                postImageRepository.deleteByPostId(id);
+                post.setImageUrl(null);
+            }
+        }
+        
         Post updatedPost = postRepository.save(post);
         return convertToMap(updatedPost);
     }
@@ -304,7 +326,12 @@ public class PostService {
 
     public List<Map<String, Object>> getPostsByUserId(Long userId) {
         List<Post> posts = postRepository.findByAuthorId(userId);
-        return posts.stream().map(this::convertToMap).collect(Collectors.toList());
+        return posts.stream().map(post -> {
+            Map<String, Object> map = convertToMap(post);
+            boolean liked = likeRepository.existsByUserIdAndPostId(userId, post.getId());
+            map.put("liked", liked);
+            return map;
+        }).collect(Collectors.toList());
     }
 
     public List<Map<String, Object>> getUserLikedPosts(Long userId) {

@@ -2,7 +2,7 @@
   <el-dialog
     v-model="visible"
     :title="post.title"
-    width="800px"
+    :width="isMobile ? '100%' : '850px'"
     :close-on-click-modal="false"
     :fullscreen="isMobile"
     class="post-detail-dialog"
@@ -20,11 +20,11 @@
         >
           <el-carousel-item v-for="(img, index) in post.images" :key="index">
             <el-image
-              :src="img.url"
+              :src="typeof img === 'string' ? img : img.url"
               :alt="`${post.title}-${index + 1}`"
               fit="contain"
               class="gallery-image"
-              :preview-src-list="post.images.map((i) => i.url)"
+              :preview-src-list="post.images.map((i) => (typeof i === 'string' ? i : i.url))"
               :initial-index="index"
             >
               <template #placeholder>
@@ -245,6 +245,7 @@ watch(
       post.value = {
         ...newVal,
         content: newVal.content || newVal.description || "",
+        liked: newVal.liked !== undefined ? newVal.liked : false,
       };
     }
   },
@@ -267,6 +268,7 @@ const loadPostDataById = async (postId) => {
       post.value = {
         ...processed,
         content: processed.content || processed.description || "",
+        liked: processed.liked !== undefined ? processed.liked : false,
       };
     }
   } catch (error) {
@@ -604,7 +606,7 @@ const loadPostData = async () => {
 
 .post-detail-dialog :deep(.el-dialog__body) {
   padding: 0;
-  max-height: 70vh;
+  max-height: 80vh;
   overflow-y: auto;
 }
 

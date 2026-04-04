@@ -159,13 +159,7 @@
                   <div class="post-content-area">
                     <!-- 图片区域 -->
                     <div v-if="post.images && post.images.length > 0" class="post-image-area">
-                      <img
-                        v-for="(image, index) in post.images"
-                        :key="index"
-                        :src="image"
-                        alt="帖子图片"
-                        class="post-image-new"
-                      />
+                      <img :src="post.images[0]" alt="帖子图片" class="post-image-new" />
                     </div>
                     <!-- 内容区域 -->
                     <div class="post-text-area">
@@ -219,9 +213,7 @@
                         <!-- 图片区域 -->
                         <div v-if="like.images && like.images.length > 0" class="post-image-area">
                           <img
-                            v-for="(image, index) in like.images"
-                            :key="index"
-                            :src="image.url || image"
+                            :src="like.images[0].url || like.images[0]"
                             alt="帖子图片"
                             class="post-image-new"
                           />
@@ -711,6 +703,7 @@ import {
   ArrowDown,
   Ticket,
 } from "@element-plus/icons-vue";
+import { getImageUrl, processPostImages } from "../utils/imageHelper";
 
 const API_BASE = "http://localhost:8082/api";
 
@@ -1439,16 +1432,27 @@ const fetchUserPosts = async () => {
     const response = await fetch(`${API_BASE}/posts/user/${userId}`);
     if (response.ok) {
       const posts = await response.json();
-      const postsWithStats = posts.map((post) => ({
-        id: post.id,
-        title: post.title || "",
-        content: post.content || "",
-        category: post.category || "",
-        date: post.time || "",
-        likes: post.likes || 0,
-        comments: post.comments || 0,
-        images: post.images || [],
-      }));
+      const postsWithStats = posts.map((post) => {
+        // 处理帖子图片
+        const processedPost = processPostImages(post);
+        return {
+          id: processedPost.id,
+          title: processedPost.title || "",
+          content: processedPost.content || "",
+          category: processedPost.category || "",
+          date: processedPost.time || processedPost.publishDate || "",
+          time: processedPost.time || processedPost.publishDate || "",
+          likes: processedPost.likes || 0,
+          comments: processedPost.comments || 0,
+          author: processedPost.author || "",
+          categoryType: processedPost.categoryType || "",
+          liked: processedPost.liked || false,
+          // 处理图片数据，确保返回的是URL数组
+          images: processedPost.images
+            ? processedPost.images.map((img) => (typeof img === "string" ? img : img.url))
+            : [],
+        };
+      });
       userPosts.value = postsWithStats;
     } else {
       ElMessage.error("获取发帖记录失败");
@@ -1481,6 +1485,10 @@ const viewPostDetails = (postId) => {
   // 如果找不到，在userLikes中查找
   if (!post) {
     post = userLikes.value.find((like) => like.id === postId);
+    // 如果从userLikes中找到帖子，确保liked字段为true
+    if (post) {
+      post.liked = true;
+    }
   }
 
   // 如果找不到，在userComments中查找帖子信息
@@ -1586,11 +1594,13 @@ const savePost = async () => {
       }
     }
 
+    const userId = getUserId();
     // 更新帖子信息
     const response = await fetch(`${API_BASE}/posts/${currentPost.value.id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        "X-User-Id": userId ? userId.toString() : "",
       },
       body: JSON.stringify({
         title: currentPost.value.title,
@@ -1663,7 +1673,25 @@ const fetchUserLikes = async () => {
     const response = await fetch(`${API_BASE}/posts/user/${userId}/likes`);
     if (response.ok) {
       const likes = await response.json();
-      userLikes.value = likes;
+      // 处理点赞数据，确保图片格式正确
+      const processedLikes = likes.map((like) => {
+        // 处理帖子图片
+        const processedPost = processPostImages(like);
+        return {
+          ...processedPost,
+          // 处理图片数据，确保返回的是URL数组
+          images: processedPost.images
+            ? processedPost.images.map((img) => (typeof img === "string" ? img : img.url))
+            : [],
+          // 处理时间格式
+          time: processedPost.time || processedPost.likeTime || processedPost.publishDate || "",
+          date: processedPost.time || processedPost.likeTime || processedPost.publishDate || "",
+          author: processedPost.author || "",
+          categoryType: processedPost.categoryType || "",
+          liked: processedPost.liked || false,
+        };
+      });
+      userLikes.value = processedLikes;
     } else {
       userLikes.value = [];
     }
@@ -1723,8 +1751,8 @@ const toggleLike = async (postId) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "X-User-Id": userId.toString(),
       },
-      body: JSON.stringify({ userId }),
     });
     if (response.ok) {
       const result = await response.json();
@@ -1733,6 +1761,12 @@ const toggleLike = async (postId) => {
       if (interaction) {
         interaction.liked = result.liked;
         interaction.likes = result.likes;
+      }
+      // 同时更新userPosts中的数据
+      const post = userPosts.value.find((p) => p.id === postId);
+      if (post) {
+        post.liked = result.liked;
+        post.likes = result.likes;
       }
       ElMessage.success(result.liked ? "点赞成功" : "取消点赞成功");
     } else {
@@ -1758,8 +1792,8 @@ const cancelLike = async (postId) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "X-User-Id": userId.toString(),
       },
-      body: JSON.stringify({ userId }),
     });
     if (response.ok) {
       const result = await response.json();
@@ -1767,6 +1801,12 @@ const cancelLike = async (postId) => {
         ElMessage.success("已取消点赞");
         // 从列表中移除
         userLikes.value = userLikes.value.filter((like) => like.id !== postId);
+        // 同时更新userPosts中的数据
+        const post = userPosts.value.find((p) => p.id === postId);
+        if (post) {
+          post.liked = false;
+          post.likes = result.likes;
+        }
       }
     } else {
       ElMessage.error("操作失败");
