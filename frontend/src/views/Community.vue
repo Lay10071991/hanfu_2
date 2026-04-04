@@ -220,10 +220,19 @@
             :on-change="handleImageChange"
             :limit="9"
             :on-exceed="handleExceed"
+            :on-preview="handlePictureCardPreview"
             accept=".jpg,.jpeg,.png,.gif"
+            multiple="multiple"
           >
             <el-icon><Plus /></el-icon>
           </el-upload>
+
+          <!-- 图片预览组件 -->
+          <el-image-viewer
+            v-if="previewDialogVisible"
+            :url-list="[previewImageUrl]"
+            @close="() => (previewDialogVisible = false)"
+          />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -415,10 +424,24 @@ const showPublishDialog = () => {
   publishDialogVisible.value = true;
 };
 
+// 图片预览相关
+const previewDialogVisible = ref(false);
+const previewImageUrl = ref("");
+
 const handleImageChange = (file, fileList) => {
   // el-upload 的 v-model:file-list 已经自动管理文件列表
-  // 这里只需要同步到 publishForm.images
-  publishForm.value.images = fileList;
+  // 不需要手动同步
+  console.log("文件列表变化:", fileList.length, "个文件");
+};
+
+const handlePictureCardPreview = (file) => {
+  // 处理本地文件预览
+  if (file.raw) {
+    previewImageUrl.value = URL.createObjectURL(file.raw);
+  } else {
+    previewImageUrl.value = file.url;
+  }
+  previewDialogVisible.value = true;
 };
 
 const handleExceed = () => {
