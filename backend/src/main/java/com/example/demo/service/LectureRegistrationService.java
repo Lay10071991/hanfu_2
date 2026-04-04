@@ -30,10 +30,7 @@ public class LectureRegistrationService {
             return false;
         }
 
-        // 检查是否达到最大容量
-        if (lecture.getRegisteredCount() >= lecture.getCapacity()) {
-            return false;
-        }
+        // 取消容量限制检查，因为已经移除了capacity字段
 
         // 创建新的报名记录
         LectureRegistration registration = new LectureRegistration();

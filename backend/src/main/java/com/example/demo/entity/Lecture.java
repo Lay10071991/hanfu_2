@@ -38,9 +38,6 @@ public class Lecture {
     private LocalDateTime endTime;
 
     @Column(nullable = false, columnDefinition = "int default 0")
-    private int capacity;
-
-    @Column(nullable = false, columnDefinition = "int default 0")
     private int registeredCount;
 
     @Column(length = 255)
@@ -128,14 +125,6 @@ public class Lecture {
 
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
-    }
-
-    public int getCapacity() {
-        return capacity;
-    }
-
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
     }
 
     public int getRegisteredCount() {

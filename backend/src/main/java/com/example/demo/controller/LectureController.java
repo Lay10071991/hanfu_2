@@ -47,7 +47,6 @@ public class LectureController {
                     existing.setLocation(lecture.getLocation());
                     existing.setStartTime(lecture.getStartTime());
                     existing.setEndTime(lecture.getEndTime());
-                    existing.setCapacity(lecture.getCapacity());
                     existing.setRegisteredCount(lecture.getRegisteredCount());
                     existing.setImage(lecture.getImage());
                     return ResponseEntity.ok(repository.save(existing));
