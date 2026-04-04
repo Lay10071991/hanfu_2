@@ -471,7 +471,7 @@
       <div v-if="selectedExhibition" class="exhibition-detail-dialog">
         <div class="detail-header">
           <el-image
-            :src="selectedExhibition.detailImage || selectedExhibition.image"
+            :src="getImageUrl(selectedExhibition.detailImage || selectedExhibition.image)"
             fit="cover"
             class="detail-image"
           />
@@ -527,12 +527,17 @@
 
           <div
             class="detail-section"
-            v-if="selectedExhibition.highlights && selectedExhibition.highlights.length > 0"
+            v-if="selectedExhibition.highlights && selectedExhibition.highlights.trim()"
           >
             <h4>展览亮点</h4>
             <ul class="highlight-list">
-              <li v-for="(highlight, index) in selectedExhibition.highlights" :key="index">
-                {{ highlight }}
+              <li
+                v-for="(highlightItem, index) in selectedExhibition.highlights
+                  .split('\n')
+                  .filter((item) => item && item.trim())"
+                :key="index"
+              >
+                {{ highlightItem.trim() }}
               </li>
             </ul>
           </div>
@@ -1024,9 +1029,25 @@ const fetchUserInfo = async () => {
 
 onMounted(() => {
   fetchUserInfo();
-  // 检查路由参数，如果有menu参数，就设置activeMenu为该值
-  if (route.query.menu) {
+  // 检查sessionStorage中是否存储了菜单状态
+  const savedMenu = sessionStorage.getItem("profileMenu");
+  if (savedMenu) {
+    activeMenu.value = savedMenu;
+    // 如果是evaluations菜单，就加载用户测评数据
+    if (savedMenu === "evaluations") {
+      fetchUserEvaluations();
+    } else if (savedMenu === "posts") {
+      fetchUserPosts();
+    } else if (savedMenu === "likes") {
+      fetchUserInteractions();
+    } else if (savedMenu === "activity-registrations") {
+      fetchActivityRegistrations();
+    }
+  } else if (route.query.menu) {
+    // 检查路由参数，如果有menu参数，就设置activeMenu为该值
     activeMenu.value = route.query.menu;
+    // 存储到sessionStorage
+    sessionStorage.setItem("profileMenu", route.query.menu);
     // 如果是evaluations菜单，就加载用户测评数据
     if (route.query.menu === "evaluations") {
       fetchUserEvaluations();
@@ -1042,6 +1063,8 @@ onMounted(() => {
 
 const handleMenuSelect = (index) => {
   activeMenu.value = index;
+  // 存储当前菜单状态到sessionStorage
+  sessionStorage.setItem("profileMenu", index);
   if (index === "evaluations") {
     fetchUserEvaluations();
   } else if (index === "posts") {
@@ -1259,7 +1282,7 @@ const viewActivityDetails = async (activityId, activityType, registration) => {
         selectedExhibition.value = {
           id: data.id,
           title: data.title,
-          date: data.date,
+          date: `${data.startDate} 至 ${data.endDate}`,
           location: data.location,
           description: data.description,
           detailDescription: data.detailDescription,
@@ -1278,7 +1301,14 @@ const viewActivityDetails = async (activityId, activityType, registration) => {
           date: registration.time,
           location: registration.location,
           description: "暂无详细介绍",
-          image: "http://localhost:8082/uploads/exhibition-1.png",
+          detailDescription: "暂无详细介绍",
+          image: "/uploads/exhibition-1.png",
+          detailImage: "/uploads/exhibition-1.png",
+          ticket: "免费",
+          organizer: "汉服文化交流平台",
+          highlights: "精彩展览内容\n传统文化体验\n互动活动丰富",
+          notice:
+            "1. 请提前预约参观时间\n2. 保持安静，勿触摸展品\n3. 禁止使用闪光灯拍照\n4. 遵守展馆各项规定",
         };
       }
     } catch (error) {
@@ -1290,7 +1320,14 @@ const viewActivityDetails = async (activityId, activityType, registration) => {
         date: registration.time,
         location: registration.location,
         description: "暂无详细介绍",
-        image: "http://localhost:8082/uploads/exhibition-1.png",
+        detailDescription: "暂无详细介绍",
+        image: "/uploads/exhibition-1.png",
+        detailImage: "/uploads/exhibition-1.png",
+        ticket: "免费",
+        organizer: "汉服文化交流平台",
+        highlights: "精彩展览内容\n传统文化体验\n互动活动丰富",
+        notice:
+          "1. 请提前预约参观时间\n2. 保持安静，勿触摸展品\n3. 禁止使用闪光灯拍照\n4. 遵守展馆各项规定",
       };
     }
     exhibitionDialogVisible.value = true;
