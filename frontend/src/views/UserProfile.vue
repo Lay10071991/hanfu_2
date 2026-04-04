@@ -333,7 +333,12 @@
                             size="small"
                             @click="cancelRegistration(registration.id)"
                           >
-                            取消预约
+                            {{
+                              registration.activityType === "festival" ||
+                              registration.activityType === "festivalActivity"
+                                ? "取消报名"
+                                : "取消预约"
+                            }}
                           </el-button>
                           <el-button
                             type="primary"
@@ -1180,11 +1185,20 @@ const getEmptyDescription = () => {
 
 // 新增：取消预约
 const cancelRegistration = async (registrationId) => {
-  ElMessageBox.confirm("确定要取消预约吗？取消后如需参加需要重新预约。", "取消预约确认", {
-    confirmButtonText: "确定取消",
-    cancelButtonText: "再想想",
-    type: "warning",
-  })
+  // 解析registrationId，获取activityType
+  const [activityType, id] = registrationId.split("-");
+  const isFestival = activityType === "festival";
+  const actionText = isFestival ? "报名" : "预约";
+
+  ElMessageBox.confirm(
+    `确定要取消${actionText}吗？取消后如需参加需要重新${actionText}。`,
+    `取消${actionText}确认`,
+    {
+      confirmButtonText: "确定取消",
+      cancelButtonText: "再想想",
+      type: "warning",
+    },
+  )
     .then(async () => {
       const userId = getUserId();
       if (!userId) {
@@ -1194,8 +1208,6 @@ const cancelRegistration = async (registrationId) => {
       }
 
       try {
-        // 解析registrationId，获取activityId和activityType
-        const [activityType, id] = registrationId.split("-");
         let response;
 
         if (activityType === "festival") {
@@ -1219,13 +1231,13 @@ const cancelRegistration = async (registrationId) => {
           const index = activityRegistrations.value.findIndex((item) => item.id === registrationId);
           if (index !== -1) {
             activityRegistrations.value[index].status = "cancelled";
-            ElMessage.success("已成功取消预约");
+            ElMessage.success(`已成功取消${actionText}`);
           }
         } else {
-          ElMessage.error("取消预约失败");
+          ElMessage.error(`取消${actionText}失败`);
         }
       } catch (error) {
-        console.error("取消预约失败:", error);
+        console.error(`取消${actionText}失败:`, error);
         ElMessage.error("网络异常，请稍后重试");
       }
     })
