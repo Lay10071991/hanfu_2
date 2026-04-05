@@ -217,8 +217,6 @@ CREATE TABLE `hanfu_images`  (
   `hanfu_id` bigint NOT NULL COMMENT '汉服ID',
   `image_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '图片路径',
   `sort_order` int NOT NULL DEFAULT 0 COMMENT '排序顺序',
-  `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_hanfu_id`(`hanfu_id`) USING BTREE,
   CONSTRAINT `fk_hanfu_images_hanfu` FOREIGN KEY (`hanfu_id`) REFERENCES `hanfu_display` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
@@ -227,33 +225,33 @@ CREATE TABLE `hanfu_images`  (
 -- ----------------------------
 -- Records of hanfu_images
 -- ----------------------------
-INSERT INTO `hanfu_images` VALUES (1, 1, '/uploads/clothing_show/1-1.jpg', 1, '2026-03-01 19:22:16', '2026-03-01 19:22:16');
-INSERT INTO `hanfu_images` VALUES (2, 1, '/uploads/clothing_show/1-2.jpg', 2, '2026-03-01 19:22:16', '2026-03-01 19:22:16');
-INSERT INTO `hanfu_images` VALUES (3, 1, '/uploads/clothing_show/1-3.jpg', 3, '2026-03-01 19:22:16', '2026-03-01 19:22:16');
-INSERT INTO `hanfu_images` VALUES (4, 2, '/uploads/clothing_show/2-1.jpg', 1, '2026-03-01 19:22:16', '2026-03-01 19:22:16');
-INSERT INTO `hanfu_images` VALUES (5, 2, '/uploads/clothing_show/2-2.jpg', 2, '2026-03-01 19:22:16', '2026-03-01 19:22:16');
-INSERT INTO `hanfu_images` VALUES (6, 2, '/uploads/clothing_show/2-3.jpg', 3, '2026-03-01 19:22:16', '2026-03-01 19:22:16');
-INSERT INTO `hanfu_images` VALUES (7, 3, '/uploads/clothing_show/3-1.jpg', 1, '2026-03-01 19:22:16', '2026-03-01 19:22:16');
-INSERT INTO `hanfu_images` VALUES (8, 3, '/uploads/clothing_show/3-2.jpg', 2, '2026-03-01 19:22:16', '2026-03-01 19:22:16');
-INSERT INTO `hanfu_images` VALUES (9, 3, '/uploads/clothing_show/3-3.jpg', 3, '2026-03-01 19:22:16', '2026-03-01 19:22:16');
-INSERT INTO `hanfu_images` VALUES (10, 4, '/uploads/clothing_show/4-1.jpg', 1, '2026-03-01 19:22:16', '2026-03-01 19:22:16');
-INSERT INTO `hanfu_images` VALUES (11, 4, '/uploads/clothing_show/4-2.jpg', 2, '2026-03-01 19:22:16', '2026-03-01 19:22:16');
-INSERT INTO `hanfu_images` VALUES (12, 4, '/uploads/clothing_show/4-3.jpg', 3, '2026-03-01 19:22:16', '2026-03-01 19:22:16');
-INSERT INTO `hanfu_images` VALUES (13, 5, '/uploads/clothing_show/5-1.jpg', 1, '2026-03-01 19:22:16', '2026-03-01 19:22:16');
-INSERT INTO `hanfu_images` VALUES (14, 5, '/uploads/clothing_show/5-2.jpg', 2, '2026-03-01 19:22:16', '2026-03-01 19:22:16');
-INSERT INTO `hanfu_images` VALUES (15, 5, '/uploads/clothing_show/5-3.jpg', 3, '2026-03-01 19:22:16', '2026-03-01 19:22:16');
-INSERT INTO `hanfu_images` VALUES (16, 6, '/uploads/clothing_show/6-1.jpg', 1, '2026-03-01 19:22:16', '2026-03-01 19:22:16');
-INSERT INTO `hanfu_images` VALUES (17, 6, '/uploads/clothing_show/6-2.jpg', 2, '2026-03-01 19:22:16', '2026-03-01 19:22:16');
-INSERT INTO `hanfu_images` VALUES (18, 6, '/uploads/clothing_show/6-3.jpg', 3, '2026-03-01 19:22:16', '2026-03-01 19:22:16');
-INSERT INTO `hanfu_images` VALUES (19, 7, '/uploads/clothing_show/7-1.jpg', 1, '2026-03-01 19:22:16', '2026-03-01 19:22:16');
-INSERT INTO `hanfu_images` VALUES (20, 7, '/uploads/clothing_show/7-2.jpg', 2, '2026-03-01 19:22:16', '2026-03-01 19:22:16');
-INSERT INTO `hanfu_images` VALUES (21, 7, '/uploads/clothing_show/7-3.jpg', 3, '2026-03-01 19:22:16', '2026-03-01 19:22:16');
-INSERT INTO `hanfu_images` VALUES (22, 8, '/uploads/clothing_show/8-1.jpg', 1, '2026-03-01 19:22:16', '2026-03-01 19:22:16');
-INSERT INTO `hanfu_images` VALUES (23, 8, '/uploads/clothing_show/8-2.jpg', 2, '2026-03-01 19:22:16', '2026-03-01 19:22:16');
-INSERT INTO `hanfu_images` VALUES (24, 8, '/uploads/clothing_show/8-3.jpg', 3, '2026-03-01 19:22:16', '2026-03-01 19:22:16');
-INSERT INTO `hanfu_images` VALUES (25, 9, '/uploads/clothing_show/9-1.jpg', 1, '2026-03-01 19:22:16', '2026-03-01 19:22:16');
-INSERT INTO `hanfu_images` VALUES (26, 9, '/uploads/clothing_show/9-2.jpg', 2, '2026-03-01 19:22:16', '2026-03-01 19:22:16');
-INSERT INTO `hanfu_images` VALUES (27, 9, '/uploads/clothing_show/9-3.jpg', 3, '2026-03-01 19:22:16', '2026-03-01 19:22:16');
+INSERT INTO `hanfu_images` VALUES (1, 1, '/uploads/clothing_show/1-1.jpg', 1);
+INSERT INTO `hanfu_images` VALUES (2, 1, '/uploads/clothing_show/1-2.jpg', 2);
+INSERT INTO `hanfu_images` VALUES (3, 1, '/uploads/clothing_show/1-3.jpg', 3);
+INSERT INTO `hanfu_images` VALUES (4, 2, '/uploads/clothing_show/2-1.jpg', 1);
+INSERT INTO `hanfu_images` VALUES (5, 2, '/uploads/clothing_show/2-2.jpg', 2);
+INSERT INTO `hanfu_images` VALUES (6, 2, '/uploads/clothing_show/2-3.jpg', 3);
+INSERT INTO `hanfu_images` VALUES (7, 3, '/uploads/clothing_show/3-1.jpg', 1);
+INSERT INTO `hanfu_images` VALUES (8, 3, '/uploads/clothing_show/3-2.jpg', 2);
+INSERT INTO `hanfu_images` VALUES (9, 3, '/uploads/clothing_show/3-3.jpg', 3);
+INSERT INTO `hanfu_images` VALUES (10, 4, '/uploads/clothing_show/4-1.jpg', 1);
+INSERT INTO `hanfu_images` VALUES (11, 4, '/uploads/clothing_show/4-2.jpg', 2);
+INSERT INTO `hanfu_images` VALUES (12, 4, '/uploads/clothing_show/4-3.jpg', 3);
+INSERT INTO `hanfu_images` VALUES (13, 5, '/uploads/clothing_show/5-1.jpg', 1);
+INSERT INTO `hanfu_images` VALUES (14, 5, '/uploads/clothing_show/5-2.jpg', 2);
+INSERT INTO `hanfu_images` VALUES (15, 5, '/uploads/clothing_show/5-3.jpg', 3);
+INSERT INTO `hanfu_images` VALUES (16, 6, '/uploads/clothing_show/6-1.jpg', 1);
+INSERT INTO `hanfu_images` VALUES (17, 6, '/uploads/clothing_show/6-2.jpg', 2);
+INSERT INTO `hanfu_images` VALUES (18, 6, '/uploads/clothing_show/6-3.jpg', 3);
+INSERT INTO `hanfu_images` VALUES (19, 7, '/uploads/clothing_show/7-1.jpg', 1);
+INSERT INTO `hanfu_images` VALUES (20, 7, '/uploads/clothing_show/7-2.jpg', 2);
+INSERT INTO `hanfu_images` VALUES (21, 7, '/uploads/clothing_show/7-3.jpg', 3);
+INSERT INTO `hanfu_images` VALUES (22, 8, '/uploads/clothing_show/8-1.jpg', 1);
+INSERT INTO `hanfu_images` VALUES (23, 8, '/uploads/clothing_show/8-2.jpg', 2);
+INSERT INTO `hanfu_images` VALUES (24, 8, '/uploads/clothing_show/8-3.jpg', 3);
+INSERT INTO `hanfu_images` VALUES (25, 9, '/uploads/clothing_show/9-1.jpg', 1);
+INSERT INTO `hanfu_images` VALUES (26, 9, '/uploads/clothing_show/9-2.jpg', 2);
+INSERT INTO `hanfu_images` VALUES (27, 9, '/uploads/clothing_show/9-3.jpg', 3);
 
 -- ----------------------------
 -- Table structure for pattern_symbol
