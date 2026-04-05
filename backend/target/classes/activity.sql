@@ -1868,8 +1868,6 @@ CREATE TABLE `post`  (
   `likes` int NULL DEFAULT 0 COMMENT '点赞数',
   `comments` int NULL DEFAULT 0 COMMENT '评论数',
   `publish_date` date NOT NULL COMMENT '发布日期',
-  `create_time` datetime NOT NULL COMMENT '创建时间',
-  `update_time` datetime NOT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `author_id`(`author_id` ASC) USING BTREE,
   CONSTRAINT `post_ibfk_1` FOREIGN KEY (`author_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
@@ -1879,17 +1877,17 @@ CREATE TABLE `post`  (
 -- Records of post
 -- ----------------------------
 -- 帖子发布人混合：英文名用户、中文名用户、lay用户(id=2)
-INSERT INTO `post` VALUES (1, '汉服出行日精彩回顾', '上周末的汉服出行日活动圆满结束，数百名同袍齐聚市中心广场，展示各朝代汉服风采。活动现场气氛热烈，吸引了不少市民驻足观看。大家穿着明制、唐制、宋制等不同朝代的汉服，成为城市一道靓丽的风景线。', '上周末汉服出行日活动回顾，数百名同袍展示各朝代汉服风采', 'https://cdn.jsdelivr.net/gh/Hanerdev/Image-Hosting@main/hanfu/1.webp', 2, '文化活动', 25, 15, '2025-12-20', '2025-12-20 10:00:00', '2025-12-20 10:00:00');
-INSERT INTO `post` VALUES (2, '春日汉服赏花图集', '春暖花开时节，穿着汉服赏花是最惬意的事情。这组照片记录了我在植物园赏花的美好时光，粉色樱花与淡蓝色汉服相映成趣，仿佛画中走出的古典美人。', '春暖花开时节穿着汉服赏花的美好时光记录', 'https://cdn.jsdelivr.net/gh/Hanerdev/Image-Hosting@main/hanfu/2.webp', 4, '摄影作品', 28, 13, '2025-12-18', '2025-12-18 14:30:00', '2025-12-18 14:30:00');
-INSERT INTO `post` VALUES (3, '明制汉服穿搭分享', '今日份明制汉服出门，马面裙搭配长袄，既传统又时尚，走在街上回头率超高！马面裙是明代最具代表性的裙装之一，褶皱整齐，行走时摇曳生姿。搭配长袄既保暖又优雅，非常适合秋冬季节穿着。', '明制马面裙搭配长袄，传统与时尚的完美结合', 'https://cdn.jsdelivr.net/gh/Hanerdev/Image-Hosting@main/hanfu/3.webp', 21, '穿搭分享', 26, 17, '2025-12-15', '2025-12-15 10:00:00', '2025-12-15 10:00:00');
-INSERT INTO `post` VALUES (4, '汉服妆造手把手教学', '很多新手同袍都说不会做汉服妆造，今天我就来分享一个简单实用的日常妆造教程。从打底到眼妆，从眉毛到唇妆，一步步教你打造适合汉服的古典妆容，手残党也能学会！', '新手友好的汉服日常妆造详细教程，手残党也能学会', 'https://cdn.jsdelivr.net/gh/Hanerdev/Image-Hosting@main/hanfu/4.webp', 5, '妆容教程', 27, 15, '2025-12-12', '2025-12-12 09:15:00', '2025-12-12 09:15:00');
-INSERT INTO `post` VALUES (5, '古风摄影作品欣赏', '在江南古镇拍摄的一组汉服人像，烟雨朦胧中，汉服的韵味被完美展现。选择古镇作为拍摄地点，是因为这里保留着传统的建筑风格，与汉服相得益彰。清晨的薄雾和石板路，营造出穿越时空的感觉。', '江南古镇烟雨朦胧中的汉服人像摄影', 'https://cdn.jsdelivr.net/gh/Hanerdev/Image-Hosting@main/hanfu/5.webp', 24, '摄影作品', 24, 14, '2025-12-10', '2025-12-10 16:00:00', '2025-12-10 16:00:00');
-INSERT INTO `post` VALUES (6, '魏晋风骨穿搭指南', '魏晋时期的服饰以宽衣博带、飘逸洒脱著称，体现了当时文人雅士的风骨。今天分享一套魏晋风穿搭，大袖衫搭配褶裙，再配上简单的发髻，尽显魏晋风流。', '魏晋风大袖衫搭配褶裙，尽显魏晋风流', 'https://cdn.jsdelivr.net/gh/Hanerdev/Image-Hosting@main/hanfu/1.webp', 6, '穿搭分享', 29, 16, '2025-12-08', '2025-12-08 11:00:00', '2025-12-08 11:00:00');
-INSERT INTO `post` VALUES (7, '汉服街拍合集', '整理了近期的汉服街拍照片，每一套都是精心搭配。从日常通勤到周末出游，不同场合的汉服穿搭都有涵盖。希望能给喜欢汉服的朋友们一些穿搭灵感。', '近期汉服街拍合集，涵盖多种场合穿搭', 'https://cdn.jsdelivr.net/gh/Hanerdev/Image-Hosting@main/hanfu/2.webp', 27, '摄影作品', 23, 13, '2025-12-05', '2025-12-05 14:00:00', '2025-12-05 14:00:00');
-INSERT INTO `post` VALUES (8, '传统发饰制作教程', '今天教大家制作一款简单的缠花发饰，材料容易获取，步骤也不复杂。缠花是传统手工艺之一，用丝线缠绕出各种花卉造型，非常适合搭配汉服。跟着教程一步步来，你也能做出精美的发饰！', '传统缠花发饰制作教程，材料简单易上手', 'https://cdn.jsdelivr.net/gh/Hanerdev/Image-Hosting@main/hanfu/3.webp', 7, '手工教程', 22, 15, '2025-12-03', '2025-12-03 10:30:00', '2025-12-03 10:30:00');
-INSERT INTO `post` VALUES (9, '汉服日常穿搭记录', '记录一下本周的汉服日常穿搭，每天都有不同的风格。周一穿明制端庄大气，周二穿宋制清新雅致，周三穿唐制华丽富贵，周四穿魏晋风流倜傥，周五穿汉制古朴典雅。汉服真的可以让每一天都充满仪式感！', '一周汉服日常穿搭记录，每天都有不同风格', 'https://cdn.jsdelivr.net/gh/Hanerdev/Image-Hosting@main/hanfu/4.webp', 30, '穿搭分享', 25, 17, '2025-12-01', '2025-12-01 15:30:00', '2025-12-01 15:30:00');
-INSERT INTO `post` VALUES (10, '古风写真拍摄技巧', '想要拍出好看的古风写真，除了服装造型，拍摄技巧也很重要。今天分享几个实用的拍摄技巧：选址要选有古风元素的地方，时间最好选清晨或傍晚光线柔和时，姿势要自然不做作。希望这些技巧能帮到你！', '古风写真拍摄实用技巧分享，从选址到姿势', 'https://cdn.jsdelivr.net/gh/Hanerdev/Image-Hosting@main/hanfu/5.webp', 8, '摄影技巧', 26, 14, '2025-11-28', '2025-11-28 09:00:00', '2025-11-28 09:00:00');
-INSERT INTO `post` VALUES (11, '汉服活动精彩花絮', '参加汉服游园会的精彩记录，同袍们穿着各式汉服，仿佛穿越回古代。这次游园会汇集了来自各地的汉服爱好者，大家穿着不同朝代的汉服，一起赏花、品茶、吟诗，度过了一个难忘的周末。', '汉服游园会精彩花絮，同袍齐聚共度美好时光', 'https://cdn.jsdelivr.net/gh/Hanerdev/Image-Hosting@main/hanfu/1.webp', 33, '文化活动', 27, 16, '2025-11-25', '2025-11-25 13:00:00', '2025-11-25 13:00:00');
+INSERT INTO `post` VALUES (1, '汉服出行日精彩回顾', '上周末的汉服出行日活动圆满结束，数百名同袍齐聚市中心广场，展示各朝代汉服风采。活动现场气氛热烈，吸引了不少市民驻足观看。大家穿着明制、唐制、宋制等不同朝代的汉服，成为城市一道靓丽的风景线。', '上周末汉服出行日活动回顾，数百名同袍展示各朝代汉服风采', 'https://cdn.jsdelivr.net/gh/Hanerdev/Image-Hosting@main/hanfu/1.webp', 2, '文化活动', 25, 15, '2025-12-20');
+INSERT INTO `post` VALUES (2, '春日汉服赏花图集', '春暖花开时节，穿着汉服赏花是最惬意的事情。这组照片记录了我在植物园赏花的美好时光，粉色樱花与淡蓝色汉服相映成趣，仿佛画中走出的古典美人。', '春暖花开时节穿着汉服赏花的美好时光记录', 'https://cdn.jsdelivr.net/gh/Hanerdev/Image-Hosting@main/hanfu/2.webp', 4, '摄影作品', 28, 13, '2025-12-18');
+INSERT INTO `post` VALUES (3, '明制汉服穿搭分享', '今日份明制汉服出门，马面裙搭配长袄，既传统又时尚，走在街上回头率超高！马面裙是明代最具代表性的裙装之一，褶皱整齐，行走时摇曳生姿。搭配长袄既保暖又优雅，非常适合秋冬季节穿着。', '明制马面裙搭配长袄，传统与时尚的完美结合', 'https://cdn.jsdelivr.net/gh/Hanerdev/Image-Hosting@main/hanfu/3.webp', 21, '穿搭分享', 26, 17, '2025-12-15');
+INSERT INTO `post` VALUES (4, '汉服妆造手把手教学', '很多新手同袍都说不会做汉服妆造，今天我就来分享一个简单实用的日常妆造教程。从打底到眼妆，从眉毛到唇妆，一步步教你打造适合汉服的古典妆容，手残党也能学会！', '新手友好的汉服日常妆造详细教程，手残党也能学会', 'https://cdn.jsdelivr.net/gh/Hanerdev/Image-Hosting@main/hanfu/4.webp', 5, '妆容教程', 27, 15, '2025-12-12');
+INSERT INTO `post` VALUES (5, '古风摄影作品欣赏', '在江南古镇拍摄的一组汉服人像，烟雨朦胧中，汉服的韵味被完美展现。选择古镇作为拍摄地点，是因为这里保留着传统的建筑风格，与汉服相得益彰。清晨的薄雾和石板路，营造出穿越时空的感觉。', '江南古镇烟雨朦胧中的汉服人像摄影', 'https://cdn.jsdelivr.net/gh/Hanerdev/Image-Hosting@main/hanfu/5.webp', 24, '摄影作品', 24, 14, '2025-12-10');
+INSERT INTO `post` VALUES (6, '魏晋风骨穿搭指南', '魏晋时期的服饰以宽衣博带、飘逸洒脱著称，体现了当时文人雅士的风骨。今天分享一套魏晋风穿搭，大袖衫搭配褶裙，再配上简单的发髻，尽显魏晋风流。', '魏晋风大袖衫搭配褶裙，尽显魏晋风流', 'https://cdn.jsdelivr.net/gh/Hanerdev/Image-Hosting@main/hanfu/1.webp', 6, '穿搭分享', 29, 16, '2025-12-08');
+INSERT INTO `post` VALUES (7, '汉服街拍合集', '整理了近期的汉服街拍照片，每一套都是精心搭配。从日常通勤到周末出游，不同场合的汉服穿搭都有涵盖。希望能给喜欢汉服的朋友们一些穿搭灵感。', '近期汉服街拍合集，涵盖多种场合穿搭', 'https://cdn.jsdelivr.net/gh/Hanerdev/Image-Hosting@main/hanfu/2.webp', 27, '摄影作品', 23, 13, '2025-12-05');
+INSERT INTO `post` VALUES (8, '传统发饰制作教程', '今天教大家制作一款简单的缠花发饰，材料容易获取，步骤也不复杂。缠花是传统手工艺之一，用丝线缠绕出各种花卉造型，非常适合搭配汉服。跟着教程一步步来，你也能做出精美的发饰！', '传统缠花发饰制作教程，材料简单易上手', 'https://cdn.jsdelivr.net/gh/Hanerdev/Image-Hosting@main/hanfu/3.webp', 7, '手工教程', 22, 15, '2025-12-03');
+INSERT INTO `post` VALUES (9, '汉服日常穿搭记录', '记录一下本周的汉服日常穿搭，每天都有不同的风格。周一穿明制端庄大气，周二穿宋制清新雅致，周三穿唐制华丽富贵，周四穿魏晋风流倜傥，周五穿汉制古朴典雅。汉服真的可以让每一天都充满仪式感！', '一周汉服日常穿搭记录，每天都有不同风格', 'https://cdn.jsdelivr.net/gh/Hanerdev/Image-Hosting@main/hanfu/4.webp', 30, '穿搭分享', 25, 17, '2025-12-01');
+INSERT INTO `post` VALUES (10, '古风写真拍摄技巧', '想要拍出好看的古风写真，除了服装造型，拍摄技巧也很重要。今天分享几个实用的拍摄技巧：选址要选有古风元素的地方，时间最好选清晨或傍晚光线柔和时，姿势要自然不做作。希望这些技巧能帮到你！', '古风写真拍摄实用技巧分享，从选址到姿势', 'https://cdn.jsdelivr.net/gh/Hanerdev/Image-Hosting@main/hanfu/5.webp', 8, '摄影技巧', 26, 14, '2025-11-28');
+INSERT INTO `post` VALUES (11, '汉服活动精彩花絮', '参加汉服游园会的精彩记录，同袍们穿着各式汉服，仿佛穿越回古代。这次游园会汇集了来自各地的汉服爱好者，大家穿着不同朝代的汉服，一起赏花、品茶、吟诗，度过了一个难忘的周末。', '汉服游园会精彩花絮，同袍齐聚共度美好时光', 'https://cdn.jsdelivr.net/gh/Hanerdev/Image-Hosting@main/hanfu/1.webp', 33, '文化活动', 27, 16, '2025-11-25');
 
 -- ----------------------------
 -- Table structure for post_image
@@ -1899,7 +1897,6 @@ CREATE TABLE `post_image`  (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '图片ID',
   `post_id` bigint NOT NULL COMMENT '帖子ID',
   `image_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '图片URL',
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `fk_post_image_post`(`post_id` ASC) USING BTREE,
   CONSTRAINT `fk_post_image_post` FOREIGN KEY (`post_id`) REFERENCES `post` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
@@ -1909,68 +1906,68 @@ CREATE TABLE `post_image`  (
 -- Records of post_image - 帖子图片
 -- ----------------------------
 -- 帖子1 (汉服出行日精彩回顾) - 2张图片
-INSERT INTO `post_image` VALUES (1, 1, 'backend/uploads/community_post/1-1.jpg', '2025-12-20 10:00:00');
-INSERT INTO `post_image` VALUES (2, 1, 'backend/uploads/community_post/1-2.jpg', '2025-12-20 10:00:00');
+INSERT INTO `post_image` VALUES (1, 1, 'backend/uploads/community_post/1-1.jpg');
+INSERT INTO `post_image` VALUES (2, 1, 'backend/uploads/community_post/1-2.jpg');
 
 -- 帖子2 (春日汉服赏花图集) - 3张图片
-INSERT INTO `post_image` VALUES (3, 2, 'backend/uploads/community_post/2-1.jpg', '2025-12-18 14:30:00');
-INSERT INTO `post_image` VALUES (4, 2, 'backend/uploads/community_post/2-2.jpg', '2025-12-18 14:30:00');
-INSERT INTO `post_image` VALUES (5, 2, 'backend/uploads/community_post/2-3.jpg', '2025-12-18 14:30:00');
+INSERT INTO `post_image` VALUES (3, 2, 'backend/uploads/community_post/2-1.jpg');
+INSERT INTO `post_image` VALUES (4, 2, 'backend/uploads/community_post/2-2.jpg');
+INSERT INTO `post_image` VALUES (5, 2, 'backend/uploads/community_post/2-3.jpg');
 
 -- 帖子3 (明制汉服穿搭分享) - 3张图片
-INSERT INTO `post_image` VALUES (6, 3, 'backend/uploads/community_post/3-1.jpg', '2025-12-15 10:00:00');
-INSERT INTO `post_image` VALUES (7, 3, 'backend/uploads/community_post/3-2.jpg', '2025-12-15 10:00:00');
-INSERT INTO `post_image` VALUES (8, 3, 'backend/uploads/community_post/3-3.jpg', '2025-12-15 10:00:00');
+INSERT INTO `post_image` VALUES (6, 3, 'backend/uploads/community_post/3-1.jpg');
+INSERT INTO `post_image` VALUES (7, 3, 'backend/uploads/community_post/3-2.jpg');
+INSERT INTO `post_image` VALUES (8, 3, 'backend/uploads/community_post/3-3.jpg');
 
 -- 帖子4 (汉服妆造手把手教学) - 8张图片
-INSERT INTO `post_image` VALUES (9, 4, 'backend/uploads/community_post/4-1.jpg', '2025-12-12 09:15:00');
-INSERT INTO `post_image` VALUES (10, 4, 'backend/uploads/community_post/4-2.jpg', '2025-12-12 09:15:00');
-INSERT INTO `post_image` VALUES (11, 4, 'backend/uploads/community_post/4-3.jpg', '2025-12-12 09:15:00');
-INSERT INTO `post_image` VALUES (12, 4, 'backend/uploads/community_post/4-4.jpg', '2025-12-12 09:15:00');
-INSERT INTO `post_image` VALUES (13, 4, 'backend/uploads/community_post/4-5.jpg', '2025-12-12 09:15:00');
-INSERT INTO `post_image` VALUES (14, 4, 'backend/uploads/community_post/4-6.jpg', '2025-12-12 09:15:00');
-INSERT INTO `post_image` VALUES (15, 4, 'backend/uploads/community_post/4-7.jpg', '2025-12-12 09:15:00');
-INSERT INTO `post_image` VALUES (16, 4, 'backend/uploads/community_post/4-8.jpg', '2025-12-12 09:15:00');
+INSERT INTO `post_image` VALUES (9, 4, 'backend/uploads/community_post/4-1.jpg');
+INSERT INTO `post_image` VALUES (10, 4, 'backend/uploads/community_post/4-2.jpg');
+INSERT INTO `post_image` VALUES (11, 4, 'backend/uploads/community_post/4-3.jpg');
+INSERT INTO `post_image` VALUES (12, 4, 'backend/uploads/community_post/4-4.jpg');
+INSERT INTO `post_image` VALUES (13, 4, 'backend/uploads/community_post/4-5.jpg');
+INSERT INTO `post_image` VALUES (14, 4, 'backend/uploads/community_post/4-6.jpg');
+INSERT INTO `post_image` VALUES (15, 4, 'backend/uploads/community_post/4-7.jpg');
+INSERT INTO `post_image` VALUES (16, 4, 'backend/uploads/community_post/4-8.jpg');
 
 -- 帖子5 (古风摄影作品欣赏) - 3张图片
-INSERT INTO `post_image` VALUES (17, 5, 'backend/uploads/community_post/5-1.jpg', '2025-12-10 16:00:00');
-INSERT INTO `post_image` VALUES (18, 5, 'backend/uploads/community_post/5-2.jpg', '2025-12-10 16:00:00');
-INSERT INTO `post_image` VALUES (19, 5, 'backend/uploads/community_post/5-3.jpg', '2025-12-10 16:00:00');
+INSERT INTO `post_image` VALUES (17, 5, 'backend/uploads/community_post/5-1.jpg');
+INSERT INTO `post_image` VALUES (18, 5, 'backend/uploads/community_post/5-2.jpg');
+INSERT INTO `post_image` VALUES (19, 5, 'backend/uploads/community_post/5-3.jpg');
 
 -- 帖子6 (魏晋风骨穿搭指南) - 3张图片
-INSERT INTO `post_image` VALUES (20, 6, 'backend/uploads/community_post/6-1.jpg', '2025-12-08 11:00:00');
-INSERT INTO `post_image` VALUES (21, 6, 'backend/uploads/community_post/6-2.jpg', '2025-12-08 11:00:00');
-INSERT INTO `post_image` VALUES (22, 6, 'backend/uploads/community_post/6-3.jpg', '2025-12-08 11:00:00');
+INSERT INTO `post_image` VALUES (20, 6, 'backend/uploads/community_post/6-1.jpg');
+INSERT INTO `post_image` VALUES (21, 6, 'backend/uploads/community_post/6-2.jpg');
+INSERT INTO `post_image` VALUES (22, 6, 'backend/uploads/community_post/6-3.jpg');
 
 -- 帖子7 (汉服街拍合集) - 2张图片
-INSERT INTO `post_image` VALUES (23, 7, 'backend/uploads/community_post/7-1.jpg', '2025-12-05 14:00:00');
-INSERT INTO `post_image` VALUES (24, 7, 'backend/uploads/community_post/7-2.jpg', '2025-12-05 14:00:00');
+INSERT INTO `post_image` VALUES (23, 7, 'backend/uploads/community_post/7-1.jpg');
+INSERT INTO `post_image` VALUES (24, 7, 'backend/uploads/community_post/7-2.jpg');
 
 -- 帖子8 (传统发饰制作教程) - 9张图片
-INSERT INTO `post_image` VALUES (25, 8, 'backend/uploads/community_post/8-1.jpg', '2025-12-03 10:30:00');
-INSERT INTO `post_image` VALUES (26, 8, 'backend/uploads/community_post/8-2.jpg', '2025-12-03 10:30:00');
-INSERT INTO `post_image` VALUES (27, 8, 'backend/uploads/community_post/8-3.jpg', '2025-12-03 10:30:00');
-INSERT INTO `post_image` VALUES (28, 8, 'backend/uploads/community_post/8-4.jpg', '2025-12-03 10:30:00');
-INSERT INTO `post_image` VALUES (29, 8, 'backend/uploads/community_post/8-5.jpg', '2025-12-03 10:30:00');
-INSERT INTO `post_image` VALUES (30, 8, 'backend/uploads/community_post/8-6.jpg', '2025-12-03 10:30:00');
-INSERT INTO `post_image` VALUES (31, 8, 'backend/uploads/community_post/8-7.jpg', '2025-12-03 10:30:00');
-INSERT INTO `post_image` VALUES (32, 8, 'backend/uploads/community_post/8-8.jpg', '2025-12-03 10:30:00');
-INSERT INTO `post_image` VALUES (33, 8, 'backend/uploads/community_post/8-9.jpg', '2025-12-03 10:30:00');
+INSERT INTO `post_image` VALUES (25, 8, 'backend/uploads/community_post/8-1.jpg');
+INSERT INTO `post_image` VALUES (26, 8, 'backend/uploads/community_post/8-2.jpg');
+INSERT INTO `post_image` VALUES (27, 8, 'backend/uploads/community_post/8-3.jpg');
+INSERT INTO `post_image` VALUES (28, 8, 'backend/uploads/community_post/8-4.jpg');
+INSERT INTO `post_image` VALUES (29, 8, 'backend/uploads/community_post/8-5.jpg');
+INSERT INTO `post_image` VALUES (30, 8, 'backend/uploads/community_post/8-6.jpg');
+INSERT INTO `post_image` VALUES (31, 8, 'backend/uploads/community_post/8-7.jpg');
+INSERT INTO `post_image` VALUES (32, 8, 'backend/uploads/community_post/8-8.jpg');
+INSERT INTO `post_image` VALUES (33, 8, 'backend/uploads/community_post/8-9.jpg');
 
 -- 帖子9 (汉服日常穿搭记录) - 3张图片
-INSERT INTO `post_image` VALUES (34, 9, 'backend/uploads/community_post/9-1.jpg', '2025-12-01 15:30:00');
-INSERT INTO `post_image` VALUES (35, 9, 'backend/uploads/community_post/9-2.jpg', '2025-12-01 15:30:00');
-INSERT INTO `post_image` VALUES (36, 9, 'backend/uploads/community_post/9-3.jpg', '2025-12-01 15:30:00');
+INSERT INTO `post_image` VALUES (34, 9, 'backend/uploads/community_post/9-1.jpg');
+INSERT INTO `post_image` VALUES (35, 9, 'backend/uploads/community_post/9-2.jpg');
+INSERT INTO `post_image` VALUES (36, 9, 'backend/uploads/community_post/9-3.jpg');
 
 -- 帖子10 (古风写真拍摄技巧) - 3张图片
-INSERT INTO `post_image` VALUES (37, 10, 'backend/uploads/community_post/10-1.jpg', '2025-11-28 09:00:00');
-INSERT INTO `post_image` VALUES (38, 10, 'backend/uploads/community_post/10-2.jpg', '2025-11-28 09:00:00');
-INSERT INTO `post_image` VALUES (39, 10, 'backend/uploads/community_post/10-3.jpg', '2025-11-28 09:00:00');
+INSERT INTO `post_image` VALUES (37, 10, 'backend/uploads/community_post/10-1.jpg');
+INSERT INTO `post_image` VALUES (38, 10, 'backend/uploads/community_post/10-2.jpg');
+INSERT INTO `post_image` VALUES (39, 10, 'backend/uploads/community_post/10-3.jpg');
 
 -- 帖子11 (汉服活动精彩花絮) - 3张图片
-INSERT INTO `post_image` VALUES (40, 11, 'backend/uploads/community_post/11-1.jpg', '2025-11-25 13:00:00');
-INSERT INTO `post_image` VALUES (41, 11, 'backend/uploads/community_post/11-2.jpg', '2025-11-25 13:00:00');
-INSERT INTO `post_image` VALUES (42, 11, 'backend/uploads/community_post/11-3.jpg', '2025-11-25 13:00:00');
+INSERT INTO `post_image` VALUES (40, 11, 'backend/uploads/community_post/11-1.jpg');
+INSERT INTO `post_image` VALUES (41, 11, 'backend/uploads/community_post/11-2.jpg');
+INSERT INTO `post_image` VALUES (42, 11, 'backend/uploads/community_post/11-3.jpg');
 
 -- ----------------------------
 -- Table structure for post_comment
