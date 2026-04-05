@@ -2,7 +2,6 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,12 +39,6 @@ public class Post {
     @Column(name = "publish_date")
     private LocalDate publishDate;
 
-    @Column(name = "create_time", nullable = false)
-    private LocalDateTime createTime;
-
-    @Column(name = "update_time", nullable = false)
-    private LocalDateTime updateTime;
-
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostImage> images = new ArrayList<>();
 
@@ -54,16 +47,9 @@ public class Post {
 
     @PrePersist
     protected void onCreate() {
-        createTime = LocalDateTime.now();
-        updateTime = LocalDateTime.now();
         if (publishDate == null) {
             publishDate = LocalDate.now();
         }
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updateTime = LocalDateTime.now();
     }
 
     public Long getId() {
@@ -145,22 +131,6 @@ public class Post {
 
     public void setPublishDate(LocalDate publishDate) {
         this.publishDate = publishDate;
-    }
-
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
-
-    public LocalDateTime getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(LocalDateTime updateTime) {
-        this.updateTime = updateTime;
     }
 
     public List<PostImage> getImages() {

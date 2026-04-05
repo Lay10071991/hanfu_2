@@ -1,7 +1,6 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "hanfu_images")
@@ -20,13 +19,6 @@ public class HanfuImage {
     @Column(name = "sort_order", nullable = false, columnDefinition = "int default 0")
     private Integer sortOrder;
 
-    @Column(name = "create_time", nullable = false, columnDefinition = "datetime default current_timestamp")
-    private LocalDateTime createTime;
-
-    @Column(name = "update_time", nullable = false, columnDefinition = "datetime default current_timestamp on update current_timestamp")
-    private LocalDateTime updateTime;
-
-    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -57,21 +49,5 @@ public class HanfuImage {
 
     public void setSortOrder(Integer sortOrder) {
         this.sortOrder = sortOrder;
-    }
-
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
-
-    public LocalDateTime getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(LocalDateTime updateTime) {
-        this.updateTime = updateTime;
     }
 }

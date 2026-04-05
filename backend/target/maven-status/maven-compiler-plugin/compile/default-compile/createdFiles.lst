@@ -3,13 +3,10 @@ com\example\demo\entity\FestivalActivity.class
 com\example\demo\entity\CultureInfluence.class
 com\example\demo\config\CorsConfig.class
 com\example\demo\repository\FestivalActivityRegistrationRepository.class
-com\example\demo\controller\ShopController.class
 com\example\demo\controller\AiChatController$CacheEntry.class
 com\example\demo\repository\FestivalActivityRepository.class
 com\example\demo\repository\EtiquetteRepository.class
-com\example\demo\controller\ShopServiceItemController.class
 com\example\demo\entity\ShopImage.class
-com\example\demo\config\ShopDataInitializer.class
 com\example\demo\util\DatabaseCleanup.class
 com\example\demo\service\ClothingComponentService.class
 com\example\demo\repository\ShopRatingDistributionRepository.class
@@ -17,7 +14,6 @@ com\example\demo\controller\EvaluationController.class
 com\example\demo\repository\ExhibitionRepository.class
 com\example\demo\repository\PatternSymbolRepository.class
 com\example\demo\entity\Festival.class
-com\example\demo\service\ShopService.class
 com\example\demo\entity\FestivalActivityRegistration.class
 com\example\demo\entity\User.class
 com\example\demo\config\FestivalActivityInitializer.class
@@ -91,10 +87,7 @@ com\example\demo\entity\Exhibition.class
 com\example\demo\DemoApplication.class
 com\example\demo\entity\ShopService.class
 com\example\demo\controller\FestivalActivityController$CommentRequest.class
-com\example\demo\service\ShopServiceItemService.class
-com\example\demo\service\FestivalActivityCommentService.class
 com\example\demo\entity\Post.class
-com\example\demo\dto\ShopDTO.class
 com\example\demo\controller\FestivalController.class
 com\example\demo\service\ShopRatingService.class
 com\example\demo\entity\ShapeType.class

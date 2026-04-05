@@ -1,10 +1,6 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "etiquette")
@@ -37,15 +33,6 @@ public class Etiquette {
     @Column(columnDefinition = "TEXT")
     private String note;
 
-    @CreationTimestamp
-    @Column(name = "create_time", updatable = false)
-    private LocalDateTime createTime;
-
-    @UpdateTimestamp
-    @Column(name = "update_time")
-    private LocalDateTime updateTime;
-
-    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getName() { return name; }
@@ -64,8 +51,4 @@ public class Etiquette {
     public void setSteps(String steps) { this.steps = steps; }
     public String getNote() { return note; }
     public void setNote(String note) { this.note = note; }
-    public LocalDateTime getCreateTime() { return createTime; }
-    public void setCreateTime(LocalDateTime createTime) { this.createTime = createTime; }
-    public LocalDateTime getUpdateTime() { return updateTime; }
-    public void setUpdateTime(LocalDateTime updateTime) { this.updateTime = updateTime; }
 }

@@ -43,7 +43,6 @@ public class ShopServiceItemController {
             return ResponseEntity.notFound().build();
         }
         service.setId(id);
-        service.setCreateTime(existing.getCreateTime());
         ShopService updated = shopServiceItemService.saveService(service);
         return ResponseEntity.ok(updated);
     }

@@ -1,6 +1,5 @@
 package com.example.demo.dto;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class ShopDTO {
@@ -14,11 +13,8 @@ public class ShopDTO {
     private Integer reviewCount;
     private String priceRange;
     private Long userId;
-    private LocalDateTime createTime;
-    private LocalDateTime updateTime;
     private List<String> hanfuImages;
     
-    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -97,22 +93,6 @@ public class ShopDTO {
     
     public void setUserId(Long userId) {
         this.userId = userId;
-    }
-    
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-    
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
-    
-    public LocalDateTime getUpdateTime() {
-        return updateTime;
-    }
-    
-    public void setUpdateTime(LocalDateTime updateTime) {
-        this.updateTime = updateTime;
     }
     
     public List<String> getHanfuImages() {

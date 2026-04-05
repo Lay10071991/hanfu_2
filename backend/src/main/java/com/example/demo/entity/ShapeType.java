@@ -1,16 +1,7 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-/**
- * 汉服形制分类实体
- * 深衣制、衣裳制、襦裙制、袍服制
- */
 @Entity
 @Table(name = "shape_type")
 public class ShapeType {
@@ -40,15 +31,6 @@ public class ShapeType {
     @Column(nullable = false)
     private Integer sortOrder = 0;
 
-    @CreationTimestamp
-    @Column(name = "create_time", updatable = false)
-    private LocalDateTime createTime;
-
-    @UpdateTimestamp
-    @Column(name = "update_time")
-    private LocalDateTime updateTime;
-
-    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -111,21 +93,5 @@ public class ShapeType {
 
     public void setSortOrder(Integer sortOrder) {
         this.sortOrder = sortOrder;
-    }
-
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
-
-    public LocalDateTime getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(LocalDateTime updateTime) {
-        this.updateTime = updateTime;
     }
 }

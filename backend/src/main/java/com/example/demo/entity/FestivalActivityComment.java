@@ -1,7 +1,6 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import java.util.Date;
 
 @Entity
 @Table(name = "festival_activity_comment")
@@ -21,11 +20,6 @@ public class FestivalActivityComment {
     @Column(name = "content", nullable = false, columnDefinition = "text")
     private String content;
 
-    @Column(name = "create_time", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createTime;
-
-    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -58,15 +52,6 @@ public class FestivalActivityComment {
         this.content = content;
     }
 
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    // Constructor
     public FestivalActivityComment() {
     }
 
@@ -74,6 +59,5 @@ public class FestivalActivityComment {
         this.activity = activity;
         this.userName = userName;
         this.content = content;
-        this.createTime = new Date();
     }
 }

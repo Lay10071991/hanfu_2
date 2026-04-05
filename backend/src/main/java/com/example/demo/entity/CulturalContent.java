@@ -1,10 +1,6 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "cultural_content")
@@ -28,15 +24,6 @@ public class CulturalContent {
     @Column(length = 50)
     private String years;
 
-    @CreationTimestamp
-    @Column(name = "create_time", updatable = false)
-    private LocalDateTime createTime;
-
-    @UpdateTimestamp
-    @Column(name = "update_time")
-    private LocalDateTime updateTime;
-
-    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -83,21 +70,5 @@ public class CulturalContent {
 
     public void setYears(String years) {
         this.years = years;
-    }
-
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
-
-    public LocalDateTime getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(LocalDateTime updateTime) {
-        this.updateTime = updateTime;
     }
 }
