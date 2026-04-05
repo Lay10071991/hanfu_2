@@ -9,7 +9,6 @@ com\example\demo\repository\FestivalActivityRepository.class
 com\example\demo\repository\EtiquetteRepository.class
 com\example\demo\controller\ShopServiceItemController.class
 com\example\demo\entity\ShopImage.class
-com\example\demo\service\ImageService.class
 com\example\demo\config\ShopDataInitializer.class
 com\example\demo\util\DatabaseCleanup.class
 com\example\demo\service\ClothingComponentService.class
@@ -44,7 +43,6 @@ com\example\demo\repository\ShapeTypeRepository.class
 com\example\demo\service\LectureRegistrationService.class
 com\example\demo\entity\PostImage.class
 com\example\demo\controller\PatternSymbolController.class
-com\example\demo\entity\Image.class
 com\example\demo\repository\LectureRepository.class
 com\example\demo\repository\FestivalRepository.class
 com\example\demo\service\FestivalActivityRegistrationService.class
@@ -81,7 +79,6 @@ com\example\demo\service\FestivalService.class
 com\example\demo\repository\HistoricalEraRepository.class
 com\example\demo\entity\ShopRating.class
 com\example\demo\entity\Lecture.class
-com\example\demo\controller\FestivalAdminController.class
 com\example\demo\repository\LikeRepository.class
 com\example\demo\entity\PatternSymbol.class
 com\example\demo\controller\ShopRatingController.class
@@ -103,12 +100,10 @@ com\example\demo\service\ShopRatingService.class
 com\example\demo\entity\ShapeType.class
 com\example\demo\exception\GlobalExceptionHandler.class
 com\example\demo\controller\CultureInfluenceController.class
-com\example\demo\repository\ImageRepository.class
 com\example\demo\repository\ShopReviewRepository.class
 com\example\demo\controller\ClothingComponentController.class
 com\example\demo\controller\AiChatController.class
 com\example\demo\repository\CultureInfluenceRepository.class
-com\example\demo\controller\ImageController.class
 com\example\demo\entity\ShopRatingDistribution.class
 com\example\demo\controller\ActivityController.class
 com\example\demo\repository\ExhibitionRegistrationRepository.class
