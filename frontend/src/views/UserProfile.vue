@@ -11,7 +11,7 @@
           <li class="nav-item" @click="$router.push('/shop-evaluation')">汉服店铺测评</li>
           <li class="nav-item" @click="$router.push('/community')">社区互动</li>
           <li class="nav-item" @click="$router.push('/ai-chat')">AI问答</li>
-          <li class="nav-item active">个人中心</li>
+          <li class="nav-item active" @click="goToProfileInfo">个人中心</li>
         </ul>
         <div class="user-info-vertical">
           <div class="user-name">欢迎，{{ username }}</div>
@@ -574,6 +574,26 @@
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="exhibitionDialogVisible = false">关闭</el-button>
+          <el-button
+            :type="
+              selectedExhibition && isExhibitionExpired(selectedExhibition.date)
+                ? 'info'
+                : selectedExhibition && exhibitionAppointments.has(selectedExhibition.id)
+                  ? 'warning'
+                  : 'primary'
+            "
+            :disabled="selectedExhibition && isExhibitionExpired(selectedExhibition.date)"
+            @click="signUpExhibition"
+            class="signup-btn"
+          >
+            {{
+              selectedExhibition && isExhibitionExpired(selectedExhibition.date)
+                ? "展览结束"
+                : selectedExhibition && exhibitionAppointments.has(selectedExhibition.id)
+                  ? "取消预约"
+                  : "预约参观"
+            }}
+          </el-button>
         </span>
       </template>
     </el-dialog>
@@ -581,6 +601,9 @@
     <!-- 讲座详情弹窗 -->
     <el-dialog v-model="lectureDialogVisible" :title="selectedLecture?.title" width="700px" center>
       <div v-if="selectedLecture" class="lecture-detail-content">
+        <div class="detail-header">
+          <el-image :src="getImageUrl(selectedLecture.image)" fit="contain" class="detail-image" />
+        </div>
         <div class="detail-info-section">
           <div class="info-row">
             <div class="info-item">
@@ -682,6 +705,26 @@
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="lectureDialogVisible = false">关闭</el-button>
+          <el-button
+            :type="
+              isLectureExpired(selectedLecture.date)
+                ? 'info'
+                : lectureAppointments.has(selectedLecture.id)
+                  ? 'warning'
+                  : 'primary'
+            "
+            :disabled="isLectureExpired(selectedLecture.date)"
+            @click="signUpLecture"
+            class="signup-btn"
+          >
+            {{
+              isLectureExpired(selectedLecture.date)
+                ? "讲座结束"
+                : lectureAppointments.has(selectedLecture.id)
+                  ? "取消报名"
+                  : "立即报名"
+            }}
+          </el-button>
         </span>
       </template>
     </el-dialog>
@@ -792,9 +835,181 @@ const userComments = ref([]);
 const exhibitionDialogVisible = ref(false);
 const selectedExhibition = ref(null);
 
+// 展览预约状态管理
+const exhibitionAppointments = ref(new Set());
+
+// 初始化预约状态
+const initAppointments = () => {
+  const savedAppointments = localStorage.getItem("exhibitionAppointments");
+  if (savedAppointments) {
+    try {
+      const appointments = JSON.parse(savedAppointments);
+      exhibitionAppointments.value = new Set(appointments);
+    } catch (error) {
+      console.error("Failed to load appointments:", error);
+    }
+  }
+};
+
+// 解析展览结束日期
+const parseExhibitionEndDate = (dateStr) => {
+  // 处理 "2024年12月1日 至 2024年12月31日" 格式
+  const match1 = dateStr.match(/至\s*(\d{4})年(\d{1,2})月(\d{1,2})日/);
+  if (match1) {
+    return new Date(parseInt(match1[1]), parseInt(match1[2]) - 1, parseInt(match1[3]));
+  }
+
+  // 处理 "2024/12/1 至 2024/12/31" 格式
+  const match2 = dateStr.match(/至\s*(\d{4})\/(\d{1,2})\/(\d{1,2})/);
+  if (match2) {
+    return new Date(parseInt(match2[1]), parseInt(match2[2]) - 1, parseInt(match2[3]));
+  }
+
+  // 处理 "2024-12-1 至 2024-12-31" 格式
+  const match3 = dateStr.match(/至\s*(\d{4})-(\d{1,2})-(\d{1,2})/);
+  if (match3) {
+    return new Date(parseInt(match3[1]), parseInt(match3[2]) - 1, parseInt(match3[3]));
+  }
+
+  // 处理 "2024/12/1 2024/12/31" 格式（无"至"字）
+  const match4 = dateStr.match(/(\d{4})\/(\d{1,2})\/(\d{1,2})\s+(\d{4})\/(\d{1,2})\/(\d{1,2})/);
+  if (match4) {
+    return new Date(parseInt(match4[4]), parseInt(match4[5]) - 1, parseInt(match4[6]));
+  }
+
+  // 处理 "2024-12-1 2024-12-31" 格式（无"至"字）
+  const match5 = dateStr.match(/(\d{4})-(\d{1,2})-(\d{1,2})\s+(\d{4})-(\d{1,2})-(\d{1,2})/);
+  if (match5) {
+    return new Date(parseInt(match5[4]), parseInt(match5[5]) - 1, parseInt(match5[6]));
+  }
+
+  // 处理单个日期格式 - 年-月-日
+  const singleMatch1 = dateStr.match(/(\d{4})年(\d{1,2})月(\d{1,2})日/);
+  if (singleMatch1) {
+    return new Date(
+      parseInt(singleMatch1[1]),
+      parseInt(singleMatch1[2]) - 1,
+      parseInt(singleMatch1[3]),
+    );
+  }
+
+  // 处理单个日期格式 - /分隔
+  const singleMatch2 = dateStr.match(/(\d{4})\/(\d{1,2})\/(\d{1,2})/);
+  if (singleMatch2) {
+    return new Date(
+      parseInt(singleMatch2[1]),
+      parseInt(singleMatch2[2]) - 1,
+      parseInt(singleMatch2[3]),
+    );
+  }
+
+  // 处理单个日期格式 - -分隔
+  const singleMatch3 = dateStr.match(/(\d{4})-(\d{1,2})-(\d{1,2})/);
+  if (singleMatch3) {
+    return new Date(
+      parseInt(singleMatch3[1]),
+      parseInt(singleMatch3[2]) - 1,
+      parseInt(singleMatch3[3]),
+    );
+  }
+
+  return new Date(dateStr);
+};
+
+// 判断展览是否已过期
+const isExhibitionExpired = (dateStr) => {
+  const endDate = parseExhibitionEndDate(dateStr);
+  const now = new Date();
+  return endDate < now;
+};
+
 // 讲座详情弹窗
 const lectureDialogVisible = ref(false);
 const selectedLecture = ref(null);
+
+// 讲座预约状态管理
+const lectureAppointments = ref(new Set());
+
+// 初始化讲座预约状态
+const initLectureAppointments = () => {
+  const savedAppointments = localStorage.getItem("lectureAppointments");
+  if (savedAppointments) {
+    try {
+      const appointments = JSON.parse(savedAppointments);
+      lectureAppointments.value = new Set(appointments);
+    } catch (error) {
+      console.error("Failed to load lecture appointments:", error);
+    }
+  }
+};
+
+// 判断讲座是否已过期
+const isLectureExpired = (dateStr) => {
+  const lectureDate = new Date(dateStr);
+  const now = new Date();
+  return lectureDate < now;
+};
+
+// 讲座报名/取消报名
+const signUpLecture = async () => {
+  if (!selectedLecture.value) return;
+
+  const userId = getUserId();
+  if (!userId) {
+    ElMessage.warning("请先登录");
+    router.push("/login");
+    return;
+  }
+
+  const lectureId = selectedLecture.value.id;
+  const isExpired = isLectureExpired(selectedLecture.value.date);
+
+  if (isExpired) {
+    ElMessage.info("讲座已结束，无法报名");
+    return;
+  }
+
+  try {
+    if (lectureAppointments.value.has(lectureId)) {
+      // 取消报名
+      const response = await fetch(`${API_BASE}/lectures/${lectureId}/registration/cancel`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId }),
+      });
+
+      if (response.ok) {
+        lectureAppointments.value.delete(lectureId);
+        localStorage.setItem("lectureAppointments", JSON.stringify([...lectureAppointments.value]));
+        ElMessage.success("取消报名成功");
+      } else {
+        ElMessage.error("取消报名失败");
+      }
+    } else {
+      // 报名
+      const response = await fetch(`${API_BASE}/lectures/${lectureId}/registration`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId }),
+      });
+
+      if (response.ok) {
+        lectureAppointments.value.add(lectureId);
+        localStorage.setItem("lectureAppointments", JSON.stringify([...lectureAppointments.value]));
+        ElMessage.success("报名成功");
+      } else {
+        ElMessage.error("报名失败");
+      }
+    }
+  } catch (error) {
+    console.error("操作失败:", error);
+    ElMessage.error("操作失败，请稍后重试");
+  }
+};
 
 // 新增：活动报名数据
 const activityRegistrations = ref([]);
@@ -887,23 +1102,33 @@ const fetchActivityRegistrations = async () => {
     const lectureResponse = await fetch(`${API_BASE}/lectures`);
     if (lectureResponse.ok) {
       const lectures = await lectureResponse.json();
+      console.log("获取到的讲座数据:", lectures);
       const lectureRegistrations = await Promise.all(
         lectures.map(async (lecture) => {
           try {
+            console.log("检查讲座报名状态:", lecture.id, lecture.title);
             const checkResponse = await fetch(
               `${API_BASE}/lectures/${lecture.id}/registration/check?userId=${userId}`,
             );
             if (checkResponse.ok) {
               const checkData = await checkResponse.json();
+              console.log("讲座报名状态:", lecture.id, checkData);
               if (checkData.isRegistered) {
-                const status = isActivityExpired(lecture.date) ? "completed" : "upcoming";
+                console.log("用户已报名讲座:", lecture.id, lecture.title);
+                const status = isActivityExpired(lecture.startTime) ? "completed" : "upcoming";
+                console.log("讲座状态:", lecture.id, status);
+                // 格式化时间显示
+                const startTime = new Date(lecture.startTime);
+                const endTime = new Date(lecture.endTime);
+                const timeStr = `${startTime.toLocaleDateString()} ${startTime.toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" })} - ${endTime.toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" })}`;
+                console.log("讲座时间:", lecture.id, timeStr);
                 return {
                   id: `lecture-${lecture.id}`,
                   activityId: lecture.id,
                   activityName: lecture.title,
                   activityType: "lecture",
                   location: lecture.location,
-                  time: lecture.time,
+                  time: timeStr,
                   registrationDate: new Date().toLocaleDateString(),
                   status: status,
                 };
@@ -915,10 +1140,14 @@ const fetchActivityRegistrations = async () => {
           return null;
         }),
       );
+      console.log("讲座报名记录:", lectureRegistrations);
+      const filteredLectureRegistrations = lectureRegistrations.filter((r) => r !== null);
+      console.log("过滤后的讲座报名记录:", filteredLectureRegistrations);
       activityRegistrations.value = [
         ...activityRegistrations.value,
-        ...lectureRegistrations.filter((r) => r !== null),
+        ...filteredLectureRegistrations,
       ];
+      console.log("更新后的活动报名数据:", activityRegistrations.value);
     }
   } catch (error) {
     console.error("获取活动报名数据失败:", error);
@@ -1027,24 +1256,18 @@ const fetchUserInfo = async () => {
   }
 };
 
-onMounted(() => {
+onMounted(async () => {
   fetchUserInfo();
-  // 检查sessionStorage中是否存储了菜单状态
-  const savedMenu = sessionStorage.getItem("profileMenu");
-  if (savedMenu) {
-    activeMenu.value = savedMenu;
-    // 如果是evaluations菜单，就加载用户测评数据
-    if (savedMenu === "evaluations") {
-      fetchUserEvaluations();
-    } else if (savedMenu === "posts") {
-      fetchUserPosts();
-    } else if (savedMenu === "likes") {
-      fetchUserInteractions();
-    } else if (savedMenu === "activity-registrations") {
-      fetchActivityRegistrations();
-    }
-  } else if (route.query.menu) {
-    // 检查路由参数，如果有menu参数，就设置activeMenu为该值
+  // 初始化预约状态
+  initAppointments();
+  initLectureAppointments();
+  // 检查用户的预约状态
+  const savedUserId = getUserId();
+  if (savedUserId) {
+    await checkUserAppointments();
+  }
+  // 检查路由参数，如果有menu参数，就设置activeMenu为该值
+  if (route.query.menu) {
     activeMenu.value = route.query.menu;
     // 存储到sessionStorage
     sessionStorage.setItem("profileMenu", route.query.menu);
@@ -1058,6 +1281,11 @@ onMounted(() => {
     } else if (route.query.menu === "activity-registrations") {
       fetchActivityRegistrations();
     }
+  } else {
+    // 默认显示个人信息页面
+    activeMenu.value = "info";
+    // 清除sessionStorage中的菜单状态
+    sessionStorage.removeItem("profileMenu");
   }
 });
 
@@ -1337,17 +1565,23 @@ const viewActivityDetails = async (activityId, activityType, registration) => {
       const response = await fetch(`${API_BASE}/lectures/${activityId}`);
       if (response.ok) {
         const data = await response.json();
+        // 格式化时间显示
+        const startTime = new Date(data.startTime);
+        const endTime = new Date(data.endTime);
+        const dateStr = startTime.toLocaleDateString();
+        const timeStr = `${startTime.toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" })} - ${endTime.toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" })}`;
         selectedLecture.value = {
           id: data.id,
           title: data.title,
-          date: data.date,
-          time: data.time,
+          date: dateStr,
+          time: timeStr,
           location: data.location,
           description: data.description,
           speaker: data.speaker,
           speakerBio: data.speakerBio,
           content: data.content,
           notice: data.notice,
+          image: data.image,
         };
       } else {
         // 如果后端没有数据，使用注册信息
@@ -1357,6 +1591,7 @@ const viewActivityDetails = async (activityId, activityType, registration) => {
           date: registration.time,
           location: registration.location,
           description: "暂无详细介绍",
+          image: "/uploads/talk/default.jpg",
         };
       }
     } catch (error) {
@@ -1368,6 +1603,7 @@ const viewActivityDetails = async (activityId, activityType, registration) => {
         date: registration.time,
         location: registration.location,
         description: "暂无详细介绍",
+        image: "/uploads/talk/default.jpg",
       };
     }
     lectureDialogVisible.value = true;
@@ -1978,6 +2214,164 @@ const logout = () => {
   ElMessage.success("退出登录成功");
   router.push("/login");
 };
+
+// 新增：回到个人信息页面
+const goToProfileInfo = () => {
+  activeMenu.value = "info";
+  // 清除sessionStorage中的菜单状态，确保下次进入时默认显示个人信息
+  sessionStorage.removeItem("profileMenu");
+};
+
+// 新增：展览预约功能
+const signUpExhibition = async () => {
+  if (!selectedExhibition.value) return;
+
+  const exhibitionId = selectedExhibition.value.id;
+  const isExpired = isExhibitionExpired(selectedExhibition.value.date);
+  const isAppointed = exhibitionAppointments.value.has(exhibitionId);
+
+  if (isExpired) {
+    ElMessage.info("展览已经结束，无法预约！");
+    return;
+  }
+
+  const savedUserId = getUserId();
+  if (!savedUserId) {
+    ElMessage.error("请先登录后再进行预约！");
+    router.push("/login");
+    return;
+  }
+
+  const userId = savedUserId;
+
+  if (isAppointed) {
+    // 取消预约
+    ElMessageBox.confirm(`确定要取消预约"${selectedExhibition.value.title}"吗？`, "取消预约", {
+      confirmButtonText: "确定取消",
+      cancelButtonText: "取消",
+      type: "warning",
+    })
+      .then(async () => {
+        try {
+          const response = await fetch(
+            `${API_BASE}/exhibitions/${exhibitionId}/registration?userId=${userId}`,
+            { method: "DELETE" },
+          );
+          if (response.ok) {
+            const data = await response.json();
+            if (data.success) {
+              exhibitionAppointments.value.delete(exhibitionId);
+              localStorage.setItem(
+                "exhibitionAppointments",
+                JSON.stringify([...exhibitionAppointments.value]),
+              );
+              ElMessage.success(`成功取消预约"${selectedExhibition.value.title}"！`);
+            } else {
+              ElMessage.error("取消预约失败");
+            }
+          } else {
+            ElMessage.error("取消预约失败");
+          }
+        } catch (error) {
+          console.error("取消预约失败:", error);
+          ElMessage.error("取消预约失败");
+        }
+      })
+      .catch(() => {
+        // 用户取消
+      });
+  } else {
+    // 预约
+    ElMessageBox.confirm(`确定要预约参观"${selectedExhibition.value.title}"吗？`, "预约确认", {
+      confirmButtonText: "确定预约",
+      cancelButtonText: "取消",
+      type: "info",
+    })
+      .then(async () => {
+        try {
+          const response = await fetch(`${API_BASE}/exhibitions/${exhibitionId}/registration`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userId }),
+          });
+          if (response.ok) {
+            const data = await response.json();
+            if (data.success) {
+              exhibitionAppointments.value.add(exhibitionId);
+              localStorage.setItem(
+                "exhibitionAppointments",
+                JSON.stringify([...exhibitionAppointments.value]),
+              );
+              ElMessage.success(`成功预约"${selectedExhibition.value.title}"！`);
+            } else {
+              ElMessage.error("预约失败");
+            }
+          } else {
+            ElMessage.error("预约失败");
+          }
+        } catch (error) {
+          console.error("预约失败:", error);
+          ElMessage.error("预约失败");
+        }
+      })
+      .catch(() => {
+        // 用户取消
+      });
+  }
+};
+
+// 检查用户的预约状态
+const checkUserAppointments = async () => {
+  const userId = getUserId();
+  if (!userId) return;
+
+  try {
+    // 检查展览预约状态
+    const exhibitionResponse = await fetch(`${API_BASE}/exhibitions`);
+    if (exhibitionResponse.ok) {
+      const exhibitions = await exhibitionResponse.json();
+      for (const exhibition of exhibitions) {
+        const response = await fetch(
+          `${API_BASE}/exhibitions/${exhibition.id}/registration/check?userId=${userId}`,
+        );
+        if (response.ok) {
+          const data = await response.json();
+          if (data.isRegistered) {
+            exhibitionAppointments.value.add(exhibition.id);
+          }
+        }
+      }
+
+      // 更新本地存储
+      localStorage.setItem(
+        "exhibitionAppointments",
+        JSON.stringify([...exhibitionAppointments.value]),
+      );
+    }
+
+    // 检查讲座预约状态
+    const lectureResponse = await fetch(`${API_BASE}/lectures`);
+    if (lectureResponse.ok) {
+      const lectures = await lectureResponse.json();
+      for (const lecture of lectures) {
+        const response = await fetch(
+          `${API_BASE}/lectures/${lecture.id}/registration/check?userId=${userId}`,
+        );
+        if (response.ok) {
+          const data = await response.json();
+          if (data.isRegistered) {
+            lectureAppointments.value.add(lecture.id);
+          }
+        }
+      }
+
+      // 更新本地存储
+      localStorage.setItem("lectureAppointments", JSON.stringify([...lectureAppointments.value]));
+    }
+  } catch (error) {
+    console.error("检查预约状态失败:", error);
+  }
+};
 </script>
 
 <style scoped>
@@ -2549,11 +2943,157 @@ const logout = () => {
   left: -10px;
   color: #8b4513;
 }
-
+/* 弹窗样式 */
 .dialog-footer {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
+}
+
+/* 展览详情弹窗样式 */
+.exhibition-detail-dialog {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.detail-header {
+  margin-bottom: 20px;
+}
+
+.detail-image {
+  width: 100%;
+  height: 200px;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f9f5f0;
+}
+
+.detail-image img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.detail-content {
+  padding: 0 10px;
+}
+
+.detail-info {
+  background-color: #f9f5f0;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.info-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 15px;
+}
+
+.info-row:last-child {
+  margin-bottom: 0;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.info-item .el-icon {
+  color: #8b4513;
+  font-size: 24px;
+}
+
+.info-content {
+  flex: 1;
+}
+
+.info-label {
+  font-size: 12px;
+  color: #999;
+  margin-bottom: 4px;
+}
+
+.info-value {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+}
+
+.detail-section {
+  margin-bottom: 25px;
+}
+
+.detail-section h4 {
+  color: #8b4513;
+  font-size: 18px;
+  margin: 0 0 15px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #d4a76a;
+}
+
+.detail-section p {
+  color: #666;
+  line-height: 1.8;
+  margin-bottom: 15px;
+}
+
+.highlight-list,
+.notice-list {
+  padding-left: 20px;
+  margin: 0;
+}
+
+.highlight-list li,
+.notice-list li {
+  color: #666;
+  line-height: 1.8;
+  margin-bottom: 8px;
+}
+
+.highlight-list li:last-child,
+.notice-list li:last-child {
+  margin-bottom: 0;
+}
+
+.highlight-list li {
+  position: relative;
+  padding-left: 10px;
+}
+
+.highlight-list li::before {
+  content: "✨";
+  position: absolute;
+  left: -15px;
+}
+
+.notice-list li {
+  position: relative;
+  padding-left: 10px;
+}
+
+.notice-list li::before {
+  content: "•";
+  position: absolute;
+  left: -10px;
+  color: #8b4513;
+}
+
+/* 修改预约按钮颜色 - 只对非禁用状态生效 */
+.signup-btn:not(:disabled) {
+  background: linear-gradient(135deg, #8b4513 0%, #d2691e 100%) !important;
+  border-color: #8b4513 !important;
+}
+
+.signup-btn:not(:disabled):hover {
+  background: linear-gradient(135deg, #7a3c10 0%, #b85c1a 100%) !important;
+  border-color: #7a3c10 !important;
 }
 
 /* 讲座详情弹窗样式 */
@@ -2561,6 +3101,96 @@ const logout = () => {
   max-height: 70vh;
   overflow-y: auto;
   padding: 10px;
+}
+
+.detail-header {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.detail-image {
+  max-width: 100%;
+  max-height: 300px;
+  margin: 0 auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.detail-info-section {
+  background: #f9f9f9;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  margin-right: 16px;
+}
+
+.info-item:last-child {
+  margin-right: 0;
+}
+
+.info-content {
+  margin-left: 8px;
+}
+
+.info-label {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.info-value {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.detail-section {
+  margin-bottom: 20px;
+}
+
+.detail-section h4 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.content-list,
+.notice-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.content-list li,
+.notice-list li {
+  padding: 8px 0;
+  border-bottom: 1px dashed #f0f0f0;
+  position: relative;
+  padding-left: 20px;
+}
+
+.content-list li:before,
+.notice-list li:before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #d2691e;
+  font-weight: bold;
 }
 
 .detail-info-section {

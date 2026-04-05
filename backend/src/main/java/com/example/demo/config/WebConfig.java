@@ -90,5 +90,9 @@ public class WebConfig implements WebMvcConfigurer {
         // 配置展览图片
         registry.addResourceHandler("/uploads/exhibition/**")
                 .addResourceLocations("file:E:/hanfu-cultural-platform/backend/uploads/exhibition/");
+        
+        // 配置讲座图片
+        registry.addResourceHandler("/uploads/talk/**")
+                .addResourceLocations("file:E:/hanfu-cultural-platform/backend/uploads/talk/");
     }
 }
