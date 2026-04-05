@@ -1791,8 +1791,6 @@ CREATE TABLE `shop_service` (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '服务ID',
   `shop_id` bigint NOT NULL COMMENT '店铺ID',
   `service_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '服务名称',
-  `create_time` datetime NOT NULL COMMENT '创建时间',
-  `update_time` datetime NOT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE,
   KEY `idx_shop_id` (`shop_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 52 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '店铺服务项目表' ROW_FORMAT = Dynamic;
@@ -1801,63 +1799,63 @@ CREATE TABLE `shop_service` (
 -- Records of shop_service
 -- ----------------------------
 -- 普通档店铺服务
-INSERT INTO `shop_service` VALUES (1, 1, '汉服售卖', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (2, 1, '汉服租赁', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (3, 1, '汉服定制', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (4, 2, '汉服售卖', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (5, 2, '日常汉服', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (6, 2, '汉服配饰', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (7, 3, '传统汉服', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (8, 3, '汉服租赁', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (9, 3, '汉服妆造', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (10, 4, '汉服售卖', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (11, 4, '小众设计', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (12, 4, '汉服定制', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (13, 5, '汉服售卖', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (14, 5, '传统工艺', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (15, 5, '汉服租赁', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (16, 6, '汉服售卖', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (17, 6, '优雅设计', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (18, 6, '汉服配饰', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
+INSERT INTO `shop_service` VALUES (1, 1, '汉服售卖');
+INSERT INTO `shop_service` VALUES (2, 1, '汉服租赁');
+INSERT INTO `shop_service` VALUES (3, 1, '汉服定制');
+INSERT INTO `shop_service` VALUES (4, 2, '汉服售卖');
+INSERT INTO `shop_service` VALUES (5, 2, '日常汉服');
+INSERT INTO `shop_service` VALUES (6, 2, '汉服配饰');
+INSERT INTO `shop_service` VALUES (7, 3, '传统汉服');
+INSERT INTO `shop_service` VALUES (8, 3, '汉服租赁');
+INSERT INTO `shop_service` VALUES (9, 3, '汉服妆造');
+INSERT INTO `shop_service` VALUES (10, 4, '汉服售卖');
+INSERT INTO `shop_service` VALUES (11, 4, '小众设计');
+INSERT INTO `shop_service` VALUES (12, 4, '汉服定制');
+INSERT INTO `shop_service` VALUES (13, 5, '汉服售卖');
+INSERT INTO `shop_service` VALUES (14, 5, '传统工艺');
+INSERT INTO `shop_service` VALUES (15, 5, '汉服租赁');
+INSERT INTO `shop_service` VALUES (16, 6, '汉服售卖');
+INSERT INTO `shop_service` VALUES (17, 6, '优雅设计');
+INSERT INTO `shop_service` VALUES (18, 6, '汉服配饰');
 
 -- 中档店铺服务
-INSERT INTO `shop_service` VALUES (19, 7, '汉服定制', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (20, 7, '高端汉服', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (21, 7, '汉服租赁', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (22, 8, '绣花汉服', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (23, 8, '汉服定制', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (24, 8, '汉服售卖', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (25, 9, '古风设计', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (26, 9, '汉服定制', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (27, 9, '汉服租赁', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (28, 10, '传统工艺', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (29, 10, '汉服定制', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (30, 10, '高端汉服', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
+INSERT INTO `shop_service` VALUES (19, 7, '汉服定制');
+INSERT INTO `shop_service` VALUES (20, 7, '高端汉服');
+INSERT INTO `shop_service` VALUES (21, 7, '汉服租赁');
+INSERT INTO `shop_service` VALUES (22, 8, '绣花汉服');
+INSERT INTO `shop_service` VALUES (23, 8, '汉服定制');
+INSERT INTO `shop_service` VALUES (24, 8, '汉服售卖');
+INSERT INTO `shop_service` VALUES (25, 9, '古风设计');
+INSERT INTO `shop_service` VALUES (26, 9, '汉服定制');
+INSERT INTO `shop_service` VALUES (27, 9, '汉服租赁');
+INSERT INTO `shop_service` VALUES (28, 10, '传统工艺');
+INSERT INTO `shop_service` VALUES (29, 10, '汉服定制');
+INSERT INTO `shop_service` VALUES (30, 10, '高端汉服');
 
 -- 中高档店铺服务
-INSERT INTO `shop_service` VALUES (31, 11, '高端定制', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (32, 11, '设计独特', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (33, 11, '汉服租赁', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (34, 12, '礼仪汉服', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (35, 12, '高端定制', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (36, 12, '汉服租赁', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (37, 13, '盛世风格', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (38, 13, '高端定制', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (39, 13, '汉服售卖', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (40, 14, '古典风格', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (41, 14, '高端定制', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (42, 14, '汉服租赁', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
+INSERT INTO `shop_service` VALUES (31, 11, '高端定制');
+INSERT INTO `shop_service` VALUES (32, 11, '设计独特');
+INSERT INTO `shop_service` VALUES (33, 11, '汉服租赁');
+INSERT INTO `shop_service` VALUES (34, 12, '礼仪汉服');
+INSERT INTO `shop_service` VALUES (35, 12, '高端定制');
+INSERT INTO `shop_service` VALUES (36, 12, '汉服租赁');
+INSERT INTO `shop_service` VALUES (37, 13, '盛世风格');
+INSERT INTO `shop_service` VALUES (38, 13, '高端定制');
+INSERT INTO `shop_service` VALUES (39, 13, '汉服售卖');
+INSERT INTO `shop_service` VALUES (40, 14, '古典风格');
+INSERT INTO `shop_service` VALUES (41, 14, '高端定制');
+INSERT INTO `shop_service` VALUES (42, 14, '汉服租赁');
 
 -- 高档店铺服务
-INSERT INTO `shop_service` VALUES (43, 15, '顶级定制', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (44, 15, '手工制作', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (45, 15, '汉服婚礼', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (46, 16, '皇室风格', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (47, 16, '高端汉服', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (48, 16, '汉服定制', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (49, 17, '顶级定制', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (50, 17, '手工制作', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_service` VALUES (51, 17, '汉服婚礼', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
+INSERT INTO `shop_service` VALUES (43, 15, '顶级定制');
+INSERT INTO `shop_service` VALUES (44, 15, '手工制作');
+INSERT INTO `shop_service` VALUES (45, 15, '汉服婚礼');
+INSERT INTO `shop_service` VALUES (46, 16, '皇室风格');
+INSERT INTO `shop_service` VALUES (47, 16, '高端汉服');
+INSERT INTO `shop_service` VALUES (48, 16, '汉服定制');
+INSERT INTO `shop_service` VALUES (49, 17, '顶级定制');
+INSERT INTO `shop_service` VALUES (50, 17, '手工制作');
+INSERT INTO `shop_service` VALUES (51, 17, '汉服婚礼');
 
 -- ----------------------------
 -- Table structure for post
