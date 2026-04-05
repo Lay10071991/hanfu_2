@@ -193,10 +193,7 @@ public class ImageController {
      */
     private boolean isValidCategory(String category) {
         String[] validCategories = {
-            "festivals", "exhibitions", "shop-hanfu", "etiquette",
-            "pattern-symbols", "dynasty-shapes", "shape-types",
-            "clothing-components", "festival-activities", "lectures",
-            "shop-details", "community-posts", "avatar"
+            "pattern-symbols", "avatar", "community_post"
         };
 
         for (String valid : validCategories) {

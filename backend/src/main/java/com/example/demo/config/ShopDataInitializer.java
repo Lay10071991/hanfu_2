@@ -84,11 +84,11 @@ public class ShopDataInitializer implements CommandLineRunner {
 
     private void addShopImages(Long shopId) {
         String[][] imageDescriptions = {
-            {"/shop-hanfu/q (1).png", "传统礼服系列"},
-            {"/shop-hanfu/q (2).png", "日常汉服系列"},
-            {"/shop-hanfu/q (3).png", "婚庆汉服系列"},
-            {"/shop-hanfu/q (4).png", "儿童汉服系列"},
-            {"/shop-hanfu/q (5).png", "配饰系列"}
+            {"https://placehold.co/400x300/8b4513/FFFFFF?text=传统礼服系列", "传统礼服系列"},
+            {"https://placehold.co/400x300/d2691e/FFFFFF?text=日常汉服系列", "日常汉服系列"},
+            {"https://placehold.co/400x300/8b4513/FFFFFF?text=婚庆特别款", "婚庆汉服系列"},
+            {"https://placehold.co/400x300/d2691e/FFFFFF?text=儿童汉服系列", "儿童汉服系列"},
+            {"https://placehold.co/400x300/8b4513/FFFFFF?text=配饰系列", "配饰系列"}
         };
         
         for (int i = 0; i < imageDescriptions.length; i++) {

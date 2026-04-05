@@ -487,8 +487,8 @@ const submitPublish = async () => {
         const formData = new FormData();
         formData.append("file", img.raw);
 
-        // 上传图片到community-posts类别
-        const uploadUrl = `${API_BASE}/image/upload/community-posts`;
+        // 上传图片到community_post类别
+        const uploadUrl = `${API_BASE}/image/upload/community_post`;
         console.log("上传图片到:", uploadUrl);
         try {
           const uploadResponse = await fetch(uploadUrl, {

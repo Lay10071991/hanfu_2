@@ -10,18 +10,7 @@ const API_BASE = "http://localhost:8082";
  * 对应后端存储的各个文件夹
  */
 export const IMAGE_CATEGORIES = {
-  FESTIVALS: "festivals", // 古代节俗礼仪
-  EXHIBITIONS: "exhibitions", // 展览
-  SHOP_HANFU: "shop-hanfu", // 汉服店铺
-  ETIQUETTE: "etiquette", // 古代仪容仪态
   PATTERN_SYMBOLS: "pattern-symbols", // 图案象征
-  DYNASTY_SHAPES: "dynasty-shapes", // 各朝代形制
-  SHAPE_TYPES: "shape-types", // 基本形制分类
-  CLOTHING_COMPONENTS: "clothing-components", // 服饰部件
-  FESTIVAL_ACTIVITIES: "festival-activities", // 节庆雅集活动
-  LECTURES: "lectures", // 讲座
-  SHOP_DETAILS: "shop-details", // 店铺详情
-  COMMUNITY_POSTS: "community-posts", // 社区帖子
 };
 
 /**

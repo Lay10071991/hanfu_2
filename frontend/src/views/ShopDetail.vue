@@ -323,11 +323,26 @@ const loadShopImages = async (shopId) => {
 
 const setDefaultImages = () => {
   shopImages.value = [
-    { url: getImageUrl("/shop-hanfu/q (1).png"), description: "传统礼服系列" },
-    { url: getImageUrl("/shop-hanfu/q (2).png"), description: "日常汉服系列" },
-    { url: getImageUrl("/shop-hanfu/q (3).png"), description: "婚庆特别款" },
-    { url: getImageUrl("/shop-hanfu/q (4).png"), description: "手工刺绣款" },
-    { url: getImageUrl("/shop-hanfu/q (5).png"), description: "改良设计款" },
+    {
+      url: "https://placehold.co/400x300/8b4513/FFFFFF?text=传统礼服系列",
+      description: "传统礼服系列",
+    },
+    {
+      url: "https://placehold.co/400x300/d2691e/FFFFFF?text=日常汉服系列",
+      description: "日常汉服系列",
+    },
+    {
+      url: "https://placehold.co/400x300/8b4513/FFFFFF?text=婚庆特别款",
+      description: "婚庆特别款",
+    },
+    {
+      url: "https://placehold.co/400x300/d2691e/FFFFFF?text=手工刺绣款",
+      description: "手工刺绣款",
+    },
+    {
+      url: "https://placehold.co/400x300/8b4513/FFFFFF?text=改良设计款",
+      description: "改良设计款",
+    },
   ];
 };
 
@@ -519,7 +534,7 @@ const hanfuImages = computed(() => {
   }
   // 默认图片（最少1张）
   console.log("使用默认图片");
-  return [getImageUrl("/shop-hanfu/q (1).png")];
+  return ["https://placehold.co/400x300/8b4513/FFFFFF?text=传统礼服系列"];
 });
 
 // 获取图片描述文字
