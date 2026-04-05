@@ -8,9 +8,9 @@ spring:
       connection-init-sql: SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci
   jpa:
     hibernate:
-      ddl-auto: none # 禁用自动表结构生成
+      ddl-auto: validate # 仅验证表结构，不创建或修改
     show-sql: true
-    defer-datasource-initialization: true
+    defer-datasource-initialization: false
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
@@ -20,7 +20,7 @@ spring:
         format_sql: true
   sql:
     init:
-      mode: always
+      mode: always # 总是执行初始化 SQL 文件
       continue-on-error: true
       encoding: UTF-8
       schema-locations: classpath:activity.sql
