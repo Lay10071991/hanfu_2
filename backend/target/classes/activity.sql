@@ -263,31 +263,29 @@ CREATE TABLE `pattern_symbol`  (
   `meaning` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '象征意义',
   `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '图案图片URL',
   `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '图案描述',
-  `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '图案象征表-汉服常见图案及寓意' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of pattern_symbol
 -- ----------------------------
-INSERT INTO `pattern_symbol` VALUES (1, '龙纹', '权势尊贵', '/pattern-symbols/1.jpg', '龙纹是中国传统图案中最尊贵的纹样，象征权势、尊贵和祥瑞，是帝王的象征。常用于宫廷服饰和重要礼仪场合。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
-INSERT INTO `pattern_symbol` VALUES (2, '凤鸟纹', '吉祥和谐', '/pattern-symbols/2.jpg', '凤鸟纹象征吉祥、和谐和高贵，是皇后的象征。凤鸟姿态优美，常与牡丹、云纹等组合使用。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
-INSERT INTO `pattern_symbol` VALUES (3, '麒麟纹', '祥瑞太平', '/pattern-symbols/3.jpg', '麒麟纹象征祥瑞太平和吉祥如意，是中国古代神话中的瑞兽，寓意美好和幸福。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
-INSERT INTO `pattern_symbol` VALUES (4, '缠枝莲纹', '纯洁高雅', '/pattern-symbols/4.jpg', '缠枝莲纹以莲花为主体，枝蔓缠绕，象征纯洁高雅和生生不息，是佛教文化的重要象征。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
-INSERT INTO `pattern_symbol` VALUES (5, '宝相花纹', '吉祥如意', '/pattern-symbols/5.jpg', '宝相花纹是中国传统花纹之一，由莲花、牡丹等纹样组合而成，象征吉祥如意和富贵荣华。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
-INSERT INTO `pattern_symbol` VALUES (6, '牡丹纹', '富贵荣华', '/pattern-symbols/6.jpg', '牡丹纹象征富贵荣华和繁荣昌盛，被称为"花中之王"，是中国传统吉祥纹样的重要组成部分。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
-INSERT INTO `pattern_symbol` VALUES (7, '如意纹', '称心如意', '/pattern-symbols/7.jpg', '如意纹象征称心如意和吉祥美好，形状如灵芝，寓意万事如意、吉祥安康。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
-INSERT INTO `pattern_symbol` VALUES (8, '方胜纹', '同心相连', '/pattern-symbols/8.jpg', '方胜纹由两个菱形交叠而成，象征同心相连、永结同心，常用于婚庆和喜庆场合。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
-INSERT INTO `pattern_symbol` VALUES (9, '云纹', '吉祥如意', '/pattern-symbols/9.jpg', '云纹象征吉祥如意和高升，是中国传统纹样中最常见的装饰元素之一，常与其他纹样组合使用。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
-INSERT INTO `pattern_symbol` VALUES (10, '蟠螭纹', '权势尊贵', '/pattern-symbols/10.jpg', '蟠螭纹是龙纹的一种变体，象征权势尊贵和祥瑞，常用于青铜器和玉器装饰。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
-INSERT INTO `pattern_symbol` VALUES (11, '回纹', '富贵不断', '/pattern-symbols/11.jpg', '回纹是中国传统纹样之一，象征富贵不断和吉祥如意，因形如"回"字而得名。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
-INSERT INTO `pattern_symbol` VALUES (12, '八宝纹', '吉祥如意', '/pattern-symbols/12.jpg', '八宝纹由八种吉祥宝物组成，象征吉祥如意和幸福美满，常用于佛教和道教装饰。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
-INSERT INTO `pattern_symbol` VALUES (13, '锦鲤纹', '年年有余', '/pattern-symbols/13.jpg', '锦鲤纹象征年年有余和富足吉祥，因"鱼"与"余"谐音，是中国传统吉祥纹样之一。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
-INSERT INTO `pattern_symbol` VALUES (14, '龟背纹', '长寿安康', '/pattern-symbols/14.jpg', '龟背纹因形如龟甲而得名，象征长寿安康和坚韧不拔，是中国传统纹样之一。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
-INSERT INTO `pattern_symbol` VALUES (15, '柿蒂纹', '事事如意', '/pattern-symbols/15.jpg', '柿蒂纹因形如柿子蒂而得名，象征事事如意和吉祥美好，常用于服饰和器物装饰。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
-INSERT INTO `pattern_symbol` VALUES (16, '忍冬纹', '坚韧不拔', '/pattern-symbols/16.jpg', '忍冬纹因忍冬花耐寒而得名，象征坚韧不拔和生命力顽强，是中国传统纹样之一。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
-INSERT INTO `pattern_symbol` VALUES (17, '芙蓉纹', '高洁优雅', '/pattern-symbols/17.jpg', '芙蓉纹象征高洁优雅和纯洁美丽，是中国传统花卉纹样之一，常用于女性服饰装饰。', '2026-03-01 19:22:16', '2026-03-01 19:22:21');
+INSERT INTO `pattern_symbol` VALUES (1, '龙纹', '权势尊贵', '/pattern-symbols/1.jpg', '龙纹是中国传统图案中最尊贵的纹样，象征权势、尊贵和祥瑞，是帝王的象征。常用于宫廷服饰和重要礼仪场合。');
+INSERT INTO `pattern_symbol` VALUES (2, '凤鸟纹', '吉祥和谐', '/pattern-symbols/2.jpg', '凤鸟纹象征吉祥、和谐和高贵，是皇后的象征。凤鸟姿态优美，常与牡丹、云纹等组合使用。');
+INSERT INTO `pattern_symbol` VALUES (3, '麒麟纹', '祥瑞太平', '/pattern-symbols/3.jpg', '麒麟纹象征祥瑞太平和吉祥如意，是中国古代神话中的瑞兽，寓意美好和幸福。');
+INSERT INTO `pattern_symbol` VALUES (4, '缠枝莲纹', '纯洁高雅', '/pattern-symbols/4.jpg', '缠枝莲纹以莲花为主体，枝蔓缠绕，象征纯洁高雅和生生不息，是佛教文化的重要象征。');
+INSERT INTO `pattern_symbol` VALUES (5, '宝相花纹', '吉祥如意', '/pattern-symbols/5.jpg', '宝相花纹是中国传统花纹之一，由莲花、牡丹等纹样组合而成，象征吉祥如意和富贵荣华。');
+INSERT INTO `pattern_symbol` VALUES (6, '牡丹纹', '富贵荣华', '/pattern-symbols/6.jpg', '牡丹纹象征富贵荣华和繁荣昌盛，被称为"花中之王"，是中国传统吉祥纹样的重要组成部分。');
+INSERT INTO `pattern_symbol` VALUES (7, '如意纹', '称心如意', '/pattern-symbols/7.jpg', '如意纹象征称心如意和吉祥美好，形状如灵芝，寓意万事如意、吉祥安康。');
+INSERT INTO `pattern_symbol` VALUES (8, '方胜纹', '同心相连', '/pattern-symbols/8.jpg', '方胜纹由两个菱形交叠而成，象征同心相连、永结同心，常用于婚庆和喜庆场合。');
+INSERT INTO `pattern_symbol` VALUES (9, '云纹', '吉祥如意', '/pattern-symbols/9.jpg', '云纹象征吉祥如意和高升，是中国传统纹样中最常见的装饰元素之一，常与其他纹样组合使用。');
+INSERT INTO `pattern_symbol` VALUES (10, '蟠螭纹', '权势尊贵', '/pattern-symbols/10.jpg', '蟠螭纹是龙纹的一种变体，象征权势尊贵和祥瑞，常用于青铜器和玉器装饰。');
+INSERT INTO `pattern_symbol` VALUES (11, '回纹', '富贵不断', '/pattern-symbols/11.jpg', '回纹是中国传统纹样之一，象征富贵不断和吉祥如意，因形如"回"字而得名。');
+INSERT INTO `pattern_symbol` VALUES (12, '八宝纹', '吉祥如意', '/pattern-symbols/12.jpg', '八宝纹由八种吉祥宝物组成，象征吉祥如意和幸福美满，常用于佛教和道教装饰。');
+INSERT INTO `pattern_symbol` VALUES (13, '锦鲤纹', '年年有余', '/pattern-symbols/13.jpg', '锦鲤纹象征年年有余和富足吉祥，因"鱼"与"余"谐音，是中国传统吉祥纹样之一。');
+INSERT INTO `pattern_symbol` VALUES (14, '龟背纹', '长寿安康', '/pattern-symbols/14.jpg', '龟背纹因形如龟甲而得名，象征长寿安康和坚韧不拔，是中国传统纹样之一。');
+INSERT INTO `pattern_symbol` VALUES (15, '柿蒂纹', '事事如意', '/pattern-symbols/15.jpg', '柿蒂纹因形如柿子蒂而得名，象征事事如意和吉祥美好，常用于服饰和器物装饰。');
+INSERT INTO `pattern_symbol` VALUES (16, '忍冬纹', '坚韧不拔', '/pattern-symbols/16.jpg', '忍冬纹因忍冬花耐寒而得名，象征坚韧不拔和生命力顽强，是中国传统纹样之一。');
+INSERT INTO `pattern_symbol` VALUES (17, '芙蓉纹', '高洁优雅', '/pattern-symbols/17.jpg', '芙蓉纹象征高洁优雅和纯洁美丽，是中国传统花卉纹样之一，常用于女性服饰装饰。');
 
 -- ----------------------------
 -- Table structure for etiquette
