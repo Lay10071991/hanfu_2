@@ -147,17 +147,15 @@ CREATE TABLE `culture_influence`  (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '文化影响ID',
   `title` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '标题',
   `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '描述',
-  `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '文化影响与传承表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of culture_influence
 -- ----------------------------
-INSERT INTO `culture_influence` VALUES (1, '礼仪制度', '汉服与华夏礼仪制度密不可分，自古以来就有衣冠之治的说法。不同场合、身份、性别都有相应的服饰规范，体现了礼的文化内涵和等级秩序。', '2026-03-01 19:22:16', '2026-03-01 19:22:16');
-INSERT INTO `culture_influence` VALUES (2, '审美观念', '汉服体现了天人合一的哲学思想，服饰讲究与自然和谐统一。宽大的袖口象征天地，交领右衽体现阴阳，整体造型追求自然流畅。', '2026-03-01 19:22:16', '2026-03-01 19:22:16');
-INSERT INTO `culture_influence` VALUES (3, '现代复兴', '21世纪初，汉服复兴运动开始兴起。最初由少数文化爱好者发起，逐渐发展成为一场涉及全国的文化运动，吸引了大量年轻人参与。', '2026-03-01 19:22:16', '2026-03-01 19:22:16');
+INSERT INTO `culture_influence` VALUES (1, '礼仪制度', '汉服与华夏礼仪制度密不可分，自古以来就有衣冠之治的说法。不同场合、身份、性别都有相应的服饰规范，体现了礼的文化内涵和等级秩序。');
+INSERT INTO `culture_influence` VALUES (2, '审美观念', '汉服体现了天人合一的哲学思想，服饰讲究与自然和谐统一。宽大的袖口象征天地，交领右衽体现阴阳，整体造型追求自然流畅。');
+INSERT INTO `culture_influence` VALUES (3, '现代复兴', '21世纪初，汉服复兴运动开始兴起。最初由少数文化爱好者发起，逐渐发展成为一场涉及全国的文化运动，吸引了大量年轻人参与。');
 
 -- ----------------------------
 -- Table structure for shape_type
