@@ -1125,8 +1125,6 @@ CREATE TABLE `shop`  (
   `address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '地址',
   `contact` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '联系方式',
   `price_range` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '价格区间',
-  `create_time` datetime NOT NULL COMMENT '创建时间',
-  `update_time` datetime NOT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `user_id`(`user_id` ASC) USING BTREE,
   CONSTRAINT `shop_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
@@ -1136,47 +1134,47 @@ CREATE TABLE `shop`  (
 -- Records of shop
 -- ----------------------------
 -- 商家1 (shop, id=3): 2个店铺 - 普通档+中档
-INSERT INTO `shop` VALUES (1, 3, '汉服小铺', '专注于平价汉服的店铺，款式多样，适合入门爱好者。我们提供各种风格的汉服，从日常穿着到节日庆典，满足不同场合的需求。所有汉服均采用优质面料，做工精细，让您在穿着舒适的同时展现传统文化之美。', 'backend/uploads/shop/1.jpg', '北京市朝阳区', '13800138001', '普通档（0-400）', '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop` VALUES (7, 3, '汉唐华服', '中等价位的汉服店铺，做工精细。我们专注于将传统工艺与现代设计相结合，打造出既符合传统形制又适合现代穿着的汉服。每一件汉服都经过精心制作，从面料选择到细节处理，都体现了我们对品质的追求。', 'backend/uploads/shop/7.jpg', '北京市海淀区', '13800138007', '中档（400-700）', '2026-01-07 10:00:00', '2026-01-07 10:00:00');
+INSERT INTO `shop` VALUES (1, 3, '汉服小铺', '专注于平价汉服的店铺，款式多样，适合入门爱好者。我们提供各种风格的汉服，从日常穿着到节日庆典，满足不同场合的需求。所有汉服均采用优质面料，做工精细，让您在穿着舒适的同时展现传统文化之美。', 'backend/uploads/shop/1.jpg', '北京市朝阳区', '13800138001', '普通档（0-400）');
+INSERT INTO `shop` VALUES (7, 3, '汉唐华服', '中等价位的汉服店铺，做工精细。我们专注于将传统工艺与现代设计相结合，打造出既符合传统形制又适合现代穿着的汉服。每一件汉服都经过精心制作，从面料选择到细节处理，都体现了我们对品质的追求。', 'backend/uploads/shop/7.jpg', '北京市海淀区', '13800138007', '中档（400-700）');
 
 -- 商家2 (织云, id=44): 1个店铺 - 普通档
-INSERT INTO `shop` VALUES (2, 44, '霓裳羽衣', '提供性价比高的汉服，适合日常穿着。我们的汉服设计简约大方，注重舒适度和实用性，让您在日常生活中也能轻松驾驭传统服饰。所有款式均经过精心挑选，确保质量和时尚感并存。', 'backend/uploads/shop/2.jpg', '上海市浦东新区', '13900139002', '普通档（0-400）', '2026-01-02 10:00:00', '2026-01-02 10:00:00');
+INSERT INTO `shop` VALUES (2, 44, '霓裳羽衣', '提供性价比高的汉服，适合日常穿着。我们的汉服设计简约大方，注重舒适度和实用性，让您在日常生活中也能轻松驾驭传统服饰。所有款式均经过精心挑选，确保质量和时尚感并存。', 'backend/uploads/shop/2.jpg', '上海市浦东新区', '13900139002', '普通档（0-400）');
 
 -- 商家3 (衔花, id=45): 2个店铺 - 普通档+中档
-INSERT INTO `shop` VALUES (3, 45, '汉风堂', '传统汉服店铺，价格亲民，款式经典。我们专注于传承经典汉服款式，每一件汉服都体现了传统工艺的精髓。我们的设计师深入研究历史文献，确保每一款汉服都符合传统形制，让您感受到真正的华夏衣冠之美。', 'backend/uploads/shop/3.jpg', '广州市天河区', '13700137003', '普通档（0-400）', '2026-01-03 10:00:00', '2026-01-03 10:00:00');
-INSERT INTO `shop` VALUES (8, 45, '锦绣坊', '绣花精美的中档汉服店铺。我们以精美的绣花工艺著称，每一件汉服都装饰有精致的刺绣图案。我们的绣工师傅拥有多年经验，能够将各种传统图案栩栩如生地呈现在汉服上，让您的服饰更加独特和精美。', 'backend/uploads/shop/8.jpg', '上海市静安区', '13900139008', '中档（400-700）', '2026-01-08 10:00:00', '2026-01-08 10:00:00');
+INSERT INTO `shop` VALUES (3, 45, '汉风堂', '传统汉服店铺，价格亲民，款式经典。我们专注于传承经典汉服款式，每一件汉服都体现了传统工艺的精髓。我们的设计师深入研究历史文献，确保每一款汉服都符合传统形制，让您感受到真正的华夏衣冠之美。', 'backend/uploads/shop/3.jpg', '广州市天河区', '13700137003', '普通档（0-400）');
+INSERT INTO `shop` VALUES (8, 45, '锦绣坊', '绣花精美的中档汉服店铺。我们以精美的绣花工艺著称，每一件汉服都装饰有精致的刺绣图案。我们的绣工师傅拥有多年经验，能够将各种传统图案栩栩如生地呈现在汉服上，让您的服饰更加独特和精美。', 'backend/uploads/shop/8.jpg', '上海市静安区', '13900139008', '中档（400-700）');
 
 -- 商家4 (南风, id=46): 1个店铺 - 普通档
-INSERT INTO `shop` VALUES (4, 46, '华服小馆', '小而精致的汉服店铺，主打平价款式。我们虽然规模不大，但致力于为顾客提供最精致的汉服体验。每一件汉服都经过精心挑选和质量检验，确保您能以实惠的价格购买到高品质的传统服饰。', 'backend/uploads/shop/4.jpg', '杭州市西湖区', '13600136004', '普通档（0-400）', '2026-01-04 10:00:00', '2026-01-04 10:00:00');
+INSERT INTO `shop` VALUES (4, 46, '华服小馆', '小而精致的汉服店铺，主打平价款式。我们虽然规模不大，但致力于为顾客提供最精致的汉服体验。每一件汉服都经过精心挑选和质量检验，确保您能以实惠的价格购买到高品质的传统服饰。', 'backend/uploads/shop/4.jpg', '杭州市西湖区', '13600136004', '普通档（0-400）');
 
 -- 商家5 (锦瑟, id=47): 2个店铺 - 普通档+中档
-INSERT INTO `shop` VALUES (5, 47, '汉服世家', '家族经营的汉服店铺，价格实惠。我们是一家有着多年历史的家族企业，传承了数代人的汉服制作工艺。我们的汉服不仅价格实惠，而且做工精细，每一件都凝聚了我们对传统文化的热爱和敬意。', 'backend/uploads/shop/5.jpg', '成都市锦江区', '13500135005', '普通档（0-400）', '2026-01-05 10:00:00', '2026-01-05 10:00:00');
-INSERT INTO `shop` VALUES (9, 47, '古风雅韵', '主打古风设计的中档汉服店铺。我们专注于古风设计，将传统元素与现代审美相结合，打造出具有浓郁古风韵味的汉服。我们的设计师深入研究古代服饰文化，确保每一款汉服都能展现出古典的美感和现代的时尚。', 'backend/uploads/shop/9.jpg', '广州市越秀区', '13700137009', '中档（400-700）', '2026-01-09 10:00:00', '2026-01-09 10:00:00');
+INSERT INTO `shop` VALUES (5, 47, '汉服世家', '家族经营的汉服店铺，价格实惠。我们是一家有着多年历史的家族企业，传承了数代人的汉服制作工艺。我们的汉服不仅价格实惠，而且做工精细，每一件都凝聚了我们对传统文化的热爱和敬意。', 'backend/uploads/shop/5.jpg', '成都市锦江区', '13500135005', '普通档（0-400）');
+INSERT INTO `shop` VALUES (9, 47, '古风雅韵', '主打古风设计的中档汉服店铺。我们专注于古风设计，将传统元素与现代审美相结合，打造出具有浓郁古风韵味的汉服。我们的设计师深入研究古代服饰文化，确保每一款汉服都能展现出古典的美感和现代的时尚。', 'backend/uploads/shop/9.jpg', '广州市越秀区', '13700137009', '中档（400-700）');
 
 -- 商家6 (枕霞, id=48): 2个店铺 - 普通档+中档
-INSERT INTO `shop` VALUES (6, 48, '雅韵汉服', '优雅韵味的汉服店铺，价格适中。我们的汉服设计注重优雅的气质和传统的韵味，每一件都能展现出穿着者的古典美。我们选用优质面料，精心制作，让您在各种场合都能展现出独特的魅力。', 'backend/uploads/shop/6.jpg', '南京市玄武区', '13400134006', '普通档（0-400）', '2026-01-06 10:00:00', '2026-01-06 10:00:00');
-INSERT INTO `shop` VALUES (10, 48, '汉衣坊', '传统工艺制作的中档汉服店铺。我们坚持使用传统工艺制作汉服，每一件都经过精心的手工制作。我们的工匠师傅拥有丰富的经验，能够将传统工艺与现代需求相结合，打造出既传统又实用的汉服。', 'backend/uploads/shop/10.jpg', '深圳市南山区', '13600136010', '中档（400-700）', '2026-01-10 10:00:00', '2026-01-10 10:00:00');
+INSERT INTO `shop` VALUES (6, 48, '雅韵汉服', '优雅韵味的汉服店铺，价格适中。我们的汉服设计注重优雅的气质和传统的韵味，每一件都能展现出穿着者的古典美。我们选用优质面料，精心制作，让您在各种场合都能展现出独特的魅力。', 'backend/uploads/shop/6.jpg', '南京市玄武区', '13400134006', '普通档（0-400）');
+INSERT INTO `shop` VALUES (10, 48, '汉衣坊', '传统工艺制作的中档汉服店铺。我们坚持使用传统工艺制作汉服，每一件都经过精心的手工制作。我们的工匠师傅拥有丰富的经验，能够将传统工艺与现代需求相结合，打造出既传统又实用的汉服。', 'backend/uploads/shop/10.jpg', '深圳市南山区', '13600136010', '中档（400-700）');
 
 -- 商家7 (听雨, id=49): 1个店铺 - 中高档
-INSERT INTO `shop` VALUES (11, 49, '华裳九州', '中高端汉服品牌，设计独特。我们是一家专注于高端汉服设计的品牌，每一件汉服都由专业设计师精心设计，具有独特的风格和创意。我们选用高品质面料，结合传统工艺和现代设计，打造出既美观又舒适的高端汉服。', 'backend/uploads/shop/11.jpg', '北京市朝阳区', '13800138011', '中高档（700-1000）', '2026-01-11 10:00:00', '2026-01-11 10:00:00');
+INSERT INTO `shop` VALUES (11, 49, '华裳九州', '中高端汉服品牌，设计独特。我们是一家专注于高端汉服设计的品牌，每一件汉服都由专业设计师精心设计，具有独特的风格和创意。我们选用高品质面料，结合传统工艺和现代设计，打造出既美观又舒适的高端汉服。', 'backend/uploads/shop/11.jpg', '北京市朝阳区', '13800138011', '中高档（700-1000）');
 
 -- 商家8 (裁月, id=50): 1个店铺 - 中高档
-INSERT INTO `shop` VALUES (12, 50, '礼乐衣冠', '注重礼仪文化的中高端汉服店铺。我们专注于礼仪文化，提供符合传统礼仪规范的汉服。我们的汉服设计参考了大量历史文献和文物，确保每一件都符合传统礼仪要求，让您在各种礼仪场合都能展现出得体的形象。', 'backend/uploads/shop/12.jpg', '上海市黄浦区', '13900139012', '中高档（700-1000）', '2026-01-12 10:00:00', '2026-01-12 10:00:00');
+INSERT INTO `shop` VALUES (12, 50, '礼乐衣冠', '注重礼仪文化的中高端汉服店铺。我们专注于礼仪文化，提供符合传统礼仪规范的汉服。我们的汉服设计参考了大量历史文献和文物，确保每一件都符合传统礼仪要求，让您在各种礼仪场合都能展现出得体的形象。', 'backend/uploads/shop/12.jpg', '上海市黄浦区', '13900139012', '中高档（700-1000）');
 
 -- 商家9 (清商, id=51): 1个店铺 - 中高档
-INSERT INTO `shop` VALUES (13, 51, '盛世华服', '重现盛世风采的中高端汉服品牌。我们致力于重现古代盛世的服饰风采，每一件汉服都参考了历史上的经典款式。我们的设计师深入研究各个朝代的服饰特点，结合现代工艺，打造出既具有历史感又适合现代穿着的高端汉服。', 'backend/uploads/shop/13.jpg', '杭州市余杭区', '13700137013', '中高档（700-1000）', '2026-01-13 10:00:00', '2026-01-13 10:00:00');
+INSERT INTO `shop` VALUES (13, 51, '盛世华服', '重现盛世风采的中高端汉服品牌。我们致力于重现古代盛世的服饰风采，每一件汉服都参考了历史上的经典款式。我们的设计师深入研究各个朝代的服饰特点，结合现代工艺，打造出既具有历史感又适合现代穿着的高端汉服。', 'backend/uploads/shop/13.jpg', '杭州市余杭区', '13700137013', '中高档（700-1000）');
 
 -- 商家10 (栖霞, id=52): 1个店铺 - 中高档
-INSERT INTO `shop` VALUES (14, 52, '古风堂', '古典风格的中高端汉服店铺。我们专注于古典风格的汉服设计，每一件都体现了传统服饰的精髓。我们的汉服采用传统工艺制作，面料选用高品质的丝绸和棉麻，确保穿着舒适且具有古典美感。', 'backend/uploads/shop/14.jpg', '苏州市姑苏区', '13600136014', '中高档（700-1000）', '2026-01-14 10:00:00', '2026-01-14 10:00:00');
+INSERT INTO `shop` VALUES (14, 52, '古风堂', '古典风格的中高端汉服店铺。我们专注于古典风格的汉服设计，每一件都体现了传统服饰的精髓。我们的汉服采用传统工艺制作，面料选用高品质的丝绸和棉麻，确保穿着舒适且具有古典美感。', 'backend/uploads/shop/14.jpg', '苏州市姑苏区', '13600136014', '中高档（700-1000）');
 
 -- 商家11 (拾花, id=53): 1个店铺 - 高档
-INSERT INTO `shop` VALUES (15, 53, '皇家织造', '顶级汉服定制店铺，工艺精湛。我们是一家专注于高端汉服定制的店铺，拥有精湛的传统工艺和丰富的定制经验。每一件汉服都由资深工匠手工制作，从面料选择到细节处理，都体现了我们对品质的极致追求，为您打造独一无二的专属汉服。', 'backend/uploads/shop/15.jpg', '北京市西城区', '13800138015', '高档（1000以上）', '2026-01-15 10:00:00', '2026-01-15 10:00:00');
+INSERT INTO `shop` VALUES (15, 53, '皇家织造', '顶级汉服定制店铺，工艺精湛。我们是一家专注于高端汉服定制的店铺，拥有精湛的传统工艺和丰富的定制经验。每一件汉服都由资深工匠手工制作，从面料选择到细节处理，都体现了我们对品质的极致追求，为您打造独一无二的专属汉服。', 'backend/uploads/shop/15.jpg', '北京市西城区', '13800138015', '高档（1000以上）');
 
 -- 商家12 (云想, id=54): 1个店铺 - 高档
-INSERT INTO `shop` VALUES (16, 54, '御品华服', '皇室风格的高档汉服品牌。我们专注于皇室风格的汉服设计，每一件都体现了皇家的尊贵与典雅。我们选用最优质的面料，采用传统工艺制作，为您打造出具有皇室风范的高端汉服，让您在各种场合都能展现出非凡的气质。', 'backend/uploads/shop/16.jpg', '上海市徐汇区', '13900139016', '高档（1000以上）', '2026-01-16 10:00:00', '2026-01-16 10:00:00');
+INSERT INTO `shop` VALUES (16, 54, '御品华服', '皇室风格的高档汉服品牌。我们专注于皇室风格的汉服设计，每一件都体现了皇家的尊贵与典雅。我们选用最优质的面料，采用传统工艺制作，为您打造出具有皇室风范的高端汉服，让您在各种场合都能展现出非凡的气质。', 'backend/uploads/shop/16.jpg', '上海市徐汇区', '13900139016', '高档（1000以上）');
 
 -- 商家13 (未央, id=55): 1个店铺 - 高档
-INSERT INTO `shop` VALUES (17, 55, '天衣无缝', '顶级工艺的高档汉服定制店铺。我们以顶级工艺著称，每一件汉服都由经验丰富的工匠手工制作，确保每一个细节都完美无瑕。我们选用最优质的面料，结合传统工艺和现代技术，为您打造出独一无二的高端定制汉服，展现您的独特品味和气质。', 'backend/uploads/shop/17.jpg', '杭州市西湖区', '13700137017', '高档（1000以上）', '2026-01-17 10:00:00', '2026-01-17 10:00:00');
+INSERT INTO `shop` VALUES (17, 55, '天衣无缝', '顶级工艺的高档汉服定制店铺。我们以顶级工艺著称，每一件汉服都由经验丰富的工匠手工制作，确保每一个细节都完美无瑕。我们选用最优质的面料，结合传统工艺和现代技术，为您打造出独一无二的高端定制汉服，展现您的独特品味和气质。', 'backend/uploads/shop/17.jpg', '杭州市西湖区', '13700137017', '高档（1000以上）');
 
 -- ----------------------------
 -- Table structure for shop_show
@@ -1187,8 +1185,6 @@ CREATE TABLE `shop_show` (
   `shop_id` bigint NOT NULL COMMENT '店铺ID',
   `image_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '图片URL',
   `sort_order` int NOT NULL DEFAULT 0 COMMENT '排序顺序',
-  `create_time` datetime NOT NULL COMMENT '创建时间',
-  `update_time` datetime NOT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `shop_id`(`shop_id` ASC) USING BTREE,
   CONSTRAINT `shop_show_ibfk_1` FOREIGN KEY (`shop_id`) REFERENCES `shop` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
@@ -1198,95 +1194,95 @@ CREATE TABLE `shop_show` (
 -- Records of shop_show - 店铺汉服展示图片
 -- ----------------------------
 -- 店铺1 (汉服小铺) - 2张图片
-INSERT INTO `shop_show` VALUES (1, 1, 'backend/uploads/shopshow/1-1.jpg', 1, '2026-01-01 10:00:00', '2026-01-01 10:00:00');
-INSERT INTO `shop_show` VALUES (2, 1, 'backend/uploads/shopshow/1-2.jpg', 2, '2026-01-01 10:00:00', '2026-01-01 10:00:00');
+INSERT INTO `shop_show` VALUES (1, 1, 'backend/uploads/shopshow/1-1.jpg', 1);
+INSERT INTO `shop_show` VALUES (2, 1, 'backend/uploads/shopshow/1-2.jpg', 2);
 
 -- 店铺2 (霓裳羽衣) - 4张图片
-INSERT INTO `shop_show` VALUES (3, 2, 'backend/uploads/shopshow/2-1.jpg', 1, '2026-01-02 10:00:00', '2026-01-02 10:00:00');
-INSERT INTO `shop_show` VALUES (4, 2, 'backend/uploads/shopshow/2-2.jpg', 2, '2026-01-02 10:00:00', '2026-01-02 10:00:00');
-INSERT INTO `shop_show` VALUES (5, 2, 'backend/uploads/shopshow/2-3.jpg', 3, '2026-01-02 10:00:00', '2026-01-02 10:00:00');
-INSERT INTO `shop_show` VALUES (6, 2, 'backend/uploads/shopshow/2-4.jpg', 4, '2026-01-02 10:00:00', '2026-01-02 10:00:00');
+INSERT INTO `shop_show` VALUES (3, 2, 'backend/uploads/shopshow/2-1.jpg', 1);
+INSERT INTO `shop_show` VALUES (4, 2, 'backend/uploads/shopshow/2-2.jpg', 2);
+INSERT INTO `shop_show` VALUES (5, 2, 'backend/uploads/shopshow/2-3.jpg', 3);
+INSERT INTO `shop_show` VALUES (6, 2, 'backend/uploads/shopshow/2-4.jpg', 4);
 
 -- 店铺3 (汉风堂) - 5张图片
-INSERT INTO `shop_show` VALUES (7, 3, 'backend/uploads/shopshow/3-1.jpg', 1, '2026-01-03 10:00:00', '2026-01-03 10:00:00');
-INSERT INTO `shop_show` VALUES (8, 3, 'backend/uploads/shopshow/3-2.jpg', 2, '2026-01-03 10:00:00', '2026-01-03 10:00:00');
-INSERT INTO `shop_show` VALUES (9, 3, 'backend/uploads/shopshow/3-3.jpg', 3, '2026-01-03 10:00:00', '2026-01-03 10:00:00');
-INSERT INTO `shop_show` VALUES (10, 3, 'backend/uploads/shopshow/3-4.jpg', 4, '2026-01-03 10:00:00', '2026-01-03 10:00:00');
-INSERT INTO `shop_show` VALUES (11, 3, 'backend/uploads/shopshow/3-5.jpg', 5, '2026-01-03 10:00:00', '2026-01-03 10:00:00');
+INSERT INTO `shop_show` VALUES (7, 3, 'backend/uploads/shopshow/3-1.jpg', 1);
+INSERT INTO `shop_show` VALUES (8, 3, 'backend/uploads/shopshow/3-2.jpg', 2);
+INSERT INTO `shop_show` VALUES (9, 3, 'backend/uploads/shopshow/3-3.jpg', 3);
+INSERT INTO `shop_show` VALUES (10, 3, 'backend/uploads/shopshow/3-4.jpg', 4);
+INSERT INTO `shop_show` VALUES (11, 3, 'backend/uploads/shopshow/3-5.jpg', 5);
 
 -- 店铺4 (华服小馆) - 3张图片
-INSERT INTO `shop_show` VALUES (12, 4, 'backend/uploads/shopshow/4-1.jpg', 1, '2026-01-04 10:00:00', '2026-01-04 10:00:00');
-INSERT INTO `shop_show` VALUES (13, 4, 'backend/uploads/shopshow/4-2.jpg', 2, '2026-01-04 10:00:00', '2026-01-04 10:00:00');
-INSERT INTO `shop_show` VALUES (14, 4, 'backend/uploads/shopshow/4-3.jpg', 3, '2026-01-04 10:00:00', '2026-01-04 10:00:00');
+INSERT INTO `shop_show` VALUES (12, 4, 'backend/uploads/shopshow/4-1.jpg', 1);
+INSERT INTO `shop_show` VALUES (13, 4, 'backend/uploads/shopshow/4-2.jpg', 2);
+INSERT INTO `shop_show` VALUES (14, 4, 'backend/uploads/shopshow/4-3.jpg', 3);
 
 -- 店铺5 (汉服世家) - 3张图片
-INSERT INTO `shop_show` VALUES (15, 5, 'backend/uploads/shopshow/5-1.jpg', 1, '2026-01-05 10:00:00', '2026-01-05 10:00:00');
-INSERT INTO `shop_show` VALUES (16, 5, 'backend/uploads/shopshow/5-2.jpg', 2, '2026-01-05 10:00:00', '2026-01-05 10:00:00');
-INSERT INTO `shop_show` VALUES (17, 5, 'backend/uploads/shopshow/5-3.jpg', 3, '2026-01-05 10:00:00', '2026-01-05 10:00:00');
+INSERT INTO `shop_show` VALUES (15, 5, 'backend/uploads/shopshow/5-1.jpg', 1);
+INSERT INTO `shop_show` VALUES (16, 5, 'backend/uploads/shopshow/5-2.jpg', 2);
+INSERT INTO `shop_show` VALUES (17, 5, 'backend/uploads/shopshow/5-3.jpg', 3);
 
 -- 店铺6 (雅韵汉服) - 3张图片
-INSERT INTO `shop_show` VALUES (18, 6, 'backend/uploads/shopshow/6-1.jpg', 1, '2026-01-06 10:00:00', '2026-01-06 10:00:00');
-INSERT INTO `shop_show` VALUES (19, 6, 'backend/uploads/shopshow/6-2.jpg', 2, '2026-01-06 10:00:00', '2026-01-06 10:00:00');
-INSERT INTO `shop_show` VALUES (20, 6, 'backend/uploads/shopshow/6-3.jpg', 3, '2026-01-06 10:00:00', '2026-01-06 10:00:00');
+INSERT INTO `shop_show` VALUES (18, 6, 'backend/uploads/shopshow/6-1.jpg', 1);
+INSERT INTO `shop_show` VALUES (19, 6, 'backend/uploads/shopshow/6-2.jpg', 2);
+INSERT INTO `shop_show` VALUES (20, 6, 'backend/uploads/shopshow/6-3.jpg', 3);
 
 -- 店铺7 (汉唐华服) - 3张图片
-INSERT INTO `shop_show` VALUES (21, 7, 'backend/uploads/shopshow/7-1.jpg', 1, '2026-01-07 10:00:00', '2026-01-07 10:00:00');
-INSERT INTO `shop_show` VALUES (22, 7, 'backend/uploads/shopshow/7-2.jpg', 2, '2026-01-07 10:00:00', '2026-01-07 10:00:00');
-INSERT INTO `shop_show` VALUES (23, 7, 'backend/uploads/shopshow/7-3.jpg', 3, '2026-01-07 10:00:00', '2026-01-07 10:00:00');
+INSERT INTO `shop_show` VALUES (21, 7, 'backend/uploads/shopshow/7-1.jpg', 1);
+INSERT INTO `shop_show` VALUES (22, 7, 'backend/uploads/shopshow/7-2.jpg', 2);
+INSERT INTO `shop_show` VALUES (23, 7, 'backend/uploads/shopshow/7-3.jpg', 3);
 
 -- 店铺8 (锦绣坊) - 3张图片
-INSERT INTO `shop_show` VALUES (24, 8, 'backend/uploads/shopshow/8-1.jpg', 1, '2026-01-08 10:00:00', '2026-01-08 10:00:00');
-INSERT INTO `shop_show` VALUES (25, 8, 'backend/uploads/shopshow/8-2.jpg', 2, '2026-01-08 10:00:00', '2026-01-08 10:00:00');
-INSERT INTO `shop_show` VALUES (26, 8, 'backend/uploads/shopshow/8-3.jpg', 3, '2026-01-08 10:00:00', '2026-01-08 10:00:00');
+INSERT INTO `shop_show` VALUES (24, 8, 'backend/uploads/shopshow/8-1.jpg', 1);
+INSERT INTO `shop_show` VALUES (25, 8, 'backend/uploads/shopshow/8-2.jpg', 2);
+INSERT INTO `shop_show` VALUES (26, 8, 'backend/uploads/shopshow/8-3.jpg', 3);
 
 -- 店铺9 (古风雅韵) - 3张图片
-INSERT INTO `shop_show` VALUES (27, 9, 'backend/uploads/shopshow/9-1.jpg', 1, '2026-01-09 10:00:00', '2026-01-09 10:00:00');
-INSERT INTO `shop_show` VALUES (28, 9, 'backend/uploads/shopshow/9-2.jpg', 2, '2026-01-09 10:00:00', '2026-01-09 10:00:00');
-INSERT INTO `shop_show` VALUES (29, 9, 'backend/uploads/shopshow/9-3.jpg', 3, '2026-01-09 10:00:00', '2026-01-09 10:00:00');
+INSERT INTO `shop_show` VALUES (27, 9, 'backend/uploads/shopshow/9-1.jpg', 1);
+INSERT INTO `shop_show` VALUES (28, 9, 'backend/uploads/shopshow/9-2.jpg', 2);
+INSERT INTO `shop_show` VALUES (29, 9, 'backend/uploads/shopshow/9-3.jpg', 3);
 
 -- 店铺10 (汉衣坊) - 3张图片
-INSERT INTO `shop_show` VALUES (30, 10, 'backend/uploads/shopshow/10-1.jpg', 1, '2026-01-10 10:00:00', '2026-01-10 10:00:00');
-INSERT INTO `shop_show` VALUES (31, 10, 'backend/uploads/shopshow/10-2.jpg', 2, '2026-01-10 10:00:00', '2026-01-10 10:00:00');
-INSERT INTO `shop_show` VALUES (32, 10, 'backend/uploads/shopshow/10-3.jpg', 3, '2026-01-10 10:00:00', '2026-01-10 10:00:00');
+INSERT INTO `shop_show` VALUES (30, 10, 'backend/uploads/shopshow/10-1.jpg', 1);
+INSERT INTO `shop_show` VALUES (31, 10, 'backend/uploads/shopshow/10-2.jpg', 2);
+INSERT INTO `shop_show` VALUES (32, 10, 'backend/uploads/shopshow/10-3.jpg', 3);
 
 -- 店铺11 (华裳九州) - 3张图片
-INSERT INTO `shop_show` VALUES (33, 11, 'backend/uploads/shopshow/11-1.jpg', 1, '2026-01-11 10:00:00', '2026-01-11 10:00:00');
-INSERT INTO `shop_show` VALUES (34, 11, 'backend/uploads/shopshow/11-2.jpg', 2, '2026-01-11 10:00:00', '2026-01-11 10:00:00');
-INSERT INTO `shop_show` VALUES (35, 11, 'backend/uploads/shopshow/11-3.jpg', 3, '2026-01-11 10:00:00', '2026-01-11 10:00:00');
+INSERT INTO `shop_show` VALUES (33, 11, 'backend/uploads/shopshow/11-1.jpg', 1);
+INSERT INTO `shop_show` VALUES (34, 11, 'backend/uploads/shopshow/11-2.jpg', 2);
+INSERT INTO `shop_show` VALUES (35, 11, 'backend/uploads/shopshow/11-3.jpg', 3);
 
 -- 店铺12 (礼乐衣冠) - 3张图片
-INSERT INTO `shop_show` VALUES (36, 12, 'backend/uploads/shopshow/12-1.jpg', 1, '2026-01-12 10:00:00', '2026-01-12 10:00:00');
-INSERT INTO `shop_show` VALUES (37, 12, 'backend/uploads/shopshow/12-2.jpg', 2, '2026-01-12 10:00:00', '2026-01-12 10:00:00');
-INSERT INTO `shop_show` VALUES (38, 12, 'backend/uploads/shopshow/12-3.jpg', 3, '2026-01-12 10:00:00', '2026-01-12 10:00:00');
+INSERT INTO `shop_show` VALUES (36, 12, 'backend/uploads/shopshow/12-1.jpg', 1);
+INSERT INTO `shop_show` VALUES (37, 12, 'backend/uploads/shopshow/12-2.jpg', 2);
+INSERT INTO `shop_show` VALUES (38, 12, 'backend/uploads/shopshow/12-3.jpg', 3);
 
 -- 店铺13 (盛世华服) - 3张图片
-INSERT INTO `shop_show` VALUES (39, 13, 'backend/uploads/shopshow/13-1.jpg', 1, '2026-01-13 10:00:00', '2026-01-13 10:00:00');
-INSERT INTO `shop_show` VALUES (40, 13, 'backend/uploads/shopshow/13-2.jpg', 2, '2026-01-13 10:00:00', '2026-01-13 10:00:00');
-INSERT INTO `shop_show` VALUES (41, 13, 'backend/uploads/shopshow/13-3.jpg', 3, '2026-01-13 10:00:00', '2026-01-13 10:00:00');
+INSERT INTO `shop_show` VALUES (39, 13, 'backend/uploads/shopshow/13-1.jpg', 1);
+INSERT INTO `shop_show` VALUES (40, 13, 'backend/uploads/shopshow/13-2.jpg', 2);
+INSERT INTO `shop_show` VALUES (41, 13, 'backend/uploads/shopshow/13-3.jpg', 3);
 
 -- 店铺14 (古风堂) - 3张图片
-INSERT INTO `shop_show` VALUES (42, 14, 'backend/uploads/shopshow/14-1.jpg', 1, '2026-01-14 10:00:00', '2026-01-14 10:00:00');
-INSERT INTO `shop_show` VALUES (43, 14, 'backend/uploads/shopshow/14-2.jpg', 2, '2026-01-14 10:00:00', '2026-01-14 10:00:00');
-INSERT INTO `shop_show` VALUES (44, 14, 'backend/uploads/shopshow/14-3.jpg', 3, '2026-01-14 10:00:00', '2026-01-14 10:00:00');
+INSERT INTO `shop_show` VALUES (42, 14, 'backend/uploads/shopshow/14-1.jpg', 1);
+INSERT INTO `shop_show` VALUES (43, 14, 'backend/uploads/shopshow/14-2.jpg', 2);
+INSERT INTO `shop_show` VALUES (44, 14, 'backend/uploads/shopshow/14-3.jpg', 3);
 
 -- 店铺15 (皇家织造) - 5张图片
-INSERT INTO `shop_show` VALUES (45, 15, 'backend/uploads/shopshow/15-1.jpg', 1, '2026-01-15 10:00:00', '2026-01-15 10:00:00');
-INSERT INTO `shop_show` VALUES (46, 15, 'backend/uploads/shopshow/15-2.jpg', 2, '2026-01-15 10:00:00', '2026-01-15 10:00:00');
-INSERT INTO `shop_show` VALUES (47, 15, 'backend/uploads/shopshow/15-3.jpg', 3, '2026-01-15 10:00:00', '2026-01-15 10:00:00');
-INSERT INTO `shop_show` VALUES (48, 15, 'backend/uploads/shopshow/15-4.jpg', 4, '2026-01-15 10:00:00', '2026-01-15 10:00:00');
-INSERT INTO `shop_show` VALUES (49, 15, 'backend/uploads/shopshow/15-5.jpg', 5, '2026-01-15 10:00:00', '2026-01-15 10:00:00');
+INSERT INTO `shop_show` VALUES (45, 15, 'backend/uploads/shopshow/15-1.jpg', 1);
+INSERT INTO `shop_show` VALUES (46, 15, 'backend/uploads/shopshow/15-2.jpg', 2);
+INSERT INTO `shop_show` VALUES (47, 15, 'backend/uploads/shopshow/15-3.jpg', 3);
+INSERT INTO `shop_show` VALUES (48, 15, 'backend/uploads/shopshow/15-4.jpg', 4);
+INSERT INTO `shop_show` VALUES (49, 15, 'backend/uploads/shopshow/15-5.jpg', 5);
 
 -- 店铺16 (御品华服) - 3张图片
-INSERT INTO `shop_show` VALUES (50, 16, 'backend/uploads/shopshow/16-1.jpg', 1, '2026-01-16 10:00:00', '2026-01-16 10:00:00');
-INSERT INTO `shop_show` VALUES (51, 16, 'backend/uploads/shopshow/16-2.jpg', 2, '2026-01-16 10:00:00', '2026-01-16 10:00:00');
-INSERT INTO `shop_show` VALUES (52, 16, 'backend/uploads/shopshow/16-3.jpg', 3, '2026-01-16 10:00:00', '2026-01-16 10:00:00');
+INSERT INTO `shop_show` VALUES (50, 16, 'backend/uploads/shopshow/16-1.jpg', 1);
+INSERT INTO `shop_show` VALUES (51, 16, 'backend/uploads/shopshow/16-2.jpg', 2);
+INSERT INTO `shop_show` VALUES (52, 16, 'backend/uploads/shopshow/16-3.jpg', 3);
 
 -- 店铺17 (天衣无缝) - 3张图片
 -- 先删除店铺17的旧数据（如果有重复主键）
 DELETE FROM `shop_show` WHERE `id` IN (54, 55, 56) AND `shop_id` = 17;
-INSERT INTO `shop_show` VALUES (53, 17, 'backend/uploads/shopshow/17-1.jpg', 1, '2026-01-17 10:00:00', '2026-01-17 10:00:00');
-INSERT INTO `shop_show` VALUES (54, 17, 'backend/uploads/shopshow/17-2.jpg', 2, '2026-01-17 10:00:00', '2026-01-17 10:00:00');
-INSERT INTO `shop_show` VALUES (55, 17, 'backend/uploads/shopshow/17-3.jpg', 3, '2026-01-17 10:00:00', '2026-01-17 10:00:00');
+INSERT INTO `shop_show` VALUES (53, 17, 'backend/uploads/shopshow/17-1.jpg', 1);
+INSERT INTO `shop_show` VALUES (54, 17, 'backend/uploads/shopshow/17-2.jpg', 2);
+INSERT INTO `shop_show` VALUES (55, 17, 'backend/uploads/shopshow/17-3.jpg', 3);
 
 
 -- ----------------------------
