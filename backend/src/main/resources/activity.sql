@@ -102,20 +102,18 @@ CREATE TABLE `historical_era`  (
   `years` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '年代',
   `title` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '标题',
   `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '描述',
-  `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '历史朝代表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of historical_era
 -- ----------------------------
-INSERT INTO `historical_era` VALUES (1, '先秦时期', '公元前21世纪-前221年', '衣裳制度确立，汉服出现', '先秦时期确立了汉服的基本形制——上衣下裳制。深衣开始出现，成为后世汉服的重要基础。服饰体现了严格的等级制度和社会规范。', '2026-03-01 19:22:16', '2026-03-01 19:22:16');
-INSERT INTO `historical_era` VALUES (2, '秦汉时期', '前221年-220年', '秦汉汉服流行，官服定制', '秦汉时期秦汉汉服流行，官服开始定制。服饰风格端庄厚重，体现了大一统帝国的威严和气度。', '2026-03-01 19:22:16', '2026-03-01 19:22:16');
-INSERT INTO `historical_era` VALUES (3, '魏晋南北朝', '220年-589年', '魏晋风流，服饰风格洒脱', '受玄学思想影响，服饰风格趋向宽松洒脱，褒衣博带成为时尚。服饰更加注重个性表达和审美追求。', '2026-03-01 19:22:16', '2026-03-01 19:22:16');
-INSERT INTO `historical_era` VALUES (4, '隋唐时期', '581年-907年', '隋唐开放，女装丰富多彩', '隋唐时期国力强盛，服饰开放多样。衫裙装成为女性主要服饰，女装样式多样，色彩斑斓，体现了开放包容的时代精神。', '2026-03-01 19:22:16', '2026-03-01 19:22:16');
-INSERT INTO `historical_era` VALUES (5, '宋明时期', '960年-1644年', '宋明理学影响，服饰趋向内敛', '宋明时期理学思想影响下，服饰风格趋于内敛含蓄。襦裙成为流行服饰，整体造型简洁质朴。', '2026-03-01 19:22:16', '2026-03-01 19:22:16');
-INSERT INTO `historical_era` VALUES (6, '清代', '1644年-1911年', '汉服衰落，满汉融合', '清代推行剃发易服政策，汉服逐渐衰落。但在民间，汉服仍有一定程度的保留，并与满族服饰相互影响融合。', '2026-03-01 19:22:16', '2026-03-01 19:22:16');
+INSERT INTO `historical_era` VALUES (1, '先秦时期', '公元前21世纪-前221年', '衣裳制度确立，汉服出现', '先秦时期确立了汉服的基本形制——上衣下裳制。深衣开始出现，成为后世汉服的重要基础。服饰体现了严格的等级制度和社会规范。');
+INSERT INTO `historical_era` VALUES (2, '秦汉时期', '前221年-220年', '秦汉汉服流行，官服定制', '秦汉时期秦汉汉服流行，官服开始定制。服饰风格端庄厚重，体现了大一统帝国的威严和气度。');
+INSERT INTO `historical_era` VALUES (3, '魏晋南北朝', '220年-589年', '魏晋风流，服饰风格洒脱', '受玄学思想影响，服饰风格趋向宽松洒脱，褒衣博带成为时尚。服饰更加注重个性表达和审美追求。');
+INSERT INTO `historical_era` VALUES (4, '隋唐时期', '581年-907年', '隋唐开放，女装丰富多彩', '隋唐时期国力强盛，服饰开放多样。衫裙装成为女性主要服饰，女装样式多样，色彩斑斓，体现了开放包容的时代精神。');
+INSERT INTO `historical_era` VALUES (5, '宋明时期', '960年-1644年', '宋明理学影响，服饰趋向内敛', '宋明时期理学思想影响下，服饰风格趋于内敛含蓄。襦裙成为流行服饰，整体造型简洁质朴。');
+INSERT INTO `historical_era` VALUES (6, '清代', '1644年-1911年', '汉服衰落，满汉融合', '清代推行剃发易服政策，汉服逐渐衰落。但在民间，汉服仍有一定程度的保留，并与满族服饰相互影响融合。');
 
 -- ----------------------------
 -- Table structure for cultural_content
