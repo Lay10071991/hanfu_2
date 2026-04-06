@@ -67,18 +67,19 @@ export default {
       menuItems: [
         { name: "statistics", label: "数据统计", icon: "📊" },
         { name: "users", label: "用户管理", icon: "👥" },
-        { name: "shape-type", label: "基本形制", icon: "👗" },
-        { name: "pattern", label: "图案象征", icon: "🎨" },
+        { name: "historical", label: "历史管理", icon: "📜" },
+        { name: "shape-type", label: "形制管理", icon: "👗" },
+        { name: "pattern", label: "图案管理", icon: "🎨" },
+        { name: "cultural", label: "文化管理", icon: "📚" },
+        { name: "activities", label: "活动管理", icon: "🎉" },
+        { name: "shops", label: "店铺管理", icon: "🏪" },
+        { name: "community", label: "社区管理", icon: "🌐" },
         { name: "component", label: "服饰部件", icon: "👔" },
         { name: "culture-influence", label: "文化影响", icon: "📜" },
         { name: "festival", label: "节日管理", icon: "🎊" },
         { name: "etiquette", label: "礼仪管理", icon: "🙏" },
-        { name: "activities", label: "活动管理", icon: "🎉" },
-        { name: "shops", label: "店铺管理", icon: "🏪" },
         { name: "posts", label: "帖子管理", icon: "📝" },
         { name: "comments", label: "评论管理", icon: "💬" },
-
-        // { name: 'cultural', label: '文化内容', icon: '📚' },
       ],
     };
   },
@@ -97,6 +98,8 @@ export default {
         pattern: "PatternManagement",
         component: "ComponentManagement",
         "culture-influence": "CultureInfluenceManagement",
+        historical: "CulturalContentManagement",
+        community: "PostManagement",
         statistics: "Statistics",
       };
       return componentMap[this.activeMenu];
