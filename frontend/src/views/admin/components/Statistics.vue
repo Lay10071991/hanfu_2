@@ -57,21 +57,23 @@ export default {
   methods: {
     async loadStatistics() {
       try {
-        const [users, posts, shops, activities] = await Promise.all([
-          fetch("http://localhost:8082/api/users").then((r) => r.json()),
-          fetch("http://localhost:8082/api/posts").then((r) => r.json()),
-          fetch("http://localhost:8082/api/shops").then((r) => r.json()),
-          fetch("http://localhost:8082/api/activities").then((r) => r.json()),
-        ]);
-
+        const [users, posts, shops, festivalActivities, exhibitions, lectures] = await Promise.all([
+          fetch('http://localhost:8082/api/users').then(r => r.json()),
+          fetch('http://localhost:8082/api/posts').then(r => r.json()),
+          fetch('http://localhost:8082/api/shops').then(r => r.json()),
+          fetch('http://localhost:8082/api/festival-activity').then(r => r.json()),
+          fetch('http://localhost:8082/api/exhibitions').then(r => r.json()),
+          fetch('http://localhost:8082/api/lectures').then(r => r.json())
+        ])
+        
         this.statistics = {
           totalUsers: users.length,
           totalPosts: posts.length,
           totalShops: shops.length,
-          totalActivities: activities.length,
-        };
+          totalActivities: festivalActivities.length + exhibitions.length + lectures.length
+        }
       } catch (error) {
-        console.error("加载统计数据失败", error);
+        console.error('加载统计数据失败', error)
       }
     },
   },
