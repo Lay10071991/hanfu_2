@@ -20,7 +20,14 @@
         </div>
         <div class="shop-content">
           <div class="shop-image">
-            <img :src="shop.image || 'https://via.placeholder.com/150'" alt="店铺图片" />
+            <img
+              :src="
+                shop.image
+                  ? shop.image.replace('backend/uploads/', 'http://localhost:8082/uploads/')
+                  : 'https://via.placeholder.com/150'
+              "
+              alt="店铺图片"
+            />
           </div>
           <div class="shop-details">
             <div class="shop-desc">{{ shop.description }}</div>
@@ -47,7 +54,10 @@
           <h4>汉服展示</h4>
           <div class="hanfu-show-images">
             <div v-for="(image, index) in shop.hanfuImages" :key="index" class="hanfu-show-item">
-              <img :src="image" alt="汉服展示" />
+              <img
+                :src="image.replace('backend/uploads/', 'http://localhost:8082/uploads/')"
+                alt="汉服展示"
+              />
             </div>
           </div>
         </div>
@@ -587,7 +597,8 @@ export default {
 .shop-image img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  background-color: #f5f5f5;
 }
 
 .shop-details {
@@ -902,8 +913,8 @@ export default {
 }
 
 .hanfu-show-item {
-  flex: 0 0 calc(25% - 11px);
-  max-width: calc(25% - 11px);
+  flex: 0 0 calc(33.33% - 10px);
+  max-width: calc(33.33% - 10px);
   border: 1px solid #eee;
   border-radius: 6px;
   overflow: hidden;
@@ -912,9 +923,10 @@ export default {
 
 .hanfu-show-item img {
   width: 100%;
-  height: 150px;
-  object-fit: cover;
+  height: 200px;
+  object-fit: contain;
   display: block;
+  background-color: #f5f5f5;
 }
 
 /* 服务管理样式 */

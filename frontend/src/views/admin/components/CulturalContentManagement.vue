@@ -10,6 +10,7 @@
           <tr>
             <th>序号</th>
             <th>标题</th>
+            <th>内容</th>
             <th>操作</th>
           </tr>
         </thead>
@@ -17,6 +18,7 @@
           <tr v-for="(item, index) in items" :key="item.id">
             <td>{{ (currentPage - 1) * pageSize + index + 1 }}</td>
             <td>{{ item.title }}</td>
+            <td class="content-cell">{{ item.content.substring(0, 100) }}...</td>
             <td>
               <button @click="editItem(item)" class="btn-edit">编辑</button>
             </td>
@@ -132,4 +134,11 @@ export default {
 
 <style scoped>
 @import "./management-common.css";
+
+.content-cell {
+  max-width: 500px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 </style>
