@@ -15,7 +15,6 @@
             <th>序号</th>
             <th>礼仪名称</th>
             <th>所属朝代</th>
-            <th>类别</th>
             <th>操作</th>
           </tr>
         </thead>
@@ -24,7 +23,6 @@
             <td>{{ (currentPage - 1) * pageSize + index + 1 }}</td>
             <td>{{ item.name }}</td>
             <td>{{ item.period }}</td>
-            <td>{{ getCategoryText(item.category) }}</td>
             <td>
               <button @click="editItem(item)" class="btn-edit">编辑</button>
               <button @click="deleteItem(item.id)" class="btn-delete">删除</button>
@@ -43,7 +41,7 @@
     <!-- 添加/编辑对话框 -->
     <div v-if="showDialog" class="modal" @click.self="closeDialog">
       <div class="modal-content large">
-        <h3>{{ isEdit ? '编辑礼仪' : '新增礼仪' }}</h3>
+        <h3>{{ isEdit ? "编辑礼仪" : "新增礼仪" }}</h3>
         <form @submit.prevent="saveItem">
           <div class="form-row">
             <div class="form-group">
@@ -55,22 +53,14 @@
               <input v-model="form.period" required />
             </div>
           </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label>类别</label>
-              <select v-model="form.category" required>
-                <option value="worship">拜礼</option>
-                <option value="standing">站礼</option>
-              </select>
-            </div>
-          </div>
+
           <div class="form-group">
             <label>示意图</label>
             <div class="upload-area">
-              <input 
-                type="file" 
-                ref="fileInput" 
-                @change="handleFileChange" 
+              <input
+                type="file"
+                ref="fileInput"
+                @change="handleFileChange"
                 accept="image/*"
                 style="display: none"
               />
@@ -112,7 +102,7 @@
 
 <script>
 export default {
-  name: 'EtiquetteManagement',
+  name: "EtiquetteManagement",
   data() {
     return {
       items: [],
@@ -125,160 +115,155 @@ export default {
       imagePreview: null,
       form: {
         id: null,
-        name: '',
-        period: '',
-        category: 'worship',
-        image: '',
-        description: '',
-        features: '',
-        steps: '',
-        note: ''
-      }
-    }
+        name: "",
+        period: "",
+        image: "",
+        description: "",
+        features: "",
+        steps: "",
+        note: "",
+      },
+    };
   },
   mounted() {
-    this.loadItems()
+    this.loadItems();
   },
   methods: {
     async loadItems() {
       try {
-        const response = await fetch('http://localhost:8082/api/etiquette')
-        const allItems = await response.json()
-        this.totalPages = Math.ceil(allItems.length / this.pageSize)
-        const start = (this.currentPage - 1) * this.pageSize
-        this.items = allItems.slice(start, start + this.pageSize)
+        const response = await fetch("http://localhost:8082/api/etiquette");
+        const allItems = await response.json();
+        this.totalPages = Math.ceil(allItems.length / this.pageSize);
+        const start = (this.currentPage - 1) * this.pageSize;
+        this.items = allItems.slice(start, start + this.pageSize);
       } catch (error) {
-        console.error('加载礼仪失败', error)
+        console.error("加载礼仪失败", error);
       }
     },
     showAddDialog() {
-      this.isEdit = false
+      this.isEdit = false;
       this.form = {
         id: null,
-        name: '',
-        period: '',
-        category: 'worship',
-        image: '',
-        description: '',
-        features: '',
-        steps: '',
-        note: ''
-      }
-      this.imagePreview = null
-      this.showDialog = true
+        name: "",
+        period: "",
+        image: "",
+        description: "",
+        features: "",
+        steps: "",
+        note: "",
+      };
+      this.imagePreview = null;
+      this.showDialog = true;
     },
     editItem(item) {
-      this.isEdit = true
-      this.form = { ...item }
-      this.imagePreview = item.image ? `http://localhost:8082${item.image}` : null
-      this.showDialog = true
+      this.isEdit = true;
+      this.form = { ...item };
+      this.imagePreview = item.image ? `http://localhost:8082${item.image}` : null;
+      this.showDialog = true;
     },
     async handleFileChange(event) {
-      const file = event.target.files[0]
-      if (!file) return
+      const file = event.target.files[0];
+      if (!file) return;
 
-      if (!file.type.startsWith('image/')) {
-        alert('请选择图片文件')
-        return
+      if (!file.type.startsWith("image/")) {
+        alert("请选择图片文件");
+        return;
       }
 
       if (file.size > 5 * 1024 * 1024) {
-        alert('图片大小不能超过5MB')
-        return
+        alert("图片大小不能超过5MB");
+        return;
       }
 
-      this.uploading = true
+      this.uploading = true;
 
       try {
-        const formData = new FormData()
-        formData.append('file', file)
+        const formData = new FormData();
+        formData.append("file", file);
 
-        const response = await fetch('http://localhost:8082/api/upload/image', {
-          method: 'POST',
-          body: formData
-        })
+        const response = await fetch("http://localhost:8082/api/upload/image", {
+          method: "POST",
+          body: formData,
+        });
 
-        const result = await response.json()
+        const result = await response.json();
 
         if (result.success) {
-          this.form.image = result.url
-          this.imagePreview = `http://localhost:8082${result.url}`
+          this.form.image = result.url;
+          this.imagePreview = `http://localhost:8082${result.url}`;
         } else {
-          alert(result.message || '上传失败')
+          alert(result.message || "上传失败");
         }
       } catch (error) {
-        console.error('上传失败', error)
-        alert('上传失败,请重试')
+        console.error("上传失败", error);
+        alert("上传失败,请重试");
       } finally {
-        this.uploading = false
+        this.uploading = false;
       }
     },
     removeImage() {
-      this.form.image = ''
-      this.imagePreview = null
+      this.form.image = "";
+      this.imagePreview = null;
       if (this.$refs.fileInput) {
-        this.$refs.fileInput.value = ''
+        this.$refs.fileInput.value = "";
       }
     },
     async saveItem() {
       if (!this.form.image) {
-        alert('请上传示意图')
-        return
+        alert("请上传示意图");
+        return;
       }
 
       try {
-        const url = this.isEdit 
+        const url = this.isEdit
           ? `http://localhost:8082/api/etiquette/${this.form.id}`
-          : 'http://localhost:8082/api/etiquette'
-        
+          : "http://localhost:8082/api/etiquette";
+
         await fetch(url, {
-          method: this.isEdit ? 'PUT' : 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(this.form)
-        })
-        
-        this.closeDialog()
-        this.loadItems()
+          method: this.isEdit ? "PUT" : "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(this.form),
+        });
+
+        this.closeDialog();
+        this.loadItems();
       } catch (error) {
-        console.error('保存失败', error)
+        console.error("保存失败", error);
       }
     },
     async deleteItem(id) {
-      if (confirm('确定要删除这个礼仪吗？')) {
+      if (confirm("确定要删除这个礼仪吗？")) {
         try {
           await fetch(`http://localhost:8082/api/etiquette/${id}`, {
-            method: 'DELETE'
-          })
-          this.loadItems()
+            method: "DELETE",
+          });
+          this.loadItems();
         } catch (error) {
-          console.error('删除失败', error)
+          console.error("删除失败", error);
         }
       }
     },
     closeDialog() {
-      this.showDialog = false
+      this.showDialog = false;
     },
     prevPage() {
       if (this.currentPage > 1) {
-        this.currentPage--
-        this.loadItems()
+        this.currentPage--;
+        this.loadItems();
       }
     },
     nextPage() {
       if (this.currentPage < this.totalPages) {
-        this.currentPage++
-        this.loadItems()
+        this.currentPage++;
+        this.loadItems();
       }
     },
-    getCategoryText(category) {
-      return category === 'worship' ? '拜礼' : '站礼'
-    }
-  }
-}
+  },
+};
 </script>
 
 <style scoped>
-@import './management-common.css';
+@import "./management-common.css";
 
 .modal-content.large {
   max-width: 800px;
@@ -304,7 +289,7 @@ export default {
 }
 
 .upload-placeholder:hover {
-  border-color: #8B4513;
+  border-color: #8b4513;
   background: #f9f9f9;
 }
 

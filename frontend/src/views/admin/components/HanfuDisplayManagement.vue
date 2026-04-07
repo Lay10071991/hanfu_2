@@ -47,10 +47,6 @@
             <textarea v-model="form.content" rows="4" placeholder="请输入详细内容"></textarea>
           </div>
           <div class="form-group">
-            <label>排序</label>
-            <input v-model.number="form.sortOrder" type="number" min="1" />
-          </div>
-          <div class="form-group">
             <label>主图片</label>
             <div class="upload-area">
               <input
@@ -95,7 +91,6 @@ export default {
         name: "",
         description: "",
         content: "",
-        sortOrder: 1,
         image: "",
       },
     };
@@ -126,7 +121,6 @@ export default {
         name: "",
         description: "",
         content: "",
-        sortOrder: 1,
         image: "",
       };
       this.imagePreview = null;
