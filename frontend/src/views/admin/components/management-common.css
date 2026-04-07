@@ -1,8 +1,5 @@
 .management-container {
-  background: white;
-  padding: 30px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  padding: 20px;
 }
 
 .header {
@@ -14,24 +11,28 @@
 
 .header h2 {
   margin: 0;
-  color: #333;
+  color: #8b4513;
 }
 
 .btn-primary {
-  padding: 10px 20px;
-  background: #8B4513;
+  background: linear-gradient(135deg, #8b4513 0%, #d2691e 100%);
   color: white;
   border: none;
+  padding: 10px 20px;
   border-radius: 4px;
   cursor: pointer;
+  font-size: 14px;
 }
 
 .btn-primary:hover {
-  background: #6d3410;
+  opacity: 0.9;
 }
 
 .table-container {
-  overflow-x: auto;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
   margin-bottom: 20px;
 }
 
@@ -41,32 +42,37 @@ table {
 }
 
 th, td {
-  padding: 12px;
+  padding: 12px 15px;
   text-align: left;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid #eee;
 }
 
 th {
-  background: #f8f9fa;
+  background: #f9f5f0;
+  color: #8b4513;
   font-weight: 600;
-  color: #333;
+}
+
+tr:hover {
+  background: #f9f9f9;
 }
 
 .btn-edit, .btn-delete {
-  padding: 6px 12px;
+  padding: 5px 10px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  font-size: 12px;
   margin-right: 5px;
 }
 
 .btn-edit {
-  background: #28a745;
+  background: #e6a23c;
   color: white;
 }
 
 .btn-delete {
-  background: #dc3545;
+  background: #f56c6c;
   color: white;
 }
 
@@ -80,7 +86,7 @@ th {
 
 .pagination button {
   padding: 8px 16px;
-  background: #8B4513;
+  background: linear-gradient(135deg, #8b4513 0%, #d2691e 100%);
   color: white;
   border: none;
   border-radius: 4px;
@@ -98,7 +104,7 @@ th {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -107,33 +113,50 @@ th {
 
 .modal-content {
   background: white;
-  padding: 30px;
   border-radius: 8px;
-  width: 700px;
-  max-width: 90%;
-  max-height: 80vh;
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
-.modal-content h3 {
-  margin-top: 0;
-  color: #333;
-  text-align: center;
-  margin-bottom: 25px;
-  font-size: 20px;
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.modal-header h3 {
+  margin: 0;
+  color: #8b4513;
+  font-size: 18px;
   font-weight: 600;
 }
 
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #999;
+}
+
+.modal-body {
+  padding: 20px;
+}
+
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 .form-group label {
   display: block;
-  margin-bottom: 8px;
+  margin-bottom: 5px;
   color: #333;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 14px;
 }
 
@@ -141,11 +164,10 @@ th {
 .form-group textarea,
 .form-group select {
   width: 100%;
-  padding: 10px 15px;
+  padding: 8px 12px;
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 14px;
-  transition: border-color 0.3s ease;
   box-sizing: border-box;
 }
 
@@ -153,28 +175,36 @@ th {
 .form-group textarea:focus,
 .form-group select:focus {
   outline: none;
-  border-color: #8B4513;
-  box-shadow: 0 0 0 2px rgba(139, 69, 19, 0.1);
+  border-color: #d2691e;
 }
 
 .form-group textarea {
-  min-height: 200px;
+  min-height: 150px;
   resize: vertical;
   font-family: inherit;
 }
 
 .form-actions {
   display: flex;
-  gap: 10px;
   justify-content: flex-end;
+  gap: 10px;
   margin-top: 20px;
 }
 
-.btn-cancel {
+.btn-cancel, .btn-save {
   padding: 8px 20px;
-  background: #6c757d;
-  color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-cancel {
+  background: #909399;
+  color: white;
+}
+
+.btn-save {
+  background: linear-gradient(135deg, #8b4513 0%, #d2691e 100%);
+  color: white;
 }

@@ -46,42 +46,47 @@
     <!-- 添加/编辑对话框 -->
     <div v-if="showDialog" class="modal" @click.self="closeDialog">
       <div class="modal-content">
-        <h3>{{ isEdit ? '编辑讲座' : '新增讲座' }}</h3>
-        <form @submit.prevent="saveLecture">
-          <div class="form-group">
-            <label>讲座标题</label>
-            <input v-model="form.title" required />
-          </div>
-          <div class="form-group">
-            <label>讲座描述</label>
-            <textarea v-model="form.description" rows="3" required></textarea>
-          </div>
-          <div class="form-group">
-            <label>讲座地点</label>
-            <input v-model="form.location" required />
-          </div>
-          <div class="form-group">
-            <label>开始时间</label>
-            <input v-model="form.startDate" type="date" required />
-          </div>
-          <div class="form-group">
-            <label>结束时间</label>
-            <input v-model="form.endDate" type="date" required />
-          </div>
-          <div class="form-group">
-            <label>状态</label>
-            <select v-model="form.status">
-              <option value="upcoming">即将开始</option>
-              <option value="ongoing">进行中</option>
-              <option value="completed">已完成</option>
-              <option value="cancelled">已取消</option>
-            </select>
-          </div>
-          <div class="form-actions">
-            <button type="button" @click="closeDialog" class="btn-cancel">取消</button>
-            <button type="submit" class="btn-primary">保存</button>
-          </div>
-        </form>
+        <div class="modal-header">
+          <h3>{{ isEdit ? '编辑讲座' : '新增讲座' }}</h3>
+          <button class="close-btn" @click="closeDialog">×</button>
+        </div>
+        <div class="modal-body">
+          <form @submit.prevent="saveLecture">
+            <div class="form-group">
+              <label>讲座标题</label>
+              <input v-model="form.title" required />
+            </div>
+            <div class="form-group">
+              <label>讲座描述</label>
+              <textarea v-model="form.description" rows="3" required></textarea>
+            </div>
+            <div class="form-group">
+              <label>讲座地点</label>
+              <input v-model="form.location" required />
+            </div>
+            <div class="form-group">
+              <label>开始时间</label>
+              <input v-model="form.startDate" type="date" required />
+            </div>
+            <div class="form-group">
+              <label>结束时间</label>
+              <input v-model="form.endDate" type="date" required />
+            </div>
+            <div class="form-group">
+              <label>状态</label>
+              <select v-model="form.status">
+                <option value="upcoming">即将开始</option>
+                <option value="ongoing">进行中</option>
+                <option value="completed">已完成</option>
+                <option value="cancelled">已取消</option>
+              </select>
+            </div>
+            <div class="form-actions">
+              <button type="button" @click="closeDialog" class="btn-cancel">取消</button>
+              <button type="submit" class="btn-save">保存</button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </div>

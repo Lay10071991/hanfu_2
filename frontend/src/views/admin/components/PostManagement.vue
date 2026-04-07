@@ -46,35 +46,40 @@
     <!-- 查看详情对话框 -->
     <div v-if="showViewDialog" class="modal" @click.self="closeViewDialog">
       <div class="modal-content">
-        <h3>帖子详情</h3>
-        <div class="post-detail">
-          <p><strong>标题：</strong>{{ selectedPost.title }}</p>
-          <p><strong>分类：</strong>{{ selectedPost.category }}</p>
-          <div v-if="selectedPost.imageUrl" class="detail-image">
-            <p><strong>封面图片：</strong></p>
-            <img :src="getImageUrl(selectedPost.imageUrl)" alt="封面图" />
-          </div>
-          <p><strong>简介：</strong></p>
-          <p>{{ selectedPost.description }}</p>
-          <p><strong>内容：</strong></p>
-          <p>{{ selectedPost.content }}</p>
-          <p><strong>评论：</strong></p>
-          <div v-if="postComments.length > 0" class="comments-list">
-            <div v-for="comment in postComments" :key="comment.id" class="comment-item">
-              <div class="comment-header">
-                <span class="comment-username">{{ comment.username }}</span>
-                <span class="comment-time">{{ formatDate(comment.createTime) }}</span>
-              </div>
-              <div class="comment-content">{{ comment.content }}</div>
-              <div class="comment-actions">
-                <button @click="deleteComment(comment.id)" class="btn-delete btn-sm">删除</button>
+        <div class="modal-header">
+          <h3>帖子详情</h3>
+          <button class="close-btn" @click="closeViewDialog">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="post-detail">
+            <p><strong>标题：</strong>{{ selectedPost.title }}</p>
+            <p><strong>分类：</strong>{{ selectedPost.category }}</p>
+            <div v-if="selectedPost.imageUrl" class="detail-image">
+              <p><strong>封面图片：</strong></p>
+              <img :src="getImageUrl(selectedPost.imageUrl)" alt="封面图" />
+            </div>
+            <p><strong>简介：</strong></p>
+            <p>{{ selectedPost.description }}</p>
+            <p><strong>内容：</strong></p>
+            <p>{{ selectedPost.content }}</p>
+            <p><strong>评论：</strong></p>
+            <div v-if="postComments.length > 0" class="comments-list">
+              <div v-for="comment in postComments" :key="comment.id" class="comment-item">
+                <div class="comment-header">
+                  <span class="comment-username">{{ comment.username }}</span>
+                  <span class="comment-time">{{ formatDate(comment.createTime) }}</span>
+                </div>
+                <div class="comment-content">{{ comment.content }}</div>
+                <div class="comment-actions">
+                  <button @click="deleteComment(comment.id)" class="btn-delete btn-sm">删除</button>
+                </div>
               </div>
             </div>
+            <div v-else class="no-comments">暂无评论</div>
           </div>
-          <div v-else class="no-comments">暂无评论</div>
-        </div>
-        <div class="form-actions">
-          <button @click="closeViewDialog" class="btn-cancel">关闭</button>
+          <div class="form-actions">
+            <button @click="closeViewDialog" class="btn-cancel">关闭</button>
+          </div>
         </div>
       </div>
     </div>
@@ -82,55 +87,64 @@
     <!-- 添加/编辑对话框 -->
     <div v-if="showEditDialog" class="modal" @click.self="closeEditDialog">
       <div class="modal-content">
-        <h3>{{ isEdit ? "编辑帖子" : "新增帖子" }}</h3>
-        <form @submit.prevent="savePost">
-          <div class="form-group">
-            <label>标题</label>
-            <input v-model="form.title" required />
-          </div>
-          <div class="form-group">
-            <label>分类</label>
-            <select v-model="form.category" required>
-              <option value="穿搭分享">穿搭分享</option>
-              <option value="发型教程">发型教程</option>
-              <option value="摄影作品">摄影作品</option>
-              <option value="汉服制作">汉服制作</option>
-              <option value="文化活动">文化活动</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>简介</label>
-            <textarea v-model="form.description" rows="2" required></textarea>
-          </div>
-          <div class="form-group">
-            <label>内容</label>
-            <textarea v-model="form.content" rows="5" required></textarea>
-          </div>
-          <div class="form-group">
-            <label>封面图片</label>
-            <div class="upload-area">
-              <input
-                type="file"
-                ref="fileInput"
-                @change="handleFileChange"
-                accept="image/*"
-                style="display: none"
-              />
-              <div v-if="!imagePreview" class="upload-placeholder" @click="$refs.fileInput.click()">
-                <span>点击上传图片</span>
-              </div>
-              <div v-else class="image-preview">
-                <img :src="imagePreview" alt="预览图" />
-                <button type="button" @click="removeImage" class="btn-remove">删除</button>
-              </div>
+        <div class="modal-header">
+          <h3>{{ isEdit ? "编辑帖子" : "新增帖子" }}</h3>
+          <button class="close-btn" @click="closeEditDialog">×</button>
+        </div>
+        <div class="modal-body">
+          <form @submit.prevent="savePost">
+            <div class="form-group">
+              <label>标题</label>
+              <input v-model="form.title" required />
             </div>
-            <small v-if="uploading">上传中...</small>
-          </div>
-          <div class="form-actions">
-            <button type="button" @click="closeEditDialog" class="btn-cancel">取消</button>
-            <button type="submit" class="btn-primary">保存</button>
-          </div>
-        </form>
+            <div class="form-group">
+              <label>分类</label>
+              <select v-model="form.category" required>
+                <option value="穿搭分享">穿搭分享</option>
+                <option value="发型教程">发型教程</option>
+                <option value="摄影作品">摄影作品</option>
+                <option value="汉服制作">汉服制作</option>
+                <option value="文化活动">文化活动</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>简介</label>
+              <textarea v-model="form.description" rows="2" required></textarea>
+            </div>
+            <div class="form-group">
+              <label>内容</label>
+              <textarea v-model="form.content" rows="5" required></textarea>
+            </div>
+            <div class="form-group">
+              <label>封面图片</label>
+              <div class="upload-area">
+                <input
+                  type="file"
+                  ref="fileInput"
+                  @change="handleFileChange"
+                  accept="image/*"
+                  style="display: none"
+                />
+                <div
+                  v-if="!imagePreview"
+                  class="upload-placeholder"
+                  @click="$refs.fileInput.click()"
+                >
+                  <span>点击上传图片</span>
+                </div>
+                <div v-else class="image-preview">
+                  <img :src="imagePreview" alt="预览图" />
+                  <button type="button" @click="removeImage" class="btn-remove">删除</button>
+                </div>
+              </div>
+              <small v-if="uploading">上传中...</small>
+            </div>
+            <div class="form-actions">
+              <button type="button" @click="closeEditDialog" class="btn-cancel">取消</button>
+              <button type="submit" class="btn-save">保存</button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </div>

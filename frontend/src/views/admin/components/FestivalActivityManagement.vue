@@ -54,66 +54,71 @@
     <!-- 添加/编辑对话框 -->
     <div v-if="showDialog" class="modal" @click.self="closeDialog">
       <div class="modal-content">
-        <h3>{{ isEdit ? "编辑节庆雅集" : "新增节庆雅集" }}</h3>
-        <form @submit.prevent="saveActivity">
-          <div class="form-group">
-            <label>活动标题</label>
-            <input v-model="form.title" required />
-          </div>
-          <div class="form-group">
-            <label>活动描述</label>
-            <textarea v-model="form.description" rows="3" required></textarea>
-          </div>
-          <div class="form-group">
-            <label>活动地点</label>
-            <input v-model="form.location" required />
-          </div>
-          <div class="form-group">
-            <label>开始时间</label>
-            <input v-model="form.startTime" type="datetime-local" required />
-          </div>
-          <div class="form-group">
-            <label>结束时间</label>
-            <input v-model="form.endTime" type="datetime-local" required />
-          </div>
-          <div class="form-group">
-            <label>状态</label>
-            <select v-model="form.status">
-              <option value="upcoming">即将开始</option>
-              <option value="ongoing">进行中</option>
-              <option value="completed">已完成</option>
-              <option value="cancelled">已取消</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>最大参与人数</label>
-            <input v-model.number="form.maxParticipants" type="number" />
-          </div>
-          <div class="form-group">
-            <label>活动图片</label>
-            <div class="upload-area">
-              <input
-                type="file"
-                ref="fileInput"
-                @change="handleFileChange"
-                accept="image/*"
-                style="display: none"
-              />
-              <div v-if="!imagePreview" class="upload-placeholder" @click="$refs.fileInput.click()">
-                <span>点击上传图片</span>
-              </div>
-              <div v-else class="image-preview">
-                <img :src="imagePreview" alt="预览图" />
-                <button type="button" @click="removeImage" class="btn-remove">删除</button>
-              </div>
+        <div class="modal-header">
+          <h3>{{ isEdit ? "编辑节庆雅集" : "新增节庆雅集" }}</h3>
+          <button class="close-btn" @click="closeDialog">×</button>
+        </div>
+        <div class="modal-body">
+          <form @submit.prevent="saveActivity">
+            <div class="form-group">
+              <label>活动标题</label>
+              <input v-model="form.title" required />
             </div>
-            <small v-if="uploading">上传中...</small>
-          </div>
-          <div class="form-actions">
-            <button type="button" @click="closeDialog" class="btn-cancel">取消</button>
-            <button type="submit" class="btn-primary">保存</button>
-          </div>
-        </form>
+            <div class="form-group">
+              <label>活动描述</label>
+              <textarea v-model="form.description" rows="3" required></textarea>
+            </div>
+            <div class="form-group">
+              <label>活动地点</label>
+              <input v-model="form.location" required />
+            </div>
+            <div class="form-group">
+              <label>开始时间</label>
+              <input v-model="form.startTime" type="datetime-local" required />
+            </div>
+            <div class="form-group">
+              <label>结束时间</label>
+              <input v-model="form.endTime" type="datetime-local" required />
+            </div>
+            <div class="form-group">
+              <label>状态</label>
+              <select v-model="form.status">
+                <option value="upcoming">即将开始</option>
+                <option value="ongoing">进行中</option>
+                <option value="completed">已完成</option>
+                <option value="cancelled">已取消</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>最大参与人数</label>
+              <input v-model.number="form.maxParticipants" type="number" />
+            </div>
+            <div class="form-group">
+              <label>活动图片</label>
+              <div class="upload-area">
+                <input
+                  type="file"
+                  ref="fileInput"
+                  @change="handleFileChange"
+                  accept="image/*"
+                  style="display: none"
+                />
+                <div v-if="!imagePreview" class="upload-placeholder" @click="$refs.fileInput.click()">
+                  <span>点击上传图片</span>
+                </div>
+                <div v-else class="image-preview">
+                  <img :src="imagePreview" alt="预览图" />
+                  <button type="button" @click="removeImage" class="btn-remove">删除</button>
+                </div>
+              </div>
+              <small v-if="uploading">上传中...</small>
+            </div>
+            <div class="form-actions">
+              <button type="button" @click="closeDialog" class="btn-cancel">取消</button>
+              <button type="submit" class="btn-save">保存</button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </div>
