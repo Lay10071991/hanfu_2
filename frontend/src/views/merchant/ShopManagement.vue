@@ -42,6 +42,15 @@
             </div>
           </div>
         </div>
+        <!-- 汉服展示图片 -->
+        <div class="hanfu-show-section" v-if="shop.hanfuImages && shop.hanfuImages.length > 0">
+          <h4>汉服展示</h4>
+          <div class="hanfu-show-images">
+            <div v-for="(image, index) in shop.hanfuImages" :key="index" class="hanfu-show-item">
+              <img :src="image" alt="汉服展示" />
+            </div>
+          </div>
+        </div>
         <!-- 服务管理部分 -->
         <div class="service-management">
           <div class="service-header">
@@ -271,7 +280,7 @@ export default {
         const formData = new FormData();
         formData.append("file", file);
 
-        fetch("http://localhost:8082/api/upload", {
+        fetch("/api/upload/image", {
           method: "POST",
           body: formData,
         })
@@ -298,7 +307,7 @@ export default {
         const formData = new FormData();
         formData.append("file", file);
 
-        fetch("http://localhost:8082/api/upload", {
+        fetch("/api/upload/image", {
           method: "POST",
           body: formData,
         })
@@ -870,6 +879,42 @@ export default {
   background: white;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 汉服展示样式 */
+.hanfu-show-section {
+  border-top: 1px solid #eee;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.hanfu-show-section h4 {
+  margin: 0 0 15px 0;
+  color: #8b4513;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.hanfu-show-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.hanfu-show-item {
+  flex: 0 0 calc(25% - 11px);
+  max-width: calc(25% - 11px);
+  border: 1px solid #eee;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #f9f9f9;
+}
+
+.hanfu-show-item img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  display: block;
 }
 
 /* 服务管理样式 */

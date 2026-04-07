@@ -3,7 +3,9 @@ package com.example.demo.service;
 import com.example.demo.dto.ShopDTO;
 import com.example.demo.entity.Shop;
 import com.example.demo.entity.ShopRating;
+import com.example.demo.entity.ShopShow;
 import com.example.demo.repository.ShopRepository;
+import com.example.demo.repository.ShopShowRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -17,6 +19,9 @@ public class ShopService {
     
     @Autowired
     private ShopRatingService shopRatingService;
+    
+    @Autowired
+    private ShopShowRepository shopShowRepository;
     
     public List<ShopDTO> getAllShops() {
         List<Shop> shops = shopRepository.findAll();
@@ -59,6 +64,13 @@ public class ShopService {
             dto.setAverageRating(0.0);
             dto.setReviewCount(0);
         }
+        
+        // 从shop_show表获取汉服展示图片
+        List<ShopShow> shopShows = shopShowRepository.findByShopIdOrderBySortOrderAsc(shop.getId());
+        List<String> hanfuImages = shopShows.stream()
+                .map(ShopShow::getImageUrl)
+                .collect(Collectors.toList());
+        dto.setHanfuImages(hanfuImages);
         
         return dto;
     }
