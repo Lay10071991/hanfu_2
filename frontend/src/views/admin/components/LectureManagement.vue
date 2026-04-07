@@ -25,8 +25,8 @@
             <td>{{ (currentPage - 1) * pageSize + index + 1 }}</td>
             <td>{{ lecture.title }}</td>
             <td>{{ lecture.location }}</td>
-            <td>{{ formatDateTime(lecture.start_time) }}</td>
-            <td>{{ formatDateTime(lecture.end_time) }}</td>
+            <td>{{ formatDateTime(lecture.startTime) }}</td>
+            <td>{{ formatDateTime(lecture.endTime) }}</td>
             <td>
               <button @click="editLecture(lecture)" class="btn-edit">编辑</button>
               <button @click="deleteLecture(lecture.id)" class="btn-delete">删除</button>
@@ -65,11 +65,11 @@
             </div>
             <div class="form-group">
               <label>开始时间</label>
-              <input v-model="form.start_time" type="date" required />
+              <input v-model="form.startTime" type="datetime-local" required />
             </div>
             <div class="form-group">
               <label>结束时间</label>
-              <input v-model="form.end_time" type="date" required />
+              <input v-model="form.endTime" type="datetime-local" required />
             </div>
             <div class="form-group">
               <label>状态</label>
@@ -107,8 +107,8 @@ export default {
         title: "",
         description: "",
         location: "",
-        start_time: "",
-        end_time: "",
+        startTime: "",
+        endTime: "",
         status: "upcoming",
       },
     };
@@ -135,8 +135,8 @@ export default {
         title: "",
         description: "",
         location: "",
-        start_time: "",
-        end_time: "",
+        startTime: "",
+        endTime: "",
         status: "upcoming",
       };
       this.showDialog = true;
@@ -145,6 +145,8 @@ export default {
       this.isEdit = true;
       this.form = {
         ...lecture,
+        startTime: this.formatDateTimeForInput(lecture.startTime),
+        endTime: this.formatDateTimeForInput(lecture.endTime),
       };
       this.showDialog = true;
     },
@@ -197,7 +199,24 @@ export default {
       if (!datetime) return "-";
       const date = new Date(datetime);
       if (isNaN(date.getTime())) return "-";
-      return date.toLocaleDateString("zh-CN");
+      return date.toLocaleString("zh-CN", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    },
+    formatDateTimeForInput(datetime) {
+      if (!datetime) return "";
+      const date = new Date(datetime);
+      if (isNaN(date.getTime())) return "";
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const hours = String(date.getHours()).padStart(2, "0");
+      const minutes = String(date.getMinutes()).padStart(2, "0");
+      return `${year}-${month}-${day}T${hours}:${minutes}`;
     },
   },
 };
