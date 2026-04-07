@@ -15,7 +15,6 @@
             <th>分类</th>
             <th>点赞数</th>
             <th>评论数</th>
-            <th>浏览数</th>
             <th>发布日期</th>
             <th>操作</th>
           </tr>
@@ -24,15 +23,13 @@
           <tr v-for="(post, index) in posts" :key="post.id">
             <td>{{ (currentPage - 1) * pageSize + index + 1 }}</td>
             <td>{{ post.title }}</td>
-            <td>{{ post.authorName }}</td>
+            <td>{{ post.author }}</td>
             <td>{{ post.category }}</td>
             <td>{{ post.likes }}</td>
             <td>{{ post.comments }}</td>
-            <td>{{ post.views }}</td>
             <td>{{ formatDate(post.publishDate) }}</td>
             <td>
               <button @click="viewPost(post)" class="btn-edit">查看</button>
-              <button @click="editPost(post)" class="btn-edit">编辑</button>
               <button @click="deletePost(post.id)" class="btn-delete">删除</button>
             </td>
           </tr>
