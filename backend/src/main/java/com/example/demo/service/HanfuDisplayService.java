@@ -29,4 +29,25 @@ public class HanfuDisplayService {
     public List<HanfuImage> getImagesByHanfuId(Long hanfuId) {
         return hanfuImageRepository.findByHanfuId(hanfuId);
     }
+
+    public HanfuDisplay createHanfuDisplay(HanfuDisplay hanfuDisplay) {
+        return hanfuDisplayRepository.save(hanfuDisplay);
+    }
+
+    public HanfuDisplay updateHanfuDisplay(Long id, HanfuDisplay hanfuDisplay) {
+        HanfuDisplay existing = hanfuDisplayRepository.findById(id).orElse(null);
+        if (existing != null) {
+            existing.setName(hanfuDisplay.getName());
+            existing.setDescription(hanfuDisplay.getDescription());
+            existing.setContent(hanfuDisplay.getContent());
+            existing.setImage(hanfuDisplay.getImage());
+            existing.setSortOrder(hanfuDisplay.getSortOrder());
+            return hanfuDisplayRepository.save(existing);
+        }
+        return null;
+    }
+
+    public void deleteHanfuDisplay(Long id) {
+        hanfuDisplayRepository.deleteById(id);
+    }
 }

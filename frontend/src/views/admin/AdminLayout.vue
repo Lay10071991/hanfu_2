@@ -51,6 +51,7 @@ import CultureInfluenceManagement from "./components/CultureInfluenceManagement.
 import EtiquetteManagement from "./components/EtiquetteManagement.vue";
 import FestivalManagement from "./components/FestivalManagement.vue";
 import ShapeTypeManagement from "./components/ShapeTypeManagement.vue";
+import HanfuDisplayManagement from "./components/HanfuDisplayManagement.vue";
 import PatternManagement from "./components/PatternManagement.vue";
 import ComponentManagement from "./components/ComponentManagement.vue";
 import Statistics from "./components/Statistics.vue";
@@ -69,6 +70,7 @@ export default {
     EtiquetteManagement,
     FestivalManagement,
     ShapeTypeManagement,
+    HanfuDisplayManagement,
     PatternManagement,
     ComponentManagement,
     Statistics,
@@ -91,7 +93,16 @@ export default {
             { name: "historical-influence", label: "文化影响与传承" },
           ],
         },
-        { name: "shape-type", label: "形制管理", icon: "👗" },
+        {
+          name: "shape-type",
+          label: "形制管理",
+          icon: "👗",
+          expanded: false,
+          subMenu: [
+            { name: "shape-type-basic", label: "基本形制" },
+            { name: "shape-type-display", label: "千载衣冠" },
+          ],
+        },
         { name: "pattern", label: "图案管理", icon: "🎨" },
         { name: "cultural", label: "文化管理", icon: "📚" },
         { name: "activities", label: "活动管理", icon: "🎉" },
@@ -116,7 +127,8 @@ export default {
         cultural: "CulturalContentManagement",
         etiquette: "EtiquetteManagement",
         festival: "FestivalManagement",
-        "shape-type": "ShapeTypeManagement",
+        "shape-type-basic": "ShapeTypeManagement",
+        "shape-type-display": "HanfuDisplayManagement",
         pattern: "PatternManagement",
         component: "ComponentManagement",
         "historical-overview": "CulturalContentManagement",

@@ -29,4 +29,19 @@ public class HanfuDisplayController {
     public List<HanfuImage> getImagesByHanfuId(@PathVariable Long id) {
         return hanfuDisplayService.getImagesByHanfuId(id);
     }
+
+    @PostMapping
+    public HanfuDisplay createHanfuDisplay(@RequestBody HanfuDisplay hanfuDisplay) {
+        return hanfuDisplayService.createHanfuDisplay(hanfuDisplay);
+    }
+
+    @PutMapping("/{id}")
+    public HanfuDisplay updateHanfuDisplay(@PathVariable Long id, @RequestBody HanfuDisplay hanfuDisplay) {
+        return hanfuDisplayService.updateHanfuDisplay(id, hanfuDisplay);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteHanfuDisplay(@PathVariable Long id) {
+        hanfuDisplayService.deleteHanfuDisplay(id);
+    }
 }
