@@ -1,6 +1,7 @@
 <template>
   <div class="component-management">
     <div class="header-actions">
+      <el-button @click="loadData">刷新</el-button>
       <el-button type="primary" @click="showAddDialog">添加部件</el-button>
     </div>
 

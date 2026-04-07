@@ -2,6 +2,9 @@
   <div class="management-container">
     <div class="header">
       <h2>评论管理</h2>
+      <div class="header-buttons">
+        <button @click="loadComments" class="btn-refresh">刷新</button>
+      </div>
     </div>
 
     <div class="table-container">

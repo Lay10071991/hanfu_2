@@ -1,6 +1,7 @@
 <template>
   <div class="dynasty-shape-management">
     <div class="header-actions">
+      <el-button @click="loadData">刷新</el-button>
       <el-button type="primary" @click="showAddDialog">添加形制</el-button>
     </div>
 

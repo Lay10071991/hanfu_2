@@ -2,7 +2,10 @@
   <div class="management-container">
     <div class="header">
       <h2>基本形制管理</h2>
-      <button @click="showAddDialog" class="btn-primary">新增形制</button>
+      <div class="header-buttons">
+        <button @click="loadItems" class="btn-refresh">刷新</button>
+        <button @click="showAddDialog" class="btn-primary">新增形制</button>
+      </div>
     </div>
     <div class="table-container">
       <table>
@@ -260,6 +263,21 @@ export default {
 .header h2 {
   margin: 0;
   color: #8b4513;
+}
+
+.header-buttons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-refresh {
+  padding: 8px 15px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
 .btn-primary {

@@ -2,7 +2,10 @@
   <div class="management-container">
     <div class="header">
       <h2>礼仪管理</h2>
-      <button @click="showAddDialog" class="btn-primary">新增礼仪</button>
+      <div class="header-buttons">
+        <button @click="loadItems" class="btn-refresh">刷新</button>
+        <button @click="showAddDialog" class="btn-primary">新增礼仪</button>
+      </div>
     </div>
 
     <div class="table-container">

@@ -2,7 +2,10 @@
   <div class="management-container">
     <div class="header">
       <h2>店铺管理</h2>
-      <button @click="showAddDialog" class="btn-primary">新增店铺</button>
+      <div class="header-buttons">
+        <button @click="loadShops" class="btn-refresh">刷新</button>
+        <button @click="showAddDialog" class="btn-primary">新增店铺</button>
+      </div>
     </div>
 
     <div class="table-container">

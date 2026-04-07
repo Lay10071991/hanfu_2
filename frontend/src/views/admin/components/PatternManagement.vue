@@ -2,7 +2,10 @@
   <div class="management-container">
     <div class="header">
       <h2>图案象征管理</h2>
-      <button @click="showAddDialog" class="btn-primary">新增图案</button>
+      <div class="header-buttons">
+        <button @click="loadItems" class="btn-refresh">刷新</button>
+        <button @click="showAddDialog" class="btn-primary">新增图案</button>
+      </div>
     </div>
     <div class="table-container">
       <table>

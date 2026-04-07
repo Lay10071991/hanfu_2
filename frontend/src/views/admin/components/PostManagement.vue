@@ -2,7 +2,10 @@
   <div class="management-container">
     <div class="header">
       <h2>帖子管理</h2>
-      <button @click="showAddDialog" class="btn-primary">新增帖子</button>
+      <div class="header-buttons">
+        <button @click="loadPosts" class="btn-refresh">刷新</button>
+        <button @click="showAddDialog" class="btn-primary">新增帖子</button>
+      </div>
     </div>
 
     <div class="table-container">

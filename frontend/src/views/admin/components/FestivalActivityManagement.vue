@@ -2,7 +2,10 @@
   <div class="management-container">
     <div class="header">
       <h2>节庆雅集管理</h2>
-      <button @click="showAddDialog" class="btn-primary">新增节庆雅集</button>
+      <div class="header-buttons">
+        <button @click="loadActivities" class="btn-refresh">刷新</button>
+        <button @click="showAddDialog" class="btn-primary">新增节庆雅集</button>
+      </div>
     </div>
 
     <div class="table-container">

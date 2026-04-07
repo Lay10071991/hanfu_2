@@ -2,6 +2,9 @@
   <div class="management-container culture-influence">
     <div class="header">
       <h2>文化影响与传承管理</h2>
+      <div class="header-buttons">
+        <button @click="loadItems" class="btn-refresh">刷新</button>
+      </div>
     </div>
 
     <div class="table-container">
@@ -18,7 +21,7 @@
           <tr v-for="item in items" :key="item.id">
             <td>{{ item.id }}</td>
             <td>{{ item.title }}</td>
-            <td>{{ item.description ? item.description.substring(0, 50) + '...' : '-' }}</td>
+            <td>{{ item.description ? item.description.substring(0, 50) + "..." : "-" }}</td>
             <td>
               <button @click="editItem(item)" class="btn-edit">编辑</button>
             </td>
@@ -144,6 +147,22 @@ onMounted(() => {
 .header h2 {
   margin: 0;
   color: #8b4513;
+}
+
+.header-buttons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-refresh {
+  padding: 8px 15px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
 }
 
 .btn-primary {
