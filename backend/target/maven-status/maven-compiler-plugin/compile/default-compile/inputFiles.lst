@@ -68,6 +68,7 @@ E:\hanfu-cultural-platform\backend\src\main\java\com\example\demo\repository\Pat
 E:\hanfu-cultural-platform\backend\src\main\java\com\example\demo\entity\ShopReview.java
 E:\hanfu-cultural-platform\backend\src\main\java\com\example\demo\controller\ShopRatingController.java
 E:\hanfu-cultural-platform\backend\src\main\java\com\example\demo\repository\HistoricalEraRepository.java
+E:\hanfu-cultural-platform\backend\src\main\java\com\example\demo\repository\HistoryOverviewRepository.java
 E:\hanfu-cultural-platform\backend\src\main\java\com\example\demo\service\ShopImageService.java
 E:\hanfu-cultural-platform\backend\src\main\java\com\example\demo\config\CorsConfig.java
 E:\hanfu-cultural-platform\backend\src\main\java\com\example\demo\repository\ExhibitionRepository.java
@@ -86,6 +87,7 @@ E:\hanfu-cultural-platform\backend\src\main\java\com\example\demo\controller\Cul
 E:\hanfu-cultural-platform\backend\src\main\java\com\example\demo\controller\CultureInfluenceController.java
 E:\hanfu-cultural-platform\backend\src\main\java\com\example\demo\service\ShopRatingDistributionService.java
 E:\hanfu-cultural-platform\backend\src\main\java\com\example\demo\controller\CommentController.java
+E:\hanfu-cultural-platform\backend\src\main\java\com\example\demo\entity\HistoryOverview.java
 E:\hanfu-cultural-platform\backend\src\main\java\com\example\demo\controller\PostController.java
 E:\hanfu-cultural-platform\backend\src\main\java\com\example\demo\controller\EtiquetteController.java
 E:\hanfu-cultural-platform\backend\src\main\java\com\example\demo\repository\LectureRegistrationRepository.java
@@ -119,6 +121,7 @@ E:\hanfu-cultural-platform\backend\src\main\java\com\example\demo\service\UserSe
 E:\hanfu-cultural-platform\backend\src\main\java\com\example\demo\controller\LectureController.java
 E:\hanfu-cultural-platform\backend\src\main\java\com\example\demo\repository\ShopRatingDistributionRepository.java
 E:\hanfu-cultural-platform\backend\src\main\java\com\example\demo\dto\ShopDTO.java
+E:\hanfu-cultural-platform\backend\src\main\java\com\example\demo\controller\HistoryOverviewController.java
 E:\hanfu-cultural-platform\backend\src\main\java\com\example\demo\config\PatternCategoryInitializer.java
 E:\hanfu-cultural-platform\backend\src\main\java\com\example\demo\service\LectureRegistrationService.java
 E:\hanfu-cultural-platform\backend\src\main\java\com\example\demo\controller\FestivalActivityController.java

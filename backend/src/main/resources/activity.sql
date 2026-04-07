@@ -127,17 +127,15 @@ CREATE TABLE `cultural_content`  (
   `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '名称',
   `years` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '年代',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '文化内容表-汉服历史概述和演变' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '文化内容表-汉服历史概述和演变' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of cultural_content
 -- ----------------------------
 INSERT INTO `cultural_content` VALUES (1, '汉服的历史概述', '汉服，全称是"汉民族传统服饰"，又称汉衣冠、汉装、华服，是从黄帝即位到公元17世纪中叶(明末清初)，在汉族的主要居住区，以"华夏-汉"文化为背景和主导思想，以华夏礼仪文化为中心，通过自然演化而形成的具有独特汉民族风貌性格，明显区别于其他民族的传统服装和配饰体系。\n\n汉服历史悠久，源远流长，承载着中华民族几千年的文化底蕴和审美理念。从黄帝"垂衣裳而天下治"开始，汉服就已经具备了基本形制，历经夏商周、秦汉、魏晋南北朝、隋唐、宋元明清各个朝代的发展演变，形成了丰富多彩的服饰文化体系。', 'overview', '汉服概述', '');
-INSERT INTO `cultural_content` VALUES (2, '衣裳制度确立，汉服出现', '先秦时期确立了汉服的基本形制——上衣下裳制。深衣开始出现，成为后世汉服的重要基础。服饰体现了严格的等级制度和社会规范。', 'history', '先秦时期', '公元前21世纪-前221年');
-INSERT INTO `cultural_content` VALUES (3, '秦汉汉服流行，官服定制', '秦汉时期秦汉汉服流行，官服开始定制。服饰风格端庄厚重，体现了大一统帝国的威严和气度。', 'history', '秦汉时期', '前221年-220年');
-INSERT INTO `cultural_content` VALUES (4, '魏晋风流，服饰风格洒脱', '受玄学思想影响，服饰风格趋向宽松洒脱，褒衣博带成为时尚。服饰更加注重个性表达和审美追求。', 'history', '魏晋南北朝', '220年-589年');
-INSERT INTO `cultural_content` VALUES (5, '隋唐开放，女装丰富多彩', '隋唐时期国力强盛，服饰开放多样。衫裙装成为女性主要服饰，女装样式多样，色彩斑斓，体现了开放包容的时代精神。', 'history', '隋唐时期', '581年-907年');
-INSERT INTO `cultural_content` VALUES (6, '宋明理学影响，服饰趋向内敛', '宋明时期理学思想影响下，服饰风格趋于内敛含蓄。襦裙成为流行服饰，整体造型简洁质朴。', 'history', '宋明时期', '960年-1644年');
+
+
+
 
 -- ----------------------------
 -- Table structure for culture_influence

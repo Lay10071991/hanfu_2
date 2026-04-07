@@ -2,7 +2,6 @@
   <div class="management-container">
     <div class="header">
       <h2>文化影响与传承管理</h2>
-      <button @click="showAddDialog" class="btn-primary">新增文化影响</button>
     </div>
 
     <div class="table-container">
@@ -26,18 +25,17 @@
             <td>{{ formatDate(item.updateTime) }}</td>
             <td>
               <button @click="editItem(item)" class="btn-edit">编辑</button>
-              <button @click="deleteItem(item.id)" class="btn-delete">删除</button>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <!-- 新增/编辑模态框 -->
+    <!-- 编辑模态框 -->
     <div v-if="dialogVisible" class="modal-overlay" @click.self="dialogVisible = false">
       <div class="modal-content">
         <div class="modal-header">
-          <h3>{{ isEdit ? '编辑文化影响' : '新增文化影响' }}</h3>
+          <h3>编辑文化影响</h3>
           <button class="close-btn" @click="dialogVisible = false">×</button>
         </div>
         <div class="modal-body">
@@ -63,11 +61,10 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessage } from 'element-plus'
 
 const items = ref([])
 const dialogVisible = ref(false)
-const isEdit = ref(false)
 const form = ref({
   id: null,
   title: '',
@@ -87,20 +84,8 @@ const loadItems = async () => {
   }
 }
 
-// 显示新增对话框
-const showAddDialog = () => {
-  isEdit.value = false
-  form.value = {
-    id: null,
-    title: '',
-    description: ''
-  }
-  dialogVisible.value = true
-}
-
 // 编辑
 const editItem = (item) => {
-  isEdit.value = true
   form.value = { ...item }
   dialogVisible.value = true
 }
@@ -108,10 +93,8 @@ const editItem = (item) => {
 // 保存
 const saveItem = async () => {
   try {
-    const url = isEdit.value
-      ? `http://localhost:8082/api/culture-influence/${form.value.id}`
-      : 'http://localhost:8082/api/culture-influence'
-    const method = isEdit.value ? 'PUT' : 'POST'
+    const url = `http://localhost:8082/api/culture-influence/${form.value.id}`
+    const method = 'PUT'
 
     const response = await fetch(url, {
       method,
@@ -122,7 +105,7 @@ const saveItem = async () => {
     })
 
     if (response.ok) {
-      ElMessage.success(isEdit.value ? '更新成功' : '创建成功')
+      ElMessage.success('更新成功')
       dialogVisible.value = false
       loadItems()
     } else {
@@ -131,33 +114,6 @@ const saveItem = async () => {
   } catch (error) {
     console.error('保存失败:', error)
     ElMessage.error('保存失败')
-  }
-}
-
-// 删除
-const deleteItem = async (id) => {
-  try {
-    await ElMessageBox.confirm('确定要删除这条记录吗？', '提示', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning'
-    })
-
-    const response = await fetch(`http://localhost:8082/api/culture-influence/${id}`, {
-      method: 'DELETE'
-    })
-
-    if (response.ok) {
-      ElMessage.success('删除成功')
-      loadItems()
-    } else {
-      ElMessage.error('删除失败')
-    }
-  } catch (error) {
-    if (error !== 'cancel') {
-      console.error('删除失败:', error)
-      ElMessage.error('删除失败')
-    }
   }
 }
 

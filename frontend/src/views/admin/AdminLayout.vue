@@ -10,14 +10,25 @@
 
     <div class="admin-content">
       <div class="sidebar">
-        <div
-          v-for="item in menuItems"
-          :key="item.name"
-          :class="['menu-item', { active: activeMenu === item.name }]"
-          @click="activeMenu = item.name"
-        >
-          <i class="icon">{{ item.icon }}</i>
-          <span>{{ item.label }}</span>
+        <div v-for="item in menuItems" :key="item.name">
+          <div
+            :class="['menu-item', { active: activeMenu === item.name }]"
+            @click="toggleSubMenu(item)"
+          >
+            <i class="icon">{{ item.icon }}</i>
+            <span>{{ item.label }}</span>
+            <i v-if="item.subMenu" class="expand-icon">{{ item.expanded ? "▼" : "▶" }}</i>
+          </div>
+          <div v-if="item.expanded && item.subMenu">
+            <div
+              v-for="subItem in item.subMenu"
+              :key="subItem.name"
+              :class="['sub-menu-item', { active: activeMenu === subItem.name }]"
+              @click="activeMenu = subItem.name"
+            >
+              <span>{{ subItem.label }}</span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -35,12 +46,13 @@ import CommentManagement from "./components/CommentManagement.vue";
 import ShopManagement from "./components/ShopManagement.vue";
 import ActivityManagement from "./components/ActivityManagement.vue";
 import CulturalContentManagement from "./components/CulturalContentManagement.vue";
+import HistoricalEraManagement from "./components/HistoricalEraManagement.vue";
+import CultureInfluenceManagement from "./components/CultureInfluenceManagement.vue";
 import EtiquetteManagement from "./components/EtiquetteManagement.vue";
 import FestivalManagement from "./components/FestivalManagement.vue";
 import ShapeTypeManagement from "./components/ShapeTypeManagement.vue";
 import PatternManagement from "./components/PatternManagement.vue";
 import ComponentManagement from "./components/ComponentManagement.vue";
-import CultureInfluenceManagement from "./components/CultureInfluenceManagement.vue";
 import Statistics from "./components/Statistics.vue";
 
 export default {
@@ -52,12 +64,13 @@ export default {
     ShopManagement,
     ActivityManagement,
     CulturalContentManagement,
+    HistoricalEraManagement,
+    CultureInfluenceManagement,
     EtiquetteManagement,
     FestivalManagement,
     ShapeTypeManagement,
     PatternManagement,
     ComponentManagement,
-    CultureInfluenceManagement,
     Statistics,
   },
   data() {
@@ -67,7 +80,17 @@ export default {
       menuItems: [
         { name: "statistics", label: "数据统计", icon: "📊" },
         { name: "users", label: "用户管理", icon: "👥" },
-        { name: "historical", label: "历史管理", icon: "📜" },
+        {
+          name: "historical",
+          label: "历史管理",
+          icon: "📜",
+          expanded: false,
+          subMenu: [
+            { name: "historical-overview", label: "历史概述" },
+            { name: "historical-timeline", label: "历史时间线" },
+            { name: "historical-influence", label: "文化影响与传承" },
+          ],
+        },
         { name: "shape-type", label: "形制管理", icon: "👗" },
         { name: "pattern", label: "图案管理", icon: "🎨" },
         { name: "cultural", label: "文化管理", icon: "📚" },
@@ -75,7 +98,6 @@ export default {
         { name: "shops", label: "店铺管理", icon: "🏪" },
         { name: "community", label: "社区管理", icon: "🌐" },
         { name: "component", label: "服饰部件", icon: "👔" },
-        { name: "culture-influence", label: "文化影响", icon: "📜" },
         { name: "festival", label: "节日管理", icon: "🎊" },
         { name: "etiquette", label: "礼仪管理", icon: "🙏" },
         { name: "posts", label: "帖子管理", icon: "📝" },
@@ -97,8 +119,9 @@ export default {
         "shape-type": "ShapeTypeManagement",
         pattern: "PatternManagement",
         component: "ComponentManagement",
-        "culture-influence": "CultureInfluenceManagement",
-        historical: "CulturalContentManagement",
+        "historical-overview": "CulturalContentManagement",
+        "historical-timeline": "HistoricalEraManagement",
+        "historical-influence": "CultureInfluenceManagement",
         community: "PostManagement",
         statistics: "Statistics",
       };
@@ -109,6 +132,21 @@ export default {
     this.checkAuth();
   },
   methods: {
+    toggleSubMenu(item) {
+      if (item.subMenu) {
+        // 关闭其他展开的菜单
+        this.menuItems.forEach((menuItem) => {
+          if (menuItem.name !== item.name) {
+            menuItem.expanded = false;
+          }
+        });
+        // 切换当前菜单的展开状态
+        item.expanded = !item.expanded;
+      } else {
+        this.activeMenu = item.name;
+      }
+    },
+
     checkAuth() {
       const user = JSON.parse(localStorage.getItem("user") || "{}");
       if (!user.userRole || user.userRole.id !== 3) {
@@ -189,6 +227,27 @@ export default {
 .menu-item.active {
   background: #8b4513;
   color: white;
+}
+
+.sub-menu-item {
+  padding: 10px 40px;
+  cursor: pointer;
+  transition: all 0.3s;
+  background: #f8f9fa;
+}
+
+.sub-menu-item:hover {
+  background: #e9ecef;
+}
+
+.sub-menu-item.active {
+  background: #8b4513;
+  color: white;
+}
+
+.expand-icon {
+  margin-left: auto;
+  font-size: 12px;
 }
 
 .main-content {
