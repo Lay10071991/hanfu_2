@@ -54,6 +54,9 @@ import ShapeTypeManagement from "./components/ShapeTypeManagement.vue";
 import HanfuDisplayManagement from "./components/HanfuDisplayManagement.vue";
 import PatternManagement from "./components/PatternManagement.vue";
 import ComponentManagement from "./components/ComponentManagement.vue";
+import FestivalActivityManagement from "./components/FestivalActivityManagement.vue";
+import ExhibitionManagement from "./components/ExhibitionManagement.vue";
+import LectureManagement from "./components/LectureManagement.vue";
 import Statistics from "./components/Statistics.vue";
 
 export default {
@@ -73,6 +76,9 @@ export default {
     HanfuDisplayManagement,
     PatternManagement,
     ComponentManagement,
+    FestivalActivityManagement,
+    ExhibitionManagement,
+    LectureManagement,
     Statistics,
   },
   data() {
@@ -114,7 +120,17 @@ export default {
             { name: "cultural-festival", label: "节俗礼仪" },
           ],
         },
-        { name: "activities", label: "活动管理", icon: "🎉" },
+        {
+          name: "activities",
+          label: "活动管理",
+          icon: "🎉",
+          expanded: false,
+          subMenu: [
+            { name: "activities-festival", label: "节庆雅集" },
+            { name: "activities-exhibition", label: "展览" },
+            { name: "activities-lecture", label: "讲座" },
+          ],
+        },
         { name: "shops", label: "店铺管理", icon: "🏪" },
         { name: "community", label: "社区管理", icon: "🌐" },
         { name: "component", label: "服饰部件", icon: "👔" },
@@ -132,6 +148,9 @@ export default {
         posts: "PostManagement",
         comments: "CommentManagement",
         shops: "ShopManagement",
+        "activities-festival": "FestivalActivityManagement",
+        "activities-exhibition": "ExhibitionManagement",
+        "activities-lecture": "LectureManagement",
         activities: "ActivityManagement",
         "cultural-etiquette": "EtiquetteManagement",
         "cultural-festival": "FestivalManagement",

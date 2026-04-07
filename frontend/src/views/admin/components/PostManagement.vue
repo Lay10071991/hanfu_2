@@ -61,6 +61,20 @@
           <p>{{ selectedPost.description }}</p>
           <p><strong>内容：</strong></p>
           <p>{{ selectedPost.content }}</p>
+          <p><strong>评论：</strong></p>
+          <div v-if="postComments.length > 0" class="comments-list">
+            <div v-for="comment in postComments" :key="comment.id" class="comment-item">
+              <div class="comment-header">
+                <span class="comment-username">{{ comment.username }}</span>
+                <span class="comment-time">{{ formatDate(comment.createTime) }}</span>
+              </div>
+              <div class="comment-content">{{ comment.content }}</div>
+              <div class="comment-actions">
+                <button @click="deleteComment(comment.id)" class="btn-delete btn-sm">删除</button>
+              </div>
+            </div>
+          </div>
+          <div v-else class="no-comments">暂无评论</div>
         </div>
         <div class="form-actions">
           <button @click="closeViewDialog" class="btn-cancel">关闭</button>
@@ -71,7 +85,7 @@
     <!-- 添加/编辑对话框 -->
     <div v-if="showEditDialog" class="modal" @click.self="closeEditDialog">
       <div class="modal-content">
-        <h3>{{ isEdit ? '编辑帖子' : '新增帖子' }}</h3>
+        <h3>{{ isEdit ? "编辑帖子" : "新增帖子" }}</h3>
         <form @submit.prevent="savePost">
           <div class="form-group">
             <label>标题</label>
@@ -98,10 +112,10 @@
           <div class="form-group">
             <label>封面图片</label>
             <div class="upload-area">
-              <input 
-                type="file" 
-                ref="fileInput" 
-                @change="handleFileChange" 
+              <input
+                type="file"
+                ref="fileInput"
+                @change="handleFileChange"
                 accept="image/*"
                 style="display: none"
               />
@@ -127,7 +141,7 @@
 
 <script>
 export default {
-  name: 'PostManagement',
+  name: "PostManagement",
   data() {
     return {
       posts: [],
@@ -138,59 +152,84 @@ export default {
       showEditDialog: false,
       isEdit: false,
       selectedPost: {},
+      postComments: [],
       uploading: false,
       imagePreview: null,
       form: {
         id: null,
-        title: '',
-        category: '穿搭分享',
-        description: '',
-        content: '',
-        imageUrl: '',
-        authorId: null
-      }
-    }
+        title: "",
+        category: "穿搭分享",
+        description: "",
+        content: "",
+        imageUrl: "",
+        authorId: null,
+      },
+    };
   },
   mounted() {
-    this.loadPosts()
+    this.loadPosts();
   },
   methods: {
     async loadPosts() {
       try {
-        const response = await fetch('http://localhost:8082/api/posts')
-        const allPosts = await response.json()
-        this.totalPages = Math.ceil(allPosts.length / this.pageSize)
-        const start = (this.currentPage - 1) * this.pageSize
-        this.posts = allPosts.slice(start, start + this.pageSize)
+        const response = await fetch("http://localhost:8082/api/posts");
+        const allPosts = await response.json();
+        this.totalPages = Math.ceil(allPosts.length / this.pageSize);
+        const start = (this.currentPage - 1) * this.pageSize;
+        this.posts = allPosts.slice(start, start + this.pageSize);
       } catch (error) {
-        console.error('加载帖子失败', error)
+        console.error("加载帖子失败", error);
       }
     },
     showAddDialog() {
-      this.isEdit = false
-      const user = JSON.parse(localStorage.getItem('user') || '{}')
+      this.isEdit = false;
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
       this.form = {
         id: null,
-        title: '',
-        category: '穿搭分享',
-        description: '',
-        content: '',
-        imageUrl: '',
-        authorId: user.id
-      }
-      this.imagePreview = null
-      this.showEditDialog = true
+        title: "",
+        category: "穿搭分享",
+        description: "",
+        content: "",
+        imageUrl: "",
+        authorId: user.id,
+      };
+      this.imagePreview = null;
+      this.showEditDialog = true;
     },
-    viewPost(post) {
+    async viewPost(post) {
       // 确保图片字段正确
       this.selectedPost = {
         ...post,
-        imageUrl: post.imageUrl || post.image
+        imageUrl: post.imageUrl || post.image,
+      };
+      // 获取帖子的评论
+      await this.loadPostComments(post.id);
+      this.showViewDialog = true;
+    },
+    async loadPostComments(postId) {
+      try {
+        const response = await fetch(`http://localhost:8082/api/posts/${postId}/comments`);
+        this.postComments = await response.json();
+      } catch (error) {
+        console.error("加载评论失败", error);
+        this.postComments = [];
       }
-      this.showViewDialog = true
+    },
+    async deleteComment(commentId) {
+      if (confirm("确定要删除这条评论吗？")) {
+        try {
+          await fetch(`http://localhost:8082/api/comments/${commentId}`, {
+            method: "DELETE",
+          });
+          // 重新加载当前帖子的评论
+          await this.loadPostComments(this.selectedPost.id);
+        } catch (error) {
+          console.error("删除评论失败", error);
+        }
+      }
     },
     editPost(post) {
-      this.isEdit = true
+      this.isEdit = true;
       this.form = {
         id: post.id,
         title: post.title,
@@ -198,136 +237,136 @@ export default {
         description: post.description,
         content: post.content,
         imageUrl: post.imageUrl || post.image,
-        authorId: post.authorId
-      }
+        authorId: post.authorId,
+      };
       // 设置图片预览
       if (this.form.imageUrl) {
-        this.imagePreview = this.getImageUrl(this.form.imageUrl)
+        this.imagePreview = this.getImageUrl(this.form.imageUrl);
       } else {
-        this.imagePreview = null
+        this.imagePreview = null;
       }
-      this.showEditDialog = true
+      this.showEditDialog = true;
     },
     getImageUrl(url) {
-      if (!url) return ''
+      if (!url) return "";
       // 如果已经是完整URL,直接返回
-      if (url.startsWith('http://') || url.startsWith('https://')) {
-        return url
+      if (url.startsWith("http://") || url.startsWith("https://")) {
+        return url;
       }
       // 如果是相对路径,添加服务器地址
-      return `http://localhost:8082${url}`
+      return `http://localhost:8082${url}`;
     },
     async handleFileChange(event) {
-      const file = event.target.files[0]
-      if (!file) return
+      const file = event.target.files[0];
+      if (!file) return;
 
       // 验证文件类型
-      if (!file.type.startsWith('image/')) {
-        alert('请选择图片文件')
-        return
+      if (!file.type.startsWith("image/")) {
+        alert("请选择图片文件");
+        return;
       }
 
       // 验证文件大小 (5MB)
       if (file.size > 5 * 1024 * 1024) {
-        alert('图片大小不能超过5MB')
-        return
+        alert("图片大小不能超过5MB");
+        return;
       }
 
-      this.uploading = true
+      this.uploading = true;
 
       try {
-        const formData = new FormData()
-        formData.append('file', file)
+        const formData = new FormData();
+        formData.append("file", file);
 
-        const response = await fetch('http://localhost:8082/api/upload/image', {
-          method: 'POST',
-          body: formData
-        })
+        const response = await fetch("http://localhost:8082/api/upload/image", {
+          method: "POST",
+          body: formData,
+        });
 
-        const result = await response.json()
+        const result = await response.json();
 
         if (result.success) {
-          this.form.imageUrl = result.url
-          this.imagePreview = `http://localhost:8082${result.url}`
+          this.form.imageUrl = result.url;
+          this.imagePreview = `http://localhost:8082${result.url}`;
         } else {
-          alert(result.message || '上传失败')
+          alert(result.message || "上传失败");
         }
       } catch (error) {
-        console.error('上传失败', error)
-        alert('上传失败,请重试')
+        console.error("上传失败", error);
+        alert("上传失败,请重试");
       } finally {
-        this.uploading = false
+        this.uploading = false;
       }
     },
     removeImage() {
-      this.form.imageUrl = ''
-      this.imagePreview = null
+      this.form.imageUrl = "";
+      this.imagePreview = null;
       if (this.$refs.fileInput) {
-        this.$refs.fileInput.value = ''
+        this.$refs.fileInput.value = "";
       }
     },
     async savePost() {
       if (!this.form.imageUrl) {
-        alert('请上传封面图片')
-        return
+        alert("请上传封面图片");
+        return;
       }
 
       try {
-        const url = this.isEdit 
+        const url = this.isEdit
           ? `http://localhost:8082/api/posts/${this.form.id}`
-          : 'http://localhost:8082/api/posts'
-        
+          : "http://localhost:8082/api/posts";
+
         await fetch(url, {
-          method: this.isEdit ? 'PUT' : 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(this.form)
-        })
-        
-        this.closeEditDialog()
-        this.loadPosts()
+          method: this.isEdit ? "PUT" : "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(this.form),
+        });
+
+        this.closeEditDialog();
+        this.loadPosts();
       } catch (error) {
-        console.error('保存帖子失败', error)
+        console.error("保存帖子失败", error);
       }
     },
     async deletePost(id) {
-      if (confirm('确定要删除这个帖子吗？')) {
+      if (confirm("确定要删除这个帖子吗？")) {
         try {
           await fetch(`http://localhost:8082/api/posts/${id}`, {
-            method: 'DELETE'
-          })
-          this.loadPosts()
+            method: "DELETE",
+          });
+          this.loadPosts();
         } catch (error) {
-          console.error('删除帖子失败', error)
+          console.error("删除帖子失败", error);
         }
       }
     },
     closeViewDialog() {
-      this.showViewDialog = false
+      this.showViewDialog = false;
     },
     closeEditDialog() {
-      this.showEditDialog = false
+      this.showEditDialog = false;
     },
     prevPage() {
       if (this.currentPage > 1) {
-        this.currentPage--
-        this.loadPosts()
+        this.currentPage--;
+        this.loadPosts();
       }
     },
     nextPage() {
       if (this.currentPage < this.totalPages) {
-        this.currentPage++
-        this.loadPosts()
+        this.currentPage++;
+        this.loadPosts();
       }
     },
     formatDate(date) {
-      return new Date(date).toLocaleDateString('zh-CN')
-    }
-  }
-}
+      return new Date(date).toLocaleDateString("zh-CN");
+    },
+  },
+};
 </script>
 
 <style scoped>
-@import './management-common.css';
+@import "./management-common.css";
 
 .post-detail p {
   margin: 10px 0;
@@ -359,7 +398,7 @@ export default {
 }
 
 .upload-placeholder:hover {
-  border-color: #8B4513;
+  border-color: #8b4513;
   background: #f9f9f9;
 }
 
@@ -402,5 +441,54 @@ export default {
   margin-top: 5px;
   color: #666;
   font-size: 12px;
+}
+
+.comments-list {
+  margin-top: 15px;
+  border-top: 1px solid #eee;
+  padding-top: 15px;
+}
+
+.comment-item {
+  margin-bottom: 15px;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+
+.comment-username {
+  font-weight: bold;
+  color: #8b4513;
+}
+
+.comment-time {
+  color: #999;
+}
+
+.comment-content {
+  margin: 10px 0;
+  line-height: 1.5;
+}
+
+.comment-actions {
+  text-align: right;
+}
+
+.btn-sm {
+  padding: 3px 8px;
+  font-size: 12px;
+}
+
+.no-comments {
+  margin-top: 10px;
+  color: #999;
+  font-style: italic;
 }
 </style>
