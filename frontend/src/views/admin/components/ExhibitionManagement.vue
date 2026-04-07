@@ -14,8 +14,6 @@
             <th>地点</th>
             <th>开始时间</th>
             <th>结束时间</th>
-            <th>状态</th>
-            <th>参与人数</th>
             <th>操作</th>
           </tr>
         </thead>
@@ -26,8 +24,6 @@
             <td>{{ exhibition.location }}</td>
             <td>{{ formatDateTime(exhibition.startDate) }}</td>
             <td>{{ formatDateTime(exhibition.endDate) }}</td>
-            <td>{{ getStatusText(exhibition.status) }}</td>
-            <td>{{ exhibition.participantsCount }}</td>
             <td>
               <button @click="editExhibition(exhibition)" class="btn-edit">编辑</button>
               <button @click="deleteExhibition(exhibition.id)" class="btn-delete">删除</button>
@@ -196,15 +192,6 @@ export default {
     },
     formatDateTime(datetime) {
       return new Date(datetime).toLocaleDateString("zh-CN");
-    },
-    getStatusText(status) {
-      const map = {
-        upcoming: "即将开始",
-        ongoing: "进行中",
-        completed: "已完成",
-        cancelled: "已取消",
-      };
-      return map[status] || status;
     },
   },
 };

@@ -10,7 +10,7 @@
           <tr>
             <th>序号</th>
             <th>图案名称</th>
-            <th>类别</th>
+            <th>图片</th>
             <th>象征意义</th>
             <th>操作</th>
           </tr>
@@ -19,7 +19,19 @@
           <tr v-for="(item, index) in items" :key="item.id">
             <td>{{ (currentPage - 1) * pageSize + index + 1 }}</td>
             <td>{{ item.name }}</td>
-            <td>{{ item.category }}</td>
+            <td>
+              <img
+                v-if="item.image"
+                :src="
+                  item.image.startsWith('http://') || item.image.startsWith('https://')
+                    ? item.image
+                    : `http://localhost:8082${item.image}`
+                "
+                alt="图案图片"
+                style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px"
+              />
+              <span v-else>-</span>
+            </td>
             <td>{{ item.meaning }}</td>
             <td>
               <button @click="editItem(item)" class="btn-edit">编辑</button>
@@ -36,20 +48,11 @@
     </div>
     <div v-if="showDialog" class="modal" @click.self="closeDialog">
       <div class="modal-content">
-        <h3>{{ isEdit ? '编辑图案' : '新增图案' }}</h3>
+        <h3>{{ isEdit ? "编辑图案" : "新增图案" }}</h3>
         <form @submit.prevent="saveItem">
           <div class="form-group">
             <label>图案名称</label>
             <input v-model="form.name" required />
-          </div>
-          <div class="form-group">
-            <label>类别</label>
-            <select v-model="form.category" required>
-              <option value="自然天象">自然天象</option>
-              <option value="祥瑞动物">祥瑞动物</option>
-              <option value="吉祥植物">吉祥植物</option>
-              <option value="几何纹样">几何纹样</option>
-            </select>
           </div>
           <div class="form-group">
             <label>象征意义</label>
@@ -58,10 +61,10 @@
           <div class="form-group">
             <label>图案图片</label>
             <div class="upload-area">
-              <input 
-                type="file" 
-                ref="fileInput" 
-                @change="handleFileChange" 
+              <input
+                type="file"
+                ref="fileInput"
+                @change="handleFileChange"
                 accept="image/*"
                 style="display: none"
               />
@@ -91,7 +94,7 @@
 
 <script>
 export default {
-  name: 'PatternManagement',
+  name: "PatternManagement",
   data() {
     return {
       items: [],
@@ -104,162 +107,160 @@ export default {
       imagePreview: null,
       form: {
         id: null,
-        name: '',
-        category: '自然天象',
-        meaning: '',
-        image: '',
-        description: ''
-      }
-    }
+        name: "",
+        meaning: "",
+        image: "",
+        description: "",
+      },
+    };
   },
   mounted() {
-    this.loadItems()
+    this.loadItems();
   },
   methods: {
     async loadItems() {
       try {
-        const response = await fetch('http://localhost:8082/api/pattern-symbol')
-        const allItems = await response.json()
-        this.totalPages = Math.ceil(allItems.length / this.pageSize)
-        const start = (this.currentPage - 1) * this.pageSize
-        this.items = allItems.slice(start, start + this.pageSize)
+        const response = await fetch("http://localhost:8082/api/pattern-symbol");
+        const allItems = await response.json();
+        this.totalPages = Math.ceil(allItems.length / this.pageSize);
+        const start = (this.currentPage - 1) * this.pageSize;
+        this.items = allItems.slice(start, start + this.pageSize);
       } catch (error) {
-        console.error('加载失败', error)
+        console.error("加载失败", error);
       }
     },
     showAddDialog() {
-      this.isEdit = false
+      this.isEdit = false;
       this.form = {
         id: null,
-        name: '',
-        category: '自然天象',
-        meaning: '',
-        image: '',
-        description: ''
-      }
-      this.imagePreview = null
-      this.showDialog = true
+        name: "",
+        meaning: "",
+        image: "",
+        description: "",
+      };
+      this.imagePreview = null;
+      this.showDialog = true;
     },
     editItem(item) {
-      this.isEdit = true
-      this.form = { ...item }
+      this.isEdit = true;
+      this.form = { ...item };
       // 处理图片预览URL
       if (item.image) {
         // 如果已经是完整URL,直接使用
-        if (item.image.startsWith('http://') || item.image.startsWith('https://')) {
-          this.imagePreview = item.image
+        if (item.image.startsWith("http://") || item.image.startsWith("https://")) {
+          this.imagePreview = item.image;
         } else {
           // 如果是相对路径,添加服务器地址
-          this.imagePreview = `http://localhost:8082${item.image}`
+          this.imagePreview = `http://localhost:8082${item.image}`;
         }
       } else {
-        this.imagePreview = null
+        this.imagePreview = null;
       }
-      this.showDialog = true
+      this.showDialog = true;
     },
     async handleFileChange(event) {
-      const file = event.target.files[0]
-      if (!file) return
+      const file = event.target.files[0];
+      if (!file) return;
 
-      if (!file.type.startsWith('image/')) {
-        alert('请选择图片文件')
-        return
+      if (!file.type.startsWith("image/")) {
+        alert("请选择图片文件");
+        return;
       }
 
       if (file.size > 5 * 1024 * 1024) {
-        alert('图片大小不能超过5MB')
-        return
+        alert("图片大小不能超过5MB");
+        return;
       }
 
-      this.uploading = true
+      this.uploading = true;
 
       try {
-        const formData = new FormData()
-        formData.append('file', file)
+        const formData = new FormData();
+        formData.append("file", file);
 
-        const response = await fetch('http://localhost:8082/api/upload/image', {
-          method: 'POST',
-          body: formData
-        })
+        const response = await fetch("http://localhost:8082/api/upload/image", {
+          method: "POST",
+          body: formData,
+        });
 
-        const result = await response.json()
+        const result = await response.json();
 
         if (result.success) {
-          this.form.image = result.url
-          this.imagePreview = `http://localhost:8082${result.url}`
+          this.form.image = result.url;
+          this.imagePreview = `http://localhost:8082${result.url}`;
         } else {
-          alert(result.message || '上传失败')
+          alert(result.message || "上传失败");
         }
       } catch (error) {
-        console.error('上传失败', error)
-        alert('上传失败,请重试')
+        console.error("上传失败", error);
+        alert("上传失败,请重试");
       } finally {
-        this.uploading = false
+        this.uploading = false;
       }
     },
     removeImage() {
-      this.form.image = ''
-      this.imagePreview = null
+      this.form.image = "";
+      this.imagePreview = null;
       if (this.$refs.fileInput) {
-        this.$refs.fileInput.value = ''
+        this.$refs.fileInput.value = "";
       }
     },
     async saveItem() {
       if (!this.form.image) {
-        alert('请上传图案图片')
-        return
+        alert("请上传图案图片");
+        return;
       }
 
       try {
-        const url = this.isEdit 
+        const url = this.isEdit
           ? `http://localhost:8082/api/pattern-symbol/${this.form.id}`
-          : 'http://localhost:8082/api/pattern-symbol'
-        
+          : "http://localhost:8082/api/pattern-symbol";
+
         await fetch(url, {
-          method: this.isEdit ? 'PUT' : 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(this.form)
-        })
-        
-        this.closeDialog()
-        this.loadItems()
+          method: this.isEdit ? "PUT" : "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(this.form),
+        });
+
+        this.closeDialog();
+        this.loadItems();
       } catch (error) {
-        console.error('保存失败', error)
+        console.error("保存失败", error);
       }
     },
     async deleteItem(id) {
-      if (confirm('确定要删除这个图案吗？')) {
+      if (confirm("确定要删除这个图案吗？")) {
         try {
           await fetch(`http://localhost:8082/api/pattern-symbol/${id}`, {
-            method: 'DELETE'
-          })
-          this.loadItems()
+            method: "DELETE",
+          });
+          this.loadItems();
         } catch (error) {
-          console.error('删除失败', error)
+          console.error("删除失败", error);
         }
       }
     },
     closeDialog() {
-      this.showDialog = false
+      this.showDialog = false;
     },
     prevPage() {
       if (this.currentPage > 1) {
-        this.currentPage--
-        this.loadItems()
+        this.currentPage--;
+        this.loadItems();
       }
     },
     nextPage() {
       if (this.currentPage < this.totalPages) {
-        this.currentPage++
-        this.loadItems()
+        this.currentPage++;
+        this.loadItems();
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped>
-@import './management-common.css';
+@import "./management-common.css";
 
 .upload-area {
   margin-top: 8px;
@@ -275,7 +276,7 @@ export default {
 }
 
 .upload-placeholder:hover {
-  border-color: #8B4513;
+  border-color: #8b4513;
   background: #f9f9f9;
 }
 

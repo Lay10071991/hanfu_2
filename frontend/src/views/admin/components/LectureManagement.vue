@@ -14,8 +14,6 @@
             <th>地点</th>
             <th>开始时间</th>
             <th>结束时间</th>
-            <th>状态</th>
-            <th>参与人数</th>
             <th>操作</th>
           </tr>
         </thead>
@@ -26,8 +24,6 @@
             <td>{{ lecture.location }}</td>
             <td>{{ formatDateTime(lecture.startDate) }}</td>
             <td>{{ formatDateTime(lecture.endDate) }}</td>
-            <td>{{ getStatusText(lecture.status) }}</td>
-            <td>{{ lecture.participantsCount }}</td>
             <td>
               <button @click="editLecture(lecture)" class="btn-edit">编辑</button>
               <button @click="deleteLecture(lecture.id)" class="btn-delete">删除</button>
@@ -47,7 +43,7 @@
     <div v-if="showDialog" class="modal" @click.self="closeDialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h3>{{ isEdit ? '编辑讲座' : '新增讲座' }}</h3>
+          <h3>{{ isEdit ? "编辑讲座" : "新增讲座" }}</h3>
           <button class="close-btn" @click="closeDialog">×</button>
         </div>
         <div class="modal-body">
@@ -94,7 +90,7 @@
 
 <script>
 export default {
-  name: 'LectureManagement',
+  name: "LectureManagement",
   data() {
     return {
       lectures: [],
@@ -105,111 +101,102 @@ export default {
       isEdit: false,
       form: {
         id: null,
-        title: '',
-        description: '',
-        location: '',
-        startDate: '',
-        endDate: '',
-        status: 'upcoming'
-      }
-    }
+        title: "",
+        description: "",
+        location: "",
+        startDate: "",
+        endDate: "",
+        status: "upcoming",
+      },
+    };
   },
   mounted() {
-    this.loadLectures()
+    this.loadLectures();
   },
   methods: {
     async loadLectures() {
       try {
-        const response = await fetch('http://localhost:8082/api/lectures')
-        const allLectures = await response.json()
-        this.totalPages = Math.ceil(allLectures.length / this.pageSize)
-        const start = (this.currentPage - 1) * this.pageSize
-        this.lectures = allLectures.slice(start, start + this.pageSize)
+        const response = await fetch("http://localhost:8082/api/lectures");
+        const allLectures = await response.json();
+        this.totalPages = Math.ceil(allLectures.length / this.pageSize);
+        const start = (this.currentPage - 1) * this.pageSize;
+        this.lectures = allLectures.slice(start, start + this.pageSize);
       } catch (error) {
-        console.error('加载讲座失败', error)
+        console.error("加载讲座失败", error);
       }
     },
     showAddDialog() {
-      this.isEdit = false
+      this.isEdit = false;
       this.form = {
         id: null,
-        title: '',
-        description: '',
-        location: '',
-        startDate: '',
-        endDate: '',
-        status: 'upcoming'
-      }
-      this.showDialog = true
+        title: "",
+        description: "",
+        location: "",
+        startDate: "",
+        endDate: "",
+        status: "upcoming",
+      };
+      this.showDialog = true;
     },
     editLecture(lecture) {
-      this.isEdit = true
+      this.isEdit = true;
       this.form = {
-        ...lecture
-      }
-      this.showDialog = true
+        ...lecture,
+      };
+      this.showDialog = true;
     },
     async saveLecture() {
       try {
-        const url = this.isEdit 
+        const url = this.isEdit
           ? `http://localhost:8082/api/lectures/${this.form.id}`
-          : 'http://localhost:8082/api/lectures'
-        
+          : "http://localhost:8082/api/lectures";
+
         await fetch(url, {
-          method: this.isEdit ? 'PUT' : 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(this.form)
-        })
-        
-        this.closeDialog()
-        this.loadLectures()
+          method: this.isEdit ? "PUT" : "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(this.form),
+        });
+
+        this.closeDialog();
+        this.loadLectures();
       } catch (error) {
-        console.error('保存讲座失败', error)
+        console.error("保存讲座失败", error);
       }
     },
     async deleteLecture(id) {
-      if (confirm('确定要删除这个讲座吗？')) {
+      if (confirm("确定要删除这个讲座吗？")) {
         try {
           await fetch(`http://localhost:8082/api/lectures/${id}`, {
-            method: 'DELETE'
-          })
-          this.loadLectures()
+            method: "DELETE",
+          });
+          this.loadLectures();
         } catch (error) {
-          console.error('删除讲座失败', error)
+          console.error("删除讲座失败", error);
         }
       }
     },
     closeDialog() {
-      this.showDialog = false
+      this.showDialog = false;
     },
     prevPage() {
       if (this.currentPage > 1) {
-        this.currentPage--
-        this.loadLectures()
+        this.currentPage--;
+        this.loadLectures();
       }
     },
     nextPage() {
       if (this.currentPage < this.totalPages) {
-        this.currentPage++
-        this.loadLectures()
+        this.currentPage++;
+        this.loadLectures();
       }
     },
     formatDateTime(datetime) {
-      return new Date(datetime).toLocaleDateString('zh-CN')
+      return new Date(datetime).toLocaleDateString("zh-CN");
     },
-    getStatusText(status) {
-      const map = {
-        upcoming: '即将开始',
-        ongoing: '进行中',
-        completed: '已完成',
-        cancelled: '已取消'
-      }
-      return map[status] || status
-    }
-  }
-}
+  },
+};
 </script>
 
 <style scoped>
-@import './management-common.css';
+@import "./management-common.css";
 </style>

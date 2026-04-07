@@ -16,21 +16,15 @@
         </thead>
         <tbody>
           <tr v-for="(item, index) in items" :key="item.id">
-            <td>{{ (currentPage - 1) * pageSize + index + 1 }}</td>
+            <td>{{ index + 1 }}</td>
             <td>{{ item.title }}</td>
-            <td class="content-cell">{{ item.content.substring(0, 100) }}...</td>
+            <td class="content-cell">{{ item.content }}</td>
             <td>
               <button @click="editItem(item)" class="btn-edit">编辑</button>
             </td>
           </tr>
         </tbody>
       </table>
-    </div>
-
-    <div class="pagination">
-      <button @click="prevPage" :disabled="currentPage === 1">上一页</button>
-      <span>第 {{ currentPage }} 页 / 共 {{ totalPages }} 页</span>
-      <button @click="nextPage" :disabled="currentPage === totalPages">下一页</button>
     </div>
 
     <!-- 编辑对话框 -->
@@ -62,9 +56,6 @@ export default {
   data() {
     return {
       items: [],
-      currentPage: 1,
-      pageSize: 10,
-      totalPages: 1,
       showDialog: false,
       form: {
         id: null,
@@ -85,10 +76,7 @@ export default {
         const response = await fetch("http://localhost:8082/api/cultural-content");
         const allItems = await response.json();
         // 只显示类型为overview的历史概述数据
-        const overviewItems = allItems.filter((item) => item.type === "overview");
-        this.totalPages = Math.ceil(overviewItems.length / this.pageSize);
-        const start = (this.currentPage - 1) * this.pageSize;
-        this.items = overviewItems.slice(start, start + this.pageSize);
+        this.items = allItems.filter((item) => item.type === "overview");
       } catch (error) {
         console.error("加载历史概述失败", error);
       }
@@ -136,9 +124,21 @@ export default {
 @import "./management-common.css";
 
 .content-cell {
-  max-width: 500px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  max-width: 600px;
+  white-space: normal;
+  word-wrap: break-word;
+  line-height: 1.5;
+  padding: 10px;
+}
+
+/* 调整表格行高，使内容可以完整展示 */
+tr {
+  min-height: 100px;
+  height: auto;
+}
+
+/* 调整表格单元格垂直对齐方式 */
+td {
+  vertical-align: top;
 }
 </style>

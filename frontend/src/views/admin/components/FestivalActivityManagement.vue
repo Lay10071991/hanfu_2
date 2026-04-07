@@ -14,8 +14,6 @@
             <th>活动日期</th>
             <th>活动地点</th>
             <th>活动图片</th>
-            <th>状态</th>
-            <th>参与人数</th>
             <th>操作</th>
           </tr>
         </thead>
@@ -23,7 +21,7 @@
           <tr v-for="(activity, index) in activities" :key="activity.id">
             <td>{{ (currentPage - 1) * pageSize + index + 1 }}</td>
             <td>{{ activity.title }}</td>
-            <td>{{ formatDateRange(activity.startTime, activity.endTime) }}</td>
+            <td>{{ activity.date || "-" }}</td>
             <td>{{ activity.location }}</td>
             <td>
               <img
@@ -34,8 +32,6 @@
               />
               <span v-else>-</span>
             </td>
-            <td>{{ getStatusText(activity.status) }}</td>
-            <td>{{ activity.participantsCount }}</td>
             <td>
               <button @click="editActivity(activity)" class="btn-edit">编辑</button>
               <button @click="deleteActivity(activity.id)" class="btn-delete">删除</button>
@@ -73,12 +69,13 @@
               <input v-model="form.location" required />
             </div>
             <div class="form-group">
-              <label>开始时间</label>
-              <input v-model="form.startTime" type="datetime-local" required />
-            </div>
-            <div class="form-group">
-              <label>结束时间</label>
-              <input v-model="form.endTime" type="datetime-local" required />
+              <label>活动日期</label>
+              <input
+                v-model="form.date"
+                type="text"
+                required
+                placeholder="例如：2025-02-01 至 2025-02-02"
+              />
             </div>
             <div class="form-group">
               <label>状态</label>
@@ -103,7 +100,11 @@
                   accept="image/*"
                   style="display: none"
                 />
-                <div v-if="!imagePreview" class="upload-placeholder" @click="$refs.fileInput.click()">
+                <div
+                  v-if="!imagePreview"
+                  class="upload-placeholder"
+                  @click="$refs.fileInput.click()"
+                >
                   <span>点击上传图片</span>
                 </div>
                 <div v-else class="image-preview">
@@ -140,8 +141,7 @@ export default {
         title: "",
         description: "",
         location: "",
-        startTime: "",
-        endTime: "",
+        date: "",
         status: "upcoming",
         maxParticipants: 100,
         organizerId: 1,
@@ -173,8 +173,7 @@ export default {
         title: "",
         description: "",
         location: "",
-        startTime: "",
-        endTime: "",
+        date: "",
         status: "upcoming",
         maxParticipants: 100,
         organizerId: 1,
@@ -185,11 +184,7 @@ export default {
     },
     editActivity(activity) {
       this.isEdit = true;
-      this.form = {
-        ...activity,
-        startTime: this.formatDateTimeForInput(activity.startTime),
-        endTime: this.formatDateTimeForInput(activity.endTime),
-      };
+      this.form = { ...activity };
       this.imagePreview = activity.image || null;
       this.showDialog = true;
     },
@@ -244,15 +239,6 @@ export default {
     formatDateTimeForInput(datetime) {
       const date = new Date(datetime);
       return date.toISOString().slice(0, 16);
-    },
-    getStatusText(status) {
-      const map = {
-        upcoming: "即将开始",
-        ongoing: "进行中",
-        completed: "已完成",
-        cancelled: "已取消",
-      };
-      return map[status] || status || "-";
     },
     formatDateRange(startTime, endTime) {
       try {
