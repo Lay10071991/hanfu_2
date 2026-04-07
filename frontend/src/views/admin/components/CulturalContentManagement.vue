@@ -1,7 +1,10 @@
 <template>
-  <div class="management-container">
+  <div class="management-container historical-overview">
     <div class="header">
       <h2>历史概述管理</h2>
+      <div class="header-buttons">
+        <button @click="loadItems" class="btn-refresh">刷新</button>
+      </div>
     </div>
 
     <div class="table-container">

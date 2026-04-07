@@ -1,5 +1,5 @@
 <template>
-  <div class="management-container">
+  <div class="management-container culture-influence">
     <div class="header">
       <h2>文化影响与传承管理</h2>
     </div>
@@ -11,8 +11,6 @@
             <th>ID</th>
             <th>标题</th>
             <th>内容预览</th>
-            <th>创建时间</th>
-            <th>更新时间</th>
             <th>操作</th>
           </tr>
         </thead>
@@ -21,8 +19,6 @@
             <td>{{ item.id }}</td>
             <td>{{ item.title }}</td>
             <td>{{ item.description ? item.description.substring(0, 50) + '...' : '-' }}</td>
-            <td>{{ formatDate(item.createTime) }}</td>
-            <td>{{ formatDate(item.updateTime) }}</td>
             <td>
               <button @click="editItem(item)" class="btn-edit">编辑</button>
             </td>
@@ -46,7 +42,11 @@
             </div>
             <div class="form-group">
               <label>内容</label>
-              <textarea v-model="form.description" rows="10" placeholder="请输入内容，多个段落用换行分隔"></textarea>
+              <textarea
+                v-model="form.description"
+                rows="10"
+                placeholder="请输入内容，多个段落用换行分隔"
+              ></textarea>
             </div>
             <div class="form-actions">
               <button type="button" @click="dialogVisible = false" class="btn-cancel">取消</button>
@@ -60,73 +60,73 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { ElMessage } from 'element-plus'
+import { ref, onMounted } from "vue";
+import { ElMessage } from "element-plus";
 
-const items = ref([])
-const dialogVisible = ref(false)
+const items = ref([]);
+const dialogVisible = ref(false);
 const form = ref({
   id: null,
-  title: '',
-  description: ''
-})
+  title: "",
+  description: "",
+});
 
 // 加载数据
 const loadItems = async () => {
   try {
-    const response = await fetch('http://localhost:8082/api/culture-influence')
+    const response = await fetch("http://localhost:8082/api/culture-influence");
     if (response.ok) {
-      items.value = await response.json()
+      items.value = await response.json();
     }
   } catch (error) {
-    console.error('加载数据失败:', error)
-    ElMessage.error('加载数据失败')
+    console.error("加载数据失败:", error);
+    ElMessage.error("加载数据失败");
   }
-}
+};
 
 // 编辑
 const editItem = (item) => {
-  form.value = { ...item }
-  dialogVisible.value = true
-}
+  form.value = { ...item };
+  dialogVisible.value = true;
+};
 
 // 保存
 const saveItem = async () => {
   try {
-    const url = `http://localhost:8082/api/culture-influence/${form.value.id}`
-    const method = 'PUT'
+    const url = `http://localhost:8082/api/culture-influence/${form.value.id}`;
+    const method = "PUT";
 
     const response = await fetch(url, {
       method,
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(form.value)
-    })
+      body: JSON.stringify(form.value),
+    });
 
     if (response.ok) {
-      ElMessage.success('更新成功')
-      dialogVisible.value = false
-      loadItems()
+      ElMessage.success("更新成功");
+      dialogVisible.value = false;
+      loadItems();
     } else {
-      ElMessage.error('保存失败')
+      ElMessage.error("保存失败");
     }
   } catch (error) {
-    console.error('保存失败:', error)
-    ElMessage.error('保存失败')
+    console.error("保存失败:", error);
+    ElMessage.error("保存失败");
   }
-}
+};
 
 // 格式化日期
 const formatDate = (dateString) => {
-  if (!dateString) return '-'
-  const date = new Date(dateString)
-  return date.toLocaleDateString('zh-CN')
-}
+  if (!dateString) return "-";
+  const date = new Date(dateString);
+  return date.toLocaleDateString("zh-CN");
+};
 
 onMounted(() => {
-  loadItems()
-})
+  loadItems();
+});
 </script>
 
 <style scoped>
@@ -172,7 +172,8 @@ table {
   border-collapse: collapse;
 }
 
-th, td {
+th,
+td {
   padding: 12px 15px;
   text-align: left;
   border-bottom: 1px solid #eee;
@@ -188,7 +189,8 @@ tr:hover {
   background: #f9f9f9;
 }
 
-.btn-edit, .btn-delete {
+.btn-edit,
+.btn-delete {
   padding: 5px 10px;
   border: none;
   border-radius: 4px;
@@ -289,7 +291,8 @@ tr:hover {
   margin-top: 20px;
 }
 
-.btn-cancel, .btn-save {
+.btn-cancel,
+.btn-save {
   padding: 8px 20px;
   border: none;
   border-radius: 4px;

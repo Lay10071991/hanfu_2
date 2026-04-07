@@ -1,5 +1,5 @@
 <template>
-  <div class="management-container">
+  <div class="management-container historical-timeline">
     <div class="header">
       <h2>历史时间线管理</h2>
       <button @click="showAddDialog" class="btn-primary">新增朝代</button>
@@ -42,7 +42,7 @@
     <!-- 添加/编辑对话框 -->
     <div v-if="showDialog" class="modal" @click.self="closeDialog">
       <div class="modal-content">
-        <h3>{{ isEdit ? '编辑朝代' : '新增朝代' }}</h3>
+        <h3>{{ isEdit ? "编辑朝代" : "新增朝代" }}</h3>
         <form @submit.prevent="saveItem">
           <div class="form-group">
             <label>朝代名称</label>
@@ -72,7 +72,7 @@
 
 <script>
 export default {
-  name: 'HistoricalEraManagement',
+  name: "HistoricalEraManagement",
   data() {
     return {
       items: [],
@@ -83,93 +83,93 @@ export default {
       isEdit: false,
       form: {
         id: null,
-        name: '',
-        years: '',
-        title: '',
-        description: ''
-      }
-    }
+        name: "",
+        years: "",
+        title: "",
+        description: "",
+      },
+    };
   },
   mounted() {
-    this.loadItems()
+    this.loadItems();
   },
   methods: {
     async loadItems() {
       try {
-        const response = await fetch('http://localhost:8082/api/historical-era')
-        const allItems = await response.json()
-        this.totalPages = Math.ceil(allItems.length / this.pageSize)
-        const start = (this.currentPage - 1) * this.pageSize
-        this.items = allItems.slice(start, start + this.pageSize)
+        const response = await fetch("http://localhost:8082/api/historical-era");
+        const allItems = await response.json();
+        this.totalPages = Math.ceil(allItems.length / this.pageSize);
+        const start = (this.currentPage - 1) * this.pageSize;
+        this.items = allItems.slice(start, start + this.pageSize);
       } catch (error) {
-        console.error('加载历史朝代失败', error)
+        console.error("加载历史朝代失败", error);
       }
     },
     showAddDialog() {
-      this.isEdit = false
+      this.isEdit = false;
       this.form = {
         id: null,
-        name: '',
-        years: '',
-        title: '',
-        description: ''
-      }
-      this.showDialog = true
+        name: "",
+        years: "",
+        title: "",
+        description: "",
+      };
+      this.showDialog = true;
     },
     editItem(item) {
-      this.isEdit = true
-      this.form = { ...item }
-      this.showDialog = true
+      this.isEdit = true;
+      this.form = { ...item };
+      this.showDialog = true;
     },
     async saveItem() {
       try {
         const url = this.isEdit
           ? `http://localhost:8082/api/historical-era/${this.form.id}`
-          : 'http://localhost:8082/api/historical-era'
+          : "http://localhost:8082/api/historical-era";
 
         await fetch(url, {
-          method: this.isEdit ? 'PUT' : 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(this.form)
-        })
+          method: this.isEdit ? "PUT" : "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(this.form),
+        });
 
-        this.closeDialog()
-        this.loadItems()
+        this.closeDialog();
+        this.loadItems();
       } catch (error) {
-        console.error('保存失败', error)
+        console.error("保存失败", error);
       }
     },
     async deleteItem(id) {
-      if (confirm('确定要删除这个朝代吗？')) {
+      if (confirm("确定要删除这个朝代吗？")) {
         try {
           await fetch(`http://localhost:8082/api/historical-era/${id}`, {
-            method: 'DELETE'
-          })
-          this.loadItems()
+            method: "DELETE",
+          });
+          this.loadItems();
         } catch (error) {
-          console.error('删除失败', error)
+          console.error("删除失败", error);
         }
       }
     },
     closeDialog() {
-      this.showDialog = false
+      this.showDialog = false;
     },
     prevPage() {
       if (this.currentPage > 1) {
-        this.currentPage--
-        this.loadItems()
+        this.currentPage--;
+        this.loadItems();
       }
     },
     nextPage() {
       if (this.currentPage < this.totalPages) {
-        this.currentPage++
-        this.loadItems()
+        this.currentPage++;
+        this.loadItems();
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped>
-@import './management-common.css';
+@import "./management-common.css";
 </style>

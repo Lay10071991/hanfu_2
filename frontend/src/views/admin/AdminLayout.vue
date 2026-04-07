@@ -172,6 +172,11 @@ export default {
   },
   mounted() {
     this.checkAuth();
+    // 从localStorage中恢复之前的活动菜单
+    const savedMenu = localStorage.getItem("activeMenu");
+    if (savedMenu) {
+      this.activeMenu = savedMenu;
+    }
   },
   methods: {
     toggleSubMenu(item) {
@@ -201,6 +206,12 @@ export default {
       localStorage.removeItem("user");
       localStorage.removeItem("isLoggedIn");
       this.$router.push("/login");
+    },
+    refreshPage() {
+      // 保存当前活动菜单
+      localStorage.setItem("activeMenu", this.activeMenu);
+      // 重新加载当前路由
+      this.$router.go(0);
     },
   },
 };
@@ -239,6 +250,16 @@ export default {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+}
+
+.refresh-btn {
+  padding: 8px 15px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 10px;
 }
 
 .admin-content {

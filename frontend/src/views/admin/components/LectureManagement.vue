@@ -22,8 +22,8 @@
             <td>{{ (currentPage - 1) * pageSize + index + 1 }}</td>
             <td>{{ lecture.title }}</td>
             <td>{{ lecture.location }}</td>
-            <td>{{ formatDateTime(lecture.startDate) }}</td>
-            <td>{{ formatDateTime(lecture.endDate) }}</td>
+            <td>{{ formatDateTime(lecture.start_time) }}</td>
+            <td>{{ formatDateTime(lecture.end_time) }}</td>
             <td>
               <button @click="editLecture(lecture)" class="btn-edit">编辑</button>
               <button @click="deleteLecture(lecture.id)" class="btn-delete">删除</button>
@@ -62,11 +62,11 @@
             </div>
             <div class="form-group">
               <label>开始时间</label>
-              <input v-model="form.startDate" type="date" required />
+              <input v-model="form.start_time" type="date" required />
             </div>
             <div class="form-group">
               <label>结束时间</label>
-              <input v-model="form.endDate" type="date" required />
+              <input v-model="form.end_time" type="date" required />
             </div>
             <div class="form-group">
               <label>状态</label>
@@ -104,8 +104,8 @@ export default {
         title: "",
         description: "",
         location: "",
-        startDate: "",
-        endDate: "",
+        start_time: "",
+        end_time: "",
         status: "upcoming",
       },
     };
@@ -132,8 +132,8 @@ export default {
         title: "",
         description: "",
         location: "",
-        startDate: "",
-        endDate: "",
+        start_time: "",
+        end_time: "",
         status: "upcoming",
       };
       this.showDialog = true;
@@ -191,7 +191,10 @@ export default {
       }
     },
     formatDateTime(datetime) {
-      return new Date(datetime).toLocaleDateString("zh-CN");
+      if (!datetime) return "-";
+      const date = new Date(datetime);
+      if (isNaN(date.getTime())) return "-";
+      return date.toLocaleDateString("zh-CN");
     },
   },
 };

@@ -2,7 +2,10 @@
   <div class="management-container">
     <div class="header">
       <h2>千载衣冠管理</h2>
-      <button @click="showAddDialog" class="btn-primary">新增衣冠</button>
+      <div class="header-buttons">
+        <button @click="loadItems" class="btn-refresh">刷新</button>
+        <button @click="showAddDialog" class="btn-primary">新增衣冠</button>
+      </div>
     </div>
     <div class="table-container">
       <table>
@@ -11,8 +14,6 @@
             <th>序号</th>
             <th>名称</th>
             <th>描述</th>
-            <th>图片</th>
-            <th>排序</th>
             <th>操作</th>
           </tr>
         </thead>
@@ -21,11 +22,6 @@
             <td>{{ index + 1 }}</td>
             <td>{{ item.name }}</td>
             <td>{{ item.description ? item.description.substring(0, 30) + "..." : "-" }}</td>
-            <td>
-              <img v-if="item.image" :src="item.image.replace('backend/uploads/', 'http://localhost:8082/uploads/')" alt="图片" style="width: 50px; height: 50px; object-fit: contain;" />
-              <span v-else>-</span>
-            </td>
-            <td>{{ item.sortOrder }}</td>
             <td>
               <button @click="editItem(item)" class="btn-edit">编辑</button>
               <button @click="deleteItem(item.id)" class="btn-delete">删除</button>
@@ -244,6 +240,21 @@ export default {
 .header h2 {
   margin: 0;
   color: #8b4513;
+}
+
+.header-buttons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-refresh {
+  padding: 8px 15px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
 .btn-primary {
