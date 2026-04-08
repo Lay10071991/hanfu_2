@@ -23,6 +23,26 @@ export default defineConfig({
       '/uploads': {
         target: 'http://localhost:8082',
         changeOrigin: true
+      },
+      '/pattern-symbols': {
+        target: 'http://localhost:8082',
+        changeOrigin: true
+      },
+      '/etiquette-posture': {
+        target: 'http://localhost:8082',
+        changeOrigin: true
+      },
+      '/shop': {
+        target: 'http://localhost:8082',
+        changeOrigin: true
+      },
+      '/shopshow': {
+        target: 'http://localhost:8082',
+        changeOrigin: true
+      },
+      '/community_post': {
+        target: 'http://localhost:8082',
+        changeOrigin: true
       }
     }
   }

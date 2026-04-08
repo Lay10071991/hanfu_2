@@ -3,8 +3,6 @@
  * 统一处理前台所有图片URL,确保正确显示
  */
 
-const API_BASE = "http://localhost:8082";
-
 /**
  * 图片类别配置
  * 对应后端存储的各个文件夹
@@ -26,8 +24,7 @@ export function getImageUrl(url) {
     return url;
   }
 
-  // 如果是相对路径,添加服务器地址
-  // 确保路径以/开头
+  // 如果是相对路径,确保路径以/开头
   let path = url.startsWith("/") ? url : `/${url}`;
   // 移除可能的backend/前缀（无论是否有前导斜杠）
   path = path.replace(/^\/?backend\//, "/");
@@ -36,7 +33,7 @@ export function getImageUrl(url) {
   const parts = path.split("/");
   const encodedPath = parts.map((part) => encodeURIComponent(part)).join("/");
 
-  return `${API_BASE}${encodedPath}`;
+  return encodedPath;
 }
 
 /**
@@ -315,7 +312,6 @@ export function createUploadFormData(file, additionalData = {}, fileFieldName = 
 }
 
 export default {
-  API_BASE,
   IMAGE_CATEGORIES,
   getImageUrl,
   getRelativePath,

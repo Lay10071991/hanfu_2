@@ -2,7 +2,6 @@ package com.example.demo.service;
 
 import com.example.demo.dto.ShopDTO;
 import com.example.demo.entity.Shop;
-import com.example.demo.entity.ShopRating;
 import com.example.demo.entity.ShopShow;
 import com.example.demo.repository.ShopRepository;
 import com.example.demo.repository.ShopShowRepository;
@@ -16,9 +15,6 @@ public class ShopService {
     
     @Autowired
     private ShopRepository shopRepository;
-    
-    @Autowired
-    private ShopRatingService shopRatingService;
     
     @Autowired
     private ShopShowRepository shopShowRepository;
@@ -56,14 +52,9 @@ public class ShopService {
         dto.setPriceRange(shop.getPriceRange());
         dto.setUserId(shop.getUserId());
         
-        ShopRating rating = shopRatingService.getRatingByShopId(shop.getId());
-        if (rating != null) {
-            dto.setAverageRating(rating.getAverageRating());
-            dto.setReviewCount(rating.getReviewCount());
-        } else {
-            dto.setAverageRating(0.0);
-            dto.setReviewCount(0);
-        }
+        // 设置默认评分和评论数
+        dto.setAverageRating(0.0);
+        dto.setReviewCount(0);
         
         // 从shop_show表获取汉服展示图片
         List<ShopShow> shopShows = shopShowRepository.findByShopIdOrderBySortOrderAsc(shop.getId());
