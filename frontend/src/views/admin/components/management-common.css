@@ -88,7 +88,7 @@ td:first-child {
 /* 所有管理页面 - 操作列 */
 th:last-child,
 td:last-child {
-  width: 120px;
+  width: 160px;
   text-align: right;
   padding-right: 20px;
 }
