@@ -167,6 +167,18 @@ export default {
       this.showDialog = true
     },
     async saveUser() {
+      // 验证用户名长度
+      if (this.form.username.length < 2 || this.form.username.length > 20) {
+        alert('用户名长度必须在2-20个字符之间')
+        return
+      }
+      
+      // 验证密码长度（对于新增用户或修改密码的情况）
+      if ((!this.isEdit || this.form.password) && (this.form.password.length < 6 || this.form.password.length > 20)) {
+        alert('密码长度必须在6-20个字符之间')
+        return
+      }
+      
       try {
         const url = this.isEdit 
           ? `http://localhost:8082/api/users/${this.form.id}`

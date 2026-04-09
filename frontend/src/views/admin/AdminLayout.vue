@@ -24,7 +24,13 @@
               v-for="subItem in item.subMenu"
               :key="subItem.name"
               :class="['sub-menu-item', { active: activeMenu === subItem.name }]"
-              @click="activeMenu = subItem.name"
+              @click="
+                () => {
+                  activeMenu = subItem.name;
+                  // 保存当前活动菜单到localStorage
+                  localStorage.setItem('activeMenu', activeMenu);
+                }
+              "
             >
               <span>{{ subItem.label }}</span>
             </div>
@@ -156,26 +162,33 @@ export default {
         activities: "ActivityManagement",
         "cultural-etiquette": "EtiquetteManagement",
         "cultural-festival": "FestivalManagement",
+        cultural: "EtiquetteManagement",
         "shape-type-basic": "ShapeTypeManagement",
         "shape-type-display": "HanfuDisplayManagement",
+        "shape-type": "ShapeTypeManagement",
         pattern: "PatternManagement",
         "historical-overview": "CulturalContentManagement",
         "historical-timeline": "HistoricalEraManagement",
         "historical-influence": "CultureInfluenceManagement",
+        historical: "CulturalContentManagement",
         "community-posts": "PostManagement",
         "community-comments": "CommentManagement",
         community: "PostManagement",
         statistics: "Statistics",
       };
-      return componentMap[this.activeMenu];
+      // 确保返回有效的组件名称
+      return componentMap[this.activeMenu] || "CulturalContentManagement";
     },
   },
   mounted() {
     this.checkAuth();
-    // 从localStorage中恢复之前的活动菜单
+    // 优先从localStorage中恢复之前的活动菜单
     const savedMenu = localStorage.getItem("activeMenu");
     if (savedMenu) {
       this.activeMenu = savedMenu;
+    } else {
+      // 如果没有保存的菜单状态，默认显示数据统计页面
+      this.activeMenu = "statistics";
     }
   },
   methods: {
@@ -191,6 +204,8 @@ export default {
         item.expanded = !item.expanded;
       } else {
         this.activeMenu = item.name;
+        // 保存当前活动菜单到localStorage
+        localStorage.setItem("activeMenu", this.activeMenu);
       }
     },
 
