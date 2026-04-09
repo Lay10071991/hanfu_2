@@ -153,7 +153,18 @@ export default {
     editItem(item) {
       this.isEdit = true;
       this.form = { ...item };
-      this.imagePreview = item.image || null;
+      // 处理图片预览URL
+      if (item.image) {
+        // 如果已经是完整URL,直接使用
+        if (item.image.startsWith("http://") || item.image.startsWith("https://")) {
+          this.imagePreview = item.image;
+        } else {
+          // 如果是相对路径,添加服务器地址
+          this.imagePreview = `http://localhost:8082${item.image}`;
+        }
+      } else {
+        this.imagePreview = null;
+      }
       this.showDialog = true;
       // 阻止背景滚动
       document.body.style.overflow = "hidden";
@@ -220,17 +231,27 @@ export default {
       this.uploading = true;
       const formData = new FormData();
       formData.append("file", file);
+      formData.append("type", "basic_style");
+      if (this.form.id) {
+        formData.append("id", this.form.id);
+      }
 
       try {
-        const response = await fetch("http://localhost:8082/api/upload", {
+        const response = await fetch("http://localhost:8082/api/upload/image", {
           method: "POST",
           body: formData,
         });
 
         if (response.ok) {
           const data = await response.json();
-          this.form.image = data.url;
-          this.imagePreview = data.url;
+          if (data.success) {
+            this.form.image = data.url;
+            this.imagePreview = `http://localhost:8082${data.url}`;
+          } else {
+            alert(data.message || "上传失败");
+          }
+        } else {
+          alert("上传失败");
         }
       } catch (error) {
         console.error("上传图片失败:", error);
@@ -239,9 +260,35 @@ export default {
         this.uploading = false;
       }
     },
-    removeImage() {
+    async removeImage() {
+      // 如果有图片URL，调用后端删除接口
+      if (this.form.image) {
+        try {
+          const response = await fetch("http://localhost:8082/api/upload/image", {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: `url=${encodeURIComponent(this.form.image)}`,
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            if (!data.success) {
+              console.warn("删除图片失败:", data.message);
+            }
+          }
+        } catch (error) {
+          console.error("删除图片失败:", error);
+        }
+      }
+      
+      // 清空表单和预览
       this.form.image = "";
       this.imagePreview = null;
+      if (this.$refs.fileInput) {
+        this.$refs.fileInput.value = "";
+      }
     },
   },
 };

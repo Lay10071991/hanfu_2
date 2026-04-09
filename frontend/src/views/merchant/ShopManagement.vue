@@ -289,15 +289,19 @@ export default {
         this.uploading = true;
         const formData = new FormData();
         formData.append("file", file);
+        formData.append("type", "shop");
+        if (this.form.id) {
+          formData.append("id", this.form.id);
+        }
 
-        fetch("/api/upload/image", {
+        fetch("http://localhost:8082/api/upload/image", {
           method: "POST",
           body: formData,
         })
           .then((response) => response.json())
           .then((data) => {
             this.form.image = data.url;
-            this.imagePreview = data.url;
+            this.imagePreview = `http://localhost:8082${data.url}`;
             this.uploading = false;
           })
           .catch((error) => {
@@ -316,14 +320,20 @@ export default {
         this.uploading = true;
         const formData = new FormData();
         formData.append("file", file);
+        formData.append("type", "shopshow");
+        if (this.form.id) {
+          formData.append("id", this.form.id);
+          // 为多张图片添加索引
+          formData.append("index", this.form.hanfuImages.length + 1);
+        }
 
-        fetch("/api/upload/image", {
+        fetch("http://localhost:8082/api/upload/image", {
           method: "POST",
           body: formData,
         })
           .then((response) => response.json())
           .then((data) => {
-            this.form.hanfuImages.push(data.url);
+            this.form.hanfuImages.push(`http://localhost:8082${data.url}`);
             this.uploading = false;
           })
           .catch((error) => {

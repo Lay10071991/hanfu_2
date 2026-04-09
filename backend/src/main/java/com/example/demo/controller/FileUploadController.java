@@ -21,7 +21,11 @@ public class FileUploadController {
     private static final String UPLOAD_DIR = "E:/hanfu-cultural-platform/backend/uploads";
 
     @PostMapping("/image")
-    public ResponseEntity<Map<String, Object>> uploadImage(@RequestParam("file") MultipartFile file, @RequestParam(value = "type", defaultValue = "general") String type) {
+    public ResponseEntity<Map<String, Object>> uploadImage(
+            @RequestParam("file") MultipartFile file, 
+            @RequestParam(value = "type", defaultValue = "general") String type,
+            @RequestParam(value = "id", required = false) Long id,
+            @RequestParam(value = "index", required = false, defaultValue = "0") int index) {
         Map<String, Object> response = new HashMap<>();
         
         try {
@@ -42,8 +46,40 @@ public class FileUploadController {
 
             // 确定子目录
             String subDir = "general";
-            if ("community_post".equals(type)) {
-                subDir = "community_post";
+            switch (type) {
+                case "basic_style":
+                    subDir = "basic_style";
+                    break;
+                case "clothing_show":
+                    subDir = "clothing_show";
+                    break;
+                case "pattern_symbol":
+                    subDir = "pattern_symbol";
+                    break;
+                case "etiquette_posture":
+                    subDir = "etiquette_posture";
+                    break;
+                case "festival_custom":
+                    subDir = "festival_custom";
+                    break;
+                case "festival_gathering":
+                    subDir = "festival_gathering";
+                    break;
+                case "exhibition":
+                    subDir = "exhibition";
+                    break;
+                case "talk":
+                    subDir = "talk";
+                    break;
+                case "shop":
+                    subDir = "shop";
+                    break;
+                case "shopshow":
+                    subDir = "shopshow";
+                    break;
+                case "community_post":
+                    subDir = "community_post";
+                    break;
             }
 
             // 创建上传目录
@@ -52,13 +88,25 @@ public class FileUploadController {
                 uploadDir.mkdirs();
             }
 
-            // 生成唯一文件名
+            // 生成文件名
             String originalFilename = file.getOriginalFilename();
             String extension = "";
             if (originalFilename != null && originalFilename.contains(".")) {
                 extension = originalFilename.substring(originalFilename.lastIndexOf("."));
             }
-            String filename = UUID.randomUUID().toString() + extension;
+            
+            String filename;
+            if (id != null) {
+                // 如果提供了ID，使用ID作为文件名，支持多张图片
+                if (index > 0) {
+                    filename = id.toString() + "-" + index + extension;
+                } else {
+                    filename = id.toString() + extension;
+                }
+            } else {
+                // 否则使用UUID
+                filename = UUID.randomUUID().toString() + extension;
+            }
 
             // 保存文件
             Path filePath = Paths.get(UPLOAD_DIR, subDir, filename);
@@ -76,6 +124,35 @@ public class FileUploadController {
         } catch (IOException e) {
             response.put("success", false);
             response.put("message", "文件上传失败: " + e.getMessage());
+            return ResponseEntity.status(500).body(response);
+        }
+    }
+
+    @DeleteMapping("/image")
+    public ResponseEntity<Map<String, Object>> deleteImage(@RequestParam("url") String url) {
+        Map<String, Object> response = new HashMap<>();
+        
+        try {
+            // 从URL中提取文件路径
+            String filePath = url.replace("/uploads/", "");
+            Path fullPath = Paths.get(UPLOAD_DIR, filePath);
+            
+            // 检查文件是否存在
+            if (Files.exists(fullPath)) {
+                // 删除文件
+                Files.delete(fullPath);
+                response.put("success", true);
+                response.put("message", "图片删除成功");
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("success", false);
+                response.put("message", "图片不存在");
+                return ResponseEntity.badRequest().body(response);
+            }
+            
+        } catch (IOException e) {
+            response.put("success", false);
+            response.put("message", "删除图片失败: " + e.getMessage());
             return ResponseEntity.status(500).body(response);
         }
     }

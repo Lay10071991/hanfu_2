@@ -257,33 +257,74 @@ export default {
         return "-";
       }
     },
-    handleFileChange(event) {
+    async handleFileChange(event) {
       const file = event.target.files[0];
-      if (file) {
-        this.uploading = true;
+      if (!file) return;
+
+      if (!file.type.startsWith("image/")) {
+        alert("请选择图片文件");
+        return;
+      }
+
+      if (file.size > 5 * 1024 * 1024) {
+        alert("图片大小不能超过5MB");
+        return;
+      }
+
+      this.uploading = true;
+
+      try {
         const formData = new FormData();
         formData.append("file", file);
+        formData.append("type", "festival_gathering");
+        if (this.form.id) {
+          formData.append("id", this.form.id);
+        }
 
-        fetch("http://localhost:8082/api/upload", {
+        const response = await fetch("http://localhost:8082/api/upload/image", {
           method: "POST",
           body: formData,
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            this.form.image = data.filePath;
-            this.imagePreview = data.filePath.replace(
-              "backend/uploads/",
-              "http://localhost:8082/uploads/",
-            );
-            this.uploading = false;
-          })
-          .catch((error) => {
-            console.error("上传图片失败", error);
-            this.uploading = false;
-          });
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          this.form.image = result.url;
+          this.imagePreview = `http://localhost:8082${result.url}`;
+        } else {
+          alert(result.message || "上传失败");
+        }
+      } catch (error) {
+        console.error("上传失败", error);
+        alert("上传失败,请重试");
+      } finally {
+        this.uploading = false;
       }
     },
-    removeImage() {
+    async removeImage() {
+      // 如果有图片URL，调用后端删除接口
+      if (this.form.image) {
+        try {
+          const response = await fetch("http://localhost:8082/api/upload/image", {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: `url=${encodeURIComponent(this.form.image)}`,
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            if (!data.success) {
+              console.warn("删除图片失败:", data.message);
+            }
+          }
+        } catch (error) {
+          console.error("删除图片失败:", error);
+        }
+      }
+
+      // 清空表单和预览
       this.form.image = "";
       this.imagePreview = null;
     },

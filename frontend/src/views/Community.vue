@@ -480,15 +480,19 @@ const submitPublish = async () => {
     // 上传图片到服务器
     const imageUrls = [];
     console.log("开始上传图片，图片数量:", publishForm.value.images.length);
-    for (const img of publishForm.value.images) {
+    for (let i = 0; i < publishForm.value.images.length; i++) {
+      const img = publishForm.value.images[i];
       console.log("处理图片:", img);
       if (img.raw) {
         // 创建FormData对象
         const formData = new FormData();
         formData.append("file", img.raw);
+        formData.append("type", "community_post");
+        // 对于新帖子，暂时没有ID，使用0作为临时ID
+        // 后端会在没有ID时使用UUID
 
         // 上传图片到community_post类别
-        const uploadUrl = `${API_BASE}/image/upload/community_post`;
+        const uploadUrl = `${API_BASE}/upload/image`;
         console.log("上传图片到:", uploadUrl);
         try {
           const uploadResponse = await fetch(uploadUrl, {
@@ -501,9 +505,9 @@ const submitPublish = async () => {
             const uploadData = await uploadResponse.json();
             console.log("图片上传响应数据:", uploadData);
             if (uploadData.success) {
-              // 使用path字段，因为后端返回的是相对路径
-              imageUrls.push(uploadData.path);
-              console.log("图片上传成功，路径:", uploadData.path);
+              // 使用url字段，因为后端返回的是相对路径
+              imageUrls.push(uploadData.url);
+              console.log("图片上传成功，路径:", uploadData.url);
             } else {
               ElMessage.error(`图片上传失败: ${uploadData.message}`);
               publishing.value = false;
