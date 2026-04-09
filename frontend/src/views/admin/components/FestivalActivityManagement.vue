@@ -52,7 +52,7 @@
 
     <!-- 添加/编辑对话框 -->
     <div v-if="showDialog" class="modal" @click.self="closeDialog">
-      <div class="modal-content">
+      <div class="modal-content large">
         <div class="modal-header">
           <h3>{{ isEdit ? "编辑节庆雅集" : "新增节庆雅集" }}</h3>
           <button class="close-btn" @click="closeDialog">×</button>
@@ -119,7 +119,7 @@
             </div>
             <div class="form-actions">
               <button type="button" @click="closeDialog" class="btn-cancel">取消</button>
-              <button type="submit" class="btn-save">保存</button>
+              <button type="submit" class="btn-primary">保存</button>
             </div>
           </form>
         </div>

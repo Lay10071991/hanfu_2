@@ -41,60 +41,65 @@
     <!-- 添加/编辑对话框 -->
     <div v-if="showDialog" class="modal" @click.self="closeDialog">
       <div class="modal-content large">
-        <h3>{{ isEdit ? "编辑礼仪" : "新增礼仪" }}</h3>
-        <form @submit.prevent="saveItem">
-          <div class="form-row">
-            <div class="form-group">
-              <label>礼仪名称</label>
-              <input v-model="form.name" required />
+        <div class="modal-header">
+          <h3>{{ isEdit ? "编辑礼仪" : "新增礼仪" }}</h3>
+          <button class="close-btn" @click="closeDialog">×</button>
+        </div>
+        <div class="modal-body">
+          <form @submit.prevent="saveItem">
+            <div class="form-row">
+              <div class="form-group">
+                <label>礼仪名称</label>
+                <input v-model="form.name" required />
+              </div>
+              <div class="form-group">
+                <label>所属朝代</label>
+                <input v-model="form.period" required />
+              </div>
             </div>
-            <div class="form-group">
-              <label>所属朝代</label>
-              <input v-model="form.period" required />
-            </div>
-          </div>
 
-          <div class="form-group">
-            <label>示意图</label>
-            <div class="upload-area">
-              <input
-                type="file"
-                ref="fileInput"
-                @change="handleFileChange"
-                accept="image/*"
-                style="display: none"
-              />
-              <div v-if="!imagePreview" class="upload-placeholder" @click="$refs.fileInput.click()">
-                <span>点击上传图片</span>
+            <div class="form-group">
+              <label>示意图</label>
+              <div class="upload-area">
+                <input
+                  type="file"
+                  ref="fileInput"
+                  @change="handleFileChange"
+                  accept="image/*"
+                  style="display: none"
+                />
+                <div v-if="!imagePreview" class="upload-placeholder" @click="$refs.fileInput.click()">
+                  <span>点击上传图片</span>
+                </div>
+                <div v-else class="image-preview">
+                  <img :src="imagePreview" alt="预览图" />
+                  <button type="button" @click="removeImage" class="btn-remove">删除</button>
+                </div>
               </div>
-              <div v-else class="image-preview">
-                <img :src="imagePreview" alt="预览图" />
-                <button type="button" @click="removeImage" class="btn-remove">删除</button>
-              </div>
+              <small v-if="uploading">上传中...</small>
             </div>
-            <small v-if="uploading">上传中...</small>
-          </div>
-          <div class="form-group">
-            <label>礼仪描述</label>
-            <textarea v-model="form.description" rows="3" required></textarea>
-          </div>
-          <div class="form-group">
-            <label>礼仪特点(用|分隔)</label>
-            <textarea v-model="form.features" rows="2"></textarea>
-          </div>
-          <div class="form-group">
-            <label>行礼步骤(用|分隔)</label>
-            <textarea v-model="form.steps" rows="3"></textarea>
-          </div>
-          <div class="form-group">
-            <label>注意事项</label>
-            <textarea v-model="form.note" rows="2"></textarea>
-          </div>
-          <div class="form-actions">
-            <button type="button" @click="closeDialog" class="btn-cancel">取消</button>
-            <button type="submit" class="btn-primary">保存</button>
-          </div>
-        </form>
+            <div class="form-group">
+              <label>礼仪描述</label>
+              <textarea v-model="form.description" rows="3" required></textarea>
+            </div>
+            <div class="form-group">
+              <label>礼仪特点(用|分隔)</label>
+              <textarea v-model="form.features" rows="2"></textarea>
+            </div>
+            <div class="form-group">
+              <label>行礼步骤(用|分隔)</label>
+              <textarea v-model="form.steps" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+              <label>注意事项</label>
+              <textarea v-model="form.note" rows="2"></textarea>
+            </div>
+            <div class="form-actions">
+              <button type="button" @click="closeDialog" class="btn-cancel">取消</button>
+              <button type="submit" class="btn-primary">保存</button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </div>

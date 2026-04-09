@@ -182,14 +182,10 @@ export default {
   },
   mounted() {
     this.checkAuth();
-    // 优先从localStorage中恢复之前的活动菜单
-    const savedMenu = localStorage.getItem("activeMenu");
-    if (savedMenu) {
-      this.activeMenu = savedMenu;
-    } else {
-      // 如果没有保存的菜单状态，默认显示数据统计页面
-      this.activeMenu = "statistics";
-    }
+    // 每次登录时都默认显示数据统计页面
+    this.activeMenu = "statistics";
+    // 保存默认菜单状态到localStorage
+    localStorage.setItem("activeMenu", this.activeMenu);
   },
   methods: {
     toggleSubMenu(item) {

@@ -47,7 +47,7 @@
 
     <!-- 查看详情对话框 -->
     <div v-if="showViewDialog" class="modal" @click.self="closeViewDialog">
-      <div class="modal-content">
+      <div class="modal-content large">
         <div class="modal-header">
           <h3>帖子详情</h3>
           <button class="close-btn" @click="closeViewDialog">×</button>
