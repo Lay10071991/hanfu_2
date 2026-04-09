@@ -110,7 +110,10 @@ public class FileUploadController {
 
             // 保存文件
             Path filePath = Paths.get(UPLOAD_DIR, subDir, filename);
-            Files.write(filePath, file.getBytes());
+            // 确保目录存在
+            Files.createDirectories(filePath.getParent());
+            // 覆盖已存在的文件
+            Files.write(filePath, file.getBytes(), java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING);
 
             // 返回文件访问路径
             String fileUrl = "/uploads/" + subDir + "/" + filename;

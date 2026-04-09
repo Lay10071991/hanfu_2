@@ -10,7 +10,13 @@
     <div class="table-container">
       <table>
         <thead>
-          <tr><th>序号</th><th>节日名称</th><th>日期</th><th>季节</th><th>操作</th></tr>
+          <tr>
+            <th>序号</th>
+            <th>节日名称</th>
+            <th>日期</th>
+            <th>季节</th>
+            <th>操作</th>
+          </tr>
         </thead>
         <tbody>
           <tr v-for="(item, index) in items" :key="item.id">
@@ -33,7 +39,7 @@
     </div>
     <div v-if="showDialog" class="modal" @click.self="closeDialog">
       <div class="modal-content">
-        <h3>{{ isEdit ? '编辑节日' : '新增节日' }}</h3>
+        <h3>{{ isEdit ? "编辑节日" : "新增节日" }}</h3>
         <form @submit.prevent="saveItem">
           <div class="form-group">
             <label>节日名称</label>
@@ -55,10 +61,10 @@
           <div class="form-group">
             <label>图片</label>
             <div class="upload-area">
-              <input 
-                type="file" 
-                ref="fileInput" 
-                @change="handleFileChange" 
+              <input
+                type="file"
+                ref="fileInput"
+                @change="handleFileChange"
                 accept="image/*"
                 style="display: none"
               />
@@ -92,7 +98,7 @@
 
 <script>
 export default {
-  name: 'FestivalManagement',
+  name: "FestivalManagement",
   data() {
     return {
       items: [],
@@ -105,189 +111,191 @@ export default {
       imagePreview: null,
       form: {
         id: null,
-        name: '',
-        date: '',
-        season: 'spring',
-        image: '',
-        description: '',
-        customs: ''
-      }
-    }
+        name: "",
+        date: "",
+        season: "spring",
+        image: "",
+        description: "",
+        customs: "",
+      },
+    };
   },
   mounted() {
-    this.loadItems()
+    this.loadItems();
   },
   methods: {
     async loadItems() {
       try {
-        const response = await fetch('http://localhost:8082/api/festival')
-        const allItems = await response.json()
-        this.totalPages = Math.ceil(allItems.length / this.pageSize)
-        const start = (this.currentPage - 1) * this.pageSize
-        this.items = allItems.slice(start, start + this.pageSize)
+        const response = await fetch("http://localhost:8082/api/festival");
+        const allItems = await response.json();
+        this.totalPages = Math.ceil(allItems.length / this.pageSize);
+        const start = (this.currentPage - 1) * this.pageSize;
+        this.items = allItems.slice(start, start + this.pageSize);
       } catch (error) {
-        console.error('加载失败', error)
+        console.error("加载失败", error);
       }
     },
     showAddDialog() {
-      this.isEdit = false
+      this.isEdit = false;
       this.form = {
         id: null,
-        name: '',
-        date: '',
-        season: 'spring',
-        image: '',
-        description: '',
-        customs: ''
-      }
-      this.imagePreview = null
-      this.showDialog = true
+        name: "",
+        date: "",
+        season: "spring",
+        image: "",
+        description: "",
+        customs: "",
+      };
+      this.imagePreview = null;
+      this.showDialog = true;
     },
     editItem(item) {
-      this.isEdit = true
-      this.form = { ...item }
-      this.imagePreview = item.image ? `http://localhost:8082${item.image}` : null
-      this.showDialog = true
+      this.isEdit = true;
+      this.form = { ...item };
+      this.imagePreview = item.image ? `http://localhost:8082${item.image}` : null;
+      this.showDialog = true;
     },
     async handleFileChange(event) {
-      const file = event.target.files[0]
-      if (!file) return
+      const file = event.target.files[0];
+      if (!file) return;
 
-      if (!file.type.startsWith('image/')) {
-        alert('请选择图片文件')
-        return
+      if (!file.type.startsWith("image/")) {
+        alert("请选择图片文件");
+        return;
       }
 
       if (file.size > 5 * 1024 * 1024) {
-        alert('图片大小不能超过5MB')
-        return
+        alert("图片大小不能超过5MB");
+        return;
       }
 
-      this.uploading = true
+      this.uploading = true;
 
       try {
-        const formData = new FormData()
-        formData.append('file', file)
-        formData.append('type', 'festival_custom')
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("type", "festival_custom");
         if (this.form.id) {
-          formData.append('id', this.form.id)
+          formData.append("id", this.form.id);
         }
 
-        const response = await fetch('http://localhost:8082/api/upload/image', {
-          method: 'POST',
-          body: formData
-        })
+        const response = await fetch("http://localhost:8082/api/upload/image", {
+          method: "POST",
+          body: formData,
+        });
 
-        const result = await response.json()
+        const result = await response.json();
 
         if (result.success) {
           this.form.image = result.url
-          this.imagePreview = `http://localhost:8082${result.url}`
+          this.imagePreview = `http://localhost:8082${result.url}?t=${new Date().getTime()}`
         } else {
           alert(result.message || '上传失败')
         }
       } catch (error) {
-        console.error('上传失败', error)
-        alert('上传失败,请重试')
+        console.error("上传失败", error);
+        alert("上传失败,请重试");
       } finally {
-        this.uploading = false
+        this.uploading = false;
+        // 清空文件输入框，确保可以选择相同的图片
+        event.target.value = "";
       }
     },
     async removeImage() {
       // 如果有图片URL，调用后端删除接口
       if (this.form.image) {
         try {
-          const response = await fetch('http://localhost:8082/api/upload/image', {
-            method: 'DELETE',
+          const response = await fetch("http://localhost:8082/api/upload/image", {
+            method: "DELETE",
             headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
+              "Content-Type": "application/x-www-form-urlencoded",
             },
             body: `url=${encodeURIComponent(this.form.image)}`,
-          })
+          });
 
           if (response.ok) {
-            const data = await response.json()
+            const data = await response.json();
             if (!data.success) {
-              console.warn('删除图片失败:', data.message)
+              console.warn("删除图片失败:", data.message);
             }
           }
         } catch (error) {
-          console.error('删除图片失败:', error)
+          console.error("删除图片失败:", error);
         }
       }
-      
+
       // 清空表单和预览
-      this.form.image = ''
-      this.imagePreview = null
+      this.form.image = "";
+      this.imagePreview = null;
       if (this.$refs.fileInput) {
-        this.$refs.fileInput.value = ''
+        this.$refs.fileInput.value = "";
       }
     },
     async saveItem() {
       if (!this.form.image) {
-        alert('请上传图片')
-        return
+        alert("请上传图片");
+        return;
       }
 
       try {
-        const url = this.isEdit 
+        const url = this.isEdit
           ? `http://localhost:8082/api/festival/${this.form.id}`
-          : 'http://localhost:8082/api/festival'
-        
+          : "http://localhost:8082/api/festival";
+
         await fetch(url, {
-          method: this.isEdit ? 'PUT' : 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(this.form)
-        })
-        
-        this.closeDialog()
-        this.loadItems()
+          method: this.isEdit ? "PUT" : "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(this.form),
+        });
+
+        this.closeDialog();
+        this.loadItems();
       } catch (error) {
-        console.error('保存失败', error)
+        console.error("保存失败", error);
       }
     },
     async deleteItem(id) {
-      if (confirm('确定要删除吗？')) {
+      if (confirm("确定要删除吗？")) {
         try {
           await fetch(`http://localhost:8082/api/festival/${id}`, {
-            method: 'DELETE'
-          })
-          this.loadItems()
+            method: "DELETE",
+          });
+          this.loadItems();
         } catch (error) {
-          console.error('删除失败', error)
+          console.error("删除失败", error);
         }
       }
     },
     closeDialog() {
-      this.showDialog = false
+      this.showDialog = false;
     },
     prevPage() {
       if (this.currentPage > 1) {
-        this.currentPage--
-        this.loadItems()
+        this.currentPage--;
+        this.loadItems();
       }
     },
     nextPage() {
       if (this.currentPage < this.totalPages) {
-        this.currentPage++
-        this.loadItems()
+        this.currentPage++;
+        this.loadItems();
       }
     },
     getSeasonText(season) {
       const map = {
-        spring: '春季',
-        summer: '夏季',
-        autumn: '秋季',
-        winter: '冬季'
-      }
-      return map[season] || season
-    }
-  }
-}
+        spring: "春季",
+        summer: "夏季",
+        autumn: "秋季",
+        winter: "冬季",
+      };
+      return map[season] || season;
+    },
+  },
+};
 </script>
 
 <style scoped>
-@import './management-common.css';
+@import "./management-common.css";
 
 .upload-area {
   margin-top: 8px;
@@ -303,7 +311,7 @@ export default {
 }
 
 .upload-placeholder:hover {
-  border-color: #8B4513;
+  border-color: #8b4513;
   background: #f9f9f9;
 }
 

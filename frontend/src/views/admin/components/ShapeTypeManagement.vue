@@ -224,10 +224,10 @@ export default {
     handleFileChange(event) {
       const file = event.target.files[0];
       if (file) {
-        this.uploadImage(file);
+        this.uploadImage(file, event.target);
       }
     },
-    async uploadImage(file) {
+    async uploadImage(file, fileInput) {
       this.uploading = true;
       const formData = new FormData();
       formData.append("file", file);
@@ -246,7 +246,7 @@ export default {
           const data = await response.json();
           if (data.success) {
             this.form.image = data.url;
-            this.imagePreview = `http://localhost:8082${data.url}`;
+            this.imagePreview = `http://localhost:8082${data.url}?t=${new Date().getTime()}`;
           } else {
             alert(data.message || "上传失败");
           }
@@ -258,6 +258,10 @@ export default {
         alert("上传图片失败");
       } finally {
         this.uploading = false;
+        // 清空文件输入框，确保可以选择相同的图片
+        if (fileInput) {
+          fileInput.value = "";
+        }
       }
     },
     async removeImage() {
@@ -282,7 +286,7 @@ export default {
           console.error("删除图片失败:", error);
         }
       }
-      
+
       // 清空表单和预览
       this.form.image = "";
       this.imagePreview = null;

@@ -198,7 +198,7 @@ export default {
 
         if (result.success) {
           this.form.image = result.url;
-          this.imagePreview = `http://localhost:8082${result.url}`;
+          this.imagePreview = `http://localhost:8082${result.url}?t=${new Date().getTime()}`;
         } else {
           alert(result.message || "上传失败");
         }
@@ -207,6 +207,8 @@ export default {
         alert("上传失败,请重试");
       } finally {
         this.uploading = false;
+        // 清空文件输入框，确保可以选择相同的图片
+        event.target.value = "";
       }
     },
     async removeImage() {
@@ -231,7 +233,7 @@ export default {
           console.error("删除图片失败:", error);
         }
       }
-      
+
       // 清空表单和预览
       this.form.image = "";
       this.imagePreview = null;
