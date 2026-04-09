@@ -17,6 +17,14 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/login-bg.jpg")
                 .addResourceLocations("file:E:/hanfu-cultural-platform/frontend/public/login-bg.jpg");
         
+        // 配置基本形制图片
+        registry.addResourceHandler("/uploads/basic_style/**")
+                .addResourceLocations("file:E:/hanfu-cultural-platform/backend/uploads/basic_style/");
+        
+        // 配置千载衣冠图片
+        registry.addResourceHandler("/uploads/clothing_show/**")
+                .addResourceLocations("file:E:/hanfu-cultural-platform/backend/uploads/clothing_show/");
+        
         // 配置图案象征图片
         registry.addResourceHandler("/pattern-symbols/**")
                 .addResourceLocations("file:E:/hanfu-cultural-platform/backend/uploads/pattern_symbol/");

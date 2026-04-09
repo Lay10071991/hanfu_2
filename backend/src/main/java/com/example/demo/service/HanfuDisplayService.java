@@ -31,7 +31,8 @@ public class HanfuDisplayService {
     }
 
     public HanfuDisplay createHanfuDisplay(HanfuDisplay hanfuDisplay) {
-        return hanfuDisplayRepository.save(hanfuDisplay);
+        HanfuDisplay saved = hanfuDisplayRepository.save(hanfuDisplay);
+        return saved;
     }
 
     public HanfuDisplay updateHanfuDisplay(Long id, HanfuDisplay hanfuDisplay) {
@@ -40,11 +41,24 @@ public class HanfuDisplayService {
             existing.setName(hanfuDisplay.getName());
             existing.setDescription(hanfuDisplay.getDescription());
             existing.setContent(hanfuDisplay.getContent());
-            existing.setImage(hanfuDisplay.getImage());
             existing.setSortOrder(hanfuDisplay.getSortOrder());
             return hanfuDisplayRepository.save(existing);
         }
         return null;
+    }
+
+    public void saveHanfuImages(Long hanfuId, List<String> imagePaths) {
+        // 先删除旧的图片
+        hanfuImageRepository.deleteByHanfuId(hanfuId);
+        
+        // 保存新的图片
+        for (int i = 0; i < imagePaths.size(); i++) {
+            HanfuImage image = new HanfuImage();
+            image.setHanfuId(hanfuId);
+            image.setImagePath(imagePaths.get(i));
+            image.setSortOrder(i);
+            hanfuImageRepository.save(image);
+        }
     }
 
     public void deleteHanfuDisplay(Long id) {

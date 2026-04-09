@@ -1,5 +1,5 @@
 <template>
-  <div class="management-container">
+  <div class="management-container hanfu-display">
     <div class="header">
       <h2>千载衣冠管理</h2>
       <div class="header-buttons">
@@ -46,25 +46,30 @@
             <label>详细内容</label>
             <textarea v-model="form.content" rows="4" placeholder="请输入详细内容"></textarea>
           </div>
+
           <div class="form-group">
-            <label>主图片</label>
+            <label>更多图片</label>
             <div class="upload-area">
               <input
                 type="file"
-                ref="fileInput"
-                @change="handleFileChange"
+                ref="filesInput"
+                @change="handleFilesChange"
                 accept="image/*"
+                multiple
                 style="display: none"
               />
-              <div v-if="!imagePreview" class="upload-placeholder" @click="$refs.fileInput.click()">
-                <span>点击上传图片</span>
-              </div>
-              <div v-else class="image-preview">
-                <img :src="imagePreview" alt="预览图" />
-                <button type="button" @click="removeImage" class="btn-remove">删除</button>
+              <div class="upload-placeholder" @click="$refs.filesInput.click()">
+                <span>点击上传多张图片</span>
               </div>
             </div>
-            <small v-if="uploading">上传中...</small>
+            <div v-if="form.images && form.images.length > 0" class="images-preview">
+              <div v-for="(img, index) in form.images" :key="index" class="image-item">
+                <img :src="img.preview || getImageUrl(img)" alt="预览图" />
+                <button type="button" @click="removeImageByIndex(index)" class="btn-remove">
+                  删除
+                </button>
+              </div>
+            </div>
           </div>
           <div class="form-actions">
             <button type="button" @click="closeDialog" class="btn-cancel">取消</button>
@@ -77,6 +82,7 @@
 </template>
 
 <script>
+import { getImageUrl } from "../../../utils/imageHelper";
 export default {
   name: "HanfuDisplayManagement",
   data() {
@@ -91,7 +97,7 @@ export default {
         name: "",
         description: "",
         content: "",
-        image: "",
+        images: [],
       },
     };
   },
@@ -103,7 +109,23 @@ export default {
       try {
         const response = await fetch("http://localhost:8082/api/hanfu-display");
         if (response.ok) {
-          this.items = await response.json();
+          const items = await response.json();
+          // 加载每个衣冠的图片
+          for (const item of items) {
+            try {
+              const imagesResponse = await fetch(
+                `http://localhost:8082/api/hanfu-display/${item.id}/images`,
+              );
+              if (imagesResponse.ok) {
+                const images = await imagesResponse.json();
+                item.images = images.map((img) => img.imagePath);
+              }
+            } catch (error) {
+              console.error(`加载衣冠 ${item.id} 的图片失败:`, error);
+              item.images = [];
+            }
+          }
+          this.items = items;
         } else {
           const errorText = await response.text();
           console.error("加载衣冠数据失败:", response.status, response.statusText, errorText);
@@ -121,34 +143,57 @@ export default {
         name: "",
         description: "",
         content: "",
-        image: "",
+        images: [],
       };
-      this.imagePreview = null;
       this.showDialog = true;
+      // 阻止背景滚动
+      document.body.style.overflow = "hidden";
     },
     editItem(item) {
       this.isEdit = true;
       this.form = { ...item };
-      // 处理图片预览URL
-      if (item.image) {
-        // 如果已经是完整URL,直接使用
-        if (item.image.startsWith("http://") || item.image.startsWith("https://")) {
-          this.imagePreview = item.image;
-        } else {
-          // 如果是相对路径,添加服务器地址
-          this.imagePreview = `http://localhost:8082${item.image}`;
-        }
-      } else {
-        this.imagePreview = null;
+      // 确保images数组存在
+      if (!this.form.images) {
+        this.form.images = [];
+      }
+      // 处理多张图片
+      if (this.form.images && Array.isArray(this.form.images)) {
+        this.form.images = this.form.images.map((img) => {
+          if (typeof img === "string") {
+            return {
+              url: img,
+              preview: getImageUrl(img) + `?t=${new Date().getTime()}`,
+            };
+          }
+          return img;
+        });
       }
       this.showDialog = true;
+      // 阻止背景滚动
+      document.body.style.overflow = "hidden";
     },
     closeDialog() {
       this.showDialog = false;
-      this.imagePreview = null;
+      // 清空图片数组
+      if (this.form) {
+        this.form.images = [];
+      }
+      // 恢复背景滚动
+      document.body.style.overflow = "auto";
     },
     async saveItem() {
       try {
+        // 准备保存的数据，处理images数组
+        const saveData = { ...this.form };
+        if (saveData.images && Array.isArray(saveData.images)) {
+          saveData.images = saveData.images.map((img) => {
+            if (typeof img === "object" && img.url) {
+              return img.url;
+            }
+            return img;
+          });
+        }
+
         const url = this.isEdit
           ? `http://localhost:8082/api/hanfu-display/${this.form.id}`
           : "http://localhost:8082/api/hanfu-display";
@@ -159,10 +204,32 @@ export default {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(this.form),
+          body: JSON.stringify(saveData),
         });
 
         if (response.ok) {
+          const savedItem = await response.json();
+          // 保存多张图片
+          if (this.form.images && this.form.images.length > 0) {
+            try {
+              const imagePaths = this.form.images.map((img) => img.url || img);
+              const imagesResponse = await fetch(
+                `http://localhost:8082/api/hanfu-display/${savedItem.id}/images`,
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(imagePaths),
+                },
+              );
+              if (!imagesResponse.ok) {
+                console.error("保存图片失败");
+              }
+            } catch (error) {
+              console.error("保存图片失败:", error);
+            }
+          }
           alert(this.isEdit ? "更新成功" : "添加成功");
           this.closeDialog();
           this.loadItems();
@@ -196,16 +263,27 @@ export default {
     handleFileChange(event) {
       const file = event.target.files[0];
       if (file) {
-        this.uploadImage(file, event.target);
+        this.uploadImage(file, event.target, false);
       }
     },
-    async uploadImage(file, fileInput) {
+    handleFilesChange(event) {
+      const files = event.target.files;
+      if (files && files.length > 0) {
+        Array.from(files).forEach((file, index) => {
+          this.uploadImage(file, event.target, true, index);
+        });
+      }
+    },
+    async uploadImage(file, fileInput, isMultiple = false, index = 0) {
       this.uploading = true;
       const formData = new FormData();
       formData.append("file", file);
       formData.append("type", "clothing_show");
       if (this.form.id) {
         formData.append("id", this.form.id);
+        if (isMultiple) {
+          formData.append("index", this.form.images.length + 1);
+        }
       }
 
       try {
@@ -217,8 +295,17 @@ export default {
         if (response.ok) {
           const data = await response.json();
           if (data.success) {
-            this.form.image = data.url;
-            this.imagePreview = `http://localhost:8082${data.url}?t=${new Date().getTime()}`;
+            if (isMultiple) {
+              // 处理多张图片
+              this.form.images.push({
+                url: data.url,
+                preview: getImageUrl(data.url) + `?t=${new Date().getTime()}`,
+              });
+            } else {
+              // 处理主图片
+              this.form.image = data.url;
+              this.imagePreview = getImageUrl(data.url) + `?t=${new Date().getTime()}`;
+            }
           } else {
             alert(data.message || "上传失败");
           }
@@ -266,180 +353,232 @@ export default {
         this.$refs.fileInput.value = "";
       }
     },
+    async removeImageByIndex(index) {
+      const img = this.form.images[index];
+      if (img && (img.url || img)) {
+        const url = img.url || img;
+        try {
+          const response = await fetch("http://localhost:8082/api/upload/image", {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: `url=${encodeURIComponent(url)}`,
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            if (!data.success) {
+              console.warn("删除图片失败:", data.message);
+            }
+          }
+        } catch (error) {
+          console.error("删除图片失败:", error);
+        }
+      }
+
+      // 从数组中移除图片
+      this.form.images.splice(index, 1);
+    },
   },
 };
 </script>
 
 <style scoped>
-.management-container {
-  padding: 20px;
+@import "./management-common.css";
+
+/* 修复表格横线不正确问题 */
+.hanfu-display table {
+  border-collapse: collapse;
+  width: 100%;
 }
 
-.header {
+.hanfu-display th,
+.hanfu-display td {
+  border-bottom: 1px solid #eee;
+  vertical-align: top;
+  padding: 12px 15px;
+}
+
+.hanfu-display tr:hover {
+  background: #f9f9f9;
+}
+
+/* 调整操作列布局，确保横线正确显示 */
+.hanfu-display td:last-child {
+  text-align: right;
+  padding-right: 20px;
+}
+
+.hanfu-display td:last-child button {
+  margin-left: 5px;
+}
+
+/* 美化编辑弹窗 */
+.modal-content {
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  animation: modalFadeIn 0.3s ease-in-out;
+  max-height: 90vh;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+  flex-direction: column;
 }
 
-.header h2 {
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-content h3 {
   margin: 0;
-  color: #8b4513;
-}
-
-.header-buttons {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.btn-refresh {
-  padding: 8px 15px;
-  background: #6c757d;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.btn-primary {
+  padding: 20px;
   background: linear-gradient(135deg, #8b4513 0%, #d2691e 100%);
   color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.table-container {
-  background: white;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th,
-td {
-  padding: 12px;
-  text-align: left;
-  border-bottom: 1px solid #eee;
-}
-
-th {
-  background: #f5f5f5;
+  font-size: 18px;
   font-weight: 600;
-  color: #8b4513;
+  border-bottom: none;
 }
 
-.btn-edit {
-  background: #d4a76a;
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-right: 8px;
-}
-
-.btn-delete {
-  background: #f56c6c;
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.modal-content {
-  background: white;
-  padding: 30px;
-  border-radius: 8px;
-  width: 90%;
-  max-width: 600px;
-  max-height: 90vh;
+.modal-content form {
+  padding: 25px;
   overflow-y: auto;
+  overscroll-behavior: contain;
+  flex: 1;
+  touch-action: auto;
+}
+
+/* 阻止背景滚动 */
+.modal {
+  touch-action: none;
 }
 
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
 .form-group label {
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
+  color: #555;
   font-weight: 600;
-  color: #333;
+  font-size: 14px;
 }
 
 .form-group input,
 .form-group textarea {
   width: 100%;
-  padding: 8px 12px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  padding: 12px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
   font-size: 14px;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #d2691e;
+  box-shadow: 0 0 0 3px rgba(210, 105, 30, 0.1);
+}
+
+.form-group textarea {
+  min-height: 120px;
+  resize: vertical;
+  font-family: inherit;
 }
 
 .form-group small {
   color: #999;
   font-size: 12px;
+  display: block;
+  margin-top: 4px;
 }
 
 .form-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
-  margin-top: 20px;
+  gap: 12px;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.btn-cancel,
+.btn-primary {
+  padding: 10px 24px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
 }
 
 .btn-cancel {
-  background: #909399;
+  background: #f5f5f5;
+  color: #333;
+  border: 1px solid #e0e0e0;
+}
+
+.btn-cancel:hover {
+  background: #e0e0e0;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #8b4513 0%, #d2691e 100%);
   color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 4px;
-  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(210, 105, 30, 0.3);
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+  box-shadow: 0 6px 16px rgba(210, 105, 30, 0.4);
+  transform: translateY(-1px);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(210, 105, 30, 0.3);
 }
 
 .upload-area {
-  border: 2px dashed #ddd;
-  border-radius: 4px;
-  padding: 20px;
+  border: 2px dashed #e0e0e0;
+  border-radius: 8px;
+  padding: 25px;
   text-align: center;
   cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.upload-area:hover {
+  border-color: #d2691e;
+  background-color: rgba(210, 105, 30, 0.05);
 }
 
 .upload-placeholder {
   color: #999;
+  font-size: 14px;
 }
 
 .image-preview {
   position: relative;
   display: inline-block;
+  margin-top: 10px;
 }
 
 .image-preview img {
   max-width: 200px;
   max-height: 200px;
-  border-radius: 4px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .btn-remove {
@@ -450,8 +589,63 @@ th {
   color: white;
   border: none;
   border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.btn-remove:hover {
+  background: #f78989;
+  transform: scale(1.1);
+}
+
+/* 多张图片预览样式 */
+.images-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.image-item {
+  position: relative;
+  display: inline-block;
+}
+
+.image-item img {
+  max-width: 120px;
+  max-height: 120px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.image-item .btn-remove {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: #f56c6c;
+  color: white;
+  border: none;
+  border-radius: 50%;
   width: 24px;
   height: 24px;
   cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.image-item .btn-remove:hover {
+  background: #f78989;
+  transform: scale(1.1);
 }
 </style>

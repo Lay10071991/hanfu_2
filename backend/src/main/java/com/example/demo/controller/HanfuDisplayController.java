@@ -44,4 +44,9 @@ public class HanfuDisplayController {
     public void deleteHanfuDisplay(@PathVariable Long id) {
         hanfuDisplayService.deleteHanfuDisplay(id);
     }
+
+    @PostMapping("/{id}/images")
+    public void saveHanfuImages(@PathVariable Long id, @RequestBody List<String> imagePaths) {
+        hanfuDisplayService.saveHanfuImages(id, imagePaths);
+    }
 }

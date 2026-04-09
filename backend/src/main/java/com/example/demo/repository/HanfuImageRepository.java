@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface HanfuImageRepository extends JpaRepository<HanfuImage, Long> {
     List<HanfuImage> findByHanfuId(Long hanfuId);
+    void deleteByHanfuId(Long hanfuId);
 }
