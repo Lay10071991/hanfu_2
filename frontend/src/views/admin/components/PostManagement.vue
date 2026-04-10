@@ -55,12 +55,14 @@
           <div v-if="selectedPost.images && selectedPost.images.length > 0" class="detail-images">
             <p><strong>图片：</strong></p>
             <div class="images-grid">
-              <img
-                v-for="(img, index) in selectedPost.images"
-                :key="index"
-                :src="getImageUrl(typeof img === 'object' ? img.url : img)"
-                :alt="`图片 ${index + 1}`"
-              />
+              <div v-for="(img, index) in selectedPost.images" :key="index" class="image-item">
+                <img
+                  :src="getImageUrl(img)"
+                  :alt="`图片 ${index + 1}`"
+                  @error="handleImageError($event, index)"
+                />
+                <div class="image-label">图片 {{ index + 1 }}</div>
+              </div>
             </div>
           </div>
           <div v-else-if="selectedPost.imageUrl" class="detail-image">
@@ -168,22 +170,26 @@ export default {
       }
     },
 
-    getImageUrl(url) {
-      if (!url) return "";
+    getImageUrl(img) {
+      if (!img) return "";
 
-      // 如果是数组，取第一张图片
-      if (Array.isArray(url) && url.length > 0) {
-        // 检查数组元素是否是对象，如果是，取其url属性
-        if (typeof url[0] === "object" && url[0].url) {
-          url = url[0].url;
-        } else {
-          url = url[0];
-        }
+      // 处理不同类型的图片数据
+      let url = img;
+      if (typeof img === "object") {
+        url = img.url || img.imageUrl || "";
       }
+
+      if (!url) return "";
 
       // 如果已经是完整URL,直接返回
       if (url.startsWith("http://") || url.startsWith("https://")) {
         return url;
+      }
+
+      // 处理数据库中存储的社区帖子图片路径（以 backend/uploads/community_post/ 开头）
+      if (url.startsWith("backend/uploads/community_post/")) {
+        const filename = url.replace("backend/uploads/community_post/", "");
+        return `http://localhost:8082/community_post/${filename}`;
       }
 
       // 处理社区帖子图片路径（以 community_post/ 开头的相对路径）
@@ -208,6 +214,12 @@ export default {
 
       // 如果是绝对路径,添加服务器地址
       return `http://localhost:8082${url}`;
+    },
+
+    handleImageError(event, index) {
+      // 图片加载失败时显示占位符
+      event.target.src =
+        "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Crect width='200' height='200' fill='%23f0f0f0'/%3E%3Ctext x='50%25' y='50%25' font-size='14' text-anchor='middle' fill='%23999' dy='.3em'%3E图片加载失败%3C/text%3E%3C/svg%3E";
     },
 
     async deletePost(id) {
@@ -271,15 +283,30 @@ export default {
 .images-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 15px;
   margin-top: 10px;
 }
 
-.images-grid img {
-  max-width: 200px;
+.image-item {
+  flex: 0 0 calc(33.333% - 10px);
+  max-width: calc(33.333% - 10px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.image-item img {
+  width: 100%;
   max-height: 200px;
   border-radius: 8px;
   object-fit: cover;
+  margin-bottom: 5px;
+}
+
+.image-label {
+  font-size: 12px;
+  color: #666;
+  text-align: center;
 }
 
 .upload-area {
