@@ -14,7 +14,7 @@
             <th>序号</th>
             <th>标题</th>
             <th>作者</th>
-            <th>分类</th>
+            <th>标签</th>
             <th>点赞数</th>
             <th>评论数</th>
             <th>发布日期</th>
@@ -47,38 +47,41 @@
 
     <!-- 查看详情对话框 -->
     <div v-if="showViewDialog" class="modal" @click.self="closeViewDialog">
-      <div class="modal-content large">
-        <div class="modal-header">
-          <h3>帖子详情</h3>
-          <button class="close-btn" @click="closeViewDialog">×</button>
-        </div>
-        <div class="modal-body">
-          <div class="post-detail">
-            <p><strong>标题：</strong>{{ selectedPost.title }}</p>
-            <p><strong>分类：</strong>{{ selectedPost.category }}</p>
-            <div v-if="selectedPost.imageUrl" class="detail-image">
-              <p><strong>封面图片：</strong></p>
-              <img :src="getImageUrl(selectedPost.imageUrl)" alt="封面图" />
-            </div>
-            <p><strong>简介：</strong></p>
-            <p>{{ selectedPost.description }}</p>
-            <p><strong>内容：</strong></p>
-            <p>{{ selectedPost.content }}</p>
-            <p><strong>评论：</strong></p>
-            <div v-if="postComments.length > 0" class="comments-list">
-              <div v-for="comment in postComments" :key="comment.id" class="comment-item">
-                <div class="comment-header">
-                  <span class="comment-username">{{ comment.username }}</span>
-                  <span class="comment-time">{{ formatDate(comment.createTime) }}</span>
-                </div>
-                <div class="comment-content">{{ comment.content }}</div>
-                <div class="comment-actions">
-                  <button @click="deleteComment(comment.id)" class="btn-delete btn-sm">删除</button>
-                </div>
+      <div class="modal-content">
+        <h3>帖子详情</h3>
+        <div class="post-detail">
+          <p><strong>标题：</strong>{{ selectedPost.title }}</p>
+          <p><strong>标签：</strong>{{ selectedPost.category }}</p>
+          <div v-if="selectedPost.imageUrl" class="detail-image">
+            <p><strong>封面图片：</strong></p>
+            <img :src="getImageUrl(selectedPost.imageUrl)" alt="封面图" />
+          </div>
+          <div v-else-if="selectedPost.image" class="detail-image">
+            <p><strong>封面图片：</strong></p>
+            <img :src="getImageUrl(selectedPost.image)" alt="封面图" />
+          </div>
+          <p><strong>简介：</strong></p>
+          <p>{{ selectedPost.description }}</p>
+          <p><strong>内容：</strong></p>
+          <p>{{ selectedPost.content }}</p>
+          <p><strong>评论：</strong></p>
+          <div v-if="postComments.length > 0" class="comments-list">
+            <div v-for="comment in postComments" :key="comment.id" class="comment-item">
+              <div class="comment-header">
+                <span class="comment-username">{{
+                  comment.username || comment.userName || "匿名用户"
+                }}</span>
+                <span class="comment-time">{{
+                  comment.createTime ? formatDate(comment.createTime) : "未知时间"
+                }}</span>
+              </div>
+              <div class="comment-content">{{ comment.content }}</div>
+              <div class="comment-actions">
+                <button @click="deleteComment(comment.id)" class="btn-delete btn-sm">删除</button>
               </div>
             </div>
-            <div v-else class="no-comments">暂无评论</div>
           </div>
+          <div v-else class="no-comments">暂无评论</div>
           <div class="form-actions">
             <button @click="closeViewDialog" class="btn-cancel">关闭</button>
           </div>
@@ -321,5 +324,78 @@ export default {
   margin-top: 10px;
   color: #999;
   font-style: italic;
+}
+
+/* 美化弹窗 */
+.modal-content {
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  animation: modalFadeIn 0.3s ease-in-out;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  width: 600px;
+  max-width: 90vw;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-content h3 {
+  margin: 0;
+  padding: 20px;
+  background: linear-gradient(135deg, #8b4513 0%, #d2691e 100%);
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+  border-bottom: none;
+}
+
+.modal-content .post-detail {
+  padding: 25px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  flex: 1;
+  touch-action: auto;
+}
+
+/* 阻止背景滚动 */
+.modal {
+  touch-action: none;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.btn-cancel {
+  padding: 10px 24px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  background: #f5f5f5;
+  color: #333;
+  border: 1px solid #e0e0e0;
+}
+
+.btn-cancel:hover {
+  background: #e0e0e0;
 }
 </style>

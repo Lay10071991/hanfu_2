@@ -48,7 +48,6 @@
 <script>
 import UserManagement from "./components/UserManagement.vue";
 import PostManagement from "./components/PostManagement.vue";
-import CommentManagement from "./components/CommentManagement.vue";
 import ShopManagement from "./components/ShopManagement.vue";
 import ActivityManagement from "./components/ActivityManagement.vue";
 import CulturalContentManagement from "./components/CulturalContentManagement.vue";
@@ -70,7 +69,6 @@ export default {
   components: {
     UserManagement,
     PostManagement,
-    CommentManagement,
     ShopManagement,
     ActivityManagement,
     CulturalContentManagement,
@@ -138,16 +136,7 @@ export default {
           ],
         },
         { name: "shops", label: "店铺管理", icon: "🏪" },
-        {
-          name: "community",
-          label: "社区管理",
-          icon: "🌐",
-          expanded: false,
-          subMenu: [
-            { name: "community-posts", label: "帖子管理" },
-            { name: "community-comments", label: "评论管理" },
-          ],
-        },
+        { name: "community", label: "社区管理", icon: "🌐" },
       ],
     };
   },
@@ -171,8 +160,6 @@ export default {
         "historical-timeline": "HistoricalEraManagement",
         "historical-influence": "CultureInfluenceManagement",
         historical: "CulturalContentManagement",
-        "community-posts": "PostManagement",
-        "community-comments": "CommentManagement",
         community: "PostManagement",
         statistics: "Statistics",
       };

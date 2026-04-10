@@ -67,6 +67,25 @@
             <label>结束时间</label>
             <input v-model="form.endTime" type="datetime-local" required />
           </div>
+          <div class="form-group">
+            <label>讲座图片</label>
+            <div class="upload-area">
+              <input
+                ref="fileInput"
+                type="file"
+                accept="image/*"
+                style="display: none"
+                @change="handleImageUpload"
+              />
+              <button type="button" class="btn-upload" @click="$refs.fileInput.click()">
+                选择图片
+              </button>
+              <div v-if="imagePreview" class="image-preview">
+                <img :src="imagePreview" alt="讲座图片" />
+                <button type="button" class="btn-remove" @click="removeImage">移除</button>
+              </div>
+            </div>
+          </div>
           <div class="form-actions">
             <button type="button" @click="closeDialog" class="btn-cancel">取消</button>
             <button type="submit" class="btn-primary">保存</button>
@@ -95,7 +114,9 @@ export default {
         location: "",
         startTime: "",
         endTime: "",
+        image: "",
       },
+      imagePreview: null,
     };
   },
   mounted() {
@@ -122,7 +143,9 @@ export default {
         location: "",
         startTime: "",
         endTime: "",
+        image: "",
       };
+      this.imagePreview = null;
       this.showDialog = true;
     },
     editLecture(lecture) {
@@ -132,22 +155,48 @@ export default {
         startTime: this.formatDateTimeForInput(lecture.startTime),
         endTime: this.formatDateTimeForInput(lecture.endTime),
       };
+      this.imagePreview = lecture.image || null;
       this.showDialog = true;
     },
     async saveLecture() {
       try {
+        // 先保存基本信息
         const url = this.isEdit
           ? `http://localhost:8082/api/lectures/${this.form.id}`
           : "http://localhost:8082/api/lectures";
 
-        await fetch(url, {
+        const response = await fetch(url, {
           method: this.isEdit ? "PUT" : "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(this.form),
         });
 
-        this.closeDialog();
-        this.loadLectures();
+        if (response.ok) {
+          // 如果是新增，获取返回的ID
+          if (!this.isEdit) {
+            const newLecture = await response.json();
+            this.form.id = newLecture.id;
+
+            // 如果有图片，重新上传（使用新ID）
+            if (this.imagePreview && this.imagePreview.startsWith("data:")) {
+              // 触发重新上传
+              const fileInput = this.$refs.fileInput;
+              if (fileInput && fileInput.files && fileInput.files[0]) {
+                await this.handleImageUpload({ target: { files: [fileInput.files[0]] } });
+
+                // 更新讲座信息（包含图片路径）
+                await fetch(`http://localhost:8082/api/lectures/${this.form.id}`, {
+                  method: "PUT",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify(this.form),
+                });
+              }
+            }
+          }
+
+          this.closeDialog();
+          this.loadLectures();
+        }
       } catch (error) {
         console.error("保存讲座失败", error);
       }
@@ -201,6 +250,47 @@ export default {
       const hours = String(date.getHours()).padStart(2, "0");
       const minutes = String(date.getMinutes()).padStart(2, "0");
       return `${year}-${month}-${day}T${hours}:${minutes}`;
+    },
+    async handleImageUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        // 显示预览
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.imagePreview = e.target.result;
+        };
+        reader.readAsDataURL(file);
+
+        // 上传文件
+        try {
+          const formData = new FormData();
+          formData.append("file", file);
+          formData.append("type", "talk");
+          if (this.form.id) {
+            formData.append("id", this.form.id);
+          }
+
+          // 上传到后端
+          const response = await fetch("http://localhost:8082/api/upload/image", {
+            method: "POST",
+            body: formData,
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            this.form.image = data.url;
+          } else {
+            console.error("图片上传失败");
+          }
+        } catch (error) {
+          console.error("上传错误:", error);
+        }
+      }
+    },
+    removeImage() {
+      this.imagePreview = null;
+      this.form.image = "";
+      this.$refs.fileInput.value = "";
     },
   },
 };
@@ -364,5 +454,66 @@ export default {
 .btn-primary:active {
   transform: translateY(0);
   box-shadow: 0 2px 8px rgba(210, 105, 30, 0.3);
+}
+
+/* 图片上传区域样式 */
+.upload-area {
+  margin-top: 10px;
+}
+
+.btn-upload {
+  background: #f5f5f5;
+  color: #333;
+  border: 1px solid #e0e0e0;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.btn-upload:hover {
+  background: #e0e0e0;
+}
+
+.image-preview {
+  margin-top: 15px;
+  position: relative;
+  width: 200px;
+  height: 150px;
+  border: 2px dashed #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-preview img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+}
+
+.btn-remove {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: rgba(255, 0, 0, 0.7);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.btn-remove:hover {
+  background: rgba(255, 0, 0, 1);
 }
 </style>
