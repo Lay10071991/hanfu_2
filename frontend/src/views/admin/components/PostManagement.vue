@@ -52,13 +52,24 @@
         <div class="post-detail">
           <p><strong>标题：</strong>{{ selectedPost.title }}</p>
           <p><strong>标签：</strong>{{ selectedPost.category }}</p>
-          <div v-if="selectedPost.imageUrl" class="detail-image">
-            <p><strong>封面图片：</strong></p>
-            <img :src="getImageUrl(selectedPost.imageUrl)" alt="封面图" />
+          <div v-if="selectedPost.images && selectedPost.images.length > 0" class="detail-images">
+            <p><strong>图片：</strong></p>
+            <div class="images-grid">
+              <img
+                v-for="(img, index) in selectedPost.images"
+                :key="index"
+                :src="getImageUrl(typeof img === 'object' ? img.url : img)"
+                :alt="`图片 ${index + 1}`"
+              />
+            </div>
+          </div>
+          <div v-else-if="selectedPost.imageUrl" class="detail-image">
+            <p><strong>图片：</strong></p>
+            <img :src="getImageUrl(selectedPost.imageUrl)" alt="图片" />
           </div>
           <div v-else-if="selectedPost.image" class="detail-image">
-            <p><strong>封面图片：</strong></p>
-            <img :src="getImageUrl(selectedPost.image)" alt="封面图" />
+            <p><strong>图片：</strong></p>
+            <img :src="getImageUrl(selectedPost.image)" alt="图片" />
           </div>
           <p><strong>简介：</strong></p>
           <p>{{ selectedPost.description }}</p>
@@ -68,12 +79,8 @@
           <div v-if="postComments.length > 0" class="comments-list">
             <div v-for="comment in postComments" :key="comment.id" class="comment-item">
               <div class="comment-header">
-                <span class="comment-username">{{
-                  comment.username || comment.userName || "匿名用户"
-                }}</span>
-                <span class="comment-time">{{
-                  comment.createTime ? formatDate(comment.createTime) : "未知时间"
-                }}</span>
+                <span class="comment-username">{{ comment.author || "匿名用户" }}</span>
+                <span class="comment-time">{{ comment.time || "未知时间" }}</span>
               </div>
               <div class="comment-content">{{ comment.content }}</div>
               <div class="comment-actions">
@@ -179,11 +186,9 @@ export default {
         return url;
       }
 
-      // 处理社区帖子图片路径
-      if (url.startsWith("/uploads/community_post/")) {
-        // 将 /uploads/community_post/ 转换为 /community_post/
-        const communityPostUrl = url.replace("/uploads/community_post/", "/community_post/");
-        return `http://localhost:8082${communityPostUrl}`;
+      // 处理社区帖子图片路径（以 community_post/ 开头的相对路径）
+      if (url.startsWith("community_post/")) {
+        return `http://localhost:8082/community_post/${url.replace("community_post/", "")}`;
       }
 
       // 处理社区帖子图片路径（直接以 /community_post/ 开头）
@@ -191,7 +196,17 @@ export default {
         return `http://localhost:8082${url}`;
       }
 
-      // 如果是相对路径,添加服务器地址
+      // 处理其他上传路径
+      if (url.startsWith("/uploads/")) {
+        return `http://localhost:8082${url}`;
+      }
+
+      // 处理其他相对路径
+      if (!url.startsWith("/")) {
+        return `http://localhost:8082/${url}`;
+      }
+
+      // 如果是绝对路径,添加服务器地址
       return `http://localhost:8082${url}`;
     },
 
@@ -247,6 +262,24 @@ export default {
   max-height: 400px;
   border-radius: 8px;
   margin-top: 10px;
+}
+
+.detail-images {
+  margin: 15px 0;
+}
+
+.images-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.images-grid img {
+  max-width: 200px;
+  max-height: 200px;
+  border-radius: 8px;
+  object-fit: cover;
 }
 
 .upload-area {
