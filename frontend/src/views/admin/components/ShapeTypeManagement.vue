@@ -4,7 +4,6 @@
       <h2>基本形制管理</h2>
       <div class="header-buttons">
         <button @click="loadItems" class="btn-refresh">刷新</button>
-        <button @click="showAddDialog" class="btn-primary">新增形制</button>
       </div>
     </div>
     <div class="table-container">
@@ -38,7 +37,7 @@
     </div>
     <div v-if="showDialog" class="modal" @click.self="closeDialog">
       <div class="modal-content">
-        <h3>{{ isEdit ? "编辑形制" : "新增形制" }}</h3>
+        <h3>编辑形制</h3>
         <form @submit.prevent="saveItem">
           <div class="form-group">
             <label>形制名称</label>
@@ -134,22 +133,7 @@ export default {
         alert("加载数据失败: " + error.message);
       }
     },
-    showAddDialog() {
-      this.isEdit = false;
-      this.form = {
-        id: null,
-        name: "",
-        period: "",
-        description: "",
-        characteristics: "",
-        content: "",
-        image: "",
-      };
-      this.imagePreview = null;
-      this.showDialog = true;
-      // 阻止背景滚动
-      document.body.style.overflow = "hidden";
-    },
+
     editItem(item) {
       this.isEdit = true;
       this.form = { ...item };
@@ -177,10 +161,8 @@ export default {
     },
     async saveItem() {
       try {
-        const url = this.isEdit
-          ? `http://localhost:8082/api/shape-type/${this.form.id}`
-          : "http://localhost:8082/api/shape-type";
-        const method = this.isEdit ? "PUT" : "POST";
+        const url = `http://localhost:8082/api/shape-type/${this.form.id}`;
+        const method = "PUT";
 
         const response = await fetch(url, {
           method,
@@ -191,7 +173,7 @@ export default {
         });
 
         if (response.ok) {
-          alert(this.isEdit ? "更新成功" : "添加成功");
+          alert("更新成功");
           this.closeDialog();
           this.loadItems();
         } else {

@@ -297,62 +297,223 @@ export default {
 <style scoped>
 @import "./management-common.css";
 
-.upload-area {
-  margin-top: 8px;
+/* 修复表格横线不正确问题 */
+.management-container table {
+  border-collapse: collapse;
+  width: 100%;
 }
 
-.upload-placeholder {
-  border: 2px dashed #ddd;
-  border-radius: 8px;
-  padding: 40px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.3s;
+.management-container th,
+.management-container td {
+  border-bottom: 1px solid #eee;
+  vertical-align: top;
+  padding: 12px 15px;
 }
 
-.upload-placeholder:hover {
-  border-color: #8b4513;
+.management-container tr:hover {
   background: #f9f9f9;
 }
 
-.upload-placeholder span {
-  color: #666;
+/* 调整操作列布局，确保横线正确显示 */
+.management-container td:last-child {
+  text-align: right;
+  padding-right: 20px;
+}
+
+.management-container td:last-child button {
+  margin-left: 5px;
+}
+
+/* 美化编辑弹窗 */
+.modal-content {
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  animation: modalFadeIn 0.3s ease-in-out;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-content h3 {
+  margin: 0;
+  padding: 20px;
+  background: linear-gradient(135deg, #8b4513 0%, #d2691e 100%);
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+  border-bottom: none;
+}
+
+.modal-content form {
+  padding: 25px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  flex: 1;
+  touch-action: auto;
+}
+
+/* 阻止背景滚动 */
+.modal {
+  touch-action: none;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #555;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #d2691e;
+  box-shadow: 0 0 0 3px rgba(210, 105, 30, 0.1);
+}
+
+.form-group textarea {
+  min-height: 120px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.form-group small {
+  color: #999;
+  font-size: 12px;
+  display: block;
+  margin-top: 4px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.btn-cancel,
+.btn-primary {
+  padding: 10px 24px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-cancel {
+  background: #f5f5f5;
+  color: #333;
+  border: 1px solid #e0e0e0;
+}
+
+.btn-cancel:hover {
+  background: #e0e0e0;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #8b4513 0%, #d2691e 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(210, 105, 30, 0.3);
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+  box-shadow: 0 6px 16px rgba(210, 105, 30, 0.4);
+  transform: translateY(-1px);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(210, 105, 30, 0.3);
+}
+
+.upload-area {
+  border: 2px dashed #e0e0e0;
+  border-radius: 8px;
+  padding: 25px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.upload-area:hover {
+  border-color: #d2691e;
+  background-color: rgba(210, 105, 30, 0.05);
+}
+
+.upload-placeholder {
+  color: #999;
   font-size: 14px;
 }
 
 .image-preview {
   position: relative;
   display: inline-block;
+  margin-top: 10px;
 }
 
 .image-preview img {
-  max-width: 300px;
+  max-width: 200px;
   max-height: 200px;
   border-radius: 8px;
-  display: block;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .btn-remove {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  padding: 5px 10px;
-  background: rgba(220, 53, 69, 0.9);
+  top: -10px;
+  right: -10px;
+  background: #f56c6c;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
   cursor: pointer;
-  font-size: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  transition: all 0.3s ease;
 }
 
 .btn-remove:hover {
-  background: rgba(220, 53, 69, 1);
-}
-
-.form-group small {
-  display: block;
-  margin-top: 5px;
-  color: #666;
-  font-size: 12px;
+  background: #f78989;
+  transform: scale(1.1);
 }
 </style>
