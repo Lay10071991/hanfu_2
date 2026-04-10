@@ -77,19 +77,6 @@
             />
           </div>
           <div class="form-group">
-            <label>状态</label>
-            <select v-model="form.status">
-              <option value="upcoming">即将开始</option>
-              <option value="ongoing">进行中</option>
-              <option value="completed">已完成</option>
-              <option value="cancelled">已取消</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>最大参与人数</label>
-            <input v-model.number="form.maxParticipants" type="number" />
-          </div>
-          <div class="form-group">
             <label>活动图片</label>
             <div class="upload-area">
               <input
@@ -136,8 +123,6 @@ export default {
         description: "",
         location: "",
         date: "",
-        status: "upcoming",
-        maxParticipants: 100,
         organizerId: 1,
         image: "",
       },
@@ -168,8 +153,6 @@ export default {
         description: "",
         location: "",
         date: "",
-        status: "upcoming",
-        maxParticipants: 100,
         organizerId: 1,
         image: "",
       };

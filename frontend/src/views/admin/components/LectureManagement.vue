@@ -67,15 +67,6 @@
             <label>结束时间</label>
             <input v-model="form.endTime" type="datetime-local" required />
           </div>
-          <div class="form-group">
-            <label>状态</label>
-            <select v-model="form.status">
-              <option value="upcoming">即将开始</option>
-              <option value="ongoing">进行中</option>
-              <option value="completed">已完成</option>
-              <option value="cancelled">已取消</option>
-            </select>
-          </div>
           <div class="form-actions">
             <button type="button" @click="closeDialog" class="btn-cancel">取消</button>
             <button type="submit" class="btn-primary">保存</button>
@@ -104,7 +95,6 @@ export default {
         location: "",
         startTime: "",
         endTime: "",
-        status: "upcoming",
       },
     };
   },
@@ -132,7 +122,6 @@ export default {
         location: "",
         startTime: "",
         endTime: "",
-        status: "upcoming",
       };
       this.showDialog = true;
     },
