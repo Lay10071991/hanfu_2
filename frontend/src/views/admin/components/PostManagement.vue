@@ -123,9 +123,16 @@ export default {
 
     async viewPost(post) {
       // 确保图片字段正确
+      let imageUrl = post.imageUrl || post.image;
+
+      // 如果有 images 字段，使用第一张图片
+      if (post.images && Array.isArray(post.images) && post.images.length > 0) {
+        imageUrl = post.images[0].url || imageUrl;
+      }
+
       this.selectedPost = {
         ...post,
-        imageUrl: post.imageUrl || post.image,
+        imageUrl: imageUrl,
       };
       // 获取帖子的评论
       await this.loadPostComments(post.id);
@@ -156,10 +163,34 @@ export default {
 
     getImageUrl(url) {
       if (!url) return "";
+
+      // 如果是数组，取第一张图片
+      if (Array.isArray(url) && url.length > 0) {
+        // 检查数组元素是否是对象，如果是，取其url属性
+        if (typeof url[0] === "object" && url[0].url) {
+          url = url[0].url;
+        } else {
+          url = url[0];
+        }
+      }
+
       // 如果已经是完整URL,直接返回
       if (url.startsWith("http://") || url.startsWith("https://")) {
         return url;
       }
+
+      // 处理社区帖子图片路径
+      if (url.startsWith("/uploads/community_post/")) {
+        // 将 /uploads/community_post/ 转换为 /community_post/
+        const communityPostUrl = url.replace("/uploads/community_post/", "/community_post/");
+        return `http://localhost:8082${communityPostUrl}`;
+      }
+
+      // 处理社区帖子图片路径（直接以 /community_post/ 开头）
+      if (url.startsWith("/community_post/")) {
+        return `http://localhost:8082${url}`;
+      }
+
       // 如果是相对路径,添加服务器地址
       return `http://localhost:8082${url}`;
     },

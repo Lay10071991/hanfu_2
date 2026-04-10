@@ -3,8 +3,10 @@ package com.example.demo.service;
 import com.example.demo.dto.ShopDTO;
 import com.example.demo.entity.Shop;
 import com.example.demo.entity.ShopShow;
+import com.example.demo.entity.ShopReview;
 import com.example.demo.repository.ShopRepository;
 import com.example.demo.repository.ShopShowRepository;
+import com.example.demo.repository.ShopReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -18,6 +20,9 @@ public class ShopService {
     
     @Autowired
     private ShopShowRepository shopShowRepository;
+    
+    @Autowired
+    private ShopReviewRepository shopReviewRepository;
     
     public List<ShopDTO> getAllShops() {
         List<Shop> shops = shopRepository.findAll();
@@ -52,9 +57,25 @@ public class ShopService {
         dto.setPriceRange(shop.getPriceRange());
         dto.setUserId(shop.getUserId());
         
-        // 设置默认评分和评论数
-        dto.setAverageRating(0.0);
-        dto.setReviewCount(0);
+        // 计算实际的平均评分和评论数
+        List<ShopReview> reviews = shopReviewRepository.findByShopId(shop.getId());
+        int reviewCount = reviews.size();
+        double averageRating = 0.0;
+        
+        if (reviewCount > 0) {
+            double totalRating = 0.0;
+            for (ShopReview review : reviews) {
+                if (review.getRating() != null) {
+                    totalRating += review.getRating();
+                }
+            }
+            averageRating = totalRating / reviewCount;
+            // 保留一位小数
+            averageRating = Math.round(averageRating * 10.0) / 10.0;
+        }
+        
+        dto.setAverageRating(averageRating);
+        dto.setReviewCount(reviewCount);
         
         // 从shop_show表获取汉服展示图片
         List<ShopShow> shopShows = shopShowRepository.findByShopIdOrderBySortOrderAsc(shop.getId());

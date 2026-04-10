@@ -116,7 +116,13 @@ public class FileUploadController {
             Files.write(filePath, file.getBytes(), java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING);
 
             // 返回文件访问路径
-            String fileUrl = "/uploads/" + subDir + "/" + filename;
+            String fileUrl;
+            if ("community_post".equals(subDir)) {
+                // 社区帖子图片使用特殊路径
+                fileUrl = "/community_post/" + filename;
+            } else {
+                fileUrl = "/uploads/" + subDir + "/" + filename;
+            }
             
             response.put("success", true);
             response.put("url", fileUrl);
@@ -137,7 +143,14 @@ public class FileUploadController {
         
         try {
             // 从URL中提取文件路径
-            String filePath = url.replace("/uploads/", "");
+            String filePath;
+            if (url.startsWith("/community_post/")) {
+                // 处理社区帖子图片路径
+                filePath = "community_post/" + url.replace("/community_post/", "");
+            } else {
+                // 处理其他图片路径
+                filePath = url.replace("/uploads/", "");
+            }
             Path fullPath = Paths.get(UPLOAD_DIR, filePath);
             
             // 检查文件是否存在
