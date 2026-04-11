@@ -8,6 +8,7 @@ E:\hanfu-cultural-platform - 调试\backend\src\main\java\com\example\demo\reposit
 E:\hanfu-cultural-platform - 调试\backend\src\main\java\com\example\demo\entity\Etiquette.java
 E:\hanfu-cultural-platform - 调试\backend\src\main\java\com\example\demo\repository\PatternSymbolRepository.java
 E:\hanfu-cultural-platform - 调试\backend\src\main\java\com\example\demo\entity\Festival.java
+E:\hanfu-cultural-platform - 调试\backend\src\main\java\com\example\demo\service\ShopReviewService.java
 E:\hanfu-cultural-platform - 调试\backend\src\main\java\com\example\demo\entity\HanfuImage.java
 E:\hanfu-cultural-platform - 调试\backend\src\main\java\com\example\demo\repository\ShopReviewRepository.java
 E:\hanfu-cultural-platform - 调试\backend\src\main\java\com\example\demo\repository\ShopServiceRepository.java
@@ -91,6 +92,7 @@ E:\hanfu-cultural-platform - 调试\backend\src\main\java\com\example\demo\config\
 E:\hanfu-cultural-platform - 调试\backend\src\main\java\com\example\demo\repository\UserRoleRepository.java
 E:\hanfu-cultural-platform - 调试\backend\src\main\java\com\example\demo\entity\CulturalContent.java
 E:\hanfu-cultural-platform - 调试\backend\src\main\java\com\example\demo\repository\ShopRepository.java
+E:\hanfu-cultural-platform - 调试\backend\src\main\java\com\example\demo\controller\ShopReviewController.java
 E:\hanfu-cultural-platform - 调试\backend\src\main\java\com\example\demo\entity\ShopImage.java
 E:\hanfu-cultural-platform - 调试\backend\src\main\java\com\example\demo\repository\HanfuDisplayRepository.java
 E:\hanfu-cultural-platform - 调试\backend\src\main\java\com\example\demo\repository\HanfuImageRepository.java
