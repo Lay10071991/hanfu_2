@@ -73,8 +73,42 @@
               v-model="form.date"
               type="text"
               required
-              placeholder="例如：2025-02-01 至 2025-02-02"
+              placeholder="例如：2025-02-01"
+              @click="showDatePicker = true"
             />
+            <!-- 自定义日期选择器 -->
+            <div v-if="showDatePicker" class="date-picker-overlay" @click="showDatePicker = false">
+              <div class="date-picker-content" @click.stop>
+                <div class="date-picker-header">
+                  <button @click="prevMonth" class="date-nav-btn">←</button>
+                  <h3>{{ currentYear }}年{{ currentMonth + 1 }}月</h3>
+                  <button @click="nextMonth" class="date-nav-btn">→</button>
+                </div>
+                <div class="date-picker-body">
+                  <div class="date-weekdays">
+                    <div v-for="day in weekdays" :key="day" class="weekday">{{ day }}</div>
+                  </div>
+                  <div class="date-days">
+                    <div
+                      v-for="day in days"
+                      :key="day.date"
+                      class="date-day"
+                      :class="{
+                        'date-day-selected': isSelected(day.date),
+                        'date-day-other': day.isOtherMonth,
+                      }"
+                      @click="selectDate(day.date)"
+                    >
+                      {{ day.day }}
+                    </div>
+                  </div>
+                </div>
+                <div class="date-picker-footer">
+                  <button @click="showDatePicker = false" class="date-btn">取消</button>
+                  <button @click="confirmDate" class="date-btn date-btn-primary">确定</button>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="form-group">
             <label>活动图片</label>
@@ -129,12 +163,84 @@ export default {
       },
       imagePreview: null,
       uploading: false,
+      // 日期选择器相关数据
+      showDatePicker: false,
+      currentYear: new Date().getFullYear(),
+      currentMonth: new Date().getMonth(),
+      selectedDate: null,
+      weekdays: ["日", "一", "二", "三", "四", "五", "六"],
+      days: [],
     };
   },
   mounted() {
     this.loadActivities();
+    this.generateCalendar();
+  },
+  watch: {
+    currentYear() {
+      this.generateCalendar();
+    },
+    currentMonth() {
+      this.generateCalendar();
+    },
   },
   methods: {
+    generateCalendar() {
+      const firstDay = new Date(this.currentYear, this.currentMonth, 1);
+      const lastDay = new Date(this.currentYear, this.currentMonth + 1, 0);
+      const startDate = new Date(firstDay);
+      startDate.setDate(startDate.getDate() - firstDay.getDay());
+
+      const days = [];
+      for (let i = 0; i < 42; i++) {
+        const currentDate = new Date(startDate);
+        currentDate.setDate(startDate.getDate() + i);
+        days.push({
+          date: currentDate,
+          day: currentDate.getDate(),
+          isOtherMonth: currentDate.getMonth() !== this.currentMonth,
+        });
+      }
+      this.days = days;
+    },
+    prevMonth() {
+      if (this.currentMonth === 0) {
+        this.currentYear--;
+        this.currentMonth = 11;
+      } else {
+        this.currentMonth--;
+      }
+    },
+    nextMonth() {
+      if (this.currentMonth === 11) {
+        this.currentYear++;
+        this.currentMonth = 0;
+      } else {
+        this.currentMonth++;
+      }
+    },
+    selectDate(date) {
+      this.selectedDate = new Date(date);
+    },
+    isSelected(date) {
+      if (!this.selectedDate) return false;
+      const selected = new Date(this.selectedDate);
+      const current = new Date(date);
+      return (
+        selected.getFullYear() === current.getFullYear() &&
+        selected.getMonth() === current.getMonth() &&
+        selected.getDate() === current.getDate()
+      );
+    },
+    confirmDate() {
+      if (this.selectedDate) {
+        const year = this.selectedDate.getFullYear();
+        const month = String(this.selectedDate.getMonth() + 1).padStart(2, "0");
+        const day = String(this.selectedDate.getDate()).padStart(2, "0");
+        this.form.date = `${year}年${month}月${day}日`;
+        this.showDatePicker = false;
+      }
+    },
     async loadActivities() {
       try {
         const response = await fetch("http://localhost:8082/api/festival-activity");
@@ -163,13 +269,23 @@ export default {
     editActivity(activity) {
       this.isEdit = true;
       this.form = { ...activity };
+      // 解析日期，设置选中日期
+      if (activity.date) {
+        const match = activity.date.match(/(\d{4})年(\d{2})月(\d{2})日/);
+        if (match) {
+          this.selectedDate = new Date(`${match[1]}-${match[2]}-${match[3]}`);
+          this.currentYear = this.selectedDate.getFullYear();
+          this.currentMonth = this.selectedDate.getMonth();
+          this.generateCalendar();
+        }
+      }
       this.imagePreview = activity.image ? getImageUrl(activity.image) : null;
       this.showDialog = true;
     },
     async saveActivity() {
       try {
         this.uploading = true;
-        
+
         // 准备保存的数据
         const saveData = { ...this.form };
         delete saveData.imageFile;
@@ -187,11 +303,15 @@ export default {
         if (response.ok) {
           const savedItem = await response.json();
           const itemId = this.isEdit ? this.form.id : savedItem.id;
-          
+
           // 上传图片
           if (this.form.imageFile) {
             try {
-              const imageUrl = await this.uploadImage(this.form.imageFile, "festival_gathering", itemId);
+              const imageUrl = await this.uploadImage(
+                this.form.imageFile,
+                "festival_gathering",
+                itemId,
+              );
               // 更新图片
               await fetch(`http://localhost:8082/api/festival-activity/${itemId}`, {
                 method: "PUT",
@@ -204,7 +324,7 @@ export default {
               return;
             }
           }
-          
+
           this.closeDialog();
           this.loadActivities();
         } else {
@@ -231,6 +351,7 @@ export default {
     },
     closeDialog() {
       this.showDialog = false;
+      this.showDatePicker = false;
     },
     prevPage() {
       if (this.currentPage > 1) {
@@ -289,7 +410,7 @@ export default {
         this.imagePreview = e.target.result;
       };
       reader.readAsDataURL(file);
-      
+
       // 清空文件输入框，确保可以选择相同的图片
       if (fileInput) {
         fileInput.value = "";
@@ -425,6 +546,143 @@ export default {
 /* 阻止背景滚动 */
 .modal {
   touch-action: none;
+}
+
+/* 日期选择器样式 */
+.date-picker-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.date-picker-content {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  width: 300px;
+  overflow: hidden;
+}
+
+.date-picker-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.date-nav-btn {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.date-nav-btn:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.date-picker-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.date-picker-body {
+  padding: 16px;
+}
+
+.date-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.weekday {
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: #666;
+}
+
+.date-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+}
+
+.date-day {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 14px;
+}
+
+.date-day:hover {
+  background-color: #f0f0f0;
+}
+
+.date-day-selected {
+  background-color: #d2691e;
+  color: white;
+}
+
+.date-day-other {
+  color: #ccc;
+}
+
+.date-picker-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 16px;
+  border-top: 1px solid #e0e0e0;
+  background-color: #f5f5f5;
+}
+
+.date-btn {
+  padding: 8px 16px;
+  border: 1px solid #dcdfe6;
+  border-radius: 4px;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 14px;
+}
+
+.date-btn:hover {
+  border-color: #d2691e;
+  color: #d2691e;
+}
+
+.date-btn-primary {
+  background-color: #d2691e;
+  color: white;
+  border-color: #d2691e;
+}
+
+.date-btn-primary:hover {
+  background-color: #b85a1a;
+  border-color: #b85a1a;
+  color: white;
 }
 
 .form-group {
