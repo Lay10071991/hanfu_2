@@ -423,6 +423,14 @@
           <el-form-item label="标题">
             <el-input v-model="currentPost.title" placeholder="请输入标题" />
           </el-form-item>
+          <el-form-item label="标签">
+            <el-input
+              v-model="currentPost.tag"
+              placeholder="请输入标签"
+              maxlength="10"
+              show-word-limit
+            />
+          </el-form-item>
           <el-form-item label="内容">
             <el-input
               v-model="currentPost.content"
@@ -1828,6 +1836,7 @@ const editPost = (post) => {
   currentPost.value = {
     id: post.id,
     title: post.title,
+    tag: post.tag || post.category || "",
     content: post.content,
     images: post.images || [],
   };
@@ -1890,6 +1899,7 @@ const savePost = async () => {
       },
       body: JSON.stringify({
         title: currentPost.value.title,
+        tag: currentPost.value.tag,
         content: currentPost.value.content,
         images: imageUrls,
       }),
