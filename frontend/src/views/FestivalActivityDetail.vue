@@ -91,7 +91,7 @@
                 </el-button>
                 <div class="registration-count">
                   <el-icon><User /></el-icon>
-                  <span>已报名: {{ registrationCount }} 人</span>
+                  <span>已报名</span>
                 </div>
               </div>
             </div>

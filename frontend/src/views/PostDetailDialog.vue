@@ -142,19 +142,6 @@
                 <span class="comment-time">{{ comment.time }}</span>
               </div>
               <div class="comment-text">{{ comment.content }}</div>
-              <div class="comment-actions">
-                <el-button type="text" size="small" @click="replyComment(comment)">
-                  回复
-                </el-button>
-                <el-button
-                  type="text"
-                  size="small"
-                  :icon="comment.liked ? StarFilled : Star"
-                  @click="toggleCommentLike(comment)"
-                >
-                  {{ comment.likes || 0 }}
-                </el-button>
-              </div>
             </div>
           </div>
         </div>
@@ -295,8 +282,6 @@ const fetchComments = async () => {
         ...comment,
         author: comment.author,
         time: comment.time,
-        likes: 0,
-        liked: false,
       }));
     }
   } catch (error) {
@@ -402,18 +387,6 @@ const toggleLike = async () => {
   }
 };
 
-const toggleCommentLike = (comment) => {
-  // 确保userId存在
-  if (!userId.value) {
-    ElMessage.warning("请先登录后再进行点赞操作");
-    return;
-  }
-
-  // 由于后端API没有提供评论点赞功能，仅在前端模拟点赞操作
-  comment.liked = !comment.liked;
-  comment.likes += comment.liked ? 1 : -1;
-};
-
 const submitComment = async () => {
   if (!newComment.value.trim()) {
     ElMessage.warning("请输入评论内容");
@@ -452,8 +425,6 @@ const submitComment = async () => {
         ...newCommentObj,
         author: newCommentObj.author,
         time: newCommentObj.time,
-        likes: 0,
-        liked: false,
       });
       post.value.comments = newCommentObj.postComments || post.value.comments + 1;
       newComment.value = "";
@@ -474,13 +445,6 @@ const submitComment = async () => {
   } finally {
     commenting.value = false;
   }
-};
-
-const replyComment = (comment) => {
-  newComment.value = `@${comment.author} `;
-  nextTick(() => {
-    commentInput.value.focus();
-  });
 };
 
 const focusCommentInput = () => {
