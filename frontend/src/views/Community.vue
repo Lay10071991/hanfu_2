@@ -200,6 +200,14 @@
             show-word-limit
           />
         </el-form-item>
+        <el-form-item label="简介" required>
+          <el-input
+            v-model="publishForm.description"
+            placeholder="请输入简介（最多100字）"
+            maxlength="100"
+            show-word-limit
+          />
+        </el-form-item>
         <el-form-item label="内容" required>
           <el-input
             v-model="publishForm.content"
@@ -210,7 +218,7 @@
             show-word-limit
           />
         </el-form-item>
-        <el-form-item label="图片">
+        <el-form-item label="图片" required>
           <div class="upload-tips">支持上传JPG、PNG格式图片，最多9张</div>
           <el-upload
             v-model:file-list="publishForm.images"
@@ -293,6 +301,7 @@ const selectedPost = ref(null);
 const publishForm = ref({
   title: "",
   content: "",
+  description: "",
   category: "",
   images: [],
 });
@@ -463,8 +472,14 @@ const formatDate = (date) => {
 };
 
 const submitPublish = async () => {
-  if (!publishForm.value.title || !publishForm.value.content || !publishForm.value.category) {
-    ElMessage.warning("请填写标题、标签和内容");
+  if (
+    !publishForm.value.title ||
+    !publishForm.value.content ||
+    !publishForm.value.category ||
+    !publishForm.value.description ||
+    publishForm.value.images.length === 0
+  ) {
+    ElMessage.warning("请填写标题、标签、简介、内容并上传图片");
     return;
   }
 
@@ -551,6 +566,7 @@ const submitPublish = async () => {
       body: JSON.stringify({
         title: publishForm.value.title,
         content: publishForm.value.content,
+        description: publishForm.value.description,
         category: publishForm.value.category || "其他",
         images: imageUrls,
       }),

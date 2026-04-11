@@ -78,7 +78,7 @@ public class PostService {
     }
 
     @Transactional
-    public Map<String, Object> createPost(String title, String content, String category, 
+    public Map<String, Object> createPost(String title, String content, String description, String category, 
             Long authorId, List<String> imageUrls) {
         Post post = new Post();
         post.setTitle(title);
@@ -89,7 +89,9 @@ public class PostService {
         post.setLikes(0);
         post.setComments(0);
         
-        if (content != null && content.length() > 100) {
+        if (description != null && !description.isEmpty()) {
+            post.setDescription(description);
+        } else if (content != null && content.length() > 100) {
             post.setDescription(content.substring(0, 100) + "...");
         } else {
             post.setDescription(content);
@@ -279,6 +281,11 @@ public class PostService {
         if (request.containsKey("content")) {
             String content = (String) request.get("content");
             post.setContent(content);
+        }
+        if (request.containsKey("description")) {
+            post.setDescription((String) request.get("description"));
+        } else if (request.containsKey("content")) {
+            String content = (String) request.get("content");
             if (content != null && content.length() > 100) {
                 post.setDescription(content.substring(0, 100) + "...");
             } else {

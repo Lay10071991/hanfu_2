@@ -41,11 +41,12 @@ public class PostController {
             @RequestHeader("X-User-Id") Long userId) {
         String title = (String) request.get("title");
         String content = (String) request.get("content");
+        String description = (String) request.get("description");
         String category = (String) request.get("category");
         @SuppressWarnings("unchecked")
         List<String> images = (List<String>) request.get("images");
         
-        Map<String, Object> post = postService.createPost(title, content, category, userId, images);
+        Map<String, Object> post = postService.createPost(title, content, description, category, userId, images);
         return ResponseEntity.ok(post);
     }
 

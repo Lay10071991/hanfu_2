@@ -159,11 +159,15 @@
                   <div class="post-content-area">
                     <!-- 图片区域 -->
                     <div v-if="post.images && post.images.length > 0" class="post-image-area">
-                      <img :src="post.images[0]" alt="帖子图片" class="post-image-new" />
+                      <img
+                        :src="post.images[0].url || post.images[0]"
+                        alt="帖子图片"
+                        class="post-image-new"
+                      />
                     </div>
                     <!-- 内容区域 -->
                     <div class="post-text-area">
-                      <p class="post-content">{{ post.content }}</p>
+                      <p class="post-content">{{ post.description || post.content }}</p>
                     </div>
                   </div>
                   <!-- 日期和统计信息 -->
@@ -428,6 +432,14 @@
               v-model="currentPost.tag"
               placeholder="请输入标签"
               maxlength="10"
+              show-word-limit
+            />
+          </el-form-item>
+          <el-form-item label="简介">
+            <el-input
+              v-model="currentPost.description"
+              placeholder="请输入简介"
+              maxlength="100"
               show-word-limit
             />
           </el-form-item>
@@ -1733,6 +1745,7 @@ const fetchUserPosts = async () => {
           id: processedPost.id,
           title: processedPost.title || "",
           content: processedPost.content || "",
+          description: processedPost.description || "",
           category: processedPost.category || "",
           date: processedPost.time || processedPost.publishDate || "",
           time: processedPost.time || processedPost.publishDate || "",
@@ -1837,6 +1850,7 @@ const editPost = (post) => {
     id: post.id,
     title: post.title,
     tag: post.tag || post.category || "",
+    description: post.description || "",
     content: post.content,
     images: post.images || [],
   };
@@ -1900,6 +1914,7 @@ const savePost = async () => {
       body: JSON.stringify({
         title: currentPost.value.title,
         tag: currentPost.value.tag,
+        description: currentPost.value.description,
         content: currentPost.value.content,
         images: imageUrls,
       }),
