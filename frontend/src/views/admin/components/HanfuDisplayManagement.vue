@@ -162,11 +162,17 @@ export default {
           if (typeof img === "string") {
             return {
               url: img,
-              preview: getImageUrl(img) + `?t=${new Date().getTime()}`,
+              preview: getImageUrl(img),
             };
           }
           return img;
         });
+      }
+      // 处理主图片
+      if (this.form.image) {
+        this.imagePreview = getImageUrl(this.form.image);
+      } else {
+        this.imagePreview = null;
       }
       this.showDialog = true;
       // 阻止背景滚动
@@ -183,8 +189,12 @@ export default {
     },
     async saveItem() {
       try {
-        // 准备保存的数据，处理images数组
+        this.uploading = true;
+
+        // 准备保存的数据
         const saveData = { ...this.form };
+
+        // 移除文件对象，只保留URL
         if (saveData.images && Array.isArray(saveData.images)) {
           saveData.images = saveData.images.map((img) => {
             if (typeof img === "object" && img.url) {
@@ -193,6 +203,7 @@ export default {
             return img;
           });
         }
+        delete saveData.imageFile;
 
         const url = this.isEdit
           ? `http://localhost:8082/api/hanfu-display/${this.form.id}`
@@ -209,27 +220,74 @@ export default {
 
         if (response.ok) {
           const savedItem = await response.json();
-          // 保存多张图片
+          const imagePaths = [];
+
+          // 上传主图片
+          if (this.form.imageFile) {
+            try {
+              const imageUrl = await this.uploadImage(
+                this.form.imageFile,
+                "clothing_show",
+                savedItem.id,
+              );
+              saveData.image = imageUrl;
+              // 更新主图片
+              await fetch(`http://localhost:8082/api/hanfu-display/${savedItem.id}`, {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ image: imageUrl }),
+              });
+            } catch (error) {
+              console.error("上传主图片失败:", error);
+              alert("上传主图片失败");
+              return;
+            }
+          }
+
+          // 上传多张图片
           if (this.form.images && this.form.images.length > 0) {
             try {
-              const imagePaths = this.form.images.map((img) => img.url || img);
-              const imagesResponse = await fetch(
-                `http://localhost:8082/api/hanfu-display/${savedItem.id}/images`,
-                {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
+              for (let i = 0; i < this.form.images.length; i++) {
+                const img = this.form.images[i];
+                if (img.file) {
+                  const imageUrl = await this.uploadImage(
+                    img.file,
+                    "clothing_show",
+                    savedItem.id,
+                    i + 1,
+                  );
+                  imagePaths.push(imageUrl);
+                } else if (img.url) {
+                  imagePaths.push(img.url);
+                }
+              }
+
+              if (imagePaths.length > 0) {
+                const imagesResponse = await fetch(
+                  `http://localhost:8082/api/hanfu-display/${savedItem.id}/images`,
+                  {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(imagePaths),
                   },
-                  body: JSON.stringify(imagePaths),
-                },
-              );
-              if (!imagesResponse.ok) {
-                console.error("保存图片失败");
+                );
+                if (!imagesResponse.ok) {
+                  console.error("保存图片失败");
+                  alert("保存图片失败");
+                  return;
+                }
               }
             } catch (error) {
               console.error("保存图片失败:", error);
+              alert("保存图片失败");
+              return;
             }
           }
+
           alert(this.isEdit ? "更新成功" : "添加成功");
           this.closeDialog();
           this.loadItems();
@@ -239,6 +297,8 @@ export default {
       } catch (error) {
         console.error("保存衣冠数据失败:", error);
         alert("保存失败");
+      } finally {
+        this.uploading = false;
       }
     },
     async deleteItem(id) {
@@ -263,26 +323,48 @@ export default {
     handleFileChange(event) {
       const file = event.target.files[0];
       if (file) {
-        this.uploadImage(file, event.target, false);
+        this.previewImage(file, event.target, false);
       }
     },
     handleFilesChange(event) {
       const files = event.target.files;
       if (files && files.length > 0) {
         Array.from(files).forEach((file, index) => {
-          this.uploadImage(file, event.target, true, index);
+          this.previewImage(file, event.target, true, index);
         });
       }
     },
-    async uploadImage(file, fileInput, isMultiple = false, index = 0) {
-      this.uploading = true;
+    previewImage(file, fileInput, isMultiple = false, index = 0) {
+      // 创建预览
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        if (isMultiple) {
+          // 处理多张图片
+          this.form.images.push({
+            file: file,
+            preview: e.target.result,
+          });
+        } else {
+          // 处理主图片
+          this.form.imageFile = file;
+          this.imagePreview = e.target.result;
+        }
+      };
+      reader.readAsDataURL(file);
+
+      // 清空文件输入框，确保可以选择相同的图片
+      if (fileInput) {
+        fileInput.value = "";
+      }
+    },
+    async uploadImage(file, type, id, index = null) {
       const formData = new FormData();
       formData.append("file", file);
-      formData.append("type", "clothing_show");
-      if (this.form.id) {
-        formData.append("id", this.form.id);
-        if (isMultiple) {
-          formData.append("index", this.form.images.length + 1);
+      formData.append("type", type);
+      if (id) {
+        formData.append("id", id);
+        if (index !== null) {
+          formData.append("index", index);
         }
       }
 
@@ -295,32 +377,16 @@ export default {
         if (response.ok) {
           const data = await response.json();
           if (data.success) {
-            if (isMultiple) {
-              // 处理多张图片
-              this.form.images.push({
-                url: data.url,
-                preview: getImageUrl(data.url) + `?t=${new Date().getTime()}`,
-              });
-            } else {
-              // 处理主图片
-              this.form.image = data.url;
-              this.imagePreview = getImageUrl(data.url) + `?t=${new Date().getTime()}`;
-            }
+            return data.url;
           } else {
-            alert(data.message || "上传失败");
+            throw new Error(data.message || "上传失败");
           }
         } else {
-          alert("上传失败");
+          throw new Error("上传失败");
         }
       } catch (error) {
         console.error("上传图片失败:", error);
-        alert("上传图片失败");
-      } finally {
-        this.uploading = false;
-        // 清空文件输入框，确保可以选择相同的图片
-        if (fileInput) {
-          fileInput.value = "";
-        }
+        throw error;
       }
     },
     async removeImage() {

@@ -33,8 +33,8 @@ export function getImageUrl(url) {
   const parts = path.split("/");
   const encodedPath = parts.map((part) => encodeURIComponent(part)).join("/");
 
-  // 添加服务器地址
-  return `http://localhost:8082${encodedPath}`;
+  // 添加服务器地址和时间戳以避免缓存
+  return `http://localhost:8082${encodedPath}?t=${new Date().getTime()}`;
 }
 
 /**

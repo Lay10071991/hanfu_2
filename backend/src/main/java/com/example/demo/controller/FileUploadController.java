@@ -18,7 +18,7 @@ import java.util.UUID;
 public class FileUploadController {
 
     // 上传目录路径
-    private static final String UPLOAD_DIR = "E:/hanfu-cultural-platform/backend/uploads";
+    private static final String UPLOAD_DIR = "E:/hanfu-cultural-platform - 调试/backend/uploads";
 
     @PostMapping("/image")
     public ResponseEntity<Map<String, Object>> uploadImage(

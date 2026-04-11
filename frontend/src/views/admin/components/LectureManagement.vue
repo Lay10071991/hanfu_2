@@ -97,6 +97,7 @@
 </template>
 
 <script>
+import { getImageUrl } from "../../../utils/imageHelper";
 export default {
   name: "LectureManagement",
   data() {
@@ -155,11 +156,17 @@ export default {
         startTime: this.formatDateTimeForInput(lecture.startTime),
         endTime: this.formatDateTimeForInput(lecture.endTime),
       };
-      this.imagePreview = lecture.image || null;
+      this.imagePreview = lecture.image ? getImageUrl(lecture.image) : null;
       this.showDialog = true;
     },
     async saveLecture() {
       try {
+        this.uploading = true;
+
+        // 准备保存的数据
+        const saveData = { ...this.form };
+        delete saveData.imageFile;
+
         // 先保存基本信息
         const url = this.isEdit
           ? `http://localhost:8082/api/lectures/${this.form.id}`
@@ -168,37 +175,40 @@ export default {
         const response = await fetch(url, {
           method: this.isEdit ? "PUT" : "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(this.form),
+          body: JSON.stringify(saveData),
         });
 
         if (response.ok) {
-          // 如果是新增，获取返回的ID
-          if (!this.isEdit) {
-            const newLecture = await response.json();
-            this.form.id = newLecture.id;
+          const savedLecture = await response.json();
+          const lectureId = this.isEdit ? this.form.id : savedLecture.id;
 
-            // 如果有图片，重新上传（使用新ID）
-            if (this.imagePreview && this.imagePreview.startsWith("data:")) {
-              // 触发重新上传
-              const fileInput = this.$refs.fileInput;
-              if (fileInput && fileInput.files && fileInput.files[0]) {
-                await this.handleImageUpload({ target: { files: [fileInput.files[0]] } });
-
-                // 更新讲座信息（包含图片路径）
-                await fetch(`http://localhost:8082/api/lectures/${this.form.id}`, {
-                  method: "PUT",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify(this.form),
-                });
-              }
+          // 上传图片
+          if (this.form.imageFile) {
+            try {
+              const imageUrl = await this.uploadImage(this.form.imageFile, "talk", lectureId);
+              // 更新图片
+              await fetch(`http://localhost:8082/api/lectures/${lectureId}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ image: imageUrl }),
+              });
+            } catch (error) {
+              console.error("上传图片失败:", error);
+              alert("上传图片失败");
+              return;
             }
           }
 
           this.closeDialog();
           this.loadLectures();
+        } else {
+          alert("保存失败");
         }
       } catch (error) {
         console.error("保存讲座失败", error);
+        alert("保存失败");
+      } finally {
+        this.uploading = false;
       }
     },
     async deleteLecture(id) {
@@ -251,40 +261,50 @@ export default {
       const minutes = String(date.getMinutes()).padStart(2, "0");
       return `${year}-${month}-${day}T${hours}:${minutes}`;
     },
-    async handleImageUpload(event) {
+    handleImageUpload(event) {
       const file = event.target.files[0];
       if (file) {
-        // 显示预览
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          this.imagePreview = e.target.result;
-        };
-        reader.readAsDataURL(file);
+        this.previewImage(file, event.target);
+      }
+    },
+    previewImage(file, fileInput) {
+      // 创建预览
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.form.imageFile = file;
+        this.imagePreview = e.target.result;
+      };
+      reader.readAsDataURL(file);
 
-        // 上传文件
-        try {
-          const formData = new FormData();
-          formData.append("file", file);
-          formData.append("type", "talk");
-          if (this.form.id) {
-            formData.append("id", this.form.id);
-          }
+      // 清空文件输入框，确保可以选择相同的图片
+      if (fileInput) {
+        fileInput.value = "";
+      }
+    },
+    async uploadImage(file, type, id) {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("type", type);
+      if (id) {
+        formData.append("id", id);
+      }
 
-          // 上传到后端
-          const response = await fetch("http://localhost:8082/api/upload/image", {
-            method: "POST",
-            body: formData,
-          });
+      try {
+        const response = await fetch("http://localhost:8082/api/upload/image", {
+          method: "POST",
+          body: formData,
+        });
 
-          if (response.ok) {
-            const data = await response.json();
-            this.form.image = data.url;
-          } else {
-            console.error("图片上传失败");
-          }
-        } catch (error) {
-          console.error("上传错误:", error);
+        const result = await response.json();
+
+        if (result.success) {
+          return result.url;
+        } else {
+          throw new Error(result.message || "上传失败");
         }
+      } catch (error) {
+        console.error("上传失败", error);
+        throw error;
       }
     },
     removeImage() {

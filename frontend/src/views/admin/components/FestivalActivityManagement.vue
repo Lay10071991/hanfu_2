@@ -107,6 +107,7 @@
 </template>
 
 <script>
+import { getImageUrl } from "../../../utils/imageHelper";
 export default {
   name: "FestivalActivityManagement",
   data() {
@@ -162,25 +163,58 @@ export default {
     editActivity(activity) {
       this.isEdit = true;
       this.form = { ...activity };
-      this.imagePreview = activity.image || null;
+      this.imagePreview = activity.image ? getImageUrl(activity.image) : null;
       this.showDialog = true;
     },
     async saveActivity() {
       try {
+        this.uploading = true;
+        
+        // 准备保存的数据
+        const saveData = { ...this.form };
+        delete saveData.imageFile;
+
         const url = this.isEdit
           ? `http://localhost:8082/api/festival-activity/${this.form.id}`
           : "http://localhost:8082/api/festival-activity";
 
-        await fetch(url, {
+        const response = await fetch(url, {
           method: this.isEdit ? "PUT" : "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(this.form),
+          body: JSON.stringify(saveData),
         });
 
-        this.closeDialog();
-        this.loadActivities();
+        if (response.ok) {
+          const savedItem = await response.json();
+          const itemId = this.isEdit ? this.form.id : savedItem.id;
+          
+          // 上传图片
+          if (this.form.imageFile) {
+            try {
+              const imageUrl = await this.uploadImage(this.form.imageFile, "festival_gathering", itemId);
+              // 更新图片
+              await fetch(`http://localhost:8082/api/festival-activity/${itemId}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ image: imageUrl }),
+              });
+            } catch (error) {
+              console.error("上传图片失败:", error);
+              alert("上传图片失败");
+              return;
+            }
+          }
+          
+          this.closeDialog();
+          this.loadActivities();
+        } else {
+          alert("保存失败");
+        }
       } catch (error) {
         console.error("保存节庆雅集失败", error);
+        alert("保存失败");
+      } finally {
+        this.uploading = false;
       }
     },
     async deleteActivity(id) {
@@ -231,7 +265,7 @@ export default {
         return "-";
       }
     },
-    async handleFileChange(event) {
+    handleFileChange(event) {
       const file = event.target.files[0];
       if (!file) return;
 
@@ -245,16 +279,31 @@ export default {
         return;
       }
 
-      this.uploading = true;
+      this.previewImage(file, event.target);
+    },
+    previewImage(file, fileInput) {
+      // 创建预览
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.form.imageFile = file;
+        this.imagePreview = e.target.result;
+      };
+      reader.readAsDataURL(file);
+      
+      // 清空文件输入框，确保可以选择相同的图片
+      if (fileInput) {
+        fileInput.value = "";
+      }
+    },
+    async uploadImage(file, type, id) {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("type", type);
+      if (id) {
+        formData.append("id", id);
+      }
 
       try {
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("type", "festival_gathering");
-        if (this.form.id) {
-          formData.append("id", this.form.id);
-        }
-
         const response = await fetch("http://localhost:8082/api/upload/image", {
           method: "POST",
           body: formData,
@@ -263,16 +312,13 @@ export default {
         const result = await response.json();
 
         if (result.success) {
-          this.form.image = result.url;
-          this.imagePreview = `http://localhost:8082${result.url}`;
+          return result.url;
         } else {
-          alert(result.message || "上传失败");
+          throw new Error(result.message || "上传失败");
         }
       } catch (error) {
         console.error("上传失败", error);
-        alert("上传失败,请重试");
-      } finally {
-        this.uploading = false;
+        throw error;
       }
     },
     async removeImage() {

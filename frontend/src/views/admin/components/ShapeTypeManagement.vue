@@ -94,6 +94,7 @@
 </template>
 
 <script>
+import { getImageUrl } from "../../../utils/imageHelper";
 export default {
   name: "ShapeTypeManagement",
   data() {
@@ -138,17 +139,7 @@ export default {
       this.isEdit = true;
       this.form = { ...item };
       // 处理图片预览URL
-      if (item.image) {
-        // 如果已经是完整URL,直接使用
-        if (item.image.startsWith("http://") || item.image.startsWith("https://")) {
-          this.imagePreview = item.image;
-        } else {
-          // 如果是相对路径,添加服务器地址
-          this.imagePreview = `http://localhost:8082${item.image}`;
-        }
-      } else {
-        this.imagePreview = null;
-      }
+      this.imagePreview = item.image ? getImageUrl(item.image) : null;
       this.showDialog = true;
       // 阻止背景滚动
       document.body.style.overflow = "hidden";
@@ -161,6 +152,12 @@ export default {
     },
     async saveItem() {
       try {
+        this.uploading = true;
+
+        // 准备保存的数据
+        const saveData = { ...this.form };
+        delete saveData.imageFile;
+
         const url = `http://localhost:8082/api/shape-type/${this.form.id}`;
         const method = "PUT";
 
@@ -169,10 +166,33 @@ export default {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(this.form),
+          body: JSON.stringify(saveData),
         });
 
         if (response.ok) {
+          // 上传图片
+          if (this.form.imageFile) {
+            try {
+              const imageUrl = await this.uploadImage(
+                this.form.imageFile,
+                "basic_style",
+                this.form.id,
+              );
+              // 更新图片
+              await fetch(url, {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ image: imageUrl }),
+              });
+            } catch (error) {
+              console.error("上传图片失败:", error);
+              alert("上传图片失败");
+              return;
+            }
+          }
+
           alert("更新成功");
           this.closeDialog();
           this.loadItems();
@@ -182,6 +202,8 @@ export default {
       } catch (error) {
         console.error("保存形制数据失败:", error);
         alert("保存失败");
+      } finally {
+        this.uploading = false;
       }
     },
     async deleteItem(id) {
@@ -206,16 +228,29 @@ export default {
     handleFileChange(event) {
       const file = event.target.files[0];
       if (file) {
-        this.uploadImage(file, event.target);
+        this.previewImage(file, event.target);
       }
     },
-    async uploadImage(file, fileInput) {
-      this.uploading = true;
+    previewImage(file, fileInput) {
+      // 创建预览
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.form.imageFile = file;
+        this.imagePreview = e.target.result;
+      };
+      reader.readAsDataURL(file);
+
+      // 清空文件输入框，确保可以选择相同的图片
+      if (fileInput) {
+        fileInput.value = "";
+      }
+    },
+    async uploadImage(file, type, id) {
       const formData = new FormData();
       formData.append("file", file);
-      formData.append("type", "basic_style");
-      if (this.form.id) {
-        formData.append("id", this.form.id);
+      formData.append("type", type);
+      if (id) {
+        formData.append("id", id);
       }
 
       try {
@@ -227,23 +262,16 @@ export default {
         if (response.ok) {
           const data = await response.json();
           if (data.success) {
-            this.form.image = data.url;
-            this.imagePreview = `http://localhost:8082${data.url}?t=${new Date().getTime()}`;
+            return data.url;
           } else {
-            alert(data.message || "上传失败");
+            throw new Error(data.message || "上传失败");
           }
         } else {
-          alert("上传失败");
+          throw new Error("上传失败");
         }
       } catch (error) {
         console.error("上传图片失败:", error);
-        alert("上传图片失败");
-      } finally {
-        this.uploading = false;
-        // 清空文件输入框，确保可以选择相同的图片
-        if (fileInput) {
-          fileInput.value = "";
-        }
+        throw error;
       }
     },
     async removeImage() {

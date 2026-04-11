@@ -95,6 +95,9 @@ public class DataInitializer implements CommandLineRunner {
         shape.setName(shapeName);
         shape.setSortOrder(sortOrder);
         
+        // 设置图片路径
+        shape.setImage("/uploads/basic_style/" + sortOrder + ".jpg");
+        
         switch (shapeName) {
             case "深衣制":
                 shape.setPeriod("战国至明代");
