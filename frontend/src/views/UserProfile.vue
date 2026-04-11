@@ -379,6 +379,7 @@
           <el-radio-group v-model="editForm.gender">
             <el-radio label="male">男</el-radio>
             <el-radio label="female">女</el-radio>
+            <el-radio label="unknown">未知</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="简介">

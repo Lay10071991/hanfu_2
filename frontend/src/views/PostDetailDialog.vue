@@ -169,7 +169,6 @@
     <template #footer>
       <div class="dialog-footer">
         <el-button @click="handleClose">关闭</el-button>
-        <el-button type="primary" @click="handleSave" v-if="isOwner"> 编辑帖子 </el-button>
       </div>
     </template>
   </el-dialog>
@@ -324,17 +323,6 @@ const hasMoreComments = computed(() => {
 const handleClose = () => {
   visible.value = false;
   emit("update:visible", false);
-};
-
-const handleSave = () => {
-  ElMessageBox.prompt("请输入新的标题", "编辑帖子", {
-    confirmButtonText: "保存",
-    cancelButtonText: "取消",
-    inputValue: post.value.title,
-  }).then(({ value }) => {
-    post.value.title = value;
-    ElMessage.success("标题已更新");
-  });
 };
 
 const toggleLike = async () => {
