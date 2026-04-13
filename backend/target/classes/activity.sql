@@ -161,17 +161,16 @@ CREATE TABLE `shape_type`  (
   `characteristics` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '形制特点',
   `content` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '详细内容',
   `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '图片URL',
-  `sort_order` int(11) NOT NULL DEFAULT 0 COMMENT '排序顺序',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '汉服形制分类表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of shape_type
 -- ----------------------------
-INSERT INTO `shape_type` VALUES (1, '深衣制', '战国至明代', '上下连属的服饰，将上衣下裳连为一体，体现深意。', '上下连属、端庄大方、适用广泛', '深衣制是汉服的重要形制之一，其最大特点是将上衣和下裳连在一起，形成上下连属的服饰结构。这种形制体现了中国古代"天地合一"的哲学思想，上衣用深色象征天，下裳用浅色象征地。深衣在战国时期开始流行，历经秦汉、魏晋南北朝，一直沿用到明代，是中国古代穿着时间最长的服饰形制之一。', '/uploads/basic_style/1.jpg', 1);
-INSERT INTO `shape_type` VALUES (2, '衣裳制', '先秦至明清', '上衣下裳的基本形制，最古老的汉服形式，象征天地秩序。', '上下分裁、庄严正统、礼仪性强', '衣裳制是汉服最古老、最基本的形制，由上衣和下裳两部分组成。这种形制的起源可以追溯到远古时期，是中国服饰文化的源头。上衣代表天，下裳代表地，体现了中国古代"天人合一"的宇宙观。', '/uploads/basic_style/2.jpg', 2);
-INSERT INTO `shape_type` VALUES (3, '襦裙制', '历代流行', '上衣下裙的女装组合，历代款式变化丰富多样。', '上衣下裙、款式多样、女性特色', '襦裙制是汉服女装的主要形制，由短上衣（襦）和裙子组成。这种形制在中国历史上流传时间最长、影响最为深远。历代襦裙款式变化丰富，有齐胸襦裙、齐腰襦裙、高腰襦裙等多种形式。', '/uploads/basic_style/3.jpg', 3);
-INSERT INTO `shape_type` VALUES (4, '袍服制', '汉代以后', '一体裁剪的长衣，便于活动，逐渐成为日常服饰。', '一体裁剪、便于活动、日常实用', '袍服制是一体裁剪的长衣形制，有衬里的称袍，无衬里的称衫。这种形制在汉代以后广泛流行，因其便于活动、穿着舒适而深受人们喜爱。袍服的特点是上下连属，一体成型，没有上衣下裳的分界。', '/uploads/basic_style/4.jpg', 4);
+INSERT INTO `shape_type` VALUES (1, '深衣制', '战国至明代', '上下连属的服饰，将上衣下裳连为一体，体现深意。', '上下连属、端庄大方、适用广泛', '深衣制是汉服的重要形制之一，其最大特点是将上衣和下裳连在一起，形成上下连属的服饰结构。这种形制体现了中国古代"天地合一"的哲学思想，上衣用深色象征天，下裳用浅色象征地。深衣在战国时期开始流行，历经秦汉、魏晋南北朝，一直沿用到明代，是中国古代穿着时间最长的服饰形制之一。', '/uploads/basic_style/1.jpg');
+INSERT INTO `shape_type` VALUES (2, '衣裳制', '先秦至明清', '上衣下裳的基本形制，最古老的汉服形式，象征天地秩序。', '上下分裁、庄严正统、礼仪性强', '衣裳制是汉服最古老、最基本的形制，由上衣和下裳两部分组成。这种形制的起源可以追溯到远古时期，是中国服饰文化的源头。上衣代表天，下裳代表地，体现了中国古代"天人合一"的宇宙观。', '/uploads/basic_style/2.jpg');
+INSERT INTO `shape_type` VALUES (3, '襦裙制', '历代流行', '上衣下裙的女装组合，历代款式变化丰富多样。', '上衣下裙、款式多样、女性特色', '襦裙制是汉服女装的主要形制，由短上衣（襦）和裙子组成。这种形制在中国历史上流传时间最长、影响最为深远。历代襦裙款式变化丰富，有齐胸襦裙、齐腰襦裙、高腰襦裙等多种形式。', '/uploads/basic_style/3.jpg');
+INSERT INTO `shape_type` VALUES (4, '袍服制', '汉代以后', '一体裁剪的长衣，便于活动，逐渐成为日常服饰。', '一体裁剪、便于活动、日常实用', '袍服制是一体裁剪的长衣形制，有衬里的称袍，无衬里的称衫。这种形制在汉代以后广泛流行，因其便于活动、穿着舒适而深受人们喜爱。袍服的特点是上下连属，一体成型，没有上衣下裳的分界。', '/uploads/basic_style/4.jpg');
 
 -- ----------------------------
 -- Table structure for hanfu_display
@@ -183,22 +182,21 @@ CREATE TABLE `hanfu_display`  (
   `description` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '衣冠描述',
   `content` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '详细内容',
   `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '图片URL',
-  `sort_order` int(11) NOT NULL DEFAULT 0 COMMENT '排序顺序',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '千载衣冠表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of hanfu_display
 -- ----------------------------
-INSERT INTO `hanfu_display` VALUES (1, '战国袍', '战国时期的袍服，款式简洁大方，体现了当时的审美风格。', '战国袍是战国时期流行的袍服形制，款式简洁大方，通常为交领右衽，袖子宽大，长度及地。战国袍的面料多为丝绸、棉麻等，色彩以素色为主，装饰简洁。', '/uploads/hanfu/1.jpg', 1);
-INSERT INTO `hanfu_display` VALUES (2, '明制', '明代的汉服形制，款式严谨规范，体现了明代的礼仪文化。', '明制汉服是明代的汉服形制，包括袄裙、马面裙、直裰等多种款式。明制汉服的特点是款式严谨规范，色彩搭配和谐，装饰精美。', '/uploads/hanfu/2.jpg', 2);
-INSERT INTO `hanfu_display` VALUES (3, '晋制', '晋代的汉服形制，款式洒脱飘逸，体现了魏晋风流的审美风格。', '晋制汉服是晋代的汉服形制，款式洒脱飘逸，通常为交领右衽，袖子宽大，衣裾宽松。晋制汉服的面料多为丝绸，色彩以素雅为主，装饰简洁。', '/uploads/hanfu/3.jpg', 3);
-INSERT INTO `hanfu_display` VALUES (4, '宋制', '宋代的汉服形制，款式简洁质朴，体现了宋代的审美风格。', '宋制汉服是宋代的汉服形制，包括褙子、襦裙、圆领袍等多种款式。宋制汉服的特点是款式简洁质朴，色彩搭配和谐，装饰精美。', '/uploads/hanfu/4.jpg', 4);
-INSERT INTO `hanfu_display` VALUES (5, '唐制', '唐代的汉服形制，款式开放多样，体现了唐代的开放包容精神。', '唐制汉服是唐代的汉服形制，包括衫裙、圆领袍、半臂等多种款式。唐制汉服的特点是款式开放多样，色彩斑斓，装饰精美。', '/uploads/hanfu/5.jpg', 5);
-INSERT INTO `hanfu_display` VALUES (6, '齐腰襦裙', '齐腰襦裙是汉服中常见的女装形制，款式优雅大方。', '齐腰襦裙是汉服中常见的女装形制，由短上衣（襦）和齐腰裙子组成。齐腰襦裙的特点是款式优雅大方，色彩搭配和谐，装饰精美。', '/uploads/hanfu/6.jpg', 6);
-INSERT INTO `hanfu_display` VALUES (7, '褙子裙', '褙子裙是宋代流行的女装形制，款式优雅大方。', '褙子裙是宋代流行的女装形制，由褙子和裙子组成。褙子是一种无袖或短袖的上衣，款式优雅大方，色彩搭配和谐，装饰精美。', '/uploads/hanfu/7.jpg', 7);
-INSERT INTO `hanfu_display` VALUES (8, '圆领袍', '圆领袍是汉服中常见的男装形制，款式简洁大方。', '圆领袍是汉服中常见的男装形制，款式简洁大方，通常为圆领，袖子宽大，长度及地。圆领袍的面料多为丝绸、棉麻等，色彩以素色为主，装饰简洁。', '/uploads/hanfu/8.jpg', 8);
-INSERT INTO `hanfu_display` VALUES (9, '飞鱼服', '飞鱼服是明代锦衣卫的官服，款式华丽威严。', '飞鱼服是明代锦衣卫的官服，款式华丽威严，通常为红色或紫色，绣有飞鱼纹样。飞鱼服的面料多为丝绸，装饰精美，体现了明代官服的等级制度。', '/uploads/hanfu/9.jpg', 9);
+INSERT INTO `hanfu_display` VALUES (1, '战国袍', '战国时期的袍服，款式简洁大方，体现了当时的审美风格。', '战国袍是战国时期流行的袍服形制，款式简洁大方，通常为交领右衽，袖子宽大，长度及地。战国袍的面料多为丝绸、棉麻等，色彩以素色为主，装饰简洁。', '/uploads/hanfu/1.jpg');
+INSERT INTO `hanfu_display` VALUES (2, '明制', '明代的汉服形制，款式严谨规范，体现了明代的礼仪文化。', '明制汉服是明代的汉服形制，包括袄裙、马面裙、直裰等多种款式。明制汉服的特点是款式严谨规范，色彩搭配和谐，装饰精美。', '/uploads/hanfu/2.jpg');
+INSERT INTO `hanfu_display` VALUES (3, '晋制', '晋代的汉服形制，款式洒脱飘逸，体现了魏晋风流的审美风格。', '晋制汉服是晋代的汉服形制，款式洒脱飘逸，通常为交领右衽，袖子宽大，衣裾宽松。晋制汉服的面料多为丝绸，色彩以素雅为主，装饰简洁。', '/uploads/hanfu/3.jpg');
+INSERT INTO `hanfu_display` VALUES (4, '宋制', '宋代的汉服形制，款式简洁质朴，体现了宋代的审美风格。', '宋制汉服是宋代的汉服形制，包括褙子、襦裙、圆领袍等多种款式。宋制汉服的特点是款式简洁质朴，色彩搭配和谐，装饰精美。', '/uploads/hanfu/4.jpg');
+INSERT INTO `hanfu_display` VALUES (5, '唐制', '唐代的汉服形制，款式开放多样，体现了唐代的开放包容精神。', '唐制汉服是唐代的汉服形制，包括衫裙、圆领袍、半臂等多种款式。唐制汉服的特点是款式开放多样，色彩斑斓，装饰精美。', '/uploads/hanfu/5.jpg');
+INSERT INTO `hanfu_display` VALUES (6, '齐腰襦裙', '齐腰襦裙是汉服中常见的女装形制，款式优雅大方。', '齐腰襦裙是汉服中常见的女装形制，由短上衣（襦）和齐腰裙子组成。齐腰襦裙的特点是款式优雅大方，色彩搭配和谐，装饰精美。', '/uploads/hanfu/6.jpg');
+INSERT INTO `hanfu_display` VALUES (7, '褙子裙', '褙子裙是宋代流行的女装形制，款式优雅大方。', '褙子裙是宋代流行的女装形制，由褙子和裙子组成。褙子是一种无袖或短袖的上衣，款式优雅大方，色彩搭配和谐，装饰精美。', '/uploads/hanfu/7.jpg');
+INSERT INTO `hanfu_display` VALUES (8, '圆领袍', '圆领袍是汉服中常见的男装形制，款式简洁大方。', '圆领袍是汉服中常见的男装形制，款式简洁大方，通常为圆领，袖子宽大，长度及地。圆领袍的面料多为丝绸、棉麻等，色彩以素色为主，装饰简洁。', '/uploads/hanfu/8.jpg');
+INSERT INTO `hanfu_display` VALUES (9, '飞鱼服', '飞鱼服是明代锦衣卫的官服，款式华丽威严。', '飞鱼服是明代锦衣卫的官服，款式华丽威严，通常为红色或紫色，绣有飞鱼纹样。飞鱼服的面料多为丝绸，装饰精美，体现了明代官服的等级制度。', '/uploads/hanfu/9.jpg');
 
 -- ----------------------------
 -- Table structure for hanfu_images
@@ -208,7 +206,6 @@ CREATE TABLE `hanfu_images`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '图片ID',
   `hanfu_id` bigint(20) NOT NULL COMMENT '汉服ID',
   `image_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '图片路径',
-  `sort_order` int(11) NOT NULL DEFAULT 0 COMMENT '排序顺序',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_hanfu_id`(`hanfu_id`) USING BTREE,
   CONSTRAINT `fk_hanfu_images_hanfu` FOREIGN KEY (`hanfu_id`) REFERENCES `hanfu_display` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
@@ -217,33 +214,33 @@ CREATE TABLE `hanfu_images`  (
 -- ----------------------------
 -- Records of hanfu_images
 -- ----------------------------
-INSERT INTO `hanfu_images` VALUES (1, 1, '/uploads/clothing_show/1-1.jpg', 1);
-INSERT INTO `hanfu_images` VALUES (2, 1, '/uploads/clothing_show/1-2.jpg', 2);
-INSERT INTO `hanfu_images` VALUES (3, 1, '/uploads/clothing_show/1-3.jpg', 3);
-INSERT INTO `hanfu_images` VALUES (4, 2, '/uploads/clothing_show/2-1.jpg', 1);
-INSERT INTO `hanfu_images` VALUES (5, 2, '/uploads/clothing_show/2-2.jpg', 2);
-INSERT INTO `hanfu_images` VALUES (6, 2, '/uploads/clothing_show/2-3.jpg', 3);
-INSERT INTO `hanfu_images` VALUES (7, 3, '/uploads/clothing_show/3-1.jpg', 1);
-INSERT INTO `hanfu_images` VALUES (8, 3, '/uploads/clothing_show/3-2.jpg', 2);
-INSERT INTO `hanfu_images` VALUES (9, 3, '/uploads/clothing_show/3-3.jpg', 3);
-INSERT INTO `hanfu_images` VALUES (10, 4, '/uploads/clothing_show/4-1.jpg', 1);
-INSERT INTO `hanfu_images` VALUES (11, 4, '/uploads/clothing_show/4-2.jpg', 2);
-INSERT INTO `hanfu_images` VALUES (12, 4, '/uploads/clothing_show/4-3.jpg', 3);
-INSERT INTO `hanfu_images` VALUES (13, 5, '/uploads/clothing_show/5-1.jpg', 1);
-INSERT INTO `hanfu_images` VALUES (14, 5, '/uploads/clothing_show/5-2.jpg', 2);
-INSERT INTO `hanfu_images` VALUES (15, 5, '/uploads/clothing_show/5-3.jpg', 3);
-INSERT INTO `hanfu_images` VALUES (16, 6, '/uploads/clothing_show/6-1.jpg', 1);
-INSERT INTO `hanfu_images` VALUES (17, 6, '/uploads/clothing_show/6-2.jpg', 2);
-INSERT INTO `hanfu_images` VALUES (18, 6, '/uploads/clothing_show/6-3.jpg', 3);
-INSERT INTO `hanfu_images` VALUES (19, 7, '/uploads/clothing_show/7-1.jpg', 1);
-INSERT INTO `hanfu_images` VALUES (20, 7, '/uploads/clothing_show/7-2.jpg', 2);
-INSERT INTO `hanfu_images` VALUES (21, 7, '/uploads/clothing_show/7-3.jpg', 3);
-INSERT INTO `hanfu_images` VALUES (22, 8, '/uploads/clothing_show/8-1.jpg', 1);
-INSERT INTO `hanfu_images` VALUES (23, 8, '/uploads/clothing_show/8-2.jpg', 2);
-INSERT INTO `hanfu_images` VALUES (24, 8, '/uploads/clothing_show/8-3.jpg', 3);
-INSERT INTO `hanfu_images` VALUES (25, 9, '/uploads/clothing_show/9-1.jpg', 1);
-INSERT INTO `hanfu_images` VALUES (26, 9, '/uploads/clothing_show/9-2.jpg', 2);
-INSERT INTO `hanfu_images` VALUES (27, 9, '/uploads/clothing_show/9-3.jpg', 3);
+INSERT INTO `hanfu_images` VALUES (1, 1, '/uploads/clothing_show/1-1.jpg');
+INSERT INTO `hanfu_images` VALUES (2, 1, '/uploads/clothing_show/1-2.jpg');
+INSERT INTO `hanfu_images` VALUES (3, 1, '/uploads/clothing_show/1-3.jpg');
+INSERT INTO `hanfu_images` VALUES (4, 2, '/uploads/clothing_show/2-1.jpg');
+INSERT INTO `hanfu_images` VALUES (5, 2, '/uploads/clothing_show/2-2.jpg');
+INSERT INTO `hanfu_images` VALUES (6, 2, '/uploads/clothing_show/2-3.jpg');
+INSERT INTO `hanfu_images` VALUES (7, 3, '/uploads/clothing_show/3-1.jpg');
+INSERT INTO `hanfu_images` VALUES (8, 3, '/uploads/clothing_show/3-2.jpg');
+INSERT INTO `hanfu_images` VALUES (9, 3, '/uploads/clothing_show/3-3.jpg');
+INSERT INTO `hanfu_images` VALUES (10, 4, '/uploads/clothing_show/4-1.jpg');
+INSERT INTO `hanfu_images` VALUES (11, 4, '/uploads/clothing_show/4-2.jpg');
+INSERT INTO `hanfu_images` VALUES (12, 4, '/uploads/clothing_show/4-3.jpg');
+INSERT INTO `hanfu_images` VALUES (13, 5, '/uploads/clothing_show/5-1.jpg');
+INSERT INTO `hanfu_images` VALUES (14, 5, '/uploads/clothing_show/5-2.jpg');
+INSERT INTO `hanfu_images` VALUES (15, 5, '/uploads/clothing_show/5-3.jpg');
+INSERT INTO `hanfu_images` VALUES (16, 6, '/uploads/clothing_show/6-1.jpg');
+INSERT INTO `hanfu_images` VALUES (17, 6, '/uploads/clothing_show/6-2.jpg');
+INSERT INTO `hanfu_images` VALUES (18, 6, '/uploads/clothing_show/6-3.jpg');
+INSERT INTO `hanfu_images` VALUES (19, 7, '/uploads/clothing_show/7-1.jpg');
+INSERT INTO `hanfu_images` VALUES (20, 7, '/uploads/clothing_show/7-2.jpg');
+INSERT INTO `hanfu_images` VALUES (21, 7, '/uploads/clothing_show/7-3.jpg');
+INSERT INTO `hanfu_images` VALUES (22, 8, '/uploads/clothing_show/8-1.jpg');
+INSERT INTO `hanfu_images` VALUES (23, 8, '/uploads/clothing_show/8-2.jpg');
+INSERT INTO `hanfu_images` VALUES (24, 8, '/uploads/clothing_show/8-3.jpg');
+INSERT INTO `hanfu_images` VALUES (25, 9, '/uploads/clothing_show/9-1.jpg');
+INSERT INTO `hanfu_images` VALUES (26, 9, '/uploads/clothing_show/9-2.jpg');
+INSERT INTO `hanfu_images` VALUES (27, 9, '/uploads/clothing_show/9-3.jpg');
 
 -- ----------------------------
 -- Table structure for pattern_symbol
