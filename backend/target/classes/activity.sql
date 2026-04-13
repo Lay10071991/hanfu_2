@@ -6,7 +6,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 DROP TABLE IF EXISTS `user_role`;
 CREATE TABLE `user_role`  (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '角色ID',
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '角色ID',
   `role_name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '角色名称',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '用户角色表' ROW_FORMAT = Dynamic;
@@ -23,12 +23,12 @@ INSERT INTO `user_role` VALUES (3, '平台负责人');
 -- ----------------------------
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user`  (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '用户ID',
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '用户ID',
   `username` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '用户名',
   `password` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '密码',
   `gender` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '性别',
   `bio` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '简介',
-  `user_role_id` bigint NOT NULL COMMENT '用户角色ID',
+  `user_role_id` bigint(20) NOT NULL COMMENT '用户角色ID',
   PRIMARY KEY (`id`) USING BTREE,
   CONSTRAINT `user_ibfk_1` FOREIGN KEY (`user_role_id`) REFERENCES `user_role` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
 ) ENGINE = InnoDB AUTO_INCREMENT = 56 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '用户表' ROW_FORMAT = Dynamic;
@@ -97,7 +97,7 @@ INSERT INTO `user` VALUES (55, '未央', '123456', 'female', '商家', 2);
 -- ----------------------------
 DROP TABLE IF EXISTS `historical_era`;
 CREATE TABLE `historical_era`  (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '历史朝代ID',
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '历史朝代ID',
   `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '朝代名称',
   `years` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '年代',
   `title` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '标题',
@@ -120,7 +120,7 @@ INSERT INTO `historical_era` VALUES (6, '清代', '1644年-1911年', '汉服衰�
 -- ----------------------------
 DROP TABLE IF EXISTS `cultural_content`;
 CREATE TABLE `cultural_content`  (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '内容ID',
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '内容ID',
   `title` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '标题',
   `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '内容',
   `type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '类型(overview/history)',
@@ -142,7 +142,7 @@ INSERT INTO `cultural_content` VALUES (1, '汉服的历史概述', '汉服，全
 -- ----------------------------
 DROP TABLE IF EXISTS `culture_influence`;
 CREATE TABLE `culture_influence`  (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '文化影响ID',
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '文化影响ID',
   `title` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '标题',
   `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '描述',
   PRIMARY KEY (`id`) USING BTREE
@@ -160,14 +160,14 @@ INSERT INTO `culture_influence` VALUES (3, '现代复兴', '21世纪初，汉服
 -- ----------------------------
 DROP TABLE IF EXISTS `shape_type`;
 CREATE TABLE `shape_type`  (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '形制分类ID',
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '形制分类ID',
   `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '形制名称',
   `period` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '流行时期',
   `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '形制描述',
   `characteristics` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '形制特点',
   `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '详细内容',
   `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '图片URL',
-  `sort_order` int NOT NULL DEFAULT 0 COMMENT '排序顺序',
+  `sort_order` int(11) NOT NULL DEFAULT 0 COMMENT '排序顺序',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '汉服形制分类表' ROW_FORMAT = Dynamic;
 
@@ -184,12 +184,12 @@ INSERT INTO `shape_type` VALUES (4, '袍服制', '汉代以后', '一体裁剪�
 -- ----------------------------
 DROP TABLE IF EXISTS `hanfu_display`;
 CREATE TABLE `hanfu_display`  (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '衣冠展示ID',
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '衣冠展示ID',
   `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '衣冠名称',
   `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '衣冠描述',
   `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '详细内容',
   `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '图片URL',
-  `sort_order` int NOT NULL DEFAULT 0 COMMENT '排序顺序',
+  `sort_order` int(11) NOT NULL DEFAULT 0 COMMENT '排序顺序',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '千载衣冠表' ROW_FORMAT = Dynamic;
 
@@ -211,10 +211,10 @@ INSERT INTO `hanfu_display` VALUES (9, '飞鱼服', '飞鱼服是明代锦衣卫
 -- ----------------------------
 DROP TABLE IF EXISTS `hanfu_images`;
 CREATE TABLE `hanfu_images`  (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '图片ID',
-  `hanfu_id` bigint NOT NULL COMMENT '汉服ID',
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '图片ID',
+  `hanfu_id` bigint(20) NOT NULL COMMENT '汉服ID',
   `image_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '图片路径',
-  `sort_order` int NOT NULL DEFAULT 0 COMMENT '排序顺序',
+  `sort_order` int(11) NOT NULL DEFAULT 0 COMMENT '排序顺序',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_hanfu_id`(`hanfu_id`) USING BTREE,
   CONSTRAINT `fk_hanfu_images_hanfu` FOREIGN KEY (`hanfu_id`) REFERENCES `hanfu_display` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
@@ -256,7 +256,7 @@ INSERT INTO `hanfu_images` VALUES (27, 9, '/uploads/clothing_show/9-3.jpg', 3);
 -- ----------------------------
 DROP TABLE IF EXISTS `pattern_symbol`;
 CREATE TABLE `pattern_symbol`  (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '图案ID',
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '图案ID',
   `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '图案名称',
   `meaning` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '象征意义',
   `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '图案图片URL',
@@ -290,7 +290,7 @@ INSERT INTO `pattern_symbol` VALUES (17, '芙蓉纹', '高洁优雅', '/pattern-
 -- ----------------------------
 DROP TABLE IF EXISTS `etiquette`;
 CREATE TABLE `etiquette`  (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '礼仪ID',
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '礼仪ID',
   `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '礼仪名称',
   `period` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '所属朝代',
   `category` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '礼仪类别(worship/standing)',
@@ -320,7 +320,7 @@ INSERT INTO `etiquette` VALUES (9, '空首礼', '唐代', 'worship', '/uploads/e
 -- ----------------------------
 DROP TABLE IF EXISTS `festival`;
 CREATE TABLE `festival`  (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '节日ID',
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '节日ID',
   `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '节日名称',
   `date` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '节日日期',
   `season` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '所属季节(spring/summer/autumn/winter)',
@@ -348,7 +348,7 @@ INSERT INTO `festival` VALUES (9, '腊八节', '农历腊月初八', 'winter', '
 -- ----------------------------
 DROP TABLE IF EXISTS `festival_activity`;
 CREATE TABLE `festival_activity`  (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '活动ID',
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '活动ID',
   `title` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '活动标题',
   `season` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '所属季节(spring/summer/autumn/winter)',
   `date` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '活动日期',
@@ -378,8 +378,8 @@ INSERT INTO `festival_activity` VALUES (9, '成人礼仪式', 'spring', '2026年
 -- ----------------------------
 DROP TABLE IF EXISTS `festival_activity_comment`;
 CREATE TABLE `festival_activity_comment`  (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '评论ID',
-  `activity_id` bigint NOT NULL COMMENT '活动ID',
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '评论ID',
+  `activity_id` bigint(20) NOT NULL COMMENT '活动ID',
   `user_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '用户名',
   `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '评论内容',
   PRIMARY KEY (`id`) USING BTREE,
@@ -433,9 +433,9 @@ INSERT INTO `festival_activity_comment` VALUES (34, 9, '落日飞车', '以后�
 -- ----------------------------
 DROP TABLE IF EXISTS `festival_activity_registration`;
 CREATE TABLE `festival_activity_registration`  (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '报名ID',
-  `festival_activity_id` bigint NOT NULL COMMENT '节庆活动ID',
-  `user_id` bigint NOT NULL COMMENT '用户ID',
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '报名ID',
+  `festival_activity_id` bigint(20) NOT NULL COMMENT '节庆活动ID',
+  `user_id` bigint(20) NOT NULL COMMENT '用户ID',
   `status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT 'registered' COMMENT '报名状态(registered/attended/cancelled)',
   `registration_time` datetime NOT NULL COMMENT '报名时间',
   PRIMARY KEY (`id`) USING BTREE,
@@ -649,7 +649,7 @@ INSERT INTO `festival_activity_registration` VALUES (178, 9, 36, 'registered', '
 -- ----------------------------
 DROP TABLE IF EXISTS `exhibition`;
 CREATE TABLE `exhibition`  (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '展览ID',
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '展览ID',
   `title` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '展览标题',
   `organizer` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '组织者',
   `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '展览描述',
@@ -681,9 +681,9 @@ INSERT INTO `exhibition` VALUES (8, '汉服国际交流展', '广州文化中心
 -- ----------------------------
 DROP TABLE IF EXISTS `exhibition_registration`;
 CREATE TABLE `exhibition_registration`  (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '报名ID',
-  `exhibition_id` bigint NOT NULL COMMENT '展览ID',
-  `user_id` bigint NOT NULL COMMENT '用户ID',
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '报名ID',
+  `exhibition_id` bigint(20) NOT NULL COMMENT '展览ID',
+  `user_id` bigint(20) NOT NULL COMMENT '用户ID',
   `status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT 'registered' COMMENT '报名状态(registered/attended/cancelled)',
   `registration_time` datetime NOT NULL COMMENT '报名时间',
   PRIMARY KEY (`id`) USING BTREE,
@@ -691,7 +691,7 @@ CREATE TABLE `exhibition_registration`  (
   INDEX `user_id`(`user_id` ASC) USING BTREE,
   CONSTRAINT `exhibition_registration_ibfk_1` FOREIGN KEY (`exhibition_id`) REFERENCES `exhibition` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
   CONSTRAINT `exhibition_registration_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 162 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '展览报名表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 162 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT '展览报名表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of exhibition_registration
@@ -877,7 +877,7 @@ INSERT INTO `exhibition_registration` VALUES (161, 8, 36, 'registered', '2026-05
 -- ----------------------------
 DROP TABLE IF EXISTS `lecture`;
 CREATE TABLE `lecture`  (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '讲座ID',
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '讲座ID',
   `title` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '讲座标题',
   `speaker` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '讲师',
   `speaker_bio` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '主讲人介绍',
@@ -886,7 +886,7 @@ CREATE TABLE `lecture`  (
   `location` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '讲座地点',
   `start_time` datetime NOT NULL COMMENT '开始时间',
   `end_time` datetime NOT NULL COMMENT '结束时间',
-  `registered_count` int NULL DEFAULT 0 COMMENT '已注册人数',
+  `registered_count` int(11) NULL DEFAULT 0 COMMENT '已注册人数',
   `notice` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '参观须知',
   `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '讲座图片URL',
   PRIMARY KEY (`id`) USING BTREE
@@ -909,9 +909,9 @@ INSERT INTO `lecture` VALUES (8, '汉服的国际化发展', '孙博士', '文�
 -- ----------------------------
 DROP TABLE IF EXISTS `lecture_registration`;
 CREATE TABLE `lecture_registration`  (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '预约ID',
-  `lecture_id` bigint NOT NULL COMMENT '讲座ID',
-  `user_id` bigint NOT NULL COMMENT '用户ID',
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '预约ID',
+  `lecture_id` bigint(20) NOT NULL COMMENT '讲座ID',
+  `user_id` bigint(20) NOT NULL COMMENT '用户ID',
   `status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT 'registered' COMMENT '预约状态(registered/attended/cancelled)',
   `registration_time` datetime NOT NULL COMMENT '预约时间',
   PRIMARY KEY (`id`) USING BTREE,
