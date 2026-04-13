@@ -122,20 +122,14 @@ DROP TABLE IF EXISTS `cultural_content`;
 CREATE TABLE `cultural_content`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '内容ID',
   `title` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '标题',
-  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '内容',
-  `type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '类型(overview/history)',
-  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '名称',
-  `years` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '年代',
+  `content` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '内容',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '历史概述' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of cultural_content
 -- ----------------------------
-INSERT INTO `cultural_content` VALUES (1, '汉服的历史概述', '汉服，全称是"汉民族传统服饰"，又称汉衣冠、汉装、华服，是从黄帝即位到公元17世纪中叶(明末清初)，在汉族的主要居住区，以"华夏-汉"文化为背景和主导思想，以华夏礼仪文化为中心，通过自然演化而形成的具有独特汉民族风貌性格，明显区别于其他民族的传统服装和配饰体系。\n\n汉服历史悠久，源远流长，承载着中华民族几千年的文化底蕴和审美理念。从黄帝"垂衣裳而天下治"开始，汉服就已经具备了基本形制，历经夏商周、秦汉、魏晋南北朝、隋唐、宋元明清各个朝代的发展演变，形成了丰富多彩的服饰文化体系。', 'overview', '汉服概述', '');
-
-
-
+INSERT INTO `cultural_content` VALUES (1, '汉服的历史概述', '汉服，全称是"汉民族传统服饰"，又称汉衣冠、汉装、华服，是从黄帝即位到公元17世纪中叶(明末清初)，在汉族的主要居住区，以"华夏-汉"文化为背景和主导思想，以华夏礼仪文化为中心，通过自然演化而形成的具有独特汉民族风貌性格，明显区别于其他民族的传统服装和配饰体系。');
 
 -- ----------------------------
 -- Table structure for culture_influence
@@ -144,7 +138,7 @@ DROP TABLE IF EXISTS `culture_influence`;
 CREATE TABLE `culture_influence`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '文化影响ID',
   `title` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '标题',
-  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '描述',
+  `description` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '描述',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '文化影响与传承表' ROW_FORMAT = Dynamic;
 
@@ -163,9 +157,9 @@ CREATE TABLE `shape_type`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '形制分类ID',
   `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '形制名称',
   `period` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '流行时期',
-  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '形制描述',
-  `characteristics` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '形制特点',
-  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '详细内容',
+  `description` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '形制描述',
+  `characteristics` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '形制特点',
+  `content` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '详细内容',
   `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '图片URL',
   `sort_order` int(11) NOT NULL DEFAULT 0 COMMENT '排序顺序',
   PRIMARY KEY (`id`) USING BTREE
@@ -174,10 +168,10 @@ CREATE TABLE `shape_type`  (
 -- ----------------------------
 -- Records of shape_type
 -- ----------------------------
-INSERT INTO `shape_type` VALUES (1, '深衣制', '战国至明代', '上下连属的服饰，将上衣下裳连为一体，体现深意。', '上下连属、端庄大方、适用广泛', '深衣制是汉服的重要形制之一，其最大特点是将上衣和下裳连在一起，形成上下连属的服饰结构。这种形制体现了中国古代"天地合一"的哲学思想，上衣用深色象征天，下裳用浅色象征地。深衣在战国时期开始流行，历经秦汉、魏晋南北朝，一直沿用到明代，是中国古代穿着时间最长的服饰形制之一。深衣的裁剪工艺精湛，线条流畅，穿着端庄大方，既适合日常穿着，也适用于各种礼仪场合。', '/uploads/basic_style/1.jpg', 1);
-INSERT INTO `shape_type` VALUES (2, '衣裳制', '先秦至明清', '上衣下裳的基本形制，最古老的汉服形式，象征天地秩序。', '上下分裁、庄严正统、礼仪性强', '衣裳制是汉服最古老、最基本的形制，由上衣和下裳两部分组成。这种形制的起源可以追溯到远古时期，是中国服饰文化的源头。上衣代表天，下裳代表地，体现了中国古代"天人合一"的宇宙观。衣裳制在先秦时期就已经成熟，成为华夏衣冠的标准形制。历代王朝在制定礼服制度时，都以衣裳制为基础。这种形制庄严正统，礼仪性强，是古代祭祀、朝会等重大场合的主要服饰形式。', '/uploads/basic_style/2.jpg', 2);
-INSERT INTO `shape_type` VALUES (3, '襦裙制', '历代流行', '上衣下裙的女装组合，历代款式变化丰富多样。', '上衣下裙、款式多样、女性特色', '襦裙制是汉服女装的主要形制，由短上衣（襦）和裙子组成。这种形制在中国历史上流传时间最长、影响最为深远。历代襦裙款式变化丰富，有齐胸襦裙、齐腰襦裙、高腰襦裙等多种形式。襦裙制充分展现了东方女性的优雅气质，上衣短小精悍，裙子飘逸动人，整体线条流畅优美。从汉代的深衣制襦裙，到唐代的齐胸襦裙，再到宋明时期的各类襦裙，这种形制随着时代发展不断演变，成为中国传统女装的经典代表。', '/uploads/basic_style/3.jpg', 3);
-INSERT INTO `shape_type` VALUES (4, '袍服制', '汉代以后', '一体裁剪的长衣，便于活动，逐渐成为日常服饰。', '一体裁剪、便于活动、日常实用', '袍服制是一体裁剪的长衣形制，有衬里的称袍，无衬里的称衫。这种形制在汉代以后广泛流行，因其便于活动、穿着舒适而深受人们喜爱。袍服的特点是上下连属，一体成型，没有上衣下裳的分界。袍服的长度一般到脚踝，袖子宽大，体现了汉服的庄重与大气。历代袍服款式多样，有直裾袍、曲裾袍、圆领袍等，不同款式适应不同的场合和身份。袍服制既保留了汉服的典雅气质，又增加了实用性，成为古代日常穿着的主要服饰形式。', '/uploads/basic_style/4.jpg', 4);
+INSERT INTO `shape_type` VALUES (1, '深衣制', '战国至明代', '上下连属的服饰，将上衣下裳连为一体，体现深意。', '上下连属、端庄大方、适用广泛', '深衣制是汉服的重要形制之一，其最大特点是将上衣和下裳连在一起，形成上下连属的服饰结构。这种形制体现了中国古代"天地合一"的哲学思想，上衣用深色象征天，下裳用浅色象征地。深衣在战国时期开始流行，历经秦汉、魏晋南北朝，一直沿用到明代，是中国古代穿着时间最长的服饰形制之一。', '/uploads/basic_style/1.jpg', 1);
+INSERT INTO `shape_type` VALUES (2, '衣裳制', '先秦至明清', '上衣下裳的基本形制，最古老的汉服形式，象征天地秩序。', '上下分裁、庄严正统、礼仪性强', '衣裳制是汉服最古老、最基本的形制，由上衣和下裳两部分组成。这种形制的起源可以追溯到远古时期，是中国服饰文化的源头。上衣代表天，下裳代表地，体现了中国古代"天人合一"的宇宙观。', '/uploads/basic_style/2.jpg', 2);
+INSERT INTO `shape_type` VALUES (3, '襦裙制', '历代流行', '上衣下裙的女装组合，历代款式变化丰富多样。', '上衣下裙、款式多样、女性特色', '襦裙制是汉服女装的主要形制，由短上衣（襦）和裙子组成。这种形制在中国历史上流传时间最长、影响最为深远。历代襦裙款式变化丰富，有齐胸襦裙、齐腰襦裙、高腰襦裙等多种形式。', '/uploads/basic_style/3.jpg', 3);
+INSERT INTO `shape_type` VALUES (4, '袍服制', '汉代以后', '一体裁剪的长衣，便于活动，逐渐成为日常服饰。', '一体裁剪、便于活动、日常实用', '袍服制是一体裁剪的长衣形制，有衬里的称袍，无衬里的称衫。这种形制在汉代以后广泛流行，因其便于活动、穿着舒适而深受人们喜爱。袍服的特点是上下连属，一体成型，没有上衣下裳的分界。', '/uploads/basic_style/4.jpg', 4);
 
 -- ----------------------------
 -- Table structure for hanfu_display
@@ -186,8 +180,8 @@ DROP TABLE IF EXISTS `hanfu_display`;
 CREATE TABLE `hanfu_display`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '衣冠展示ID',
   `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '衣冠名称',
-  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '衣冠描述',
-  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '详细内容',
+  `description` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '衣冠描述',
+  `content` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '详细内容',
   `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '图片URL',
   `sort_order` int(11) NOT NULL DEFAULT 0 COMMENT '排序顺序',
   PRIMARY KEY (`id`) USING BTREE
@@ -196,15 +190,15 @@ CREATE TABLE `hanfu_display`  (
 -- ----------------------------
 -- Records of hanfu_display
 -- ----------------------------
-INSERT INTO `hanfu_display` VALUES (1, '战国袍', '战国时期的袍服，款式简洁大方，体现了当时的审美风格。', '战国袍是战国时期流行的袍服形制，款式简洁大方，通常为交领右衽，袖子宽大，长度及地。战国袍的面料多为丝绸、棉麻等，色彩以素色为主，装饰简洁。战国袍的穿着方式体现了当时的礼仪规范，是贵族和士大夫的常见服饰。', '/uploads/hanfu/1.jpg', 1);
-INSERT INTO `hanfu_display` VALUES (2, '明制', '明代的汉服形制，款式严谨规范，体现了明代的礼仪文化。', '明制汉服是明代的汉服形制，包括袄裙、马面裙、直裰等多种款式。明制汉服的特点是款式严谨规范，色彩搭配和谐，装饰精美。明制汉服的穿着方式体现了明代的礼仪文化，是当时社会各阶层的常见服饰。', '/uploads/hanfu/2.jpg', 2);
-INSERT INTO `hanfu_display` VALUES (3, '晋制', '晋代的汉服形制，款式洒脱飘逸，体现了魏晋风流的审美风格。', '晋制汉服是晋代的汉服形制，款式洒脱飘逸，通常为交领右衽，袖子宽大，衣裾宽松。晋制汉服的面料多为丝绸，色彩以素雅为主，装饰简洁。晋制汉服的穿着方式体现了魏晋风流的审美风格，是当时文人雅士的常见服饰。', '/uploads/hanfu/3.jpg', 3);
-INSERT INTO `hanfu_display` VALUES (4, '宋制', '宋代的汉服形制，款式简洁质朴，体现了宋代的审美风格。', '宋制汉服是宋代的汉服形制，包括褙子、襦裙、圆领袍等多种款式。宋制汉服的特点是款式简洁质朴，色彩搭配和谐，装饰精美。宋制汉服的穿着方式体现了宋代的审美风格，是当时社会各阶层的常见服饰。', '/uploads/hanfu/4.jpg', 4);
-INSERT INTO `hanfu_display` VALUES (5, '唐制', '唐代的汉服形制，款式开放多样，体现了唐代的开放包容精神。', '唐制汉服是唐代的汉服形制，包括衫裙、圆领袍、半臂等多种款式。唐制汉服的特点是款式开放多样，色彩斑斓，装饰精美。唐制汉服的穿着方式体现了唐代的开放包容精神，是当时社会各阶层的常见服饰。', '/uploads/hanfu/5.jpg', 5);
-INSERT INTO `hanfu_display` VALUES (6, '齐腰襦裙', '齐腰襦裙是汉服中常见的女装形制，款式优雅大方。', '齐腰襦裙是汉服中常见的女装形制，由短上衣（襦）和齐腰裙子组成。齐腰襦裙的特点是款式优雅大方，色彩搭配和谐，装饰精美。齐腰襦裙的穿着方式体现了东方女性的优雅气质，是历代女性的常见服饰。', '/uploads/hanfu/6.jpg', 6);
-INSERT INTO `hanfu_display` VALUES (7, '褙子裙', '褙子裙是宋代流行的女装形制，款式优雅大方。', '褙子裙是宋代流行的女装形制，由褙子和裙子组成。褙子是一种无袖或短袖的上衣，款式优雅大方，色彩搭配和谐，装饰精美。褙子裙的穿着方式体现了宋代女性的优雅气质，是当时女性的常见服饰。', '/uploads/hanfu/7.jpg', 7);
-INSERT INTO `hanfu_display` VALUES (8, '圆领袍', '圆领袍是汉服中常见的男装形制，款式简洁大方。', '圆领袍是汉服中常见的男装形制，款式简洁大方，通常为圆领，袖子宽大，长度及地。圆领袍的面料多为丝绸、棉麻等，色彩以素色为主，装饰简洁。圆领袍的穿着方式体现了男性的阳刚之气，是历代男性的常见服饰。', '/uploads/hanfu/8.jpg', 8);
-INSERT INTO `hanfu_display` VALUES (9, '飞鱼服', '飞鱼服是明代锦衣卫的官服，款式华丽威严。', '飞鱼服是明代锦衣卫的官服，款式华丽威严，通常为红色或紫色，绣有飞鱼纹样。飞鱼服的面料多为丝绸，装饰精美，体现了明代官服的等级制度。飞鱼服的穿着方式体现了锦衣卫的威严，是明代官员的特殊服饰。', '/uploads/hanfu/9.jpg', 9);
+INSERT INTO `hanfu_display` VALUES (1, '战国袍', '战国时期的袍服，款式简洁大方，体现了当时的审美风格。', '战国袍是战国时期流行的袍服形制，款式简洁大方，通常为交领右衽，袖子宽大，长度及地。战国袍的面料多为丝绸、棉麻等，色彩以素色为主，装饰简洁。', '/uploads/hanfu/1.jpg', 1);
+INSERT INTO `hanfu_display` VALUES (2, '明制', '明代的汉服形制，款式严谨规范，体现了明代的礼仪文化。', '明制汉服是明代的汉服形制，包括袄裙、马面裙、直裰等多种款式。明制汉服的特点是款式严谨规范，色彩搭配和谐，装饰精美。', '/uploads/hanfu/2.jpg', 2);
+INSERT INTO `hanfu_display` VALUES (3, '晋制', '晋代的汉服形制，款式洒脱飘逸，体现了魏晋风流的审美风格。', '晋制汉服是晋代的汉服形制，款式洒脱飘逸，通常为交领右衽，袖子宽大，衣裾宽松。晋制汉服的面料多为丝绸，色彩以素雅为主，装饰简洁。', '/uploads/hanfu/3.jpg', 3);
+INSERT INTO `hanfu_display` VALUES (4, '宋制', '宋代的汉服形制，款式简洁质朴，体现了宋代的审美风格。', '宋制汉服是宋代的汉服形制，包括褙子、襦裙、圆领袍等多种款式。宋制汉服的特点是款式简洁质朴，色彩搭配和谐，装饰精美。', '/uploads/hanfu/4.jpg', 4);
+INSERT INTO `hanfu_display` VALUES (5, '唐制', '唐代的汉服形制，款式开放多样，体现了唐代的开放包容精神。', '唐制汉服是唐代的汉服形制，包括衫裙、圆领袍、半臂等多种款式。唐制汉服的特点是款式开放多样，色彩斑斓，装饰精美。', '/uploads/hanfu/5.jpg', 5);
+INSERT INTO `hanfu_display` VALUES (6, '齐腰襦裙', '齐腰襦裙是汉服中常见的女装形制，款式优雅大方。', '齐腰襦裙是汉服中常见的女装形制，由短上衣（襦）和齐腰裙子组成。齐腰襦裙的特点是款式优雅大方，色彩搭配和谐，装饰精美。', '/uploads/hanfu/6.jpg', 6);
+INSERT INTO `hanfu_display` VALUES (7, '褙子裙', '褙子裙是宋代流行的女装形制，款式优雅大方。', '褙子裙是宋代流行的女装形制，由褙子和裙子组成。褙子是一种无袖或短袖的上衣，款式优雅大方，色彩搭配和谐，装饰精美。', '/uploads/hanfu/7.jpg', 7);
+INSERT INTO `hanfu_display` VALUES (8, '圆领袍', '圆领袍是汉服中常见的男装形制，款式简洁大方。', '圆领袍是汉服中常见的男装形制，款式简洁大方，通常为圆领，袖子宽大，长度及地。圆领袍的面料多为丝绸、棉麻等，色彩以素色为主，装饰简洁。', '/uploads/hanfu/8.jpg', 8);
+INSERT INTO `hanfu_display` VALUES (9, '飞鱼服', '飞鱼服是明代锦衣卫的官服，款式华丽威严。', '飞鱼服是明代锦衣卫的官服，款式华丽威严，通常为红色或紫色，绣有飞鱼纹样。飞鱼服的面料多为丝绸，装饰精美，体现了明代官服的等级制度。', '/uploads/hanfu/9.jpg', 9);
 
 -- ----------------------------
 -- Table structure for hanfu_images
@@ -260,7 +254,7 @@ CREATE TABLE `pattern_symbol`  (
   `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '图案名称',
   `meaning` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '象征意义',
   `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '图案图片URL',
-  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '图案描述',
+  `description` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '图案描述',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '图案象征表-汉服常见图案及寓意' ROW_FORMAT = Dynamic;
 
@@ -295,10 +289,10 @@ CREATE TABLE `etiquette`  (
   `period` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '所属朝代',
   `category` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '礼仪类别(worship/standing)',
   `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '示意图URL',
-  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '礼仪描述',
-  `features` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '礼仪特点(|分隔)',
-  `steps` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '行礼步骤(|分隔)',
-  `note` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '注意事项',
+  `description` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '礼仪描述',
+  `features` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '礼仪特点(|分隔)',
+  `steps` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '行礼步骤(|分隔)',
+  `note` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '注意事项',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '古代礼容仪态表' ROW_FORMAT = Dynamic;
 
@@ -325,8 +319,8 @@ CREATE TABLE `festival`  (
   `date` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '节日日期',
   `season` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '所属季节(spring/summer/autumn/winter)',
   `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '节日图片URL',
-  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '节日描述',
-  `customs` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '节日习俗(|分隔)',
+  `description` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '节日描述',
+  `customs` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '节日习俗(|分隔)',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '古代节俗礼仪表' ROW_FORMAT = Dynamic;
 
@@ -354,24 +348,24 @@ CREATE TABLE `festival_activity`  (
   `date` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '活动日期',
   `location` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '活动地点',
   `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '活动图片URL',
-  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '活动描述',
-  `tradition_experience` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '传统习俗体验',
-  `precautions` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '注意事项',
+  `description` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '活动描述',
+  `tradition_experience` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '传统习俗体验',
+  `precautions` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '注意事项',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '节庆雅集活动表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of festival_activity
 -- ----------------------------
-INSERT INTO `festival_activity` VALUES (1, '上元节灯会', 'spring', '2026年2月12日', '北京故宫', '/uploads/festival_gathering/1.jpg', '上元节，又称元宵节，是新年第一个月圆之夜。本次活动将在故宫举办盛大的灯会，展示各种精美的花灯造型，参与者可以猜灯谜、吃元宵，感受传统节日的魅力。', '猜灯谜：活动现场设置各类灯谜，参与者可凭智慧赢取精美奖品。\n赏花灯：欣赏各种传统花灯造型，包括宫灯、走马灯、荷花灯等。\n吃元宵：品尝各种口味的传统元宵，体验团圆美满的寓意。\n穿汉服：鼓励参与者身着汉服参加，感受古代上元节的氛围。', '请提前在官方平台预约门票，活动期间人流量较大。\n建议穿着舒适的鞋子，活动场地较大需要步行。\n夜间气温较低，请注意保暖。\n请遵守现场秩序，文明观灯。');
-INSERT INTO `festival_activity` VALUES (2, '清明踏青雅集', 'spring', '2026年4月4日', '杭州西湖', '/uploads/festival_gathering/2.jpg', '清明时节，春光明媚。本次活动将在西湖边举行踏青雅集，参与者可以身着汉服，漫步苏堤春晓，放风筝，品尝清明团子，感受春日的美好。', '踏青赏花：漫步西湖苏堤，欣赏春日美景，感受万物复苏的气息。\n放风筝：在指定区域放飞传统风筝，体验清明时节放风筝的习俗。\n品尝青团：品尝清明传统美食青团，了解其制作工艺和文化寓意。\n插柳戴柳：学习清明插柳戴柳的传统习俗，祈求平安健康。', '请穿着适合户外活动的服装和鞋子。\n春季天气多变，建议携带雨具和外套。\n注意防晒，建议携带遮阳帽和防晒霜。\n请爱护环境，不乱扔垃圾。');
-INSERT INTO `festival_activity` VALUES (3, '端午龙舟竞渡', 'summer', '2026年6月19日', '苏州金鸡湖', '/uploads/festival_gathering/3.jpg', '端午节是纪念屈原的传统节日。本次活动将在金鸡湖举办龙舟竞渡，参与者可以体验划龙舟的乐趣，品尝各种口味的粽子，学习包粽子的技艺。', '龙舟竞渡：观看或参与龙舟比赛，体验团队协作的乐趣。\n包粽子：学习传统包粽子技艺，了解不同地区粽子的特色。\n佩香囊：制作和佩戴端午香囊，驱邪避瘟，祈求健康。\n挂艾草：学习端午挂艾草、菖蒲的传统习俗。', '夏季户外活动请注意防暑降温，及时补充水分。\n参与水上活动请听从工作人员安排，注意安全。\n建议穿着轻便透气的服装和防滑鞋。\n请做好防晒措施，携带遮阳帽和防晒霜。');
-INSERT INTO `festival_activity` VALUES (4, '七夕乞巧大会', 'summer', '2026年8月19日', '西安大唐芙蓉园', '/uploads/festival_gathering/4.jpg', '七夕节是中国的情人节，源于牛郎织女的美丽传说。本次活动将在大唐芙蓉园举办乞巧大会，参与者可以学习传统女红技艺，祈求美好姻缘。', '穿针乞巧：体验传统乞巧习俗，比赛穿针引线，祈求心灵手巧。\n女红体验：学习刺绣、编织等传统女红技艺。\n拜织女：了解七夕拜织女的传统仪式和文化内涵。\n放河灯：在芙蓉园水域放河灯，祈求美好姻缘。', '活动场地为户外，夏季请注意防暑降温。\n建议穿着汉服或传统服饰参加活动，增强氛围感。\n夜间活动请注意安全，听从工作人员指引。\n请爱护园区设施和环境。');
-INSERT INTO `festival_activity` VALUES (5, '中秋赏月诗会', 'autumn', '2026年9月24日', '南京夫子庙', '/uploads/festival_gathering/5.jpg', '中秋节是月圆人团圆的美好时刻。本次活动将在夫子庙举办赏月诗会，参与者可以品尝各种口味的月饼，吟诗作对，欣赏秦淮河的月色。', '赏月吟诗：在秦淮河畔赏月，参与诗词接龙和即兴创作。\n品尝月饼：品尝苏式、广式等各种风味的传统月饼。\n拜月仪式：了解和学习传统中秋拜月仪式。\n放天灯：在指定区域放飞孔明灯，许下美好心愿。', '秋季夜晚气温较低，请注意保暖，建议携带外套。\n活动涉及水域，请注意安全，不要靠近水边。\n请遵守现场秩序，文明参与活动。\n建议提前到达，选择最佳赏月位置。');
-INSERT INTO `festival_activity` VALUES (6, '重阳登高敬老', 'autumn', '2026年10月11日', '泰山', '/uploads/festival_gathering/6.jpg', '重阳节是敬老爱老的传统节日。本次活动将组织登泰山活动，参与者可以欣赏秋日的壮丽景色，品尝菊花酒，表达对长者的尊敬和关爱。', '登高望远：登泰山赏秋景，体验重阳登高的传统习俗。\n敬老活动：参与敬老爱老活动，向长者表达敬意和祝福。\n赏菊品酒：品尝菊花酒，欣赏各种菊花品种。\n佩茱萸：佩戴茱萸囊，了解其驱邪避灾的寓意。', '登山活动请根据自身身体状况量力而行。\n请穿着舒适的运动鞋和适合登山的服装。\n秋季山顶气温较低，请携带保暖衣物。\n请携带足够的饮用水和简单食物。');
-INSERT INTO `festival_activity` VALUES (7, '冬至饺子宴', 'winter', '2026年12月21日', '北京四合院', '/uploads/festival_gathering/7.jpg', '冬至是一年中白昼最短的一天。本次活动将在传统四合院举办饺子宴，参与者可以学习包饺子的技艺，了解冬至的传统习俗，感受冬日的温暖。', '包饺子：学习传统包饺子技艺，了解不同馅料的寓意。\n吃饺子：品尝各种口味的饺子，体验冬至吃饺子的传统。\n数九消寒：了解冬至数九习俗，制作九九消寒图。\n祭祖祈福：了解冬至祭祖的传统习俗和文化内涵。', '冬季户外活动请注意保暖，穿着厚实的冬装。\n四合院室内外温差较大，请注意增减衣物。\n如有食物过敏请提前告知工作人员。\n请遵守活动秩序，文明参与。');
-INSERT INTO `festival_activity` VALUES (8, '腊八施粥祈福', 'winter', '2027年1月17日', '杭州灵隐寺', '/uploads/festival_gathering/8.jpg', '腊八节是佛教重要节日。本次活动将在灵隐寺举办施粥祈福活动，参与者可以品尝用多种食材熬制的腊八粥，祈求来年平安吉祥。', '品尝腊八粥：品尝用多种食材熬制的传统腊八粥。\n祈福许愿：在寺庙内祈福许愿，祈求来年平安吉祥。\n了解佛文化：参观寺庙，了解腊八节的佛教文化内涵。\n布施结缘：参与施粥活动，体验布施的功德。', '进入寺庙请保持安静，尊重佛教礼仪。\n冬季山区气温较低，请注意保暖。\n请穿着端庄得体的服装，不宜过于暴露。\n请遵守寺庙规定，不随意拍照。');
-INSERT INTO `festival_activity` VALUES (9, '成人礼仪式', 'spring', '2026年3月21日', '曲阜孔庙', '/uploads/festival_gathering/9.jpg', '成人礼是古代重要的成年仪式。本次活动将在孔庙举办传统成人礼，男子行冠礼，女子行笄礼，标志正式成年，承担社会责任，传承中华礼仪文化。', '冠礼仪式：男子行冠礼，三加冠服，象征成年。\n笄礼仪式：女子行笄礼，加笄换装，标志成年。\n聆训受教：聆听长辈训诫，接受成人责任。\n宣誓立志：宣读成人誓词，立志承担社会责任。', '请穿着正式汉服参加仪式，建议提前准备。\n仪式庄重，请保持肃静，手机调至静音。\n请提前到达，熟悉仪式流程和站位。\n家长可陪同观礼，但请遵守现场秩序。');
+INSERT INTO `festival_activity` VALUES (1, '上元节灯会', 'spring', '2026年2月12日', '北京故宫', '/uploads/festival_gathering/1.jpg', '上元节，又称元宵节，是新年第一个月圆之夜。本次活动将在故宫举办盛大的灯会，展示各种精美的花灯造型，参与者可以猜灯谜、吃元宵，感受传统节日的魅力。', '猜灯谜：活动现场设置各类灯谜，参与者可凭智慧赢取精美奖品。赏花灯：欣赏各种传统花灯造型。吃元宵：品尝各种口味的传统元宵。穿汉服：鼓励参与者身着汉服参加。', '请提前在官方平台预约门票，活动期间人流量较大。建议穿着舒适的鞋子，活动场地较大需要步行。夜间气温较低，请注意保暖。');
+INSERT INTO `festival_activity` VALUES (2, '清明踏青雅集', 'spring', '2026年4月4日', '杭州西湖', '/uploads/festival_gathering/2.jpg', '清明时节，春光明媚。本次活动将在西湖边举行踏青雅集，参与者可以身着汉服，漫步苏堤春晓，放风筝，品尝清明团子，感受春日的美好。', '踏青赏花：漫步西湖苏堤，欣赏春日美景。放风筝：在指定区域放飞传统风筝。品尝青团：品尝清明传统美食青团。插柳戴柳：学习清明插柳戴柳的传统习俗。', '请穿着适合户外活动的服装和鞋子。春季天气多变，建议携带雨具和外套。注意防晒，建议携带遮阳帽和防晒霜。');
+INSERT INTO `festival_activity` VALUES (3, '端午龙舟竞渡', 'summer', '2026年6月19日', '苏州金鸡湖', '/uploads/festival_gathering/3.jpg', '端午节是纪念屈原的传统节日。本次活动将在金鸡湖举办龙舟竞渡，参与者可以体验划龙舟的乐趣，品尝各种口味的粽子，学习包粽子的技艺。', '龙舟竞渡：观看或参与龙舟比赛，体验团队协作的乐趣。包粽子：学习传统包粽子技艺。佩香囊：制作和佩戴端午香囊。挂艾草：学习端午挂艾草、菖蒲的传统习俗。', '夏季户外活动请注意防暑降温，及时补充水分。参与水上活动请听从工作人员安排，注意安全。建议穿着轻便透气的服装和防滑鞋。');
+INSERT INTO `festival_activity` VALUES (4, '七夕乞巧大会', 'summer', '2026年8月19日', '西安大唐芙蓉园', '/uploads/festival_gathering/4.jpg', '七夕节是中国的情人节，源于牛郎织女的美丽传说。本次活动将在大唐芙蓉园举办乞巧大会，参与者可以学习传统女红技艺，祈求美好姻缘。', '穿针乞巧：体验传统乞巧习俗，比赛穿针引线。女红体验：学习刺绣、编织等传统女红技艺。拜织女：了解七夕拜织女的传统仪式。放河灯：在芙蓉园水域放河灯。', '活动场地为户外，夏季请注意防暑降温。建议穿着汉服或传统服饰参加活动，增强氛围感。夜间活动请注意安全，听从工作人员指引。');
+INSERT INTO `festival_activity` VALUES (5, '中秋赏月诗会', 'autumn', '2026年9月24日', '南京夫子庙', '/uploads/festival_gathering/5.jpg', '中秋节是月圆人团圆的美好时刻。本次活动将在夫子庙举办赏月诗会，参与者可以品尝各种口味的月饼，吟诗作对，欣赏秦淮河的月色。', '赏月吟诗：在秦淮河畔赏月，参与诗词接龙和即兴创作。品尝月饼：品尝苏式、广式等各种风味的传统月饼。拜月仪式：了解和学习传统中秋拜月仪式。', '秋季夜晚气温较低，请注意保暖，建议携带外套。活动涉及水域，请注意安全，不要靠近水边。请遵守现场秩序，文明参与活动。');
+INSERT INTO `festival_activity` VALUES (6, '重阳登高敬老', 'autumn', '2026年10月11日', '泰山', '/uploads/festival_gathering/6.jpg', '重阳节是敬老爱老的传统节日。本次活动将组织登泰山活动，参与者可以欣赏秋日的壮丽景色，品尝菊花酒，表达对长者的尊敬和关爱。', '登高望远：登泰山赏秋景，体验重阳登高的传统习俗。敬老活动：参与敬老爱老活动，向长者表达敬意。赏菊品酒：品尝菊花酒，欣赏各种菊花品种。', '登山活动请根据自身身体状况量力而行。请穿着舒适的运动鞋和适合登山的服装。秋季山顶气温较低，请携带保暖衣物。');
+INSERT INTO `festival_activity` VALUES (7, '冬至饺子宴', 'winter', '2026年12月21日', '北京四合院', '/uploads/festival_gathering/7.jpg', '冬至是一年中白昼最短的一天。本次活动将在传统四合院举办饺子宴，参与者可以学习包饺子的技艺，了解冬至的传统习俗，感受冬日的温暖。', '包饺子：学习传统包饺子技艺，了解不同馅料的寓意。吃饺子：品尝各种口味的饺子。数九消寒：了解冬至数九习俗，制作九九消寒图。', '冬季户外活动请注意保暖，穿着厚实的冬装。四合院室内外温差较大，请注意增减衣物。如有食物过敏请提前告知工作人员。');
+INSERT INTO `festival_activity` VALUES (8, '腊八施粥祈福', 'winter', '2027年1月17日', '杭州灵隐寺', '/uploads/festival_gathering/8.jpg', '腊八节是佛教重要节日。本次活动将在灵隐寺举办施粥祈福活动，参与者可以品尝用多种食材熬制的腊八粥，祈求来年平安吉祥。', '品尝腊八粥：品尝用多种食材熬制的传统腊八粥。祈福许愿：在寺庙内祈福许愿。了解佛文化：参观寺庙，了解腊八节的佛教文化内涵。', '进入寺庙请保持安静，尊重佛教礼仪。冬季山区气温较低，请注意保暖。请穿着端庄得体的服装，不宜过于暴露。');
+INSERT INTO `festival_activity` VALUES (9, '成人礼仪式', 'spring', '2026年3月21日', '曲阜孔庙', '/uploads/festival_gathering/9.jpg', '成人礼是古代重要的成年仪式。本次活动将在孔庙举办传统成人礼，男子行冠礼，女子行笄礼，标志正式成年，承担社会责任，传承中华礼仪文化。', '冠礼仪式：男子行冠礼，三加冠服，象征成年。笄礼仪式：女子行笄礼，加笄换装。聆训受教：聆听长辈训诫，接受成人责任。', '请穿着正式汉服参加仪式，建议提前准备。仪式庄重，请保持肃静，手机调至静音。请提前到达，熟悉仪式流程和站位。');
 
 -- ----------------------------
 -- Table structure for festival_activity_comment
@@ -381,7 +375,7 @@ CREATE TABLE `festival_activity_comment`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '评论ID',
   `activity_id` bigint(20) NOT NULL COMMENT '活动ID',
   `user_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '用户名',
-  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '评论内容',
+  `content` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '评论内容',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `activity_id`(`activity_id` ASC) USING BTREE,
   CONSTRAINT `festival_activity_comment_ibfk_1` FOREIGN KEY (`activity_id`) REFERENCES `festival_activity` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
@@ -652,29 +646,29 @@ CREATE TABLE `exhibition`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '展览ID',
   `title` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '展览标题',
   `organizer` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '组织者',
-  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '展览描述',
+  `description` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '展览描述',
   `location` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '展览地点',
   `start_date` date NOT NULL COMMENT '开始日期',
   `end_date` date NOT NULL COMMENT '结束日期',
   `opening_hours` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '开放时间',
   `ticket_price` decimal(10, 2) NULL DEFAULT 0.00 COMMENT '票价',
   `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '展览图片URL',
-  `notice` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '参观须知',
-  `highlights` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '展览亮点',
+  `notice` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '参观须知',
+  `highlights` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '展览亮点',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT '展览表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of exhibition
 -- ----------------------------
-INSERT INTO `exhibition` VALUES (1, '千年汉服文化展', '中国汉服协会', '展示从先秦到明清的汉服实物和复制品，呈现汉服的历史演变和文化内涵。', '北京国家博物馆', '2026-02-15', '2026-03-15', '09:00-17:00 (周一闭馆)', 50.00, '/uploads/exhibition/1.jpg', '1. 请提前预约参观时间\n2. 保持安静，勿触摸展品\n3. 禁止使用闪光灯拍照\n4. 遵守展馆各项规定', '汇集了从先秦到明清的珍贵汉服实物，包括宫廷御用服饰和民间日常服装，展现汉服的完整历史演变脉络');
-INSERT INTO `exhibition` VALUES (2, '唐代服饰艺术展', '陕西历史博物馆', '展示唐代各阶层的服饰文物和复原品，重现盛唐服饰的华丽与开放。', '陕西历史博物馆', '2026-03-20', '2026-05-20', '09:00-17:30 (周一闭馆)', 40.00, '/uploads/exhibition/2.jpg', '1. 请提前预约参观时间\n2. 保持安静，勿触摸展品\n3. 禁止使用闪光灯拍照\n4. 遵守展馆各项规定', '展出唐代丝绸珍品和壁画中的服饰形象，重现盛唐时期的开放与繁荣，特别展示了武则天时期的宫廷服饰');
-INSERT INTO `exhibition` VALUES (3, '明代汉服精品展', '南京博物院', '展出明代宫廷和民间的汉服精品，展示明代服饰的精致与典雅。', '南京博物院', '2026-04-01', '2026-06-01', '09:00-17:00 (周一闭馆)', 45.00, '/uploads/exhibition/3.jpg', '1. 请提前预约参观时间\n2. 保持安静，勿触摸展品\n3. 禁止使用闪光灯拍照\n4. 遵守展馆各项规定', '展示明代刺绣工艺的巅峰之作，包括皇室御用龙袍和民间刺绣精品，展现明代服饰的精致工艺');
-INSERT INTO `exhibition` VALUES (4, '汉服纹样艺术展', '中国丝绸博物馆', '展示汉服上的各种传统纹样，分析其文化象征意义和艺术价值。', '中国丝绸博物馆', '2026-04-10', '2026-07-10', '09:00-17:00 (周一闭馆)', 35.00, '/uploads/exhibition/4.jpg', '1. 请提前预约参观时间\n2. 保持安静，勿触摸展品\n3. 禁止使用闪光灯拍照\n4. 遵守展馆各项规定', '深入解析汉服纹样的文化寓意，包括龙纹、云纹、花卉纹等传统图案的演变和象征意义');
-INSERT INTO `exhibition` VALUES (5, '现代汉服设计展', '上海时尚博物馆', '展示当代设计师的汉服创新作品，探索传统与现代的融合。', '上海时尚博物馆', '2026-04-15', '2026-06-15', '10:00-18:00 (周二闭馆)', 55.00, '/uploads/exhibition/5.jpg', '1. 请提前预约参观时间\n2. 保持安静，勿触摸展品\n3. 禁止使用闪光灯拍照\n4. 遵守展馆各项规定', '汇聚当代设计师的创新汉服作品，融合现代面料和工艺，展现汉服在当代的时尚表达');
-INSERT INTO `exhibition` VALUES (6, '汉服与生活展', '苏州博物馆', '展示汉服在传统生活中的应用场景，重现古代生活的服饰细节。', '苏州博物馆', '2026-04-20', '2026-06-20', '09:00-17:00 (周一闭馆)', 30.00, '/uploads/exhibition/6.jpg', '1. 请提前预约参观时间\n2. 保持安静，勿触摸展品\n3. 禁止使用闪光灯拍照\n4. 遵守展馆各项规定', '通过场景复原展示汉服在传统生活中的实际应用，包括婚礼、节日、日常等不同场景的服饰搭配');
-INSERT INTO `exhibition` VALUES (7, '少数民族与汉服展', '云南民族博物馆', '展示各少数民族的传统服饰与汉服的交流融合，体现多元文化的魅力。', '云南民族博物馆', '2026-05-01', '2026-07-01', '09:00-17:00 (周一闭馆)', 40.00, '/uploads/exhibition/7.jpg', '1. 请提前预约参观时间\n2. 保持安静，勿触摸展品\n3. 禁止使用闪光灯拍照\n4. 遵守展馆各项规定', '展示各少数民族服饰与汉服的交流融合，呈现多元文化背景下的服饰创新与演变');
-INSERT INTO `exhibition` VALUES (8, '汉服国际交流展', '广州文化中心', '展示各国汉服爱好者的作品和收藏，促进国际文化交流。', '广州文化中心', '2026-05-10', '2026-07-10', '10:00-18:00 (周二闭馆)', 60.00, '/uploads/exhibition/8.jpg', '1. 请提前预约参观时间\n2. 保持安静，勿触摸展品\n3. 禁止使用闪光灯拍照\n4. 遵守展馆各项规定', '汇集来自全球各地汉服爱好者的作品和收藏，展现汉服在国际视野中的传播与发展');
+INSERT INTO `exhibition` VALUES (1, '千年汉服文化展', '中国汉服协会', '展示从先秦到明清的汉服实物和复制品，呈现汉服的历史演变和文化内涵。', '北京国家博物馆', '2026-02-15', '2026-03-15', '09:00-17:00 (周一闭馆)', 50.00, '/uploads/exhibition/1.jpg', '请提前预约参观时间，保持安静，勿触摸展品，禁止使用闪光灯拍照，遵守展馆各项规定', '汇集了从先秦到明清的珍贵汉服实物，包括宫廷御用服饰和民间日常服装，展现汉服的完整历史演变脉络');
+INSERT INTO `exhibition` VALUES (2, '唐代服饰艺术展', '陕西历史博物馆', '展示唐代各阶层的服饰文物和复原品，重现盛唐服饰的华丽与开放。', '陕西历史博物馆', '2026-03-20', '2026-05-20', '09:00-17:30 (周一闭馆)', 40.00, '/uploads/exhibition/2.jpg', '请提前预约参观时间，保持安静，勿触摸展品，禁止使用闪光灯拍照，遵守展馆各项规定', '展出唐代丝绸珍品和壁画中的服饰形象，重现盛唐时期的开放与繁荣，特别展示了武则天时期的宫廷服饰');
+INSERT INTO `exhibition` VALUES (3, '明代汉服精品展', '南京博物院', '展出明代宫廷和民间的汉服精品，展示明代服饰的精致与典雅。', '南京博物院', '2026-04-01', '2026-06-01', '09:00-17:00 (周一闭馆)', 45.00, '/uploads/exhibition/3.jpg', '请提前预约参观时间，保持安静，勿触摸展品，禁止使用闪光灯拍照，遵守展馆各项规定', '展示明代刺绣工艺的巅峰之作，包括皇室御用龙袍和民间刺绣精品，展现明代服饰的精致工艺');
+INSERT INTO `exhibition` VALUES (4, '汉服纹样艺术展', '中国丝绸博物馆', '展示汉服上的各种传统纹样，分析其文化象征意义和艺术价值。', '中国丝绸博物馆', '2026-04-10', '2026-07-10', '09:00-17:00 (周一闭馆)', 35.00, '/uploads/exhibition/4.jpg', '请提前预约参观时间，保持安静，勿触摸展品，禁止使用闪光灯拍照，遵守展馆各项规定', '深入解析汉服纹样的文化寓意，包括龙纹、云纹、花卉纹等传统图案的演变和象征意义');
+INSERT INTO `exhibition` VALUES (5, '现代汉服设计展', '上海时尚博物馆', '展示当代设计师的汉服创新作品，探索传统与现代的融合。', '上海时尚博物馆', '2026-04-15', '2026-06-15', '10:00-18:00 (周二闭馆)', 55.00, '/uploads/exhibition/5.jpg', '请提前预约参观时间，保持安静，勿触摸展品，禁止使用闪光灯拍照，遵守展馆各项规定', '汇聚当代设计师的创新汉服作品，融合现代面料和工艺，展现汉服在当代的时尚表达');
+INSERT INTO `exhibition` VALUES (6, '汉服与生活展', '苏州博物馆', '展示汉服在传统生活中的应用场景，重现古代生活的服饰细节。', '苏州博物馆', '2026-04-20', '2026-06-20', '09:00-17:00 (周一闭馆)', 30.00, '/uploads/exhibition/6.jpg', '请提前预约参观时间，保持安静，勿触摸展品，禁止使用闪光灯拍照，遵守展馆各项规定', '通过场景复原展示汉服在传统生活中的实际应用，包括婚礼、节日、日常等不同场景的服饰搭配');
+INSERT INTO `exhibition` VALUES (7, '少数民族与汉服展', '云南民族博物馆', '展示各少数民族的传统服饰与汉服的交流融合，体现多元文化的魅力。', '云南民族博物馆', '2026-05-01', '2026-07-01', '09:00-17:00 (周一闭馆)', 40.00, '/uploads/exhibition/7.jpg', '请提前预约参观时间，保持安静，勿触摸展品，禁止使用闪光灯拍照，遵守展馆各项规定', '展示各少数民族服饰与汉服的交流融合，呈现多元文化背景下的服饰创新与演变');
+INSERT INTO `exhibition` VALUES (8, '汉服国际交流展', '广州文化中心', '展示各国汉服爱好者的作品和收藏，促进国际文化交流。', '广州文化中心', '2026-05-10', '2026-07-10', '10:00-18:00 (周二闭馆)', 60.00, '/uploads/exhibition/8.jpg', '请提前预约参观时间，保持安静，勿触摸展品，禁止使用闪光灯拍照，遵守展馆各项规定', '汇集来自全球各地汉服爱好者的作品和收藏，展现汉服在国际视野中的传播与发展');
 
 -- ----------------------------
 -- Table structure for exhibition_registration
@@ -880,14 +874,14 @@ CREATE TABLE `lecture`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '讲座ID',
   `title` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '讲座标题',
   `speaker` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '讲师',
-  `speaker_bio` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '主讲人介绍',
-  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '讲座描述',
-  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '讲座内容',
+  `speaker_bio` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '主讲人介绍',
+  `description` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '讲座描述',
+  `content` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '讲座内容',
   `location` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '讲座地点',
   `start_time` datetime NOT NULL COMMENT '开始时间',
   `end_time` datetime NOT NULL COMMENT '结束时间',
   `registered_count` int(11) NULL DEFAULT 0 COMMENT '已注册人数',
-  `notice` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '参观须知',
+  `notice` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '参观须知',
   `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '讲座图片URL',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT '讲座表' ROW_FORMAT = Dynamic;
@@ -895,14 +889,14 @@ CREATE TABLE `lecture`  (
 -- ----------------------------
 -- Records of lecture
 -- ----------------------------
-INSERT INTO `lecture` VALUES (1, '汉服的历史演变', '张教授', '历史学博士，专注于中国古代服饰史研究，出版《汉服史话》等多部学术著作，在汉服文化研究领域享有盛誉。', '详细介绍汉服从先秦到明清的历史演变过程，探讨不同朝代汉服的特点和文化内涵。', '本讲座将从汉服的起源讲起，详细介绍先秦时期的深衣、汉代的袍服、唐代的幞头襕衫、宋代的褙子、明代的补服等不同时期的代表性服饰，分析其款式、色彩、纹样的变化，以及背后的社会文化因素。通过大量历史图片和实物资料，展现汉服发展的完整脉络。', '北京文化中心', '2026-03-20 14:00:00', '2026-03-20 16:00:00', 34, '请提前15分钟到场签到\n讲座期间请保持安静\n可携带笔记本记录\n讲座结束后设有互动问答环节', '/uploads/talk/1.jpg');
-INSERT INTO `lecture` VALUES (2, '汉服制作工艺', '李师傅', '国家级非物质文化遗产传承人，从事传统汉服制作40余年，擅长各种传统缝制工艺，培养了众多汉服制作人才。', '讲解传统汉服的制作工艺和技巧，包括面料选择、裁剪方法和缝制技术。', '本讲座将详细介绍汉服制作的完整流程，从面料的选择与处理开始，讲解传统汉服的裁剪方法、缝制技巧、装饰工艺等。李师傅将现场展示传统针法和刺绣技巧，并分享多年积累的制作经验，让参与者了解汉服制作的精髓所在。', '上海手工艺中心', '2026-03-25 10:00:00', '2026-03-25 12:00:00', 28, '请提前10分钟到场\n现场将有互动制作环节\n可携带小型工具\n听从现场工作人员安排', '/uploads/talk/2.jpg');
-INSERT INTO `lecture` VALUES (3, '汉服与传统礼仪', '王教授', '礼仪学专家，研究中国传统礼仪文化30余年，著有《中国传统礼仪大全》等著作，经常受邀参加国内外文化交流活动。', '探讨汉服与传统礼仪的关系，介绍不同场合的汉服穿着规范和礼仪要求。', '本讲座将深入探讨汉服与传统礼仪的紧密关系，详细介绍不同场合（如婚礼、祭祀、朝会等）的汉服穿着规范和礼仪要求。王教授将通过生动的案例和现场演示，讲解汉服穿着的礼仪细节，以及如何在现代社会中恰当运用传统礼仪。', '西安大唐芙蓉园', '2026-04-02 14:00:00', '2026-04-02 16:00:00', 45, '请提前20分钟到场\n讲座期间将有礼仪演示\n建议穿着舒适服装\n保持手机静音', '/uploads/talk/3.jpg');
-INSERT INTO `lecture` VALUES (4, '明代汉服的特点', '刘博士', '明史专家，专注于明代服饰研究，主持多项国家级研究课题，发表学术论文数十篇，对明代汉服有深入研究。', '深入解析明代汉服的款式、纹样和穿着特点，展示明代服饰的独特魅力。', '本讲座将聚焦明代汉服的独特特点，详细解析明代官服的补子制度、常服的款式变化、女子服饰的多样风格等。刘博士将结合南京博物馆的馆藏文物，分析明代汉服的面料、色彩、纹样特点，以及其背后的社会等级制度和文化内涵。', '南京博物馆', '2026-04-10 09:30:00', '2026-04-10 11:30:00', 32, '请提前15分钟到场签到\n讲座期间有实物展示\n禁止触摸展品\n遵守博物馆相关规定', '/uploads/talk/4.jpg');
-INSERT INTO `lecture` VALUES (5, '汉服复兴运动', '陈老师', '汉服文化推广者，参与组织多次大型汉服文化活动，撰写《汉服复兴之路》等著作，致力于汉服文化的现代传承。', '讲述现代汉服复兴运动的发展历程，分析其文化意义和社会影响。', '本讲座将系统梳理现代汉服复兴运动的发展历程，从早期的民间自发活动到如今的规模化文化现象。陈老师将分享自己参与组织的大型汉服活动经验，分析汉服复兴对当代社会的文化意义，以及如何在现代生活中更好地传承和发展汉服文化。', '杭州西湖文化广场', '2026-05-10 15:00:00', '2026-05-10 17:00:00', 67, '请提前10分钟到场\n讲座结束后有交流环节\n可携带汉服相关问题\n保持会场整洁', '/uploads/talk/5.jpg');
-INSERT INTO `lecture` VALUES (6, '唐代汉服与时尚', '赵教授', '服装史专家，研究唐代服饰文化20余年，曾参与多个唐代服饰复原项目，对唐代时尚文化有独特见解。', '探讨唐代汉服的时尚元素和设计特点，分析其对现代时尚的影响。', '本讲座将深入探讨唐代汉服的时尚元素，详细分析唐代女子的襦裙、男子的幞头袍衫等代表性服饰的设计特点。赵教授将结合唐代壁画、陶俑等资料，展示唐代服饰的色彩搭配、纹样设计和配饰风格，并分析其对现代时尚设计的影响和启发。', '洛阳龙门石窟', '2026-05-15 14:00:00', '2026-05-15 16:00:00', 42, '请提前15分钟到场\n讲座期间有唐代服饰展示\n可拍照但禁止闪光灯\n遵守景区相关规定', '/uploads/talk/6.jpg');
-INSERT INTO `lecture` VALUES (7, '汉服与文学艺术', '钱老师', '文学博士，研究中国古代文学与服饰文化的关系，发表多篇相关学术论文，对汉服在文学作品中的表现有深入研究。', '分析汉服在文学、绘画等艺术形式中的表现，探讨其文化象征意义。', '本讲座将从文学艺术的角度解读汉服文化，通过分析《诗经》、唐诗宋词等文学作品中对汉服的描写，以及绘画、壁画中汉服的视觉表现，探讨汉服在艺术作品中的文化象征意义。钱老师将通过经典文学片段的朗诵和赏析，展现汉服与文学艺术的紧密联系。', '苏州园林', '2026-06-05 10:00:00', '2026-06-05 12:00:00', 26, '请提前10分钟到场\n讲座期间有文学作品朗诵\n保持安静聆听\n遵守园林参观规定', '/uploads/talk/7.jpg');
-INSERT INTO `lecture` VALUES (8, '汉服的国际化发展', '孙博士', '文化传播学专家，研究中国传统文化的国际传播，曾在多个国际学术会议上发表关于汉服国际化的演讲。', '探讨汉服在国际舞台上的传播和发展，分析其作为文化符号的意义。', '本讲座将探讨汉服在国际舞台上的传播与发展历程，分析汉服如何从传统服饰转变为具有全球影响力的文化符号。孙博士将分享汉服在国际时尚界、文化交流活动中的表现，以及海外汉服社团的发展状况，探讨如何进一步推动汉服的国际化传播。', '广州文化中心', '2026-06-15 15:00:00', '2026-06-15 17:00:00', 49, '请提前15分钟到场\n讲座期间有国际汉服展示\n鼓励提问交流\n保持会场秩序', '/uploads/talk/8.jpg');
+INSERT INTO `lecture` VALUES (1, '汉服的历史演变', '张教授', '历史学博士，专注于中国古代服饰史研究，出版《汉服史话》等多部学术著作，在汉服文化研究领域享有盛誉。', '详细介绍汉服从先秦到明清的历史演变过程，探讨不同朝代汉服的特点和文化内涵。', '本讲座将从汉服的起源讲起，详细介绍先秦时期的深衣、汉代的袍服、唐代的幞头襕衫、宋代的褙子、明代的补服等不同时期的代表性服饰，分析其款式、色彩、纹样的变化。', '北京文化中心', '2026-03-20 14:00:00', '2026-03-20 16:00:00', 34, '请提前15分钟到场签到，讲座期间请保持安静，可携带笔记本记录，讲座结束后设有互动问答环节', '/uploads/talk/1.jpg');
+INSERT INTO `lecture` VALUES (2, '汉服制作工艺', '李师傅', '国家级非物质文化遗产传承人，从事传统汉服制作40余年，擅长各种传统缝制工艺，培养了众多汉服制作人才。', '讲解传统汉服的制作工艺和技巧，包括面料选择、裁剪方法和缝制技术。', '本讲座将详细介绍汉服制作的完整流程，从面料的选择与处理开始，讲解传统汉服的裁剪方法、缝制技巧、装饰工艺等。李师傅将现场展示传统针法和刺绣技巧。', '上海手工艺中心', '2026-03-25 10:00:00', '2026-03-25 12:00:00', 28, '请提前10分钟到场，现场将有互动制作环节，可携带小型工具，听从现场工作人员安排', '/uploads/talk/2.jpg');
+INSERT INTO `lecture` VALUES (3, '汉服与传统礼仪', '王教授', '礼仪学专家，研究中国传统礼仪文化30余年，著有《中国传统礼仪大全》等著作，经常受邀参加国内外文化交流活动。', '探讨汉服与传统礼仪的关系，介绍不同场合的汉服穿着规范和礼仪要求。', '本讲座将深入探讨汉服与传统礼仪的紧密关系，详细介绍不同场合（如婚礼、祭祀、朝会等）的汉服穿着规范和礼仪要求。王教授将通过生动的案例和现场演示。', '西安大唐芙蓉园', '2026-04-02 14:00:00', '2026-04-02 16:00:00', 45, '请提前20分钟到场，讲座期间将有礼仪演示，建议穿着舒适服装，保持手机静音', '/uploads/talk/3.jpg');
+INSERT INTO `lecture` VALUES (4, '明代汉服的特点', '刘博士', '明史专家，专注于明代服饰研究，主持多项国家级研究课题，发表学术论文数十篇，对明代汉服有深入研究。', '深入解析明代汉服的款式、纹样和穿着特点，展示明代服饰的独特魅力。', '本讲座将聚焦明代汉服的独特特点，详细解析明代官服的补子制度、常服的款式变化、女子服饰的多样风格等。刘博士将结合南京博物馆的馆藏文物。', '南京博物馆', '2026-04-10 09:30:00', '2026-04-10 11:30:00', 32, '请提前15分钟到场签到，讲座期间有实物展示，禁止触摸展品，遵守博物馆相关规定', '/uploads/talk/4.jpg');
+INSERT INTO `lecture` VALUES (5, '汉服复兴运动', '陈老师', '汉服文化推广者，参与组织多次大型汉服文化活动，撰写《汉服复兴之路》等著作，致力于汉服文化的现代传承。', '讲述现代汉服复兴运动的发展历程，分析其文化意义和社会影响。', '本讲座将系统梳理现代汉服复兴运动的发展历程，从早期的民间自发活动到如今的规模化文化现象。陈老师将分享自己参与组织的大型汉服活动经验。', '杭州西湖文化广场', '2026-05-10 15:00:00', '2026-05-10 17:00:00', 67, '请提前10分钟到场，讲座结束后有交流环节，可携带汉服相关问题，保持会场整洁', '/uploads/talk/5.jpg');
+INSERT INTO `lecture` VALUES (6, '唐代汉服与时尚', '赵教授', '服装史专家，研究唐代服饰文化20余年，曾参与多个唐代服饰复原项目，对唐代时尚文化有独特见解。', '探讨唐代汉服的时尚元素和设计特点，分析其对现代时尚的影响。', '本讲座将深入探讨唐代汉服的时尚元素，详细分析唐代女子的襦裙、男子的幞头袍衫等代表性服饰的设计特点。赵教授将结合唐代壁画、陶俑等资料。', '洛阳龙门石窟', '2026-05-15 14:00:00', '2026-05-15 16:00:00', 42, '请提前15分钟到场，讲座期间有唐代服饰展示，可拍照但禁止闪光灯，遵守景区相关规定', '/uploads/talk/6.jpg');
+INSERT INTO `lecture` VALUES (7, '汉服与文学艺术', '钱老师', '文学博士，研究中国古代文学与服饰文化的关系，发表多篇相关学术论文，对汉服在文学作品中的表现有深入研究。', '分析汉服在文学、绘画等艺术形式中的表现，探讨其文化象征意义。', '本讲座将从文学艺术的角度解读汉服文化，通过分析《诗经》、唐诗宋词等文学作品中对汉服的描写，以及绘画、壁画中汉服的视觉表现。', '苏州园林', '2026-06-05 10:00:00', '2026-06-05 12:00:00', 26, '请提前10分钟到场，讲座期间有文学作品朗诵，保持安静聆听，遵守园林参观规定', '/uploads/talk/7.jpg');
+INSERT INTO `lecture` VALUES (8, '汉服的国际化发展', '孙博士', '文化传播学专家，研究中国传统文化的国际传播，曾在多个国际学术会议上发表关于汉服国际化的演讲。', '探讨汉服在国际舞台上的传播和发展，分析其作为文化符号的意义。', '本讲座将探讨汉服在国际舞台上的传播与发展历程，分析汉服如何从传统服饰转变为具有全球影响力的文化符号。孙博士将分享汉服在国际时尚界的表现。', '广州文化中心', '2026-06-15 15:00:00', '2026-06-15 17:00:00', 49, '请提前15分钟到场，讲座期间有国际汉服展示，鼓励提问交流，保持会场秩序', '/uploads/talk/8.jpg');
 
 -- ----------------------------
 -- Table structure for lecture_registration
