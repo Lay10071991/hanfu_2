@@ -20,7 +20,7 @@ spring:
         format_sql: true
   sql:
     init:
-      mode: never # 不执行初始化 SQL 文件
+      mode: always # 执行初始化 SQL 文件
       continue-on-error: true
       encoding: UTF-8
       schema-locations: classpath:activity.sql

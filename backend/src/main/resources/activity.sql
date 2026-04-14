@@ -182,21 +182,22 @@ CREATE TABLE `hanfu_display`  (
   `description` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '衣冠描述',
   `content` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '详细内容',
   `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '图片URL',
+  `sort_order` int(11) NOT NULL DEFAULT 0 COMMENT '排序顺序',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '千载衣冠表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of hanfu_display
 -- ----------------------------
-INSERT INTO `hanfu_display` VALUES (1, '战国袍', '战国时期的袍服，款式简洁大方，体现了当时的审美风格。', '战国袍是战国时期流行的袍服形制，款式简洁大方，通常为交领右衽，袖子宽大，长度及地。战国袍的面料多为丝绸、棉麻等，色彩以素色为主，装饰简洁。', '/uploads/hanfu/1.jpg');
-INSERT INTO `hanfu_display` VALUES (2, '明制', '明代的汉服形制，款式严谨规范，体现了明代的礼仪文化。', '明制汉服是明代的汉服形制，包括袄裙、马面裙、直裰等多种款式。明制汉服的特点是款式严谨规范，色彩搭配和谐，装饰精美。', '/uploads/hanfu/2.jpg');
-INSERT INTO `hanfu_display` VALUES (3, '晋制', '晋代的汉服形制，款式洒脱飘逸，体现了魏晋风流的审美风格。', '晋制汉服是晋代的汉服形制，款式洒脱飘逸，通常为交领右衽，袖子宽大，衣裾宽松。晋制汉服的面料多为丝绸，色彩以素雅为主，装饰简洁。', '/uploads/hanfu/3.jpg');
-INSERT INTO `hanfu_display` VALUES (4, '宋制', '宋代的汉服形制，款式简洁质朴，体现了宋代的审美风格。', '宋制汉服是宋代的汉服形制，包括褙子、襦裙、圆领袍等多种款式。宋制汉服的特点是款式简洁质朴，色彩搭配和谐，装饰精美。', '/uploads/hanfu/4.jpg');
-INSERT INTO `hanfu_display` VALUES (5, '唐制', '唐代的汉服形制，款式开放多样，体现了唐代的开放包容精神。', '唐制汉服是唐代的汉服形制，包括衫裙、圆领袍、半臂等多种款式。唐制汉服的特点是款式开放多样，色彩斑斓，装饰精美。', '/uploads/hanfu/5.jpg');
-INSERT INTO `hanfu_display` VALUES (6, '齐腰襦裙', '齐腰襦裙是汉服中常见的女装形制，款式优雅大方。', '齐腰襦裙是汉服中常见的女装形制，由短上衣（襦）和齐腰裙子组成。齐腰襦裙的特点是款式优雅大方，色彩搭配和谐，装饰精美。', '/uploads/hanfu/6.jpg');
-INSERT INTO `hanfu_display` VALUES (7, '褙子裙', '褙子裙是宋代流行的女装形制，款式优雅大方。', '褙子裙是宋代流行的女装形制，由褙子和裙子组成。褙子是一种无袖或短袖的上衣，款式优雅大方，色彩搭配和谐，装饰精美。', '/uploads/hanfu/7.jpg');
-INSERT INTO `hanfu_display` VALUES (8, '圆领袍', '圆领袍是汉服中常见的男装形制，款式简洁大方。', '圆领袍是汉服中常见的男装形制，款式简洁大方，通常为圆领，袖子宽大，长度及地。圆领袍的面料多为丝绸、棉麻等，色彩以素色为主，装饰简洁。', '/uploads/hanfu/8.jpg');
-INSERT INTO `hanfu_display` VALUES (9, '飞鱼服', '飞鱼服是明代锦衣卫的官服，款式华丽威严。', '飞鱼服是明代锦衣卫的官服，款式华丽威严，通常为红色或紫色，绣有飞鱼纹样。飞鱼服的面料多为丝绸，装饰精美，体现了明代官服的等级制度。', '/uploads/hanfu/9.jpg');
+INSERT INTO `hanfu_display` VALUES (1, '战国袍', '战国时期的袍服，款式简洁大方，体现了当时的审美风格。', '战国袍是战国时期流行的袍服形制，款式简洁大方，通常为交领右衽，袖子宽大，长度及地。战国袍的面料多为丝绸、棉麻等，色彩以素色为主，装饰简洁。', '/uploads/hanfu/1.jpg', 1);
+INSERT INTO `hanfu_display` VALUES (2, '明制', '明代的汉服形制，款式严谨规范，体现了明代的礼仪文化。', '明制汉服是明代的汉服形制，包括袄裙、马面裙、直裰等多种款式。明制汉服的特点是款式严谨规范，色彩搭配和谐，装饰精美。', '/uploads/hanfu/2.jpg', 2);
+INSERT INTO `hanfu_display` VALUES (3, '晋制', '晋代的汉服形制，款式洒脱飘逸，体现了魏晋风流的审美风格。', '晋制汉服是晋代的汉服形制，款式洒脱飘逸，通常为交领右衽，袖子宽大，衣裾宽松。晋制汉服的面料多为丝绸，色彩以素雅为主，装饰简洁。', '/uploads/hanfu/3.jpg', 3);
+INSERT INTO `hanfu_display` VALUES (4, '宋制', '宋代的汉服形制，款式简洁质朴，体现了宋代的审美风格。', '宋制汉服是宋代的汉服形制，包括褙子、襦裙、圆领袍等多种款式。宋制汉服的特点是款式简洁质朴，色彩搭配和谐，装饰精美。', '/uploads/hanfu/4.jpg', 4);
+INSERT INTO `hanfu_display` VALUES (5, '唐制', '唐代的汉服形制，款式开放多样，体现了唐代的开放包容精神。', '唐制汉服是唐代的汉服形制，包括衫裙、圆领袍、半臂等多种款式。唐制汉服的特点是款式开放多样，色彩斑斓，装饰精美。', '/uploads/hanfu/5.jpg', 5);
+INSERT INTO `hanfu_display` VALUES (6, '齐腰襦裙', '齐腰襦裙是汉服中常见的女装形制，款式优雅大方。', '齐腰襦裙是汉服中常见的女装形制，由短上衣（襦）和齐腰裙子组成。齐腰襦裙的特点是款式优雅大方，色彩搭配和谐，装饰精美。', '/uploads/hanfu/6.jpg', 6);
+INSERT INTO `hanfu_display` VALUES (7, '褙子裙', '褙子裙是宋代流行的女装形制，款式优雅大方。', '褙子裙是宋代流行的女装形制，由褙子和裙子组成。褙子是一种无袖或短袖的上衣，款式优雅大方，色彩搭配和谐，装饰精美。', '/uploads/hanfu/7.jpg', 7);
+INSERT INTO `hanfu_display` VALUES (8, '圆领袍', '圆领袍是汉服中常见的男装形制，款式简洁大方。', '圆领袍是汉服中常见的男装形制，款式简洁大方，通常为圆领，袖子宽大，长度及地。圆领袍的面料多为丝绸、棉麻等，色彩以素色为主，装饰简洁。', '/uploads/hanfu/8.jpg', 8);
+INSERT INTO `hanfu_display` VALUES (9, '飞鱼服', '飞鱼服是明代锦衣卫的官服，款式华丽威严。', '飞鱼服是明代锦衣卫的官服，款式华丽威严，通常为红色或紫色，绣有飞鱼纹样。飞鱼服的面料多为丝绸，装饰精美，体现了明代官服的等级制度。', '/uploads/hanfu/9.jpg', 9);
 
 -- ----------------------------
 -- Table structure for hanfu_images
@@ -206,6 +207,7 @@ CREATE TABLE `hanfu_images`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '图片ID',
   `hanfu_id` bigint(20) NOT NULL COMMENT '汉服ID',
   `image_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '图片路径',
+  `sort_order` int(11) NOT NULL DEFAULT 0 COMMENT '排序顺序',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_hanfu_id`(`hanfu_id`) USING BTREE,
   CONSTRAINT `fk_hanfu_images_hanfu` FOREIGN KEY (`hanfu_id`) REFERENCES `hanfu_display` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
@@ -214,33 +216,33 @@ CREATE TABLE `hanfu_images`  (
 -- ----------------------------
 -- Records of hanfu_images
 -- ----------------------------
-INSERT INTO `hanfu_images` VALUES (1, 1, '/uploads/clothing_show/1-1.jpg');
-INSERT INTO `hanfu_images` VALUES (2, 1, '/uploads/clothing_show/1-2.jpg');
-INSERT INTO `hanfu_images` VALUES (3, 1, '/uploads/clothing_show/1-3.jpg');
-INSERT INTO `hanfu_images` VALUES (4, 2, '/uploads/clothing_show/2-1.jpg');
-INSERT INTO `hanfu_images` VALUES (5, 2, '/uploads/clothing_show/2-2.jpg');
-INSERT INTO `hanfu_images` VALUES (6, 2, '/uploads/clothing_show/2-3.jpg');
-INSERT INTO `hanfu_images` VALUES (7, 3, '/uploads/clothing_show/3-1.jpg');
-INSERT INTO `hanfu_images` VALUES (8, 3, '/uploads/clothing_show/3-2.jpg');
-INSERT INTO `hanfu_images` VALUES (9, 3, '/uploads/clothing_show/3-3.jpg');
-INSERT INTO `hanfu_images` VALUES (10, 4, '/uploads/clothing_show/4-1.jpg');
-INSERT INTO `hanfu_images` VALUES (11, 4, '/uploads/clothing_show/4-2.jpg');
-INSERT INTO `hanfu_images` VALUES (12, 4, '/uploads/clothing_show/4-3.jpg');
-INSERT INTO `hanfu_images` VALUES (13, 5, '/uploads/clothing_show/5-1.jpg');
-INSERT INTO `hanfu_images` VALUES (14, 5, '/uploads/clothing_show/5-2.jpg');
-INSERT INTO `hanfu_images` VALUES (15, 5, '/uploads/clothing_show/5-3.jpg');
-INSERT INTO `hanfu_images` VALUES (16, 6, '/uploads/clothing_show/6-1.jpg');
-INSERT INTO `hanfu_images` VALUES (17, 6, '/uploads/clothing_show/6-2.jpg');
-INSERT INTO `hanfu_images` VALUES (18, 6, '/uploads/clothing_show/6-3.jpg');
-INSERT INTO `hanfu_images` VALUES (19, 7, '/uploads/clothing_show/7-1.jpg');
-INSERT INTO `hanfu_images` VALUES (20, 7, '/uploads/clothing_show/7-2.jpg');
-INSERT INTO `hanfu_images` VALUES (21, 7, '/uploads/clothing_show/7-3.jpg');
-INSERT INTO `hanfu_images` VALUES (22, 8, '/uploads/clothing_show/8-1.jpg');
-INSERT INTO `hanfu_images` VALUES (23, 8, '/uploads/clothing_show/8-2.jpg');
-INSERT INTO `hanfu_images` VALUES (24, 8, '/uploads/clothing_show/8-3.jpg');
-INSERT INTO `hanfu_images` VALUES (25, 9, '/uploads/clothing_show/9-1.jpg');
-INSERT INTO `hanfu_images` VALUES (26, 9, '/uploads/clothing_show/9-2.jpg');
-INSERT INTO `hanfu_images` VALUES (27, 9, '/uploads/clothing_show/9-3.jpg');
+INSERT INTO `hanfu_images` VALUES (1, 1, '/uploads/clothing_show/1-1.jpg', 1);
+INSERT INTO `hanfu_images` VALUES (2, 1, '/uploads/clothing_show/1-2.jpg', 2);
+INSERT INTO `hanfu_images` VALUES (3, 1, '/uploads/clothing_show/1-3.jpg', 3);
+INSERT INTO `hanfu_images` VALUES (4, 2, '/uploads/clothing_show/2-1.jpg', 1);
+INSERT INTO `hanfu_images` VALUES (5, 2, '/uploads/clothing_show/2-2.jpg', 2);
+INSERT INTO `hanfu_images` VALUES (6, 2, '/uploads/clothing_show/2-3.jpg', 3);
+INSERT INTO `hanfu_images` VALUES (7, 3, '/uploads/clothing_show/3-1.jpg', 1);
+INSERT INTO `hanfu_images` VALUES (8, 3, '/uploads/clothing_show/3-2.jpg', 2);
+INSERT INTO `hanfu_images` VALUES (9, 3, '/uploads/clothing_show/3-3.jpg', 3);
+INSERT INTO `hanfu_images` VALUES (10, 4, '/uploads/clothing_show/4-1.jpg', 1);
+INSERT INTO `hanfu_images` VALUES (11, 4, '/uploads/clothing_show/4-2.jpg', 2);
+INSERT INTO `hanfu_images` VALUES (12, 4, '/uploads/clothing_show/4-3.jpg', 3);
+INSERT INTO `hanfu_images` VALUES (13, 5, '/uploads/clothing_show/5-1.jpg', 1);
+INSERT INTO `hanfu_images` VALUES (14, 5, '/uploads/clothing_show/5-2.jpg', 2);
+INSERT INTO `hanfu_images` VALUES (15, 5, '/uploads/clothing_show/5-3.jpg', 3);
+INSERT INTO `hanfu_images` VALUES (16, 6, '/uploads/clothing_show/6-1.jpg', 1);
+INSERT INTO `hanfu_images` VALUES (17, 6, '/uploads/clothing_show/6-2.jpg', 2);
+INSERT INTO `hanfu_images` VALUES (18, 6, '/uploads/clothing_show/6-3.jpg', 3);
+INSERT INTO `hanfu_images` VALUES (19, 7, '/uploads/clothing_show/7-1.jpg', 1);
+INSERT INTO `hanfu_images` VALUES (20, 7, '/uploads/clothing_show/7-2.jpg', 2);
+INSERT INTO `hanfu_images` VALUES (21, 7, '/uploads/clothing_show/7-3.jpg', 3);
+INSERT INTO `hanfu_images` VALUES (22, 8, '/uploads/clothing_show/8-1.jpg', 1);
+INSERT INTO `hanfu_images` VALUES (23, 8, '/uploads/clothing_show/8-2.jpg', 2);
+INSERT INTO `hanfu_images` VALUES (24, 8, '/uploads/clothing_show/8-3.jpg', 3);
+INSERT INTO `hanfu_images` VALUES (25, 9, '/uploads/clothing_show/9-1.jpg', 1);
+INSERT INTO `hanfu_images` VALUES (26, 9, '/uploads/clothing_show/9-2.jpg', 2);
+INSERT INTO `hanfu_images` VALUES (27, 9, '/uploads/clothing_show/9-3.jpg', 3);
 
 -- ----------------------------
 -- Table structure for pattern_symbol
