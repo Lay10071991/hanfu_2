@@ -122,14 +122,17 @@ DROP TABLE IF EXISTS `cultural_content`;
 CREATE TABLE `cultural_content`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '内容ID',
   `title` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '标题',
+  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '名称',
   `content` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '内容',
+  `type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '类型',
+  `years` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '年代',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '历史概述' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of cultural_content
 -- ----------------------------
-INSERT INTO `cultural_content` VALUES (1, '汉服的历史概述', '汉服，全称是"汉民族传统服饰"，又称汉衣冠、汉装、华服，是从黄帝即位到公元17世纪中叶(明末清初)，在汉族的主要居住区，以"华夏-汉"文化为背景和主导思想，以华夏礼仪文化为中心，通过自然演化而形成的具有独特汉民族风貌性格，明显区别于其他民族的传统服装和配饰体系。');
+INSERT INTO `cultural_content` VALUES (1, '汉服的历史概述', '汉服历史', '汉服，全称是"汉民族传统服饰"，又称汉衣冠、汉装、华服，是从黄帝即位到公元17世纪中叶(明末清初)，在汉族的主要居住区，以"华夏-汉"文化为背景和主导思想，以华夏礼仪文化为中心，通过自然演化而形成的具有独特汉民族风貌性格，明显区别于其他民族的传统服装和配饰体系。', 'overview', '黄帝时期至明末清初');
 
 -- ----------------------------
 -- Table structure for culture_influence
@@ -161,16 +164,17 @@ CREATE TABLE `shape_type`  (
   `characteristics` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '形制特点',
   `content` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '详细内容',
   `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '图片URL',
+  `sort_order` int(11) NOT NULL DEFAULT 0 COMMENT '排序顺序',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '汉服形制分类表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of shape_type
 -- ----------------------------
-INSERT INTO `shape_type` VALUES (1, '深衣制', '战国至明代', '上下连属的服饰，将上衣下裳连为一体，体现深意。', '上下连属、端庄大方、适用广泛', '深衣制是汉服的重要形制之一，其最大特点是将上衣和下裳连在一起，形成上下连属的服饰结构。这种形制体现了中国古代"天地合一"的哲学思想，上衣用深色象征天，下裳用浅色象征地。深衣在战国时期开始流行，历经秦汉、魏晋南北朝，一直沿用到明代，是中国古代穿着时间最长的服饰形制之一。', '/uploads/basic_style/1.jpg');
-INSERT INTO `shape_type` VALUES (2, '衣裳制', '先秦至明清', '上衣下裳的基本形制，最古老的汉服形式，象征天地秩序。', '上下分裁、庄严正统、礼仪性强', '衣裳制是汉服最古老、最基本的形制，由上衣和下裳两部分组成。这种形制的起源可以追溯到远古时期，是中国服饰文化的源头。上衣代表天，下裳代表地，体现了中国古代"天人合一"的宇宙观。', '/uploads/basic_style/2.jpg');
-INSERT INTO `shape_type` VALUES (3, '襦裙制', '历代流行', '上衣下裙的女装组合，历代款式变化丰富多样。', '上衣下裙、款式多样、女性特色', '襦裙制是汉服女装的主要形制，由短上衣（襦）和裙子组成。这种形制在中国历史上流传时间最长、影响最为深远。历代襦裙款式变化丰富，有齐胸襦裙、齐腰襦裙、高腰襦裙等多种形式。', '/uploads/basic_style/3.jpg');
-INSERT INTO `shape_type` VALUES (4, '袍服制', '汉代以后', '一体裁剪的长衣，便于活动，逐渐成为日常服饰。', '一体裁剪、便于活动、日常实用', '袍服制是一体裁剪的长衣形制，有衬里的称袍，无衬里的称衫。这种形制在汉代以后广泛流行，因其便于活动、穿着舒适而深受人们喜爱。袍服的特点是上下连属，一体成型，没有上衣下裳的分界。', '/uploads/basic_style/4.jpg');
+INSERT INTO `shape_type` VALUES (1, '深衣制', '战国至明代', '上下连属的服饰，将上衣下裳连为一体，体现深意。', '上下连属、端庄大方、适用广泛', '深衣制是汉服的重要形制之一，其最大特点是将上衣和下裳连在一起，形成上下连属的服饰结构。这种形制体现了中国古代"天地合一"的哲学思想，上衣用深色象征天，下裳用浅色象征地。深衣在战国时期开始流行，历经秦汉、魏晋南北朝，一直沿用到明代，是中国古代穿着时间最长的服饰形制之一。', '/uploads/basic_style/1.jpg', 1);
+INSERT INTO `shape_type` VALUES (2, '衣裳制', '先秦至明清', '上衣下裳的基本形制，最古老的汉服形式，象征天地秩序。', '上下分裁、庄严正统、礼仪性强', '衣裳制是汉服最古老、最基本的形制，由上衣和下裳两部分组成。这种形制的起源可以追溯到远古时期，是中国服饰文化的源头。上衣代表天，下裳代表地，体现了中国古代"天人合一"的宇宙观。', '/uploads/basic_style/2.jpg', 2);
+INSERT INTO `shape_type` VALUES (3, '襦裙制', '历代流行', '上衣下裙的女装组合，历代款式变化丰富多样。', '上衣下裙、款式多样、女性特色', '襦裙制是汉服女装的主要形制，由短上衣（襦）和裙子组成。这种形制在中国历史上流传时间最长、影响最为深远。历代襦裙款式变化丰富，有齐胸襦裙、齐腰襦裙、高腰襦裙等多种形式。', '/uploads/basic_style/3.jpg', 3);
+INSERT INTO `shape_type` VALUES (4, '袍服制', '汉代以后', '一体裁剪的长衣，便于活动，逐渐成为日常服饰。', '一体裁剪、便于活动、日常实用', '袍服制是一体裁剪的长衣形制，有衬里的称袍，无衬里的称衫。这种形制在汉代以后广泛流行，因其便于活动、穿着舒适而深受人们喜爱。袍服的特点是上下连属，一体成型，没有上衣下裳的分界。', '/uploads/basic_style/4.jpg', 4);
 
 -- ----------------------------
 -- Table structure for hanfu_display
