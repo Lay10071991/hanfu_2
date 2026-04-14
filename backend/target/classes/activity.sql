@@ -290,6 +290,7 @@ CREATE TABLE `etiquette`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '礼仪ID',
   `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '礼仪名称',
   `period` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '所属朝代',
+  `category` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '礼仪类别(worship/standing)',
   `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '示意图URL',
   `description` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '礼仪描述',
   `features` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '礼仪特点(|分隔)',
@@ -301,15 +302,15 @@ CREATE TABLE `etiquette`  (
 -- ----------------------------
 -- Records of etiquette
 -- ----------------------------
-INSERT INTO `etiquette` VALUES (1, '肃拜礼', '秦汉时期', '/uploads/etiquette_posture/1.jpg', '秦汉时期的重要礼仪，用于正式场合的拜见，体现尊卑有序的礼制思想。行礼时身体微躬，双手合抱，神情庄重，动作缓慢而有力。', '体现尊卑有序的礼制思想|动作庄重缓慢|适用于正式场合|体现对长者和尊者的尊敬', '站立端正，双脚并拢|双手缓缓合抱于胸前|身体微躬，头略低|保持姿势片刻后缓缓起身', '行礼时要保持神情庄重，动作不宜过快，体现对对方的尊重。');
-INSERT INTO `etiquette` VALUES (2, '颜首礼', '魏晋时期', '/uploads/etiquette_posture/2.jpg', '魏晋名士风度的体现，行礼时注重仪态的自然与优雅。体现了当时文人雅士追求个性解放和自然之美的思想。', '体现名士风度|动作自然优雅|注重个人气质|融合道家思想', '自然站立，神情从容|头部微倾，目光温和|右手轻抚左胸|微笑示意，动作流畅', '行礼时要保持自然从容，避免刻意做作，体现文人雅士的风范。');
-INSERT INTO `etiquette` VALUES (3, '叉手礼', '唐代', '/uploads/etiquette_posture/3.jpg', '唐代流行的日常礼节，双手交叉于胸前，体现唐代的开放与包容。是当时社会各阶层通用的见面礼节。', '日常通用礼节|体现开放包容|动作简洁大方|适用于各种场合', '双手自然下垂|右手在上，左手在下交叉|双手置于胸前|微微点头示意', '此礼适用于平辈之间的日常问候，动作要自然流畅。');
-INSERT INTO `etiquette` VALUES (4, '万福礼', '宋代', '/uploads/etiquette_posture/4.jpg', '宋代女性常用礼仪，双手合抱于腰侧，微屈膝，体现女性的柔美。是古代女性见面的标准礼节。', '女性专用礼节|体现柔美气质|动作优雅含蓄|表达美好祝愿', '双手合抱于腰侧右侧|右腿稍向后撤|双膝微屈|口称"万福"', '行礼时要保持姿态优雅，动作轻柔，体现女性特有的温柔气质。');
-INSERT INTO `etiquette` VALUES (5, '揖礼', '明代', '/uploads/etiquette_posture/5.jpg', '明代通用的见面礼节，双手合抱鞠躬，体现明代礼仪的规范化。是当时社会交往中的基本礼节。', '通用见面礼节|体现礼仪规范化|动作简洁明了|表达相互尊重', '双手合抱于胸前|身体前倾鞠躬|保持姿势片刻|缓缓直身', '行礼时动作要规范，体现明代礼仪的庄重。');
-INSERT INTO `etiquette` VALUES (6, '请安礼', '清代', '/uploads/etiquette_posture/6.jpg', '清代流行的问候礼节，体现清代礼仪的等级制度。是清代社会各阶层通用的问候方式。', '清代通用问候礼节|体现等级制度|动作规范严格|表达敬意', '按照身份等级行礼|双手合抱或垂手|身体微躬|口称问候语', '行礼时要根据身份等级选择适当的礼节。');
-INSERT INTO `etiquette` VALUES (7, '稽首礼', '周代', '/uploads/etiquette_posture/7.jpg', '古代最隆重的跪拜礼，用于祭祀天地和拜见君王。是九拜中最重的礼节，表达极度的尊敬。', '最隆重的礼节|用于祭祀和朝见|表达极度尊敬|动作庄重规范', '跪地，双手伏地|头触地停留片刻|缓缓抬头|再拜一次', '此礼极为庄重，只在重要场合使用，动作要规范严谨。');
-INSERT INTO `etiquette` VALUES (8, '顿首礼', '汉代', '/uploads/etiquette_posture/8.jpg', '磕头礼，用于请罪或表达极度尊敬之情。动作较为急促，表达强烈的情感。', '表达强烈情感|用于请罪或极度尊敬|动作较为急促|头触地即起', '快速跪地|头触地即起|可连续多次|神情恳切', '此礼表达的情感较为强烈，要配合适当的神情和语气。');
-INSERT INTO `etiquette` VALUES (9, '空首礼', '唐代', '/uploads/etiquette_posture/9.jpg', '跪拜礼的一种，头不至地，用于地位相当者之间的礼节。比稽首礼稍轻，表达平等的尊重。', '地位相当者使用|头不至地|表达平等尊重|动作较为轻松', '跪地，双手拱合|头向前倾但不触地|保持姿势片刻|缓缓直身', '行礼时要注意头不能触地，体现平等的尊重关系。');
+INSERT INTO `etiquette` VALUES (1, '肃拜礼', '秦汉时期', 'standing', '/uploads/etiquette_posture/1.jpg', '秦汉时期的重要礼仪，用于正式场合的拜见，体现尊卑有序的礼制思想。行礼时身体微躬，双手合抱，神情庄重，动作缓慢而有力。', '体现尊卑有序的礼制思想|动作庄重缓慢|适用于正式场合|体现对长者和尊者的尊敬', '站立端正，双脚并拢|双手缓缓合抱于胸前|身体微躬，头略低|保持姿势片刻后缓缓起身', '行礼时要保持神情庄重，动作不宜过快，体现对对方的尊重。');
+INSERT INTO `etiquette` VALUES (2, '颜首礼', '魏晋时期', 'standing', '/uploads/etiquette_posture/2.jpg', '魏晋名士风度的体现，行礼时注重仪态的自然与优雅。体现了当时文人雅士追求个性解放和自然之美的思想。', '体现名士风度|动作自然优雅|注重个人气质|融合道家思想', '自然站立，神情从容|头部微倾，目光温和|右手轻抚左胸|微笑示意，动作流畅', '行礼时要保持自然从容，避免刻意做作，体现文人雅士的风范。');
+INSERT INTO `etiquette` VALUES (3, '叉手礼', '唐代', 'standing', '/uploads/etiquette_posture/3.jpg', '唐代流行的日常礼节，双手交叉于胸前，体现唐代的开放与包容。是当时社会各阶层通用的见面礼节。', '日常通用礼节|体现开放包容|动作简洁大方|适用于各种场合', '双手自然下垂|右手在上，左手在下交叉|双手置于胸前|微微点头示意', '此礼适用于平辈之间的日常问候，动作要自然流畅。');
+INSERT INTO `etiquette` VALUES (4, '万福礼', '宋代', 'standing', '/uploads/etiquette_posture/4.jpg', '宋代女性常用礼仪，双手合抱于腰侧，微屈膝，体现女性的柔美。是古代女性见面的标准礼节。', '女性专用礼节|体现柔美气质|动作优雅含蓄|表达美好祝愿', '双手合抱于腰侧右侧|右腿稍向后撤|双膝微屈|口称"万福"', '行礼时要保持姿态优雅，动作轻柔，体现女性特有的温柔气质。');
+INSERT INTO `etiquette` VALUES (5, '揖礼', '明代', 'standing', '/uploads/etiquette_posture/5.jpg', '明代通用的见面礼节，双手合抱鞠躬，体现明代礼仪的规范化。是当时社会交往中的基本礼节。', '通用见面礼节|体现礼仪规范化|动作简洁明了|表达相互尊重', '双手合抱于胸前|身体前倾鞠躬|保持姿势片刻|缓缓直身', '行礼时动作要规范，体现明代礼仪的庄重。');
+INSERT INTO `etiquette` VALUES (6, '请安礼', '清代', 'standing', '/uploads/etiquette_posture/6.jpg', '清代流行的问候礼节，体现清代礼仪的等级制度。是清代社会各阶层通用的问候方式。', '清代通用问候礼节|体现等级制度|动作规范严格|表达敬意', '按照身份等级行礼|双手合抱或垂手|身体微躬|口称问候语', '行礼时要根据身份等级选择适当的礼节。');
+INSERT INTO `etiquette` VALUES (7, '稽首礼', '周代', 'worship', '/uploads/etiquette_posture/7.jpg', '古代最隆重的跪拜礼，用于祭祀天地和拜见君王。是九拜中最重的礼节，表达极度的尊敬。', '最隆重的礼节|用于祭祀和朝见|表达极度尊敬|动作庄重规范', '跪地，双手伏地|头触地停留片刻|缓缓抬头|再拜一次', '此礼极为庄重，只在重要场合使用，动作要规范严谨。');
+INSERT INTO `etiquette` VALUES (8, '顿首礼', '汉代', 'worship', '/uploads/etiquette_posture/8.jpg', '磕头礼，用于请罪或表达极度尊敬之情。动作较为急促，表达强烈的情感。', '表达强烈情感|用于请罪或极度尊敬|动作较为急促|头触地即起', '快速跪地|头触地即起|可连续多次|神情恳切', '此礼表达的情感较为强烈，要配合适当的神情和语气。');
+INSERT INTO `etiquette` VALUES (9, '空首礼', '唐代', 'worship', '/uploads/etiquette_posture/9.jpg', '跪拜礼的一种，头不至地，用于地位相当者之间的礼节。比稽首礼稍轻，表达平等的尊重。', '地位相当者使用|头不至地|表达平等尊重|动作较为轻松', '跪地，双手拱合|头向前倾但不触地|保持姿势片刻|缓缓直身', '行礼时要注意头不能触地，体现平等的尊重关系。');
 
 -- ----------------------------
 -- Table structure for festival
