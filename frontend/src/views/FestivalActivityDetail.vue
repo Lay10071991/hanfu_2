@@ -91,7 +91,7 @@
                 </el-button>
                 <div class="registration-count">
                   <el-icon><User /></el-icon>
-                  <span>已报名</span>
+                  <span>{{ isSignedUp ? '已报名' : '未报名' }}</span>
                 </div>
               </div>
             </div>
@@ -269,7 +269,7 @@ const registrationCount = ref(0);
 // 评论数据
 const comments = ref([]);
 
-onMounted(() => {
+onMounted(async () => {
   // 滚动到页面顶部
   window.scrollTo({ top: 0, behavior: "auto" });
 
@@ -278,20 +278,47 @@ onMounted(() => {
     username.value = savedUsername;
   }
 
-  const savedUserId = localStorage.getItem("userId");
+  // 优先从 localStorage 获取 userId
+  let savedUserId = localStorage.getItem("userId");
+
+  // 如果没有，尝试从 user 对象中获取
+  if (!savedUserId) {
+    const userStr = localStorage.getItem("user");
+    if (userStr) {
+      try {
+        const user = JSON.parse(userStr);
+        if (user.id) {
+          savedUserId = user.id.toString();
+          localStorage.setItem("userId", savedUserId);
+          console.log("onMounted: 从 user 对象获取 userId =", savedUserId);
+        }
+      } catch (e) {
+        console.error("解析 user 对象失败:", e);
+      }
+    }
+  }
+
   if (savedUserId) {
-    userId.value = parseInt(savedUserId);
+    const parsedUserId = parseInt(savedUserId);
+    if (!isNaN(parsedUserId)) {
+      userId.value = parsedUserId;
+      console.log("onMounted: userId =", userId.value);
+    } else {
+      console.error("无效的 userId:", savedUserId);
+    }
   }
 
   // 根据路由参数加载活动数据
   const festivalId = route.params.id;
-  loadFestivalData(festivalId);
+  console.log("onMounted: festivalId =", festivalId);
+  await loadFestivalData(festivalId);
 
-  // 检查用户是否已报名
-  setTimeout(() => {
-    checkUserStatus();
-    loadRegistrationCount();
-  }, 100);
+  // 在活动数据加载完成后检查用户状态
+  if (festivalData.value.id) {
+    console.log("onMounted: 活动ID =", festivalData.value.id);
+    await checkUserStatus();
+    await loadRegistrationCount();
+  }
 });
 
 // 根据季节获取季节名称
@@ -416,13 +443,27 @@ const loadComments = async (activityId) => {
 
 // 加载报名人数
 const loadRegistrationCount = async () => {
+  console.log("loadRegistrationCount: festivalData.id =", festivalData.value.id);
+
+  if (!festivalData.value.id) {
+    console.error("loadRegistrationCount: 活动ID为空");
+    return;
+  }
+
   try {
-    const response = await fetch(
-      `http://localhost:8082/api/festival-activity/${festivalData.value.id}/registration/count`,
-    );
+    const url = `http://localhost:8082/api/festival-activity/${festivalData.value.id}/registration/count`;
+    console.log("loadRegistrationCount: 请求URL =", url);
+
+    const response = await fetch(url);
+    console.log("loadRegistrationCount: 响应状态 =", response.status);
+
     if (response.ok) {
       const data = await response.json();
+      console.log("loadRegistrationCount: 响应数据 =", data);
       registrationCount.value = data.count;
+      console.log("loadRegistrationCount: registrationCount =", registrationCount.value);
+    } else {
+      console.error("加载报名人数失败，状态码:", response.status);
     }
   } catch (error) {
     console.error("加载报名人数失败:", error);
@@ -432,6 +473,13 @@ const loadRegistrationCount = async () => {
 // 检查用户状态
 const checkUserStatus = async () => {
   if (!userId.value) {
+    console.log("checkUserStatus: userId为空");
+    isSignedUp.value = false;
+    return;
+  }
+
+  if (!festivalData.value.id) {
+    console.log("checkUserStatus: 活动ID为空");
     isSignedUp.value = false;
     return;
   }
@@ -442,7 +490,12 @@ const checkUserStatus = async () => {
     );
     if (response.ok) {
       const data = await response.json();
-      isSignedUp.value = data.isRegistered;
+      console.log("checkUserStatus response:", data);
+      isSignedUp.value = data.isRegistered === true;
+      console.log("checkUserStatus: isSignedUp =", isSignedUp.value);
+    } else {
+      console.error("检查报名状态失败，状态码:", response.status);
+      isSignedUp.value = false;
     }
   } catch (error) {
     console.error("检查报名状态失败:", error);

@@ -270,15 +270,56 @@ onMounted(async () => {
     username.value = savedUsername;
   }
 
-  const savedUserId = localStorage.getItem("userId");
-  if (savedUserId) {
-    userId.value = parseInt(savedUserId);
+  // 优先从 localStorage 获取 userId
+  let savedUserId = localStorage.getItem("userId");
+
+  // 如果没有，尝试从 user 对象中获取
+  if (!savedUserId) {
+    const userStr = localStorage.getItem("user");
+    if (userStr) {
+      try {
+        const user = JSON.parse(userStr);
+        if (user.id) {
+          savedUserId = user.id.toString();
+          localStorage.setItem("userId", savedUserId);
+          console.log("FestivalGathering onMounted: 从 user 对象获取 userId =", savedUserId);
+        }
+      } catch (e) {
+        console.error("解析 user 对象失败:", e);
+      }
+    }
   }
 
-  // 加载节庆活动数据
+  console.log("FestivalGathering onMounted: savedUserId =", savedUserId);
+
+  if (savedUserId) {
+    const parsedUserId = parseInt(savedUserId);
+    if (!isNaN(parsedUserId)) {
+      userId.value = parsedUserId;
+      console.log("FestivalGathering onMounted: userId set to =", userId.value);
+    } else {
+      console.error("FestivalGathering onMounted: 无效的 userId:", savedUserId);
+    }
+  } else {
+    console.log("FestivalGathering onMounted: 无法获取 userId");
+  }
+
+  // 先加载节庆活动数据，确保数据完整
   await loadFestivals();
-  // 加载用户报名状态
-  await loadUserSignUpStatus();
+  console.log("FestivalGathering onMounted: festivals loaded, count =", festivals.value.length);
+
+  // 只有当 userId 存在且 festivals 有数据时，才加载报名状态
+  if (userId.value && festivals.value.length > 0) {
+    console.log("FestivalGathering onMounted: 开始加载用户报名状态");
+    await loadUserSignUpStatus();
+  } else {
+    console.log(
+      "FestivalGathering onMounted: 跳过加载报名状态 - userId=",
+      userId.value,
+      ", festivals.length=",
+      festivals.value.length,
+    );
+  }
 
   // 恢复页码
   if (savedPageImmediate) {
@@ -355,6 +396,13 @@ const isActivitySignedUp = (id) => {
 // 加载用户报名状态
 const loadUserSignUpStatus = async () => {
   if (!userId.value) {
+    console.log("loadUserSignUpStatus: userId为空");
+    signedUpActivities.value = [];
+    return;
+  }
+
+  if (festivals.value.length === 0) {
+    console.log("loadUserSignUpStatus: 活动列表为空");
     signedUpActivities.value = [];
     return;
   }
@@ -368,9 +416,14 @@ const loadUserSignUpStatus = async () => {
         );
         if (response.ok) {
           const data = await response.json();
-          if (data.isRegistered) {
+          console.log(`检查活动${festival.id}报名状态:`, data);
+          // 确保正确处理布尔值（可能是字符串或布尔）
+          const isRegistered = data.isRegistered === true || data.isRegistered === "true";
+          if (isRegistered) {
             return festival.id;
           }
+        } else {
+          console.error(`检查活动${festival.id}报名状态失败，状态码:`, response.status);
         }
       } catch (error) {
         console.error(`检查活动${festival.id}报名状态失败:`, error);
@@ -380,6 +433,7 @@ const loadUserSignUpStatus = async () => {
 
     const results = await Promise.all(signUpStatusPromises);
     signedUpActivities.value = results.filter((id) => id !== null);
+    console.log("loadUserSignUpStatus: 已报名活动IDs:", signedUpActivities.value);
   } catch (error) {
     console.error("加载用户报名状态失败:", error);
     signedUpActivities.value = [];

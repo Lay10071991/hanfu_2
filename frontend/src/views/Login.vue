@@ -115,6 +115,10 @@ const handleLogin = async () => {
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("user", JSON.stringify(user));
         localStorage.setItem("username", user.username);
+        // 保存用户ID用于后续报名等操作
+        if (user.id) {
+          localStorage.setItem("userId", user.id.toString());
+        }
 
         // 添加标记，防止重复显示
         if (!loginSuccessShown.value) {
