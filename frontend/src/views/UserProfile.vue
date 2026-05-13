@@ -1794,7 +1794,7 @@ const getCategoryType = (value) => {
 };
 
 // 查看帖子详情
-const viewPostDetails = (postId) => {
+const viewPostDetails = async (postId) => {
   // 先在userPosts中查找
   let post = userPosts.value.find((p) => p.id === postId);
 
@@ -1804,26 +1804,6 @@ const viewPostDetails = (postId) => {
     // 如果从userLikes中找到帖子，确保liked字段为true
     if (post) {
       post.liked = true;
-    }
-  }
-
-  // 如果找不到，在userComments中查找帖子信息
-  if (!post) {
-    const comment = userComments.value.find((c) => c.postId === postId);
-    if (comment) {
-      // 从评论中构造帖子信息
-      post = {
-        id: comment.postId,
-        title: comment.postTitle,
-        category: comment.postCategory,
-        // 评论中没有帖子内容和图片，需要从其他地方获取
-        content: "",
-        images: [],
-        date: comment.createTime || "",
-        likes: 0, // 评论中没有点赞数信息
-        comments: 1, // 至少有一条评论（当前评论）
-        author: "",
-      };
     }
   }
 
@@ -1842,6 +1822,30 @@ const viewPostDetails = (postId) => {
         images: interaction.postImages || [],
         author: interaction.author,
       };
+    }
+  }
+
+  // 如果还是找不到完整的帖子信息，调用后端API获取完整详情
+  if (!post || !post.content || post.content === "") {
+    try {
+      const response = await fetch(`${API_BASE}/posts/${postId}`);
+      if (response.ok) {
+        const fullPost = await response.json();
+        post = {
+          id: fullPost.id,
+          title: fullPost.title,
+          content: fullPost.content,
+          category: fullPost.category,
+          date: fullPost.date || fullPost.createTime || "",
+          likes: fullPost.likes || 0,
+          comments: fullPost.comments || 0,
+          images: fullPost.images || [],
+          author: fullPost.author || "",
+          authorId: fullPost.authorId,
+        };
+      }
+    } catch (error) {
+      console.error("获取帖子详情失败:", error);
     }
   }
 
@@ -1892,15 +1896,17 @@ const savePost = async () => {
         if (file.raw) {
           const formData = new FormData();
           formData.append("file", file.raw);
+          formData.append("type", "community_post");
+          formData.append("id", currentPost.value.id);
 
-          const uploadResponse = await fetch(`${API_BASE}/upload`, {
+          const uploadResponse = await fetch(`${API_BASE}/upload/image`, {
             method: "POST",
             body: formData,
           });
 
           if (uploadResponse.ok) {
             const result = await uploadResponse.json();
-            imageUrls.push(result.fileUrl);
+            imageUrls.push(result.url);
           } else {
             ElMessage.error("图片上传失败");
             return;
@@ -1922,7 +1928,7 @@ const savePost = async () => {
       },
       body: JSON.stringify({
         title: currentPost.value.title,
-        tag: currentPost.value.tag,
+        category: currentPost.value.tag,
         description: currentPost.value.description,
         content: currentPost.value.content,
         images: imageUrls,

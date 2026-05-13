@@ -196,8 +196,9 @@ public class PostService {
         map.put("title", post.getTitle());
         map.put("content", post.getContent());
         map.put("description", post.getDescription());
-        map.put("image", post.getImageUrl());
-        map.put("imageUrl", post.getImageUrl()); // 添加imageUrl字段以保持一致性
+        String processedImageUrl = processImageUrl(post.getImageUrl());
+        map.put("image", processedImageUrl);
+        map.put("imageUrl", processedImageUrl); // 添加imageUrl字段以保持一致性
         map.put("author", getAuthorName(post.getAuthorId()));
         map.put("authorId", post.getAuthorId());
         map.put("likes", likeRepository.countByPostId(post.getId()));
@@ -214,17 +215,37 @@ public class PostService {
             map.put("images", images.stream()
                 .map(img -> {
                     Map<String, Object> imgMap = new HashMap<>();
-                    imgMap.put("url", img.getImageUrl());
+                    imgMap.put("url", processImageUrl(img.getImageUrl()));
                     return imgMap;
                 })
                 .collect(Collectors.toList()));
         } else if (post.getImageUrl() != null) {
             Map<String, Object> imgMap = new HashMap<>();
-            imgMap.put("url", post.getImageUrl());
+            imgMap.put("url", processedImageUrl);
             map.put("images", List.of(imgMap));
         }
         
         return map;
+    }
+    
+    private String processImageUrl(String imageUrl) {
+        if (imageUrl == null) {
+            return null;
+        }
+        // 如果已经是完整URL，直接返回
+        if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) {
+            return imageUrl;
+        }
+        // 移除 backend/uploads/ 前缀，转换为可访问的URL路径
+        if (imageUrl.startsWith("backend/uploads/")) {
+            return "/" + imageUrl.substring("backend/uploads/".length());
+        }
+        // 如果已经是正确的格式，直接返回
+        if (imageUrl.startsWith("/")) {
+            return imageUrl;
+        }
+        // 默认处理
+        return "/" + imageUrl;
     }
 
     private String getAuthorName(Long authorId) {
