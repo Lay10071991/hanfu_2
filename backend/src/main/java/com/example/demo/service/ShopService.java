@@ -51,7 +51,21 @@ public class ShopService {
         dto.setId(shop.getId());
         dto.setName(shop.getName());
         dto.setDescription(shop.getDescription());
-        dto.setImage(shop.getImage());
+        
+        // 处理店铺图片路径
+        String imagePath = shop.getImage();
+        if (imagePath != null) {
+            if (imagePath.startsWith("http")) {
+                dto.setImage(imagePath);
+            } else if (imagePath.startsWith("backend/uploads/shop/")) {
+                // 转换为可访问的URL
+                String fileName = imagePath.replace("backend/uploads/shop/", "");
+                dto.setImage("/shop/" + fileName);
+            } else {
+                dto.setImage(imagePath);
+            }
+        }
+        
         dto.setAddress(shop.getAddress());
         dto.setContact(shop.getContact());
         dto.setPriceRange(shop.getPriceRange());

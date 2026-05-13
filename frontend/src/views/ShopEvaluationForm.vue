@@ -151,14 +151,24 @@ const fetchShopInfo = async () => {
     const response = await fetch(`http://localhost:8082/api/shops/${shopId}`);
     if (response.ok) {
       const shop = await response.json();
+      let imageUrl = "";
+      if (shop.image) {
+        if (shop.image.startsWith("http")) {
+          imageUrl = shop.image;
+        } else if (shop.image.startsWith("backend/uploads/shop/")) {
+          // 数据库存储的格式，转换为可访问的URL
+          const fileName = shop.image.replace("backend/uploads/shop/", "");
+          imageUrl = `http://localhost:8082/shop/${fileName}`;
+        } else if (shop.image.startsWith("/")) {
+          imageUrl = `http://localhost:8082${shop.image}`;
+        } else {
+          imageUrl = `http://localhost:8082/${shop.image}`;
+        }
+      }
       shopInfo.value = {
         id: shop.id,
         name: shop.name,
-        image: shop.image
-          ? shop.image.startsWith("http")
-            ? shop.image
-            : `http://localhost:8082${shop.image}`
-          : "",
+        image: imageUrl,
         rating: shop.averageRating || 0,
         reviewCount: shop.reviewCount || 0,
         description: shop.description || "",
