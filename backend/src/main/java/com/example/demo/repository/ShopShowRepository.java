@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface ShopShowRepository extends JpaRepository<ShopShow, Long> {
     List<ShopShow> findByShopIdOrderBySortOrderAsc(Long shopId);
+    
+    void deleteByShopId(Long shopId);
 }

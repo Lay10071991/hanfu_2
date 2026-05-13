@@ -24,6 +24,9 @@ public class ShopService {
     @Autowired
     private ShopReviewRepository shopReviewRepository;
     
+    @Autowired
+    private ShopShowService shopShowService;
+    
     public List<ShopDTO> getAllShops() {
         List<Shop> shops = shopRepository.findAll();
         return shops.stream()
@@ -94,7 +97,19 @@ public class ShopService {
         // 从shop_show表获取汉服展示图片
         List<ShopShow> shopShows = shopShowRepository.findByShopIdOrderBySortOrderAsc(shop.getId());
         List<String> hanfuImages = shopShows.stream()
-                .map(ShopShow::getImageUrl)
+                .map(show -> {
+                    String imageUrl = show.getImageUrl();
+                    if (imageUrl != null) {
+                        if (imageUrl.startsWith("http")) {
+                            return imageUrl;
+                        } else if (imageUrl.startsWith("backend/uploads/shopshow/")) {
+                            // 转换为可访问的URL
+                            String fileName = imageUrl.replace("backend/uploads/shopshow/", "");
+                            return "/uploads/shopshow/" + fileName;
+                        }
+                    }
+                    return imageUrl;
+                })
                 .collect(Collectors.toList());
         dto.setHanfuImages(hanfuImages);
         
@@ -116,6 +131,28 @@ public class ShopService {
             shop.setPriceRange(shopDetails.getPriceRange());
             shop.setUserId(shopDetails.getUserId());
             return shopRepository.save(shop);
+        }
+        return null;
+    }
+    
+    public ShopDTO updateShopWithHanfuImages(Long id, ShopDTO shopDTO) {
+        Shop shop = shopRepository.findById(id).orElse(null);
+        if (shop != null) {
+            shop.setName(shopDTO.getName());
+            shop.setDescription(shopDTO.getDescription());
+            shop.setImage(shopDTO.getImage());
+            shop.setAddress(shopDTO.getAddress());
+            shop.setContact(shopDTO.getContact());
+            shop.setPriceRange(shopDTO.getPriceRange());
+            shop.setUserId(shopDTO.getUserId());
+            shop = shopRepository.save(shop);
+            
+            // 保存汉服展示图片
+            if (shopDTO.getHanfuImages() != null && !shopDTO.getHanfuImages().isEmpty()) {
+                shopShowService.saveShopShows(id, shopDTO.getHanfuImages());
+            }
+            
+            return convertToDTO(shop);
         }
         return null;
     }

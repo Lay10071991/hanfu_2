@@ -42,8 +42,8 @@ public class ShopController {
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<Shop> updateShop(@PathVariable Long id, @RequestBody Shop shop) {
-        Shop updated = shopService.updateShop(id, shop);
+    public ResponseEntity<ShopDTO> updateShop(@PathVariable Long id, @RequestBody ShopDTO shopDTO) {
+        ShopDTO updated = shopService.updateShopWithHanfuImages(id, shopDTO);
         if (updated == null) {
             return ResponseEntity.notFound().build();
         }

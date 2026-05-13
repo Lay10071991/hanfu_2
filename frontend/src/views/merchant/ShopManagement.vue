@@ -54,10 +54,7 @@
           <h4>汉服展示</h4>
           <div class="hanfu-show-images">
             <div v-for="(image, index) in shop.hanfuImages" :key="index" class="hanfu-show-item">
-              <img
-                :src="image.replace('backend/uploads/', 'http://localhost:8082/uploads/')"
-                alt="汉服展示"
-              />
+              <img :src="getHanfuImageUrl(image)" alt="汉服展示" />
             </div>
           </div>
         </div>
@@ -158,7 +155,7 @@
                   :key="index"
                   class="hanfu-image-item"
                 >
-                  <img :src="image" alt="汉服展示" />
+                  <img :src="getHanfuImageUrl(image)" alt="汉服展示" />
                   <button type="button" @click="removeHanfuImage(index)" class="btn-remove-img">
                     删除
                   </button>
@@ -255,6 +252,23 @@ export default {
         });
     },
 
+    getHanfuImageUrl(image) {
+      if (image.startsWith("http")) {
+        return image;
+      } else if (image.startsWith("backend/uploads/shopshow/")) {
+        return image.replace(
+          "backend/uploads/shopshow/",
+          "http://localhost:8082/uploads/shopshow/",
+        );
+      } else if (image.startsWith("backend/uploads/")) {
+        return image.replace("backend/uploads/", "http://localhost:8082/uploads/");
+      } else if (image.startsWith("/uploads/")) {
+        return "http://localhost:8082" + image;
+      } else {
+        return image;
+      }
+    },
+
     showAddDialog() {
       this.isEdit = false;
       this.form = {
@@ -272,28 +286,41 @@ export default {
     },
     editShop(shop) {
       this.isEdit = true;
-      
+
       // 转换店铺图片路径
       let imagePreview = null;
       if (shop.image) {
-        imagePreview = shop.image.replace('backend/uploads/', 'http://localhost:8082/uploads/');
+        imagePreview = shop.image.replace("backend/uploads/", "http://localhost:8082/uploads/");
       }
       this.imagePreview = imagePreview;
-      
+
       // 转换汉服展示图片路径
       let hanfuImages = [];
       if (shop.hanfuImages && shop.hanfuImages.length > 0) {
-        hanfuImages = shop.hanfuImages.map(img => 
-          img.replace('backend/uploads/', 'http://localhost:8082/uploads/')
-        );
+        hanfuImages = shop.hanfuImages.map((img) => {
+          if (img.startsWith("http")) {
+            return img;
+          } else if (img.startsWith("backend/uploads/shopshow/")) {
+            return img.replace(
+              "backend/uploads/shopshow/",
+              "http://localhost:8082/uploads/shopshow/",
+            );
+          } else if (img.startsWith("/uploads/")) {
+            return "http://localhost:8082" + img;
+          } else if (img.startsWith("backend/uploads/")) {
+            return img.replace("backend/uploads/", "http://localhost:8082/uploads/");
+          } else {
+            return img;
+          }
+        });
       }
-      
+
       this.form = {
         ...shop,
         priceRange: shop.priceRange || shop.price_range || "普通档（0-400）",
         hanfuImages: hanfuImages,
       };
-      
+
       this.showDialog = true;
     },
     closeDialog() {
@@ -370,9 +397,15 @@ export default {
       const method = this.isEdit ? "PUT" : "POST";
 
       const data = {
-        ...this.form,
-        price_range: this.form.priceRange,
+        id: this.form.id,
+        name: this.form.name,
+        description: this.form.description,
+        image: this.form.image,
+        address: this.form.address,
+        contact: this.form.contact,
+        priceRange: this.form.priceRange,
         userId: user.id,
+        hanfuImages: this.form.hanfuImages || [],
       };
 
       fetch(url, {
