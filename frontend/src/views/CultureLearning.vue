@@ -111,7 +111,7 @@
         <div class="detail-basic">
           <div class="detail-period">{{ currentEtiquette.period }}</div>
           <div class="detail-category">
-            <el-tag :type="getCategoryType(currentEtiquette.category)" size="small">
+            <el-tag v-if="getCategoryText(currentEtiquette.category)" :type="getCategoryType(currentEtiquette.category)" size="small">
               {{ getCategoryText(currentEtiquette.category) }}
             </el-tag>
           </div>
@@ -333,7 +333,7 @@ const goToProfile = () => {
 const getCategoryType = (category) => {
   const typeMap = {
     worship: "primary",
-    standing: "success",
+    standing: "",
   };
   return typeMap[category] || "";
 };
@@ -341,7 +341,7 @@ const getCategoryType = (category) => {
 const getCategoryText = (category) => {
   const textMap = {
     worship: "跪拜礼",
-    standing: "站立礼",
+    standing: "",
   };
   return textMap[category] || "";
 };

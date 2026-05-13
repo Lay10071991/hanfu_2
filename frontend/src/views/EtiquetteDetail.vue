@@ -108,7 +108,7 @@
           <div class="detail-basic">
             <div class="detail-period">{{ currentEtiquette.period }}</div>
             <div class="detail-category">
-              <el-tag :type="getCategoryType(currentEtiquette.category)" size="small">
+              <el-tag v-if="getCategoryText(currentEtiquette.category)" :type="getCategoryType(currentEtiquette.category)" size="small">
                 {{ getCategoryText(currentEtiquette.category) }}
               </el-tag>
             </div>
@@ -220,7 +220,7 @@ onMounted(() => {
 // 分类类型和文本（用于弹窗显示）
 const getCategoryType = (category) => {
   const typeMap = {
-    standing: "success",
+    standing: "",
     walking: "warning",
     sitting: "danger",
     worship: "info",
@@ -230,7 +230,7 @@ const getCategoryType = (category) => {
 
 const getCategoryText = (category) => {
   const textMap = {
-    standing: "站立礼仪",
+    standing: "",
     walking: "行走礼仪",
     sitting: "坐姿礼仪",
     worship: "拜礼",
