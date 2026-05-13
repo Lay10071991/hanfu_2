@@ -272,12 +272,28 @@ export default {
     },
     editShop(shop) {
       this.isEdit = true;
+      
+      // 转换店铺图片路径
+      let imagePreview = null;
+      if (shop.image) {
+        imagePreview = shop.image.replace('backend/uploads/', 'http://localhost:8082/uploads/');
+      }
+      this.imagePreview = imagePreview;
+      
+      // 转换汉服展示图片路径
+      let hanfuImages = [];
+      if (shop.hanfuImages && shop.hanfuImages.length > 0) {
+        hanfuImages = shop.hanfuImages.map(img => 
+          img.replace('backend/uploads/', 'http://localhost:8082/uploads/')
+        );
+      }
+      
       this.form = {
         ...shop,
         priceRange: shop.priceRange || shop.price_range || "普通档（0-400）",
-        hanfuImages: shop.hanfuImages || [],
+        hanfuImages: hanfuImages,
       };
-      this.imagePreview = shop.image || null;
+      
       this.showDialog = true;
     },
     closeDialog() {
@@ -695,11 +711,13 @@ export default {
 
 .modal-content {
   background: white;
-  padding: 20px;
-  border-radius: 12px;
+  padding: 24px;
+  border-radius: 16px;
   width: 90%;
-  max-width: 700px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
   animation: slideIn 0.3s ease;
 }
 
@@ -725,12 +743,12 @@ export default {
 }
 
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
 .form-group label {
   display: block;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   font-weight: 600;
   color: #333;
   font-size: 14px;
@@ -740,12 +758,13 @@ export default {
 .form-group textarea,
 .form-group select {
   width: 100%;
-  padding: 8px 10px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
+  padding: 12px 14px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
   font-size: 14px;
   transition: all 0.3s ease;
   box-sizing: border-box;
+  background: #fafafa;
 }
 
 .form-group input:focus,
@@ -753,31 +772,32 @@ export default {
 .form-group select:focus {
   outline: none;
   border-color: #d2691e;
-  box-shadow: 0 0 0 2px rgba(210, 105, 30, 0.2);
+  box-shadow: 0 0 0 3px rgba(210, 105, 30, 0.15);
+  background: white;
 }
 
 .form-group textarea {
   resize: vertical;
-  min-height: 60px;
+  min-height: 80px;
 }
 
 .upload-area {
-  margin-top: 10px;
+  margin-top: 12px;
 }
 
 .upload-placeholder {
-  border: 2px dashed #ddd;
-  border-radius: 6px;
-  padding: 20px;
+  border: 2px dashed #d0d0d0;
+  border-radius: 10px;
+  padding: 24px;
   text-align: center;
   cursor: pointer;
   transition: all 0.3s ease;
-  background: #f9f9f9;
+  background: #fafafa;
 }
 
 .upload-placeholder:hover {
   border-color: #d2691e;
-  background: #f5f0e8;
+  background: #fef8f0;
 }
 
 .add-button {
@@ -787,6 +807,10 @@ export default {
 
 .upload-placeholder span {
   font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .upload-placeholder:not(.add-button) span {
@@ -855,42 +879,46 @@ export default {
 .form-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
-  margin-top: 20px;
-  padding-top: 15px;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 20px;
   border-top: 1px solid #f0f0f0;
 }
 
 .btn-cancel {
-  padding: 10px 20px;
-  border: 1px solid #ddd;
+  padding: 12px 24px;
+  border: 1px solid #e0e0e0;
   background: white;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 14px;
+  font-weight: 500;
   transition: all 0.3s ease;
+  min-width: 80px;
 }
 
 .btn-cancel:hover {
-  border-color: #999;
-  background: #f5f5f5;
+  border-color: #b0b0b0;
+  background: #fafafa;
 }
 
 .btn-primary {
-  padding: 10px 20px;
+  padding: 12px 28px;
   background: linear-gradient(135deg, #8b4513 0%, #d2691e 100%);
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 14px;
+  font-weight: 500;
   transition: all 0.3s ease;
+  min-width: 80px;
 }
 
 .btn-primary:hover {
   background: linear-gradient(135deg, #6b340e 0%, #b85a1a 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(139, 69, 19, 0.3);
 }
 
 .empty-state {

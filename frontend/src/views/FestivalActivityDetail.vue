@@ -550,26 +550,32 @@ const handleSignUp = async () => {
     })
       .then(async () => {
         try {
+          console.log(`报名活动 ${festivalData.value.id}，用户ID:`, userId.value);
           const response = await fetch(
             `http://localhost:8082/api/festival-activity/${festivalData.value.id}/registration`,
             {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
-                userId: userId.value,
+                userId: parseInt(userId.value),
               }),
             },
           );
+          
           if (response.ok) {
+            const data = await response.json();
+            console.log("报名成功:", data);
             isSignedUp.value = true;
             registrationCount.value += 1;
             signUpDialogVisible.value = true;
           } else {
-            ElMessage.error("报名失败");
+            const errorData = await response.json();
+            console.error("报名失败响应:", errorData);
+            ElMessage.error(errorData.message || "报名失败");
           }
         } catch (error) {
           console.error("报名失败:", error);
-          ElMessage.error("报名失败");
+          ElMessage.error("网络错误，报名失败");
         }
       })
       .catch(() => {});
