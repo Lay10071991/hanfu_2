@@ -46,4 +46,8 @@ public class ExhibitionRegistrationService {
     public long getRegistrationCount(Long exhibitionId) {
         return repository.countByExhibitionId(exhibitionId);
     }
+
+    public java.util.Optional<ExhibitionRegistration> getRegistration(Long userId, Long exhibitionId) {
+        return repository.findByUserIdAndExhibitionId(userId, exhibitionId);
+    }
 }

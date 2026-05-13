@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/festival-activity")
@@ -159,6 +160,12 @@ public class FestivalActivityController {
         boolean isRegistered = registrationService.isRegistered(id, userId);
         Map<String, Object> response = new HashMap<>();
         response.put("isRegistered", isRegistered);
+        if (isRegistered) {
+            Optional<FestivalActivityRegistration> registration = registrationService.getRegistration(id, userId);
+            if (registration.isPresent()) {
+                response.put("registrationTime", registration.get().getRegistrationTime());
+            }
+        }
         return ResponseEntity.ok(response);
     }
 

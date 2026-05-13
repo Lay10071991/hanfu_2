@@ -1,14 +1,17 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.Exhibition;
+import com.example.demo.entity.ExhibitionRegistration;
 import com.example.demo.repository.ExhibitionRepository;
 import com.example.demo.service.ExhibitionRegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/exhibitions")
@@ -83,7 +86,15 @@ public class ExhibitionController {
     @GetMapping("/{id}/registration/check")
     public ResponseEntity<Map<String, Object>> checkRegistration(@PathVariable Long id, @RequestParam Long userId) {
         boolean isRegistered = registrationService.isRegistered(userId, id);
-        return ResponseEntity.ok(Map.of("isRegistered", isRegistered));
+        Map<String, Object> response = new HashMap<>();
+        response.put("isRegistered", isRegistered);
+        if (isRegistered) {
+            Optional<ExhibitionRegistration> registration = registrationService.getRegistration(userId, id);
+            if (registration.isPresent()) {
+                response.put("registrationTime", registration.get().getRegistrationTime());
+            }
+        }
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}/registration/count")

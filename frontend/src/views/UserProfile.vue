@@ -1060,6 +1060,9 @@ const fetchActivityRegistrations = async () => {
               const checkData = await checkResponse.json();
               if (checkData.isRegistered) {
                 const status = isActivityExpired(activity.date) ? "completed" : "upcoming";
+                const registrationDate = checkData.registrationTime
+                  ? new Date(checkData.registrationTime).toLocaleDateString()
+                  : new Date().toLocaleDateString();
                 return {
                   id: `festival-${activity.id}`,
                   activityId: activity.id,
@@ -1067,7 +1070,7 @@ const fetchActivityRegistrations = async () => {
                   activityType: "festival",
                   location: activity.location,
                   time: activity.date,
-                  registrationDate: new Date().toLocaleDateString(),
+                  registrationDate: registrationDate,
                   status: status,
                 };
               }
@@ -1095,6 +1098,9 @@ const fetchActivityRegistrations = async () => {
               const checkData = await checkResponse.json();
               if (checkData.isRegistered) {
                 const status = isActivityExpired(exhibition.endDate) ? "completed" : "upcoming";
+                const registrationDate = checkData.registrationTime
+                  ? new Date(checkData.registrationTime).toLocaleDateString()
+                  : new Date().toLocaleDateString();
                 return {
                   id: `exhibition-${exhibition.id}`,
                   activityId: exhibition.id,
@@ -1102,7 +1108,7 @@ const fetchActivityRegistrations = async () => {
                   activityType: "exhibition",
                   location: exhibition.location,
                   time: `${exhibition.startDate} 至 ${exhibition.endDate}`,
-                  registrationDate: new Date().toLocaleDateString(),
+                  registrationDate: registrationDate,
                   status: status,
                 };
               }
@@ -1143,6 +1149,9 @@ const fetchActivityRegistrations = async () => {
                 const endTime = new Date(lecture.endTime);
                 const timeStr = `${startTime.toLocaleDateString()} ${startTime.toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" })} - ${endTime.toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" })}`;
                 console.log("讲座时间:", lecture.id, timeStr);
+                const registrationDate = checkData.registrationTime
+                  ? new Date(checkData.registrationTime).toLocaleDateString()
+                  : new Date().toLocaleDateString();
                 return {
                   id: `lecture-${lecture.id}`,
                   activityId: lecture.id,
@@ -1150,7 +1159,7 @@ const fetchActivityRegistrations = async () => {
                   activityType: "lecture",
                   location: lecture.location,
                   time: timeStr,
-                  registrationDate: new Date().toLocaleDateString(),
+                  registrationDate: registrationDate,
                   status: status,
                 };
               }

@@ -77,4 +77,8 @@ public class LectureRegistrationService {
     public long getRegistrationCount(Long lectureId) {
         return registrationRepository.countByLectureId(lectureId);
     }
+
+    public java.util.Optional<LectureRegistration> getRegistration(Long userId, Long lectureId) {
+        return registrationRepository.findByUserIdAndLectureId(userId, lectureId);
+    }
 }

@@ -1,14 +1,17 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.Lecture;
+import com.example.demo.entity.LectureRegistration;
 import com.example.demo.repository.LectureRepository;
 import com.example.demo.service.LectureRegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/lectures")
@@ -81,7 +84,15 @@ public class LectureController {
     @GetMapping("/{id}/registration/check")
     public ResponseEntity<Map<String, Object>> checkRegistration(@PathVariable Long id, @RequestParam Long userId) {
         boolean isRegistered = registrationService.isRegistered(userId, id);
-        return ResponseEntity.ok(Map.of("isRegistered", isRegistered));
+        Map<String, Object> response = new HashMap<>();
+        response.put("isRegistered", isRegistered);
+        if (isRegistered) {
+            Optional<LectureRegistration> registration = registrationService.getRegistration(userId, id);
+            if (registration.isPresent()) {
+                response.put("registrationTime", registration.get().getRegistrationTime());
+            }
+        }
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}/registration/count")
